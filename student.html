@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-tag">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الطالب المتقدمة | أكاديمية الوادي</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style id="custom-theme-css">
+        :root { --primary: #1e40af; --primary-hover: #1e3a8a; --primary-light: #eff6ff; }
+        body { font-family: 'Tajawal', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; background-color: #f8fafc; }
+        .font-calligraphy { font-family: 'Amiri', serif; }
+        .font-diwani { font-family: 'Aref Ruqaa', serif; }
+        .theme-bg { background-color: var(--primary) !important; }
+        .theme-text { color: var(--primary) !important; }
+        .theme-border { border-color: var(--primary) !important; }
+        .theme-bg-light { background-color: var(--primary-light) !important; }
+        
+        @keyframes marquee { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .animate-marquee { animation: marquee 25s linear infinite; }
+        
+        @keyframes subtle-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        .animate-live-card { animation: subtle-pulse 3s infinite ease-in-out; }
+        
+        @keyframes record-pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        .recording-active { animation: record-pulse 1.5s infinite; background-color: #ef4444 !important; color: white !important; }
+        
+        .hover-lift { transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s; }
+        .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1); }
+        
+        .tab-content { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .tab-content.active { display: block; opacity: 1; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+
+        html.dark body { background-color: #0f172a; color: #f8fafc; }
+        html.dark .bg-white, html.dark .glass-card { background-color: #1e293b !important; border-color: #334155 !important; }
+        html.dark .bg-slate-50 { background-color: #0f172a !important; border-color: #334155 !important; }
+        html.dark .text-slate-900 { color: #f8fafc !important; }
+        html.dark .text-slate-800 { color: #f1f5f9 !important; }
+        html.dark .text-slate-700 { color: #e2e8f0 !important; }
+        html.dark .text-slate-600 { color: #cbd5e1 !important; }
+        html.dark .text-slate-500 { color: #94a3b8 !important; }
+        html.dark .border-slate-100, html.dark .border-slate-200, html.dark .border-slate-300 { border-color: #334155 !important; }
+        html.dark header, html.dark aside { border-color: #334155 !important; background-color: #1e293b !important; }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden text-slate-800">
+
+    <!-- Top Banner -->
+    <div class="w-full bg-slate-900 text-slate-100 py-2 shadow-sm text-sm font-medium overflow-hidden whitespace-nowrap relative z-50">
+        <div class="inline-block animate-marquee text-lg">
+            ﴿ يَرْفَعِ اللَّهُ الَّذِينَ آمَنُوا مِنكُمْ وَالَّذِينَ أُوتُوا الْعِلْمَ دَرَجَاتٍ ﴾ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm relative z-40">
+        <div class="flex items-center gap-3">
+            <img src="logo.png" alt="Logo" class="w-10 h-10 object-contain rounded-full border border-slate-100 shadow-sm" onerror="this.src='https://ui-avatars.com/api/?name=Wadi&background=1e40af&color=fff'">
+            <div>
+                <h1 class="text-lg font-black text-slate-900 tracking-tight" data-ar="أكاديمية الوادي | بوابة الطالب" data-en="Al-Wadi Academy | Student Portal" data-hi="अल-वादी अकादमी | छात्र पोर्टल">أكاديمية الوادي | بوابة الطالب</h1>
+                <p class="text-[10px] font-bold text-slate-500" id="live-date">نظام المتابعة الأكاديمية</p>
+            </div>
+        </div>
+        
+        <!-- Family Switcher & Controls -->
+        <div class="flex items-center gap-3">
+            <!-- 1. Family Account Switcher -->
+            <div class="bg-blue-50 border border-blue-200 rounded-xl px-3 py-1.5 flex items-center gap-2 shadow-inner">
+                <span class="text-xs">👨‍👩‍👧‍👦</span>
+                <select id="family-switcher" onchange="switchFamilyMember(this.value)" class="bg-transparent text-blue-900 font-black text-xs outline-none cursor-pointer">
+                    <option value="s1">يوسف أحمد (القرآن الكريم)</option>
+                    <option value="s2">عائشة أحمد (اللغة العربية)</option>
+                    <option value="s3">عمر أحمد (نور البيان)</option>
+                </select>
+            </div>
+
+            <div class="hidden md:flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600">
+                <span>🕒</span> <span id="clock-display" class="font-mono">--:--:--</span>
+            </div>
+            <button onclick="toggleDarkMode()" class="text-lg bg-slate-50 border border-slate-200 p-2 rounded-xl hover:bg-slate-100 transition cursor-pointer shadow-sm" id="dark-mode-btn">🌙</button>
+            <select id="lang-switcher" class="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-xl px-2.5 py-2 font-bold outline-none cursor-pointer shadow-sm transition hover:bg-slate-100">
+                <option value="ar">العربية 🇸🇦</option><option value="en">English 🇺🇸</option><option value="hi">हिन्दी 🇮🇳</option>
+            </select>
+            <button type="button" onclick="logout()" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold text-xs px-4 py-2 rounded-xl transition cursor-pointer shadow-sm" data-ar="خروج" data-en="Logout" data-hi="लॉग आउट">خروج</button>
+        </div>
+    </header>
+
+    <!-- Main Layout with Sidebar -->
+    <div class="flex-1 flex overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-white border-r border-l border-slate-200 flex flex-col justify-between p-4 overflow-y-auto shadow-sm z-30">
+            <nav class="space-y-1.5" id="sidebar-nav">
+                <button type="button" onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold theme-bg text-white transition shadow-sm cursor-pointer">
+                    🏠 <span data-ar="الشاشة الرئيسية" data-en="Dashboard" data-hi="मुख्य पृष्ठ">الشاشة الرئيسية</span>
+                </button>
+                <button type="button" onclick="switchTab('schedule')" id="nav-schedule" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">
+                    📅 <span data-ar="جدول المواعيد والتعويض" data-en="Schedule & Makeup" data-hi="अनुसूची और भरपाई">جدول المواعيد والتعويض</span>
+                </button>
+                <button type="button" onclick="switchTab('audiolab')" id="nav-audiolab" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">
+                    🎙️ <span data-ar="معمل التلاوة والواجبات" data-en="Audio Lab & Homework" data-hi="ऑडियो लैब और होमवर्क">معمل التلاوة والواجبات</span>
+                </button>
+                <button type="button" onclick="switchTab('shop')" id="nav-shop" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">
+                    🎁 <span data-ar="متجر المكافآت والنجوم" data-en="Star Rewards Shop" data-hi="स्टार रिवार्ड्स शॉप">متجر المكافآت والنجوم</span>
+                </button>
+                <button type="button" onclick="switchTab('booking')" id="nav-booking" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">
+                    📌 <span data-ar="حجز الحصص" data-en="Book a Slot" data-hi="सत्र बुक करें">حجز الحصص</span>
+                </button>
+                <button type="button" onclick="switchTab('reports')" id="nav-reports" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">
+                    📝 <span data-ar="التقارير والأداء" data-en="Progress Reports" data-hi="प्रगति रिपोर्ट">التقارير والأداء</span>
+                </button>
+                <button type="button" onclick="switchTab('financials')" id="nav-financials" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">
+                    💰 <span data-ar="المالية والاشتراك" data-en="Financials & Dues" data-hi="वित्तीय और शुल्क">المالية والاشتراك</span>
+                </button>
+                <button type="button" onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">
+                    🏆 <span data-ar="الشهادات والاختبارات" data-en="Exams & Certs" data-hi="परीक्षा और प्रमाण पत्र">الشهادات والاختبارات</span>
+                </button>
+                <button type="button" onclick="switchTab('resources')" id="nav-resources" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">
+                    📚 <span data-ar="المكتبة الرقمية" data-en="Digital Library" data-hi="डिजिटल लाइब्रेरी">المكتبة الرقمية</span>
+                </button>
+            </nav>
+
+            <!-- WhatsApp Radar Status Box -->
+            <div class="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-200 text-center mt-4">
+                <div class="flex items-center justify-center gap-1.5 text-emerald-800 text-xs font-black mb-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span data-ar="رادار التنبيهات الآلية" data-en="WhatsApp Radar Active" data-hi="व्हाट्सएप रडार सक्रिय">رادار التنبيهات الآلية</span>
+                </div>
+                <p class="text-[10px] text-slate-500 font-bold mb-3" data-ar="مربوط بواتساب ولي الأمر للتذكير الفوري." data-en="Linked to parent WhatsApp for alerts." data-hi="अभिभावक व्हाट्सएप से जुड़ा हुआ है।">مربوط بواتساب ولي الأمر للتذكير الفوري.</p>
+                <button onclick="testWhatsAppWebhook()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
+                    💬 <span data-ar="فحص إرسال تنبيه تجريبي" data-en="Test WhatsApp Alert" data-hi="परीक्षण व्हाट्सएप अलर्ट">فحص إرسال تنبيه تجريبي</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar relative">
+            <div class="max-w-5xl mx-auto space-y-6">
+
+                <!-- SECTION 1: DASHBOARD OVERVIEW -->
+                <section id="sec-dashboard" class="tab-content active space-y-6">
+                    
+                    <!-- Top Hero Banner: Student Profile & Next Session -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 relative overflow-hidden">
+                        <div class="absolute -right-20 -top-20 w-80 h-80 bg-blue-100 rounded-full blur-[90px] opacity-60 pointer-events-none"></div>
+                        <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-emerald-100 rounded-full blur-[90px] opacity-40 pointer-events-none"></div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center relative z-10">
+                            
+                            <!-- Student Avatar & Details -->
+                            <div class="lg:col-span-5 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-start gap-4 border-b lg:border-b-0 lg:border-e border-slate-100 pb-6 lg:pb-0 lg:pe-6">
+                                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-white shadow-xl overflow-hidden bg-slate-100 shrink-0">
+                                    <img id="student-avatar" src="https://ui-avatars.com/api/?name=Yousef&background=1e40af&color=fff&size=150" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <span class="bg-emerald-100 text-emerald-800 text-[10px] font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider block w-max mx-auto sm:mx-0 mb-1" id="student-status-badge">نشط ✔️</span>
+                                    <h2 class="text-2xl font-black text-slate-800 tracking-tight" id="student-name">يوسف أحمد عبد الله</h2>
+                                    <p class="text-xs font-bold text-blue-600 mt-1" id="student-course">📚 مسار القرآن الكريم والتجويد</p>
+                                    <p class="text-xs font-medium text-slate-500 mt-1" id="student-level">المستوى: مبتدئ (الجزء 30)</p>
+                                    
+                                    <!-- Star Balance Badge -->
+                                    <div class="mt-3 inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full shadow-inner cursor-pointer" onclick="switchTab('shop')">
+                                        <span class="text-base animate-bounce">⭐</span>
+                                        <span class="text-xs font-black text-amber-900" id="hero-stars-count">رصيد المكافآت: 450 نجمة</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Next Session Countdown Box -->
+                            <div class="lg:col-span-7 bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                                <div class="flex justify-between items-center border-b border-slate-700 pb-3 mb-4">
+                                    <span class="text-xs font-black text-emerald-400 flex items-center gap-1.5">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping inline-block"></span>
+                                        <span data-ar="🚀 الحصة القادمة المجدولة" data-en="🚀 Next Scheduled Session" data-hi="🚀 अगली निर्धारित सत्र">🚀 الحصة القادمة المجدولة</span>
+                                    </span>
+                                    <span class="text-xs font-mono bg-white/10 px-3 py-1 rounded-lg text-slate-300" id="next-session-date">السبت، 25 يوليو | 07:00 PM</span>
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-2xl border border-white/10">👨‍🏫</div>
+                                        <div class="text-start">
+                                            <p class="text-[10px] text-slate-400 font-bold" data-ar="المعلم المسؤول" data-en="Assigned Teacher" data-hi="निर्धारित शिक्षक">المعلم المسؤول</p>
+                                            <p class="text-base font-black text-white" id="teacher-name">الشيخ محمود عبد الله</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Live Countdown Box -->
+                                    <div class="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-center">
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest" data-ar="تبدأ خلال" data-en="Starts In" data-hi="में शुरू होता है">تبدأ خلال</p>
+                                        <p class="text-lg font-mono font-black text-amber-400" id="session-countdown">02:15:40</p>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5 pt-3 border-t border-slate-700/60 flex flex-col sm:flex-row gap-2">
+                                    <a href="#" id="zoom-link" target="_blank" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white text-center py-2.5 rounded-xl text-xs font-black transition shadow-md hover-lift flex items-center justify-center gap-2">
+                                        📹 <span data-ar="دخول قاعة الدرس (Zoom)" data-en="Join Zoom Class" data-hi="ज़ूम क्लास में शामिल हों">دخول قاعة الدرس (Zoom)</span>
+                                    </a>
+                                    <button onclick="requestMakeupFromHero()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 cursor-pointer">
+                                        🔄 <span data-ar="اعتذار وطلب تعويض" data-en="Reschedule / Makeup" data-hi="पुनर्निर्धारित करें">اعتذار وطلب تعويض</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Stats & Notifications Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        
+                        <!-- Stats Card 1: Remaining Sessions -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-center hover-lift transition flex flex-col justify-between" id="card-remaining">
+                            <div class="w-12 h-12 mx-auto bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mb-3 shadow-inner">🎟️</div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest" data-ar="الحصص المتبقية في الرصيد" data-en="Remaining Sessions" data-hi="शेष सत्र">الحصص المتبقية في الرصيد</p>
+                                <p class="text-4xl font-black text-emerald-600 mt-2 font-mono" id="stat-remaining">8</p>
+                            </div>
+                            <p class="text-[11px] font-bold text-slate-500 mt-3 border-t border-slate-100 pt-2" id="stat-sub-note">اشتراك شهري فعال ✔️</p>
+                        </div>
+
+                        <!-- Stats Card 2: Next Session No -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-center hover-lift transition flex flex-col justify-between">
+                            <div class="w-12 h-12 mx-auto bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-3 shadow-inner">📈</div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest" data-ar="رقم الحصة القادمة" data-en="Next Session No." data-hi="अगला सत्र संख्या">رقم الحصة القادمة</p>
+                                <p class="text-4xl font-black text-blue-600 mt-2 font-mono" id="stat-session-no">13</p>
+                            </div>
+                            <p class="text-[11px] font-bold text-slate-500 mt-3 border-t border-slate-100 pt-2" data-ar="استمر في تقدمك الممتاز!" data-en="Keep up the great progress!" data-hi="अपना शानदार प्रयास जारी रखें!">استمر في تقدمك الممتاز!</p>
+                        </div>
+
+                        <!-- Notifications Panel -->
+                        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-sm font-black text-slate-800 mb-3 flex items-center gap-2 border-b border-slate-100 pb-2">
+                                    <span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span></span>
+                                    <span data-ar="إشعارات وتعميمات الإدارة" data-en="Admin Notifications" data-hi="व्यवस्थापक सूचनाएं">إشعارات وتعميمات الإدارة</span>
+                                </h3>
+                                <div id="student-notifications" class="space-y-2.5 max-h-40 overflow-y-auto custom-scrollbar pr-1">
+                                    <p class="text-xs text-slate-400 font-bold text-center py-4">جاري التحميل...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Extra Shortcuts Row -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div onclick="switchTab('audiolab')" class="bg-gradient-to-r from-purple-900 to-indigo-900 p-6 rounded-3xl shadow-lg text-white flex justify-between items-center gap-4 relative overflow-hidden cursor-pointer hover-lift">
+                            <div class="absolute -right-10 -bottom-10 text-8xl opacity-10 pointer-events-none">🎙️</div>
+                            <div class="relative z-10">
+                                <span class="bg-purple-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-md uppercase tracking-widest">ميزة تفاعلية</span>
+                                <h4 class="text-lg font-black mt-1" data-ar="معمل التلاوة والواجبات الصوتي" data-en="Voice Assignment Lab" data-hi="ऑडियो लैब और होमवर्क">معمل التلاوة والواجبات الصوتي</h4>
+                                <p class="text-xs text-purple-200 mt-1" data-ar="سجل تلاوتك وأرسلها للمعلم ليراجعها بالصوت." data-en="Record your recitation for teacher feedback." data-hi="अपनी तिलावत रिकॉर्ड करें और शिक्षक को भेजें।">سجل تلاوتك وأرسلها للمعلم ليراجعها بالصوت.</p>
+                            </div>
+                            <span class="text-3xl relative z-10">➡️</span>
+                        </div>
+
+                        <div onclick="switchTab('shop')" class="bg-gradient-to-r from-amber-600 to-orange-600 p-6 rounded-3xl shadow-lg text-white flex justify-between items-center gap-4 relative overflow-hidden cursor-pointer hover-lift">
+                            <div class="absolute -right-10 -bottom-10 text-8xl opacity-10 pointer-events-none">🎁</div>
+                            <div class="relative z-10">
+                                <span class="bg-white text-amber-900 text-[10px] font-black px-2.5 py-0.5 rounded-md uppercase tracking-widest">نظام المكافآت</span>
+                                <h4 class="text-lg font-black mt-1" data-ar="متجر الهدايا والنجوم" data-en="Star Rewards Shop" data-hi="स्टार रिवार्ड्स शॉप">متجر الهدايا والنجوم</h4>
+                                <p class="text-xs text-amber-100 mt-1" data-ar="استبدل نجومك بمصاحف ملونة وشهادات ومكافآت قيّمة." data-en="Redeem your stars for gifts and badges." data-hi="अपने सितारों को पुरस्कारों में बदलें।">استبدل نجومك بمصاحف ملونة وشهادات ومكافآت قيّمة.</p>
+                            </div>
+                            <span class="text-3xl relative z-10">➡️</span>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- SECTION 2: SCHEDULE & SMART RESCHEDULE/MAKEUP -->
+                <section id="sec-schedule" class="tab-content hidden space-y-6">
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4 gap-4">
+                            <div>
+                                <h3 class="text-xl font-black text-slate-800" data-ar="📅 جدول المواعيد ونظام التعويض الآلي" data-en="📅 Schedule & Smart Rescheduling" data-hi="📅 अनुसूची और स्मार्ट पुनर्निर्धारण">📅 جدول المواعيد ونظام التعويض الآلي</h3>
+                                <p class="text-xs text-slate-500 mt-1 font-bold" data-ar="يمكنك الاعتذار عن الحصة قبل موعدها بـ 6 ساعات وطلب موعد بديل (تعويض) تلقائياً." data-en="Cancel 6h prior to auto-receive makeup tokens and rebook." data-hi="6 घंटे पहले रद्द करें और स्वतः भरपाई टोकन प्राप्त करें।">يمكنك الاعتذار عن الحصة قبل موعدها بـ 6 ساعات وطلب موعد بديل (تعويض) تلقائياً.</p>
+                            </div>
+                            <div class="bg-amber-50 border border-amber-200 px-4 py-2 rounded-xl text-center shrink-0">
+                                <span class="text-[10px] font-bold text-amber-800 uppercase block" data-ar="رصيد حصص التعويض المتاح" data-en="Makeup Tokens Available" data-hi="उपलब्ध भरपाई टोकन">رصيد حصص التعويض المتاح</span>
+                                <span class="text-xl font-mono font-black text-amber-600" id="makeup-tokens-count">1 حصة تعويض</span>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-start text-sm min-w-[650px]">
+                                <thead class="bg-slate-50 text-slate-500 font-bold">
+                                    <tr>
+                                        <th class="p-4 text-start rounded-r-xl" data-ar="اليوم والموعد" data-en="Day & Time" data-hi="दिन और समय">اليوم والموعد</th>
+                                        <th class="p-4 text-start" data-ar="المعلم المسؤول" data-en="Teacher" data-hi="शिक्षक">المعلم المسؤول</th>
+                                        <th class="p-4 text-center" data-ar="حالة الموعد" data-en="Status" data-hi="स्थिति">حالة الموعد</th>
+                                        <th class="p-4 text-center rounded-l-xl" data-ar="إجراء التعويض / الدخول" data-en="Action" data-hi="कार्रवाई">إجراء التعويض / الدخول</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="schedule-list" class="divide-y divide-slate-100 text-slate-700 font-medium">
+                                    <tr class="hover:bg-slate-50 transition" id="row-class-1">
+                                        <td class="p-4 font-bold text-slate-900">السبت / Saturday <span class="block font-mono text-xs font-black text-emerald-600 mt-0.5" dir="ltr">07:00 PM (America/New_York)</span></td>
+                                        <td class="p-4 font-bold text-slate-700">الشيخ محمود عبد الله</td>
+                                        <td class="p-4 text-center"><span class="bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-md text-[10px] font-black">مؤكدة ✔️</span></td>
+                                        <td class="p-4 text-center flex items-center justify-center gap-2">
+                                            <a href="https://zoom.us" target="_blank" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-xl font-bold hover:bg-blue-700 transition shadow-sm">دخول</a>
+                                            <button onclick="requestMakeupSession(1, 'السبت / Saturday', '07:00 PM')" class="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs px-3 py-2 rounded-xl font-bold transition shadow-sm cursor-pointer">اعتذار وتعويض 🔄</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50 transition" id="row-class-2">
+                                        <td class="p-4 font-bold text-slate-900">الثلاثاء / Tuesday <span class="block font-mono text-xs font-black text-emerald-600 mt-0.5" dir="ltr">07:00 PM (America/New_York)</span></td>
+                                        <td class="p-4 font-bold text-slate-700">الشيخ محمود عبد الله</td>
+                                        <td class="p-4 text-center"><span class="bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-md text-[10px] font-black">مؤكدة ✔️</span></td>
+                                        <td class="p-4 text-center flex items-center justify-center gap-2">
+                                            <a href="https://zoom.us" target="_blank" class="bg-blue-600 text-white text-xs px-4 py-2 rounded-xl font-bold hover:bg-blue-700 transition shadow-sm">دخول</a>
+                                            <button onclick="requestMakeupSession(2, 'الثلاثاء / Tuesday', '07:00 PM')" class="bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs px-3 py-2 rounded-xl font-bold transition shadow-sm cursor-pointer">اعتذار وتعويض 🔄</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Makeup Booking Box -->
+                        <div class="bg-amber-50/50 border border-amber-200 p-6 rounded-2xl">
+                            <h4 class="font-black text-amber-900 text-sm mb-2" data-ar="🔄 هل لديك رصيد تعويض وتريد حجز حصة بديلة الآن؟" data-en="🔄 Need to book a makeup class?" data-hi="🔄 क्या आप भरपाई कक्षा बुक करना चाहते हैं?">🔄 هل لديك رصيد تعويض وتريد حجز حصة بديلة الآن؟</h4>
+                            <p class="text-xs text-slate-600 mb-4" data-ar="اختر أحد الأوقات المتاحة لدى معلمك ليتم تسكين حصة التعويض فوراً بدون خصم من رصيدك الأساسي." data-en="Select an available time to auto-book your makeup class." data-hi="भरपाई कक्षा स्वतः बुक करने के लिए उपलब्ध समय चुनें।">اختر أحد الأوقات المتاحة لدى معلمك ليتم تسكين حصة التعويض فوراً بدون خصم من رصيدك الأساسي.</p>
+                            <button onclick="switchTab('booking')" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-black px-6 py-2.5 rounded-xl transition shadow-md hover-lift cursor-pointer">تصفح شبكة الحجوزات واختيار موعد التعويض ➡️</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: INTERACTIVE AUDIO LAB (NEW FEATURE) -->
+                <section id="sec-audiolab" class="tab-content hidden space-y-6">
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                        <div class="border-b border-slate-100 pb-4">
+                            <span class="bg-purple-100 text-purple-800 text-[10px] font-black px-3 py-1 rounded-full uppercase">ميزة حصرية 🎙️</span>
+                            <h3 class="text-xl font-black text-slate-800 mt-2" data-ar="معمل التلاوة والواجبات الصوتي التفاعلي" data-en="Interactive Audio Lab & Assignments" data-hi="इंटरएक्टिव ऑडियो लैब और असाइनमेंट">معمل التلاوة والواجبات الصوتي التفاعلي</h3>
+                            <p class="text-xs text-slate-500 mt-1 font-bold" data-ar="سجل قراءتك للآيات أو نطقك لمحادثة اللغة العربية، وأرسلها ليقوم المعلم بتقييمها ووضع النجوم." data-en="Record your recitation or pronunciation and send to your teacher for review." data-hi="अपनी तिलावत रिकॉर्ड करें और समीक्षा के लिए अपने शिक्षक को भेजें।">سجل قراءتك للآيات أو نطقك لمحادثة اللغة العربية، وأرسلها ليقوم المعلم بتقييمها ووضع النجوم.</p>
+                        </div>
+
+                        <!-- Recorder Box -->
+                        <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-xl flex flex-col items-center justify-center text-center relative overflow-hidden">
+                            <div class="w-16 h-16 rounded-full bg-red-500/20 border-2 border-red-500 flex items-center justify-center text-3xl mb-3" id="record-btn-icon">🎙️</div>
+                            <h4 class="font-black text-base" id="record-status-text" data-ar="اضغط للبدء في تسجيل التلاوة / الواجب" data-en="Click to Start Recording" data-hi="रिकॉर्डिंग शुरू करने के लिए क्लिक करें">اضغط للبدء في تسجيل التلاوة / الواجب</h4>
+                            <p class="text-xs text-slate-400 mt-1 font-mono" id="record-timer">00:00</p>
+
+                            <!-- Audio Wave Simulation -->
+                            <div class="flex gap-1.5 items-center justify-center h-8 my-4 opacity-30" id="audio-wave">
+                                <span class="w-1 h-3 bg-emerald-400 rounded-full"></span><span class="w-1 h-6 bg-emerald-400 rounded-full"></span><span class="w-1 h-8 bg-emerald-400 rounded-full"></span><span class="w-1 h-4 bg-emerald-400 rounded-full"></span><span class="w-1 h-7 bg-emerald-400 rounded-full"></span><span class="w-1 h-3 bg-emerald-400 rounded-full"></span><span class="w-1 h-5 bg-emerald-400 rounded-full"></span>
+                            </div>
+
+                            <div class="flex gap-3 w-full max-w-sm">
+                                <button type="button" onclick="toggleAudioRecord()" id="btn-record-action" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl text-xs font-black transition shadow-lg cursor-pointer">
+                                    🔴 <span data-ar="بدء التسجيل الآن" data-en="Start Recording" data-hi="रिकॉर्डिंग शुरू करें">بدء التسجيل الآن</span>
+                                </button>
+                                <button type="button" onclick="submitAudioAssignment()" id="btn-send-audio" disabled class="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white py-3 rounded-xl text-xs font-black transition shadow-lg cursor-pointer">
+                                    🚀 <span data-ar="إرسال للمعلم" data-en="Submit to Teacher" data-hi="शिक्षक को भेजें">إرسال للمعلم</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Previous Audio Submissions List -->
+                        <div>
+                            <h4 class="font-black text-slate-800 text-sm mb-4 border-b border-slate-100 pb-2" data-ar="📑 سجل الواجبات الصوتية وتقييم المعلم" data-en="📑 Previous Submissions & Feedback" data-hi="📑 पिछले सबमिशन और प्रतिक्रिया">📑 سجل الواجبات الصوتية وتقييم المعلم</h4>
+                            <div class="space-y-3" id="audio-submissions-list">
+                                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">مُقيّم ✔️</span>
+                                            <span class="text-xs font-black text-slate-800">تلاوة سورة الملك (الآيات 1-10)</span>
+                                        </div>
+                                        <p class="text-xs text-slate-600 mt-1">💡 رد المعلم: تلاوة ممتازة جداً ومخارج الحروف سليمة، بوركت!</p>
+                                    </div>
+                                    <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+                                        <span class="bg-amber-100 text-amber-800 text-xs font-black px-3 py-1 rounded-lg">⭐ +50 نجمة</span>
+                                        <button onclick="alert('جاري تشغيل المقطع الصوتي المُراجع... 🎧')" class="bg-white border border-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold shadow-xs hover:bg-slate-100 transition cursor-pointer">🎧 استماع</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SECTION 4: STAR REWARDS SHOP (NEW FEATURE) -->
+                <section id="sec-shop" class="tab-content hidden space-y-6">
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4 gap-4">
+                            <div>
+                                <h3 class="text-xl font-black text-slate-800" data-ar="🎁 متجر المكافآت ونظام التلعيب الأكاديمي" data-en="🎁 Star Rewards & Gamification Shop" data-hi="🎁 स्टार रिवार्ड्स और गेमिफिकेशन शॉप">🎁 متجر المكافآت ونظام التلعيب الأكاديمي</h3>
+                                <p class="text-xs text-slate-500 mt-1 font-bold" data-ar="استبدل النجوم التي كسبتها في الحصص والواجبات بهدايا قيمة ومصاحف وشهادات شرف." data-en="Redeem earned stars for badges, storybooks, and physical gifts." data-hi="उपहारों और प्रमाण पत्रों के लिए सितारों को भुनाएं।">استبدل النجوم التي كسبتها في الحصص والواجبات بهدايا قيمة ومصاحف وشهادات شرف.</p>
+                            </div>
+                            <div class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-5 py-2.5 rounded-2xl shadow-md shrink-0 flex items-center gap-2">
+                                <span class="text-xl">⭐</span>
+                                <div class="text-start">
+                                    <span class="text-[9px] uppercase tracking-widest block font-bold">رصيدك المتاح</span>
+                                    <span class="text-lg font-mono font-black" id="shop-stars-balance">450 نجمة</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shop Items Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="shop-items-grid">
+                            
+                            <!-- Item 1 -->
+                            <div class="border border-slate-200 rounded-2xl p-5 bg-slate-50 flex flex-col justify-between hover-lift transition">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 mx-auto bg-amber-100 rounded-2xl flex items-center justify-center text-3xl mb-3 shadow-inner">📖</div>
+                                    <h4 class="font-black text-slate-900 text-base">مصحف التجويد الملون (فاخر)</h4>
+                                    <p class="text-xs text-slate-500 mt-1 font-medium">يتم شحنه إلى عنوانك مباشرة من إدارة الأكاديمية هدية تفوقك.</p>
+                                </div>
+                                <div class="mt-5 pt-3 border-t border-slate-200/80 flex items-center justify-between">
+                                    <span class="font-mono font-black text-amber-700 bg-amber-100 px-3 py-1 rounded-lg text-xs">⭐ 300 نجمة</span>
+                                    <button onclick="redeemShopItem('مصحف التجويد الملون', 300)" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-black transition shadow-sm cursor-pointer">شراء بالمكافأة 🎁</button>
+                                </div>
+                            </div>
+
+                            <!-- Item 2 -->
+                            <div class="border border-slate-200 rounded-2xl p-5 bg-slate-50 flex flex-col justify-between hover-lift transition">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 mx-auto bg-blue-100 rounded-2xl flex items-center justify-center text-3xl mb-3 shadow-inner">🎟️</div>
+                                    <h4 class="font-black text-slate-900 text-base">حصة إضافية مجانية (100%)</h4>
+                                    <p class="text-xs text-slate-500 mt-1 font-medium">قسيمة لحضور حصة مراجعة أو تلاوة إضافية مع معلمك مجاناً.</p>
+                                </div>
+                                <div class="mt-5 pt-3 border-t border-slate-200/80 flex items-center justify-between">
+                                    <span class="font-mono font-black text-amber-700 bg-amber-100 px-3 py-1 rounded-lg text-xs">⭐ 200 نجمة</span>
+                                    <button onclick="redeemShopItem('حصة إضافية مجانية', 200)" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-black transition shadow-sm cursor-pointer">شراء بالمكافأة 🎁</button>
+                                </div>
+                            </div>
+
+                            <!-- Item 3 -->
+                            <div class="border border-slate-200 rounded-2xl p-5 bg-slate-50 flex flex-col justify-between hover-lift transition">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 mx-auto bg-purple-100 rounded-2xl flex items-center justify-center text-3xl mb-3 shadow-inner">👑</div>
+                                    <h4 class="font-black text-slate-900 text-base">شارة "فارس الأكاديمية" الذهبية</h4>
+                                    <p class="text-xs text-slate-500 mt-1 font-medium">شارة شرف رقمية تظهر بجانب اسمك في لوحة الشرف الرئيسية.</p>
+                                </div>
+                                <div class="mt-5 pt-3 border-t border-slate-200/80 flex items-center justify-between">
+                                    <span class="font-mono font-black text-amber-700 bg-amber-100 px-3 py-1 rounded-lg text-xs">⭐ 150 نجمة</span>
+                                    <button onclick="redeemShopItem('شارة فارس الأكاديمية', 150)" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-black transition shadow-sm cursor-pointer">شراء بالمكافأة 🎁</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 5: BOOKING GRID -->
+                <section id="sec-booking" class="tab-content hidden space-y-6">
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-100 pb-4 gap-4">
+                            <div>
+                                <h3 class="text-xl font-black text-slate-800" data-ar="📌 شبكة حجز المواعيد التفاعلية" data-en="📌 Interactive Booking Grid" data-hi="📌 इंटरएक्टिव बुकिंग ग्रिड">📌 شبكة حجز المواعيد التفاعلية</h3>
+                                <p class="text-xs text-slate-500 mt-1 font-bold" data-ar="الأوقات المعروضة بتوقيتك المحلي. اضغط على الموعد المتاح لطلب حجزه فوراً." data-en="Times displayed in local TZ. Click available slot to book." data-hi="स्थानीय समय क्षेत्र में प्रदर्शित। बुक करने के लिए उपलब्ध स्लॉट पर क्लिक करें।">الأوقات المعروضة بتوقيتك المحلي. اضغط على الموعد المتاح لطلب حجزه فوراً.</p>
+                            </div>
+                            <div class="flex gap-3 text-xs font-bold bg-slate-50 px-4 py-2 rounded-full border border-slate-200">
+                                <span class="flex items-center gap-1.5 text-emerald-600"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> <span data-ar="متاح للحجز" data-en="Available" data-hi="उपलब्ध">متاح للحجز</span></span>
+                                <span class="flex items-center gap-1.5 text-red-500"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> <span data-ar="محجوز" data-en="Booked" data-hi="बुक किया गया">محجوز</span></span>
+                            </div>
+                        </div>
+                        <div id="booking-grid-container" class="rounded-2xl overflow-hidden border border-slate-200 bg-white">
+                            <p class="text-xs text-slate-400 font-bold p-12 text-center">جاري تحميل أوقات المعلم...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 6: REPORTS -->
+                <section id="sec-reports" class="tab-content hidden space-y-6">
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                            <div>
+                                <h3 class="text-xl font-black text-slate-800" data-ar="📝 تقارير الأداء ومتابعة الحفظ" data-en="📝 Performance & Progress Reports" data-hi="📝 प्रदर्शन और प्रगति रिपोर्ट">📝 تقارير الأداء ومتابعة الحفظ</h3>
+                                <p class="text-xs text-slate-500 mt-1 font-bold" data-ar="سجل الحصص السابقة وملاحظات المعلم وتكليفات الحفظ والمراجعة." data-en="History of sessions, teacher feedback, and revision homework." data-hi="सत्रों का इतिहास, शिक्षक की प्रतिक्रिया और गृहकार्य।">سجل الحصص السابقة وملاحظات المعلم وتكليفات الحفظ والمراجعة.</p>
+                            </div>
+                            <button onclick="window.print()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm cursor-pointer" data-ar="🖨️ طباعة التقارير" data-en="🖨️ Print Reports" data-hi="🖨️ रिपोर्ट प्रिंट करें">🖨️ طباعة التقارير</button>
+                        </div>
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-start text-sm min-w-[600px]">
+                                <thead class="bg-slate-50 text-slate-500 font-bold">
+                                    <tr>
+                                        <th class="p-4 text-start rounded-r-xl" data-ar="التاريخ" data-en="Date" data-hi="तारीख">التاريخ</th>
+                                        <th class="p-4 text-center" data-ar="حالة الحضور" data-en="Status" data-hi="स्थिति">حالة الحضور</th>
+                                        <th class="p-4 text-start rounded-l-xl" data-ar="تقييم المعلم وملاحظات الحفظ والمراجعة" data-en="Teacher Evaluation & Notes" data-hi="शिक्षक मूल्यांकन और नोट्स">تقييم المعلم وملاحظات الحفظ والمراجعة</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reports-list" class="divide-y divide-slate-100 text-slate-700 font-medium">
+                                    <tr><td colspan="3" class="p-8 text-center text-slate-400 font-bold">جاري جلب التقارير...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 7: FINANCIALS -->
+                <section id="sec-financials" class="tab-content hidden space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-6 rounded-3xl shadow-md text-white">
+                            <p class="text-xs font-bold opacity-80" data-ar="باقة الاشتراك الشهرية" data-en="Monthly Plan" data-hi="मासिक योजना">باقة الاشتراك الشهرية</p>
+                            <p class="text-3xl font-black mt-2 font-mono" id="fin-plan">$150 / 10 حصص</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 p-6 rounded-3xl shadow-md text-white">
+                            <p class="text-xs font-bold opacity-80" data-ar="المبلغ المدفوع" data-en="Amount Paid" data-hi="भुगतान की गई राशि">المبلغ المدفوع</p>
+                            <p class="text-3xl font-black mt-2 font-mono" id="fin-paid">$150.00</p>
+                        </div>
+                        <div class="bg-slate-900 p-6 rounded-3xl shadow-md text-white">
+                            <p class="text-xs font-bold text-amber-400" data-ar="الرصيد المتبقي (حصص)" data-en="Sessions Left" data-hi="शेष सत्र">الرصيد المتبقي (حصص)</p>
+                            <p class="text-3xl font-black mt-2 font-mono text-amber-400" id="fin-left">8 حصص</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                            <h3 class="text-lg font-black text-slate-800" data-ar="🧾 سجل الفواتير والمستحقات" data-en="🧾 Invoices & Billing History" data-hi="🧾 चालान और बिलिंग इतिहास">🧾 سجل الفواتير والمستحقات</h3>
+                            <a href="https://wa.me/201000000000?text=اريد%20تجديد%20الاشتراك" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-black transition shadow-sm hover-lift flex items-center gap-1">
+                                💬 <span data-ar="تجديد الاشتراك عبر واتساب" data-en="Renew via WhatsApp" data-hi="व्हाट्सएप के माध्यम से नवीनीकरण करें">تجديد الاشتراك عبر واتساب</span>
+                            </a>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-start text-sm">
+                                <thead class="bg-slate-50 text-slate-500 font-bold">
+                                    <tr>
+                                        <th class="p-3 text-start" data-ar="رقم الفاتورة" data-en="Invoice #" data-hi="चालान संख्या">رقم الفاتورة</th>
+                                        <th class="p-3 text-center" data-ar="التاريخ" data-en="Date" data-hi="तारीख">التاريخ</th>
+                                        <th class="p-3 text-center" data-ar="المبلغ" data-en="Amount" data-hi="राशि">المبلغ</th>
+                                        <th class="p-3 text-center" data-ar="الحالة" data-en="Status" data-hi="स्थिति">الحالة</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-slate-700 font-medium">
+                                    <tr><td class="p-4 font-mono font-bold">INV-2026-089</td><td class="p-4 text-center">2026-07-01</td><td class="p-4 text-center font-mono font-bold text-emerald-600">$150.00</td><td class="p-4 text-center"><span class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-bold">مدفوع ✔️</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 8: EXAMS & CERTS -->
+                <section id="sec-exams" class="tab-content hidden space-y-6">
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                        <h3 class="text-xl font-black text-slate-800 border-b border-slate-100 pb-4" data-ar="🏆 سجل الاختبارات والشهادات التكريمية" data-en="🏆 Exams & Honorary Certificates" data-hi="🏆 परीक्षा और मानद प्रमाण पत्र">🏆 سجل الاختبارات والشهادات التكريمية</h3>
+                        <div id="exams-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-6 border border-slate-200 rounded-2xl bg-gradient-to-br from-white to-amber-50/30 flex flex-col justify-between hover-lift transition shadow-sm">
+                                <div>
+                                    <div class="flex justify-between items-start">
+                                        <span class="bg-amber-100 text-amber-800 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">شهادة إنجاز 🎖️</span>
+                                        <span class="text-xs text-slate-400 font-bold font-mono">2026-06-15</span>
+                                    </div>
+                                    <h4 class="font-black text-slate-900 text-lg mt-3" data-ar="إتمام حفظ واختبار جزء عمّ" data-en="Juz Amma Completion Exam" data-hi="जुज़ अम्मा पूर्णता परीक्षा">إتمام حفظ واختبار جزء عمّ</h4>
+                                    <p class="text-xs text-slate-600 font-bold mt-1" data-ar="التقييم: ممتاز بطلاقة | النسبة: 98%" data-en="Grade: Excellent | Score: 98%" data-hi="ग्रेड: उत्कृष्ट | स्कोर: 98%">التقييم: ممتاز بطلاقة | النسبة: 98%</p>
+                                </div>
+                                <button onclick="alert('تم تنزيل شهادة التكريم بنجاح!')" class="mt-6 bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl text-xs font-black transition cursor-pointer shadow-sm flex items-center justify-center gap-2">
+                                    📄 <span data-ar="تحميل شهادة الاختبار (PDF)" data-en="Download Certificate (PDF)" data-hi="प्रमाण पत्र डाउनलोड करें">تحميل شهادة الاختبار (PDF)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 9: RESOURCES -->
+                <section id="sec-resources" class="tab-content hidden space-y-6">
+                    <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                        <h3 class="text-xl font-black text-slate-800 border-b border-slate-100 pb-4" data-ar="📚 المكتبة الرقمية والمناهج الدراسية" data-en="📚 Digital Library & Curriculum" data-hi="📚 डिजिटल लाइब्रेरी और पाठ्यक्रम">📚 المكتبة الرقمية والمناهج الدراسية</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover-lift transition">
+                                <div><span class="text-[10px] font-black text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-md uppercase">PDF</span><h4 class="font-black text-slate-800 mt-3 text-base">كتاب نور البيان</h4></div>
+                                <a href="#" class="mt-4 text-center bg-white hover:bg-emerald-600 hover:text-white border border-slate-200 text-xs font-bold py-2 rounded-xl transition shadow-xs block">تصفح الكتاب 📖</a>
+                            </div>
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover-lift transition">
+                                <div><span class="text-[10px] font-black text-blue-700 bg-blue-100 px-2.5 py-1 rounded-md uppercase">PDF</span><h4 class="font-black text-slate-800 mt-3 text-base">العربية بين يديك (كتاب 1)</h4></div>
+                                <a href="#" class="mt-4 text-center bg-white hover:bg-blue-600 hover:text-white border border-slate-200 text-xs font-bold py-2 rounded-xl transition shadow-xs block">تصفح الكتاب 📖</a>
+                            </div>
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover-lift transition">
+                                <div><span class="text-[10px] font-black text-purple-700 bg-purple-100 px-2.5 py-1 rounded-md uppercase">APP</span><h4 class="font-black text-slate-800 mt-3 text-base">المصحف المعلم والتجويد المصور</h4></div>
+                                <a href="https://quran.ksu.edu.sa" target="_blank" class="mt-4 text-center bg-white hover:bg-purple-600 hover:text-white border border-slate-200 text-xs font-bold py-2 rounded-xl transition shadow-xs block">فتح التطبيق 🌐</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Toasts Container -->
+    <div id="toast-container" class="fixed bottom-6 left-6 space-y-3 z-[150] flex flex-col items-start pointer-events-none"></div>
+
+    <script>
+        const htmlTag = document.getElementById('html-tag');
+        const langSwitcher = document.getElementById('lang-switcher');
+        let currentLang = "ar";
+
+        // ================= Supabase Connection =================
+        const SUPABASE_URL = "https://cnfykoxjwxujrsxvjdud.supabase.co"; 
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuZnlrb3hqd3h1anJzeHZqZHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NTIzOTcsImV4cCI6MjEwMDAyODM5N30.kLEmrA3XPIhgtwMw5bMkJhCH-Q8LP4ygyNKcnr265i4";
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let currentStudentId = null;
+        let studentData = null;
+        let teacherData = null;
+        let isRecording = false;
+        let recordInterval = null;
+        let recordSeconds = 0;
+        let starBalance = 450;
+        let makeupTokens = 1;
+
+        // 👨‍👩‍👧‍👦 قاعدة محاكاة الأبناء لحساب العائلة
+        const familyMembers = {
+            "s1": { id: "s1", name: "يوسف أحمد عبد الله", subject_ar: "قرآن وتجويد (الجزء 30)", subject_en: "Quran & Tajweed (Juz 30)", subject_hi: "कुरान और ताजवीद (जुज़ 30)", level_ar: "المستوى الثاني", level_en: "Level 2", level_hi: "स्तर 2", remaining: 8, last_no: 12, stars: 450, makeup: 1, avatar: "https://ui-avatars.com/api/?name=Yousef&background=1e40af&color=fff&size=150" },
+            "s2": { id: "s2", name: "عائشة أحمد عبد الله", subject_ar: "العربية بين يديك (كتاب 1)", subject_en: "Arabic Between Hands (Bk 1)", subject_hi: "अरबी भाषा (पुस्तक 1)", level_ar: "المستوى الأول", level_en: "Level 1", level_hi: "स्तर 1", remaining: 4, last_no: 6, stars: 280, makeup: 0, avatar: "https://ui-avatars.com/api/?name=Aisha&background=047857&color=fff&size=150" },
+            "s3": { id: "s3", name: "عمر أحمد عبد الله", subject_ar: "نور البيان والقراءة العربية", subject_en: "Noor Al-Bayan Reading", subject_hi: "नूर अल-बयान और पढ़ना", level_ar: "تأسيس مبتدئ", level_en: "Foundation", level_hi: "बुनियादी स्तर", remaining: 10, last_no: 2, stars: 120, makeup: 2, avatar: "https://ui-avatars.com/api/?name=Omar&background=d97706&color=fff&size=150" }
+        };
+
+        function showToast(msg, type='info') {
+            const container = document.getElementById('toast-container');
+            if(!container) return;
+            const t = document.createElement('div');
+            const color = type === 'info' ? 'bg-blue-600' : (type === 'warning' ? 'bg-amber-600' : 'bg-emerald-600');
+            t.className = `p-4 rounded-2xl text-white text-sm font-bold shadow-2xl flex items-center gap-2 ${color} transition-all duration-500 transform translate-y-10 opacity-0`;
+            t.innerHTML = `<span>${type==='info'?'🔔':(type==='warning'?'⚠️':'✅')}</span> ${msg}`;
+            container.appendChild(t);
+            setTimeout(() => t.classList.remove('translate-y-10', 'opacity-0'), 50);
+            setTimeout(() => { t.classList.add('opacity-0', 'translate-y-10'); setTimeout(()=>t.remove(), 500); }, 4000);
+        }
+
+        window.onload = async () => {
+            initPage();
+            await initStudentApp();
+            updateClock();
+            setInterval(updateClock, 1000);
+            startSessionCountdown();
+            setInterval(startSessionCountdown, 1000);
+        };
+
+        async function initStudentApp() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (user) currentStudentId = user.id;
+
+            // البدء بالابن الأول كافتراضي
+            switchFamilyMember("s1");
+
+            // جلب أول معلم نشط كافتراضي
+            let { data: tList } = await supabaseClient.from('teachers').select('*').eq('status', 'active').limit(1);
+            if(tList && tList.length > 0) { teacherData = tList[0]; renderTeacherInfo(); }
+            else { teacherData = { name_ar: "الشيخ محمود عبد الله", zoom_link: "https://zoom.us" }; renderTeacherInfo(); }
+
+            fetchReports();
+            fetchStudentNotifications();
+            renderBookingGrid();
+
+            // الاستماع الحي للإشعارات
+            supabaseClient.channel('student_realtime_notifs')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'student_notifications' }, payload => {
+                    const n = payload.new;
+                    showToast(`إشعار جديد: ${n.title}`, 'info');
+                    fetchStudentNotifications();
+                }).subscribe();
+        }
+
+        // ================= 👨‍👩‍👧‍👦 محرك تبديل الأبناء (Family Switcher) =================
+        window.switchFamilyMember = function(memberId) {
+            const member = familyMembers[memberId] || familyMembers["s1"];
+            studentData = member;
+            starBalance = member.stars;
+            makeupTokens = member.makeup;
+            
+            const isAr = currentLang === 'ar';
+            const isHi = currentLang === 'hi';
+
+            document.getElementById('student-name').innerText = member.name;
+            if(member.avatar) document.getElementById('student-avatar').src = member.avatar;
+            
+            let sName = isHi ? member.subject_hi : (isAr ? member.subject_ar : member.subject_en);
+            document.getElementById('student-course').innerText = `📚 ${sName}`;
+            
+            let lName = isHi ? member.level_hi : (isAr ? member.level_ar : member.level_en);
+            document.getElementById('student-level').innerText = `${isHi?'स्तर:':(isAr?'المستوى:':'Level:')} ${lName}`;
+            
+            document.getElementById('stat-remaining').innerText = member.remaining;
+            document.getElementById('stat-session-no').innerText = member.last_no + 1;
+            
+            // تحديث أرصدة النجوم والتعويض
+            const starsBadge = document.getElementById('hero-stars-count');
+            if(starsBadge) starsBadge.innerText = isHi ? `रिवार्ड्स बैलेंस: ${starBalance} सितारे` : (isAr ? `رصيد المكافآت: ${starBalance} نجمة` : `Rewards Balance: ${starBalance} Stars`);
+            
+            const shopStars = document.getElementById('shop-stars-balance');
+            if(shopStars) shopStars.innerText = `${starBalance} ${isHi?'सितारे':(isAr?'نجمة':'Stars')}`;
+            
+            const makeupBadge = document.getElementById('makeup-tokens-count');
+            if(makeupBadge) makeupBadge.innerText = `${makeupTokens} ${isHi?'भरपाई टोकन':(isAr?'حصة تعويض':'Makeup Token')}`;
+
+            showToast(isHi ? `पोर्टल पर स्विच किया गया: ${member.name}` : (isAr ? `تم التبديل إلى ملف الطالب: ${member.name}` : `Switched to student: ${member.name}`), 'success');
+            fetchReports();
+        };
+
+        // ================= 🔄 نظام التعويض الآلي (Smart Reschedule/Makeup) =================
+        window.requestMakeupSession = function(classId, dayName, timeStr) {
+            const isAr = currentLang === 'ar';
+            const isHi = currentLang === 'hi';
+            let msg = isHi ? `क्या आप ${dayName} ${timeStr} की कक्षा रद्द करके भरपाई टोकन प्राप्त करना चाहते हैं?` : (isAr ? `هل أنت متأكد من الاعتذار عن حصة يوم ${dayName} الساعة ${timeStr}؟\nسيتم إضافة (1 حصة تعويض) لرصيدك لتختار موعد بديل.` : `Cancel class on ${dayName} at ${timeStr} and receive 1 Makeup Token to rebook?`);
+            
+            if(confirm(msg)) {
+                makeupTokens++;
+                const makeupBadge = document.getElementById('makeup-tokens-count');
+                if(makeupBadge) makeupBadge.innerText = `${makeupTokens} ${isHi?'भरपाई टोकन':(isAr?'حصة تعويض':'Makeup Token')}`;
+                
+                const row = document.getElementById(`row-class-${classId}`);
+                if(row) {
+                    row.innerHTML = `<td colspan="4" class="p-4 text-center bg-amber-50 text-amber-800 font-bold text-xs">⚠️ ${isHi?'कक्षा रद्द कर दी गई है। 1 भरपाई टोकन जोड़ा गया।':(isAr?'تم الاعتذار عن هذه الحصة وإضافة رصيد التعويض. يمكنك حجز موعد بديل الآن.':'Class cancelled. Makeup token added.')}</td>`;
+                }
+                showToast(isHi ? '✅ 1 भरपाई टोकन जोड़ा गया!' : (isAr ? '✅ تم إضافة 1 رصيد تعويض لحسابك!' : '✅ 1 Makeup token added!'), 'success');
+            }
+        };
+
+        window.requestMakeupFromHero = function() {
+            requestMakeupSession(1, "السبت", "07:00 PM");
+        };
+
+        // ================= 🎙️ معمل التلاوة والواجبات الصوتي (Interactive Audio Lab) =================
+        window.toggleAudioRecord = function() {
+            const btn = document.getElementById('btn-record-action');
+            const icon = document.getElementById('record-btn-icon');
+            const status = document.getElementById('record-status-text');
+            const wave = document.getElementById('audio-wave');
+            const sendBtn = document.getElementById('btn-send-audio');
+            const timerEl = document.getElementById('record-timer');
+            
+            const isAr = currentLang === 'ar';
+            const isHi = currentLang === 'hi';
+
+            if(!isRecording) {
+                isRecording = true;
+                recordSeconds = 0;
+                btn.classList.add('recording-active');
+                btn.innerHTML = `⏹️ <span>${isHi?'रिकॉर्डिंग रोकें':(isAr?'إيقاف التسجيل الآن':'Stop Recording')}</span>`;
+                icon.innerText = "🔴";
+                status.innerText = isHi ? "रिकॉर्डिंग जारी है... अपनी तिलावत पढ़ें" : (isAr ? "جاري التسجيل الآن... ابدأ في تلاوة الآيات" : "Recording in progress... Start reciting");
+                wave.classList.replace('opacity-30', 'opacity-100');
+                sendBtn.disabled = true;
+                
+                recordInterval = setInterval(() => {
+                    recordSeconds++;
+                    let m = Math.floor(recordSeconds / 60).toString().padStart(2, '0');
+                    let s = (recordSeconds % 60).toString().padStart(2, '0');
+                    if(timerEl) timerEl.innerText = `${m}:${s}`;
+                }, 1000);
+            } else {
+                isRecording = false;
+                clearInterval(recordInterval);
+                btn.classList.remove('recording-active');
+                btn.innerHTML = `🔴 <span>${isHi?'पुनः रिकॉर्ड करें':(isAr?'إعادة التسجيل':'Record Again')}</span>`;
+                icon.innerText = "🎧";
+                status.innerText = isHi ? "रिकॉर्डिंग पूरी हुई! समीक्षा के लिए भेजें" : (isAr ? "تم إيقاف التسجيل جاهز للإرسال!" : "Recording ready! Submit below");
+                wave.classList.replace('opacity-100', 'opacity-30');
+                sendBtn.disabled = false;
+                showToast(isHi ? '🎙️ रिकॉर्डिंग सफल!' : (isAr ? '🎙️ تم حفظ التسجيل الصوتي بنجاح.' : '🎙️ Audio recorded!'), 'info');
+            }
+        };
+
+        window.submitAudioAssignment = function() {
+            const isAr = currentLang === 'ar';
+            const isHi = currentLang === 'hi';
+            const list = document.getElementById('audio-submissions-list');
+            const timerEl = document.getElementById('record-timer');
+            const duration = timerEl ? timerEl.innerText : "00:45";
+            
+            const html = `
+                <div class="p-4 rounded-xl border border-blue-200 bg-blue-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 animate-fadeIn">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">${isHi?'समीक्षा की प्रतीक्षा में ⏳':(isAr?'قيد المراجعة ⏳':'Pending Review ⏳')}</span>
+                            <span class="text-xs font-black text-slate-800">${isHi?'नई ध्वनि रिकॉर्डिंग':(isAr?'تلاوة واجب صوتي حديث':'New Audio Recitation')} (${duration})</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1 font-medium">${isHi?'शिक्षक जल्द ही सुनेंगे और सितारे देंगे।':(isAr?'سيقوم المعلم بالاستماع ووضع التقييم والنجوم قريباً.':'Teacher will review and award stars soon.')}</p>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <span class="text-xs font-bold text-slate-400 font-mono">${new Date().toLocaleDateString(isHi?'hi-IN':(isAr?'ar-EG':'en-US'))}</span>
+                    </div>
+                </div>
+            `;
+            if(list) list.insertAdjacentHTML('afterbegin', html);
+            document.getElementById('btn-send-audio').disabled = true;
+            showToast(isHi ? '🚀 असाइनमेंट शिक्षक को भेजा गया!' : (isAr ? '🚀 تم إرسال الواجب الصوتي للمعلم بنجاح!' : '🚀 Audio assignment sent!'), 'success');
+        };
+
+        // ================= 🎁 متجر المكافآت ونظام التلعيب (Gamification Star Shop) =================
+        window.redeemShopItem = function(itemName, cost) {
+            const isAr = currentLang === 'ar';
+            const isHi = currentLang === 'hi';
+            
+            if(starBalance < cost) {
+                alert(isHi ? `क्षमा करें! आपके पास पर्याप्त सितारे नहीं हैं। आपको ${cost} सितारों की आवश्यकता है।` : (isAr ? `عفواً! رصيد نجومك لا يكفي. تحتاج إلى ${cost} نجمة لإتمام الشراء.` : `Sorry! You need ${cost} stars to redeem this item.`));
+                return;
+            }
+
+            if(confirm(isHi ? `क्या आप ${cost} सितारों के बदले "${itemName}" खरीदना चाहते हैं?` : (isAr ? `تأكيد استبدال (${cost} نجمة) للحصول على "${itemName}"؟` : `Redeem "${itemName}" for ${cost} stars?`))) {
+                starBalance -= cost;
+                
+                const starsBadge = document.getElementById('hero-stars-count');
+                if(starsBadge) starsBadge.innerText = isHi ? `रिवार्ड्स बैलेंस: ${starBalance} सितारे` : (isAr ? `رصيد المكافآت: ${starBalance} نجمة` : `Rewards Balance: ${starBalance} Stars`);
+                
+                const shopStars = document.getElementById('shop-stars-balance');
+                if(shopStars) shopStars.innerText = `${starBalance} ${isHi?'सितारे':(isAr?'نجمة':'Stars')}`;
+
+                showToast(isHi ? '🎁 बधाई हो! पुरस्कार खरीद लिया गया है।' : (isAr ? '🎁 مبروك! تم شراء المكافأة وإرسال طلب الشحن للإدارة.' : '🎁 Award redeemed successfully!'), 'success');
+            }
+        };
+
+        // ================= 🤖 رادار التنبيهات الآلية عبر واتساب (WhatsApp Webhook Radar) =================
+        window.testWhatsAppWebhook = function() {
+            const isAr = currentLang === 'ar';
+            const isHi = currentLang === 'hi';
+            showToast(isHi ? '📡 व्हाट्सएप रडार का परीक्षण किया जा रहा है...' : (isAr ? '📡 جاري فحص رادار التنبيهات وإرسال رسالة تجريبية...' : '📡 Testing WhatsApp Radar...'), 'info');
+            
+            setTimeout(() => {
+                let msg = isHi ? 
+                    "*🤖 अल-वादी अकादमी रडार सूचना*\n\nप्रिय अभिभावक, यह एक स्वचालित व्हाट्सएप परीक्षण है। आपका छात्र सक्रिय है। धन्यवाद!" :
+                    (isAr ? "*🤖 تنبيه رادار أكاديمية الوادي الآلي*\n\nعزيزي ولي الأمر، هذا فحص تلقائي لربط الواتساب. ملف ابنكم يعمل بسلاسة وموعد الحصة القادمة مؤكد. شكراً لثقتكم!" :
+                    "*🤖 Al-Wadi Academy Radar Alert*\n\nDear Parent, this is an automated WhatsApp alert test. Your student account is active and scheduled. Thank you!");
+                
+                window.open(`https://wa.me/201000000000?text=${encodeURIComponent(msg)}`, '_blank');
+            }, 1000);
+        };
+
+        function renderTeacherInfo() {
+            const isAr = currentLang === 'ar';
+            const isHi = currentLang === 'hi';
+            if(teacherData) {
+                let tName = isAr ? teacherData.name_ar : (teacherData.name_en || teacherData.name_ar);
+                document.getElementById('teacher-name').innerText = `${teacherData.title || (isHi?'शिक्षक':'الشيخ')} / ${tName}`;
+                const zoomBtn = document.getElementById('zoom-link');
+                if(teacherData.zoom_link) {
+                    zoomBtn.href = teacherData.zoom_link;
+                    zoomBtn.classList.remove('opacity-50', 'pointer-events-none');
+                } else {
+                    zoomBtn.href = "#";
+                    zoomBtn.classList.add('opacity-50', 'pointer-events-none');
+                }
+            }
+        }
+
+        function startSessionCountdown() {
+            const countEl = document.getElementById('session-countdown');
+            if(!countEl) return;
+            let hours = 2; let mins = 15; let secs = Math.floor(Math.random() * 59);
+            countEl.innerText = `${hours.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+        }
+
+        async function fetchReports() {
+            const isAr = currentLang === 'ar';
+            const isHi = currentLang === 'hi';
+            const tbody = document.getElementById('reports-list');
+            if(!tbody) return;
+
+            let reports = [
+                { date: "2026-07-20", status: "present", notes: isHi ? "कुरान याद करने में उत्कृष्ट प्रदर्शन। गृहकार्य: सूरह अल-मुल्क।" : (isAr ? "أداء ممتاز في الحفظ، ومراجعة الماضي جيدة جداً. الواجب: سورة الملك." : "Excellent memorization. Homework: Surah Al-Mulk.") },
+                { date: "2026-07-18", status: "present", notes: isHi ? "ताजवीद नियमों पर अधिक ध्यान देने की आवश्यकता है।" : (isAr ? "يحتاج إلى التركيز على أحكام الإخفاء الحقيقي." : "Needs focus on Tajweed rules.") }
+            ];
+
+            tbody.innerHTML = reports.map(r => {
+                let sBadge = ""; 
+                if(r.status==='present' || r.status==='حاضر') sBadge=`<span class="text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider">${isHi?'उपस्थित ✔️':(isAr?'حاضر ✔️':'Present')}</span>`; 
+                else if(r.status.includes('unexcused')) sBadge=`<span class="text-red-700 bg-red-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider">${isHi?'अनुपस्थित ❌':(isAr?'غائب ❌':'Absent')}</span>`; 
+                else sBadge=`<span class="text-amber-700 bg-amber-100 px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider">${isHi?'क्षमा ⚠️':(isAr?'معتذر ⚠️':'Excused')}</span>`;
+                
+                return `<tr class="hover:bg-slate-50 transition">
+                    <td class="p-4 font-mono text-xs font-bold">${r.date || ''}</td>
+                    <td class="p-4 text-center">${sBadge}</td>
+                    <td class="p-4 text-xs font-medium text-slate-600 leading-relaxed">${r.notes || '-'}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        async function fetchStudentNotifications() {
+            const isAr = currentLang === 'ar';
+            const isHi = currentLang === 'hi';
+            const listEl = document.getElementById('student-notifications');
+            if(!listEl) return;
+            
+            let notifs = [
+                { title: isHi ? "नवीनीकरण अनुस्मारक ⚠️" : (isAr ? "تذكير بتجديد الاشتراك" : "Renewal Reminder"), body: isHi ? "आपके वर्तमान पैकेज में केवल 2 सत्र बचे हैं। कृपया नवीनीकरण करें।" : (isAr ? "عزيزي ولي الأمر، يرجى العلم أنه يتبقى حصتان فقط في رصيدكم الحالي. نرجو التجديد لضمان استمرار الحصص." : "Only 2 sessions remaining in your plan. Please renew."), type: "warning", created_at: new Date().toISOString() },
+                { title: isHi ? "बधाई हो! 🌟" : (isAr ? "تهنئة وتكريم 🌟" : "Congratulations! 🌟"), body: isHi ? "अकादमी छात्र को जुज़ अम्मा पूरा करने पर बधाई देती है।" : (isAr ? "تتقدم الأكاديمية بخالص التهاني للطالب على إتمام جزء عم بتفوق." : "Al-Wadi Academy congratulates the student on completing Juz Amma."), type: "success", created_at: new Date().toISOString() }
+            ];
+
+            listEl.innerHTML = notifs.map(n => {
+                let color = n.type === 'info' ? 'blue' : (n.type === 'warning' ? 'amber' : 'emerald'); 
+                let d = new Date(n.created_at).toLocaleDateString(isHi ? 'hi-IN' : (isAr ? 'ar-EG' : 'en-US'));
+                return `<div class="bg-white p-3.5 rounded-2xl border border-${color}-100 shadow-sm border-r-4 border-r-${color}-500 transition hover:bg-slate-50">
+                            <div class="flex justify-between items-center mb-1">
+                                <h4 class="font-bold text-${color}-800 text-xs">${n.title}</h4>
+                                <span class="text-[9px] text-slate-400 font-bold">${d}</span>
+                            </div>
+                            <p class="text-[11px] text-slate-600 leading-relaxed font-medium">${n.body}</p>
+                        </div>`;
+            }).join('');
+        }
+
+        function renderBookingGrid() {
+            const container = document.getElementById('booking-grid-container');
+            if(!container) return;
+
+            const daysAr = ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
+            const daysEn = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+            const daysHi = ["शनि", "रवि", "सोम", "मंगल", "बुध", "गुरु", "शुक्र"];
+            let hours = ["04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM", "08:00 PM"];
+
+            let html = `<div class="overflow-x-auto custom-scrollbar"><table class="w-full min-w-[700px] border-collapse text-center text-sm">`;
+            html += `<thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-100"><tr><th class="p-3 sticky right-0 bg-slate-50 z-10 w-24">${currentLang==='hi'?'समय':(currentLang==='ar'?'الوقت':'Time')}</th>`;
+            for(let d=0; d<7; d++) { 
+                let dName = currentLang==='hi' ? daysHi[d] : (currentLang==='ar' ? daysAr[d] : daysEn[d]);
+                html += `<th class="p-3 w-28">${dName}</th>`; 
+            }
+            html += `</tr></thead><tbody class="divide-y divide-slate-100">`;
+
+            hours.forEach((time, hIndex) => {
+                html += `<tr class="hover:bg-slate-50 transition">`;
+                html += `<td class="p-2.5 font-mono font-black text-slate-700 sticky right-0 bg-white/95 backdrop-blur-sm shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]" dir="ltr">${time}</td>`;
+                for(let d=0; d<7; d++) {
+                    let isBooked = (hIndex === 1 && d === 2) || (hIndex === 3 && d === 4); 
+                    if (isBooked) {
+                        html += `<td class="p-1.5"><div class="w-full bg-red-50 text-red-600 py-2 rounded-xl font-bold text-[11px] cursor-not-allowed border border-red-100">${currentLang==='hi'?'बुक':(currentLang==='ar'?'محجوز ❌':'Booked ❌')}</div></td>`;
+                    } else {
+                        let btnText = currentLang==='hi' ? 'बुक करें ✔️' : (currentLang==='ar' ? 'احجز ✔️' : 'Book ✔️');
+                        html += `<td class="p-1.5"><button onclick="requestSlot('${d}', '${time}')" class="w-full bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white border border-emerald-200 py-2 rounded-xl font-black text-[11px] transition cursor-pointer shadow-sm hover-lift">${btnText}</button></td>`;
+                    }
+                }
+                html += `</tr>`;
+            });
+            html += `</tbody></table></div>`;
+            container.innerHTML = html;
+        }
+
+        window.requestSlot = function(dayIdx, time) {
+            const isAr = currentLang === 'ar';
+            const isHi = currentLang === 'hi';
+            let msg = isHi ? `क्या आप ${time} बजे स्लॉट बुक करना चाहते हैं?` : (isAr ? `تأكيد طلب حجز موعد الساعة ${time}؟\nسيتم إرسال الطلب للإدارة للموافقة.` : `Confirm booking request at ${time}?`);
+            if(confirm(msg)) {
+                showToast(isHi ? '⏳ अनुरोध व्यवस्थापक को भेजा गया।' : (isAr ? '⏳ تم إرسال الطلب للإدارة بنجاح.' : '⏳ Request sent to Admin.'), 'success');
+            }
+        };
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(s => { s.classList.add('hidden'); s.classList.remove('active'); });
+            document.querySelectorAll('#sidebar-nav button').forEach(b => { b.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer"; });
+            
+            let sec = document.getElementById(`sec-${tabId}`);
+            if(sec) {
+                sec.classList.remove('hidden'); sec.classList.add('active');
+                const btn = document.getElementById(`nav-${tabId}`);
+                if(btn) {
+                    btn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold theme-bg text-white transition shadow-sm cursor-pointer";
+                }
+            }
+        }
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('alwadi-student-dark', document.documentElement.classList.contains('dark'));
+            document.getElementById('dark-mode-btn').innerText = document.documentElement.classList.contains('dark') ? "☀️" : "🌙";
+        }
+
+        function applyLanguage(lang) {
+            currentLang = lang;
+            htmlTag.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+            htmlTag.setAttribute('lang', lang);
+            
+            document.querySelectorAll(`[data-${lang}]`).forEach(el => { 
+                el.innerText = el.getAttribute(`data-${lang}`); 
+            });
+            
+            updateClock();
+            if(studentData) switchFamilyMember(studentData.id || "s1");
+            if(teacherData) renderTeacherInfo();
+            fetchReports();
+            fetchStudentNotifications();
+            renderBookingGrid();
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const locale = currentLang === 'hi' ? 'hi-IN' : (currentLang === 'ar' ? 'ar-EG' : 'en-US');
+            const hLocale = (currentLang === 'ar' ? 'ar-EG' : 'en-US') + '-u-ca-islamic-umalqura';
+            
+            const gDate = now.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'short' });
+            const hDate = now.toLocaleDateString(hLocale, { day: 'numeric', month: 'short' });
+            
+            const liveDateEl = document.getElementById('live-date');
+            if(liveDateEl) {
+                if(currentLang === 'hi') liveDateEl.innerText = `${gDate} | हिजरी: ${hDate}`;
+                else if(currentLang === 'ar') liveDateEl.innerText = `${gDate} م | ${hDate} هـ`;
+                else liveDateEl.innerText = `${gDate} | ${hDate} AH`;
+            }
+
+            const clockEl = document.getElementById('clock-display');
+            if(clockEl) {
+                clockEl.innerText = now.toLocaleTimeString(locale, { hour: '2-digit', minute:'2-digit', second:'2-digit', hour12: true });
+            }
+        }
+
+        function initPage() {
+            if(localStorage.getItem('alwadi-student-dark') === 'true') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('dark-mode-btn').innerText = "☀️";
+            }
+            const savedLang = localStorage.getItem('alwadi-student-lang') || 'ar';
+            document.getElementById('lang-switcher').value = savedLang;
+            applyLanguage(savedLang);
+        }
+
+        langSwitcher.addEventListener('change', (e) => { 
+            localStorage.setItem('alwadi-student-lang', e.target.value);
+            applyLanguage(e.target.value); 
+        });
+
+        async function logout() { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }
+    </script>
+</body>
+</html>

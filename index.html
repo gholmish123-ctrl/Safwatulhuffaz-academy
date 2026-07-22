@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-tag">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الأكاديمية | أكاديمية الوادي</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Tajawal', sans-serif; }
+        .font-calligraphy { font-family: 'Amiri', serif; }
+        @keyframes marquee {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .animate-marquee {
+            animation: marquee 25s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col h-screen overflow-hidden">
+
+    <div class="w-full bg-emerald-800 text-emerald-50 py-2 shadow-sm text-sm font-medium overflow-hidden whitespace-nowrap relative z-50">
+        <div class="inline-block animate-marquee text-lg">
+            ﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ﴿ يَرْفَعِ اللَّهُ الَّذِينَ آمَنُوا مِنكُمْ وَالَّذِينَ أُوتُوا الْعِلْمَ دَرَجَاتٍ ﴾
+        </div>
+    </div>
+
+    <div class="flex-1 flex flex-col items-center justify-center p-4 gap-4">
+        
+        <div class="text-center bg-white border border-emerald-100 px-6 py-2 rounded-full shadow-sm max-w-md w-full">
+            <span id="live-date" class="font-calligraphy text-xl font-bold text-emerald-800 tracking-wide"></span>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md border border-gray-100 relative">
+            
+            <div class="absolute top-4 left-4 right-auto rtl:left-auto rtl:right-4 z-10">
+                <select id="lang-switcher" class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-lg px-2 py-1 font-semibold focus:outline-none cursor-pointer">
+                    <option value="ar">العربية</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col items-center mb-6 mt-2">
+                <div class="bg-white p-1 rounded-full border border-emerald-100 shadow-md mb-2 w-20 h-20 flex items-center justify-center overflow-hidden">
+                    <img src="logo.png" alt="Academy Logo" class="w-full h-full object-contain">
+                </div>
+                <span id="txt-logo-sub" class="text-xs text-emerald-800 font-bold tracking-widest bg-emerald-50/50 px-3 py-0.5 rounded-full border border-emerald-100/50">AL-WADI ACADEMY</span>
+            </div>
+
+            <div id="error-msg" class="hidden bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4 text-center font-bold"></div>
+            <div id="success-msg" class="hidden bg-emerald-50 text-emerald-600 p-3 rounded-lg text-sm mb-4 text-center font-bold"></div>
+
+            <div id="login-section">
+                <div class="text-center mb-6">
+                    <h1 id="txt-portal-title" class="text-2xl font-bold text-emerald-800">بوابة الأكاديمية التعليمية</h1>
+                    <p id="txt-portal-subtitle" class="text-gray-500 text-sm mt-1">مرحباً بك، يرجى تسجيل الدخول للمتابعة</p>
+                </div>
+
+                <form id="login-form" autocomplete="off">
+                    <div class="mb-4">
+                        <label id="lbl-email" class="block text-gray-700 text-sm font-semibold mb-2">البريد الإلكتروني</label>
+                        <input type="email" id="email" required autocomplete="off" placeholder="name@academy.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-start">
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <label id="lbl-password" class="text-gray-700 text-sm font-semibold">كلمة المرور</label>
+                            <button type="button" id="btn-forgot-password" class="text-xs text-emerald-600 hover:underline focus:outline-none cursor-pointer">نسيت كلمة السر؟</button>
+                        </div>
+                        <div class="relative">
+                            <input type="password" id="password" required autocomplete="new-password" placeholder="••••••••" class="w-full px-4 py-2 pe-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-start">
+                            <button type="button" id="toggle-password" class="absolute inset-y-0 end-0 flex items-center pe-3 text-gray-400 hover:text-emerald-700 focus:outline-none cursor-pointer">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btn-login-submit" class="w-full h-10 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg transition duration-200 flex items-center justify-center cursor-pointer">
+                        تسجيل الدخول
+                    </button>
+                </form>
+            </div>
+
+            <div id="forgot-section" class="hidden">
+                <div class="text-center mb-6">
+                    <h1 class="text-xl font-bold text-emerald-800" id="forgot-title">استعادة كلمة المرور</h1>
+                    <p class="text-gray-500 text-sm mt-1" id="forgot-desc">أدخل بريدك الإلكتروني لإرسال كود التحقيق</p>
+                </div>
+
+                <form id="forgot-step1-form" autocomplete="off">
+                    <div class="mb-4">
+                        <label id="lbl-reset-email" class="block text-gray-700 text-sm font-semibold mb-2">البريد الإلكتروني للحساب</label>
+                        <input type="email" id="reset-email" required autocomplete="off" placeholder="name@academy.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-start">
+                    </div>
+                    <button type="submit" id="btn-send-code" class="w-full h-10 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg transition flex items-center justify-center cursor-pointer">
+                        أرسل كود التحقيق
+                    </button>
+                </form>
+
+                <form id="forgot-step2-form" class="hidden" autocomplete="off">
+                    <div class="mb-4">
+                        <label id="lbl-code-input" class="block text-gray-700 text-sm font-semibold mb-2">كود التحقيق (8 رموز/أرقام)</label>
+                        <input type="text" id="reset-code" required autocomplete="off" placeholder="12345678" maxlength="8" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center font-mono text-xl tracking-widest focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                    <button type="submit" id="btn-confirm-code" class="w-full h-10 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg transition flex items-center justify-center cursor-pointer">
+                        تأكيد الكود
+                    </button>
+                </form>
+
+                <form id="forgot-step3-form" class="hidden" autocomplete="off">
+                    <div class="mb-4">
+                        <label id="lbl-new-password" class="block text-gray-700 text-sm font-semibold mb-2">كلمة المرور الجديدة</label>
+                        <div class="relative">
+                            <input type="password" id="new-password" required autocomplete="new-password" placeholder="••••••••" class="w-full px-4 py-2 pe-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-start">
+                            <button type="button" id="toggle-new-password" class="absolute inset-y-0 end-0 flex items-center pe-3 text-gray-400 hover:text-emerald-700 focus:outline-none cursor-pointer">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" id="btn-save-password" class="w-full h-10 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg transition flex items-center justify-center cursor-pointer">
+                        حفظ كلمة المرور الجديدة
+                    </button>
+                </form>
+
+                <button type="button" id="btn-back-to-login" class="w-full text-center text-sm text-gray-500 mt-4 block hover:underline focus:outline-none cursor-pointer">العودة لتسجيل الدخول</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://cnfykoxjwxujrsxvjdud.supabase.co"; 
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuZnlrb3hqd3h1anJzeHZqZHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NTIzOTcsImV4cCI6MjEwMDAyODM5N30.kLEmrA3XPIhgtwMw5bMkJhCH-Q8LP4ygyNKcnr265i4";
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const htmlTag = document.getElementById('html-tag');
+        const langSwitcher = document.getElementById('lang-switcher');
+        const loginSection = document.getElementById('login-section');
+        const forgotSection = document.getElementById('forgot-section');
+        const errorMsg = document.getElementById('error-msg');
+        const successMsg = document.getElementById('success-msg');
+
+        const forgotForm1 = document.getElementById('forgot-step1-form');
+        const forgotForm2 = document.getElementById('forgot-step2-form');
+        const forgotForm3 = document.getElementById('forgot-step3-form');
+        const forgotTitle = document.getElementById('forgot-title');
+        const forgotDesc = document.getElementById('forgot-desc');
+
+        function generateLiveDate(lang) {
+            const today = new Date();
+            const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
+            const optionsG = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateG = today.toLocaleDateString(locale, optionsG);
+            const dateH = today.toLocaleDateString(locale + '-u-ca-islamic-umalqura', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            if (lang === 'ar') {
+                document.getElementById('live-date').innerText = `${dateG} هـ | ${dateH} مـ`;
+            } else {
+                document.getElementById('live-date').innerText = `${dateG} | ${dateH}`;
+            }
+        }
+
+        const translations = {
+            ar: {
+                dir: "rtl",
+                portalTitle: "بوابة الأكاديمية التعليمية",
+                portalSubtitle: "مرحباً بك، يرجى تسجيل الدخول للمتابعة",
+                email: "البريد الإلكتروني",
+                password: "كلمة المرور",
+                forgotBtn: "نسيت كلمة السر؟",
+                loginSubmit: "تسجيل الدخول",
+                forgotTitle: "استعادة كلمة المرور",
+                forgotDesc: "أدخل بريدك الإلكتروني لإرسال كود التحقيق",
+                sendCode: "أرسل كود التحقيق",
+                codeInputLabel: "كود التحقيق (8 رموز/أرقام)",
+                confirmCode: "تأكيد الكود",
+                newPasswordLabel: "كلمة المرور الجديدة",
+                savePassword: "حفظ كلمة المرور الجديدة",
+                backToLogin: "العودة لتسجيل الدخول",
+                errCreds: "عذراً، البريد الإلكتروني أو كلمة المرور غير صحيحة",
+                errRole: "عذراً، لم يتم تحديد صلاحيات لهذا الحساب",
+                errCode: "كود التحقيق غير صحيح أو انتهت صلاحيته",
+                errGeneral: "حدث خطأ: تأكد من أن البريد الإلكتروني مسجل بالفعل",
+                errSave: "فشل الحفظ: لا يمكنك استخدام كلمة مرور استخدمتها سابقاً!",
+                succSent: "تم إرسال كود التحقيق المكون من 8 رموز إلى بريدك الإلكتروني",
+                succVerified: "تم تأكيد الكود بنجاح! يمكنك الآن كتابة كلمة المرور الجديدة",
+                alertFinal: "تمت إعادة تعيين كلمة المرور بنجاح تام! يمكنك الآن تسجيل الدخول بها."
+            },
+            en: {
+                dir: "ltr",
+                portalTitle: "Academy Educational Portal",
+                portalSubtitle: "Welcome, please log in to continue",
+                email: "Email Address",
+                password: "Password",
+                forgotBtn: "Forgot Password?",
+                loginSubmit: "Login",
+                forgotTitle: "Reset Password",
+                forgotDesc: "Enter your email to send the verification code",
+                sendCode: "Send Verification Code",
+                codeInputLabel: "Verification Code (8 characters/numbers)",
+                confirmCode: "Confirm Code",
+                newPasswordLabel: "New Password",
+                savePassword: "Save New Password",
+                backToLogin: "Back to Login",
+                errCreds: "Sorry, the email or password is incorrect",
+                errRole: "Sorry, no permissions have been assigned to this account",
+                errCode: "The verification code is incorrect or expired",
+                errGeneral: "An error occurred: Make sure the email is already registered",
+                errSave: "Save failed: You cannot use a password you have used previously!",
+                succSent: "An 8-character verification code has been sent to your email",
+                succVerified: "Code verified successfully! You can now type your new password",
+                alertFinal: "Password reset successfully! You can now log in with your new credentials."
+            }
+        };
+
+        let currentLang = "ar";
+        function applyLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+            
+            htmlTag.setAttribute('dir', t.dir);
+            htmlTag.setAttribute('lang', lang);
+            
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                if(t.dir === 'rtl') { input.classList.remove('text-left'); input.classList.add('text-right'); }
+                else { input.classList.remove('text-right'); input.classList.add('text-left'); }
+            });
+
+            document.getElementById('txt-portal-title').innerText = t.portalTitle;
+            document.getElementById('txt-portal-subtitle').innerText = t.portalSubtitle;
+            document.getElementById('lbl-email').innerText = t.email;
+            document.getElementById('lbl-password').innerText = t.password;
+            document.getElementById('btn-forgot-password').innerText = t.forgotBtn;
+            if(!document.getElementById('btn-login-submit').querySelector('svg')) document.getElementById('btn-login-submit').innerText = t.loginSubmit;
+            
+            document.getElementById('lbl-reset-email').innerText = t.email;
+            if(!document.getElementById('btn-send-code').querySelector('svg')) document.getElementById('btn-send-code').innerText = t.sendCode;
+            document.getElementById('lbl-code-input').innerText = t.codeInputLabel;
+            if(!document.getElementById('btn-confirm-code').querySelector('svg')) document.getElementById('btn-confirm-code').innerText = t.confirmCode;
+            document.getElementById('lbl-new-password').innerText = t.newPasswordLabel;
+            if(!document.getElementById('btn-save-password').querySelector('svg')) document.getElementById('btn-save-password').innerText = t.savePassword;
+            document.getElementById('btn-back-to-login').innerText = t.backToLogin;
+            
+            if(!forgotSection.classList.contains('hidden')) forgotTitle.innerText = t.forgotTitle;
+            generateLiveDate(lang);
+        }
+
+        function setupPasswordToggle(buttonId, inputId) {
+            const btn = document.getElementById(buttonId);
+            const input = document.getElementById(inputId);
+            btn.addEventListener('click', () => {
+                const isPass = input.getAttribute('type') === 'password';
+                input.setAttribute('type', isPass ? 'text' : 'password');
+                btn.innerHTML = isPass 
+                    ? `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>`
+                    : `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>`;
+            });
+        }
+        setupPasswordToggle('toggle-password', 'password');
+        setupPasswordToggle('toggle-new-password', 'new-password');
+
+        function toggleBtnLoading(btnId, isLoading, textKey) {
+            const btn = document.getElementById(btnId);
+            if (isLoading) {
+                btn.disabled = true;
+                btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = translations[currentLang][textKey];
+            }
+        }
+
+        function initPageLanguageAndClearInputs() {
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('reset-email').value = '';
+            document.getElementById('reset-code').value = '';
+            document.getElementById('new-password').value = '';
+
+            const browserLang = navigator.language || navigator.userLanguage;
+            const detectedLang = browserLang.startsWith('ar') ? 'ar' : 'en';
+            langSwitcher.value = detectedLang;
+            applyLanguage(detectedLang);
+        }
+        
+        initPageLanguageAndClearInputs();
+        langSwitcher.addEventListener('change', (e) => applyLanguage(e.target.value));
+
+        document.getElementById('btn-forgot-password').addEventListener('click', () => {
+            loginSection.classList.add('hidden');
+            forgotSection.classList.remove('hidden');
+            resetForgotFlow();
+        });
+
+        document.getElementById('btn-back-to-login').addEventListener('click', () => {
+            forgotSection.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
+            initPageLanguageAndClearInputs();
+        });
+
+        function resetForgotFlow() {
+            forgotForm1.classList.remove('hidden');
+            forgotForm2.classList.add('hidden');
+            forgotForm3.classList.add('hidden');
+            forgotTitle.innerText = translations[currentLang].forgotTitle;
+            forgotDesc.innerText = translations[currentLang].forgotDesc;
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
+        }
+
+        // ================= الدخول والتوجه للبروفايل =================
+ 
+              // ================= الدخول والتوجه للبروفايل =================
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.classList.add('hidden');
+            toggleBtnLoading('btn-login-submit', true, 'loginSubmit');
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+            if (error) {
+                errorMsg.innerText = translations[currentLang].errCreds + " (" + error.message + ")";
+                errorMsg.classList.remove('hidden');
+                toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+            } else {
+                const { data: profile, error: profileError } = await supabaseClient.from('profiles').select('role').eq('id', data.user.id).single();
+                
+                if (profileError || !profile) {
+                    errorMsg.innerText = translations[currentLang].errRole;
+                    errorMsg.classList.remove('hidden');
+                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+                    return;
+                }
+
+                // 🛑 التحقق من الإيقاف والحظر وجلب مدة الإيقاف من جدول المعلمين 🛑
+                if (profile.role === 'suspended') {
+                    const { data: tData } = await supabaseClient.from('teachers').select('status').eq('id', data.user.id).single();
+                    let banMsg = currentLang === 'ar' ? "عذراً، حسابك موقوف مؤقتاً." : "Account Suspended.";
+                    
+                    if (tData && tData.status.startsWith('suspended|')) {
+                        let dateStr = tData.status.split('|')[1];
+                        if(dateStr === 'infinite') {
+                            banMsg = currentLang === 'ar' ? "حسابك موقوف لأجل غير مسمى. راجع الإدارة." : "Account suspended indefinitely.";
+                        } else {
+                            banMsg = currentLang === 'ar' ? `حسابك موقوف حتى تاريخ ${dateStr}. راجع الإدارة.` : `Account suspended until ${dateStr}.`;
+                        }
+                    }
+                    
+                    errorMsg.innerText = banMsg;
+                    errorMsg.classList.remove('hidden');
+                    await supabaseClient.auth.signOut();
+                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+                    return;
+                } else if (profile.role === 'banned') {
+                    errorMsg.innerText = currentLang === 'ar' ? "عذراً، تم حذف حسابك نهائياً من النظام." : "Account permanently banned.";
+                    errorMsg.classList.remove('hidden');
+                    await supabaseClient.auth.signOut();
+                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+                    return;
+                }
+
+                // توجيه المستخدم حسب الصلاحية
+                if (['admin', 'super_admin', 'supervisor', 'accountant', 'content_manager'].includes(profile.role)) {
+                    window.location.href = "admin.html";
+                } else if (profile.role === 'student') {
+                    window.location.href = "student.html";
+                } else if (profile.role === 'teacher') {
+                    window.location.href = "teacher.html";
+                } else {
+                    errorMsg.innerText = "دور مستخدم غير معروف.";
+                    errorMsg.classList.remove('hidden');
+                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+                }
+            }
+        });
+
+        forgotForm1.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
+            toggleBtnLoading('btn-send-code', true, 'sendCode');
+            
+            const email = document.getElementById('reset-email').value;
+            const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+
+            if (error) {
+                errorMsg.innerText = translations[currentLang].errGeneral;
+                errorMsg.classList.remove('hidden');
+                toggleBtnLoading('btn-send-code', false, 'sendCode');
+            } else {
+                successMsg.innerText = translations[currentLang].succSent;
+                successMsg.classList.remove('hidden');
+                toggleBtnLoading('btn-send-code', false, 'sendCode');
+                forgotForm1.classList.add('hidden');
+                forgotForm2.classList.remove('hidden');
+                forgotDesc.innerText = "";
+            }
+        });
+
+        forgotForm2.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
+            toggleBtnLoading('btn-confirm-code', true, 'confirmCode');
+            
+            const email = document.getElementById('reset-email').value;
+            const code = document.getElementById('reset-code').value;
+            
+            const { error } = await supabaseClient.auth.verifyOtp({ email, token: code, type: 'recovery' });
+
+            if (error) {
+                errorMsg.innerText = translations[currentLang].errCode;
+                errorMsg.classList.remove('hidden');
+                toggleBtnLoading('btn-confirm-code', false, 'confirmCode');
+            } else {
+                successMsg.innerText = translations[currentLang].succVerified;
+                successMsg.classList.add('hidden');
+                toggleBtnLoading('btn-confirm-code', false, 'confirmCode');
+                forgotForm2.classList.add('hidden');
+                forgotForm3.classList.remove('hidden');
+            }
+        });
+
+        forgotForm3.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
+            toggleBtnLoading('btn-save-password', true, 'savePassword');
+            
+            const newPassword = document.getElementById('new-password').value;
+            const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
+
+            if (error) {
+                errorMsg.innerText = translations[currentLang].errSave;
+                errorMsg.classList.remove('hidden');
+                toggleBtnLoading('btn-save-password', false, 'savePassword');
+            } else {
+                toggleBtnLoading('btn-save-password', false, 'savePassword');
+                alert(translations[currentLang].alertFinal);
+                forgotSection.classList.add('hidden');
+                loginSection.classList.remove('hidden');
+                await supabaseClient.auth.signOut();
+                initPageLanguageAndClearInputs();
+            }
+        });
+    </script>
+</body>
+</html>
