@@ -3922,6 +3922,21 @@
         };
 
         window.renderAll = function() {
+            // --- كود تعبئة قائمة الطلاب في شاشة التسكين والربط ---
+            const assignStudentSelect = document.getElementById('assign-student');
+            if (assignStudentSelect) {
+                const activeStudents = dbStudents.filter(s => s.status !== 'deleted');
+                assignStudentSelect.innerHTML = `<option value="">-- اختر الطالب --</option>` + 
+                    activeStudents.map(s => {
+                        let currentTeacher = "غير مسكّن";
+                        if (s.teacher_id) {
+                            let t = globalTeachers.find(x => String(x.id) === String(s.teacher_id));
+                            if (t) currentTeacher = t.name_ar;
+                        }
+                        return `<option value="${s.id}">${s.name} (الحالة: ${currentTeacher})</option>`;
+                    }).join('');
+            }
+            // -----------------------------------------------------
             if(document.getElementById('stat-students')) document.getElementById('stat-students').innerText = dbStudents.length;
 
             if (typeof window.renderCoupons === 'function') window.renderCoupons();
