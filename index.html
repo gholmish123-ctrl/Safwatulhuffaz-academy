@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة الأكاديمية | أكاديمية الوادي</title>
+    <title>بوابة الأكاديمية | تسجيل الدخول</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
@@ -15,12 +15,10 @@
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-        .animate-marquee {
-            animation: marquee 25s linear infinite;
-        }
+        .animate-marquee { animation: marquee 25s linear infinite; }
     </style>
 </head>
-<body class="bg-gray-50 flex flex-col h-screen overflow-hidden">
+<body class="bg-gray-50 flex flex-col min-h-screen overflow-y-auto">
 
     <div class="w-full bg-emerald-800 text-emerald-50 py-2 shadow-sm text-sm font-medium overflow-hidden whitespace-nowrap relative z-50">
         <div class="inline-block animate-marquee text-lg">
@@ -30,16 +28,17 @@
 
     <div class="flex-1 flex flex-col items-center justify-center p-4 gap-4">
         
-        <div class="text-center bg-white border border-emerald-100 px-6 py-2 rounded-full shadow-sm max-w-md w-full">
+        <div class="text-center bg-white border border-emerald-100 px-6 py-2 rounded-full shadow-sm max-w-md w-full mt-4">
             <span id="live-date" class="font-calligraphy text-xl font-bold text-emerald-800 tracking-wide"></span>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md border border-gray-100 relative">
+        <div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md border border-gray-100 relative mb-4">
             
             <div class="absolute top-4 left-4 right-auto rtl:left-auto rtl:right-4 z-10">
                 <select id="lang-switcher" class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-lg px-2 py-1 font-semibold focus:outline-none cursor-pointer">
                     <option value="ar">العربية</option>
                     <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
                 </select>
             </div>
 
@@ -62,7 +61,7 @@
                 <form id="login-form" autocomplete="off">
                     <div class="mb-4">
                         <label id="lbl-email" class="block text-gray-700 text-sm font-semibold mb-2">البريد الإلكتروني</label>
-                        <input type="email" id="email" required autocomplete="off" placeholder="name@academy.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-start">
+                        <input type="email" id="email" required autofocus autocomplete="off" placeholder="name@academy.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-start">
                     </div>
 
                     <div class="mb-6">
@@ -102,8 +101,8 @@
 
                 <form id="forgot-step2-form" class="hidden" autocomplete="off">
                     <div class="mb-4">
-                        <label id="lbl-code-input" class="block text-gray-700 text-sm font-semibold mb-2">كود التحقيق (8 رموز/أرقام)</label>
-                        <input type="text" id="reset-code" required autocomplete="off" placeholder="12345678" maxlength="8" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center font-mono text-xl tracking-widest focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <label id="lbl-code-input" class="block text-gray-700 text-sm font-semibold mb-2">كود التحقيق (6 أرقام)</label>
+                        <input type="text" id="reset-code" required autocomplete="off" placeholder="123456" maxlength="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center font-mono text-xl tracking-widest focus:outline-none focus:ring-2 focus:ring-emerald-500">
                     </div>
                     <button type="submit" id="btn-confirm-code" class="w-full h-10 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg transition flex items-center justify-center cursor-pointer">
                         تأكيد الكود
@@ -127,7 +126,6 @@
 
                 <button type="button" id="btn-back-to-login" class="w-full text-center text-sm text-gray-500 mt-4 block hover:underline focus:outline-none cursor-pointer">العودة لتسجيل الدخول</button>
             </div>
-
         </div>
     </div>
 
@@ -166,54 +164,36 @@
 
         const translations = {
             ar: {
-                dir: "rtl",
-                portalTitle: "بوابة الأكاديمية التعليمية",
-                portalSubtitle: "مرحباً بك، يرجى تسجيل الدخول للمتابعة",
-                email: "البريد الإلكتروني",
-                password: "كلمة المرور",
-                forgotBtn: "نسيت كلمة السر؟",
-                loginSubmit: "تسجيل الدخول",
-                forgotTitle: "استعادة كلمة المرور",
-                forgotDesc: "أدخل بريدك الإلكتروني لإرسال كود التحقيق",
-                sendCode: "أرسل كود التحقيق",
-                codeInputLabel: "كود التحقيق (8 رموز/أرقام)",
-                confirmCode: "تأكيد الكود",
-                newPasswordLabel: "كلمة المرور الجديدة",
-                savePassword: "حفظ كلمة المرور الجديدة",
-                backToLogin: "العودة لتسجيل الدخول",
-                errCreds: "عذراً، البريد الإلكتروني أو كلمة المرور غير صحيحة",
-                errRole: "عذراً، لم يتم تحديد صلاحيات لهذا الحساب",
-                errCode: "كود التحقيق غير صحيح أو انتهت صلاحيته",
-                errGeneral: "حدث خطأ: تأكد من أن البريد الإلكتروني مسجل بالفعل",
-                errSave: "فشل الحفظ: لا يمكنك استخدام كلمة مرور استخدمتها سابقاً!",
-                succSent: "تم إرسال كود التحقيق المكون من 8 رموز إلى بريدك الإلكتروني",
-                succVerified: "تم تأكيد الكود بنجاح! يمكنك الآن كتابة كلمة المرور الجديدة",
+                dir: "rtl", portalTitle: "بوابة الأكاديمية التعليمية", portalSubtitle: "مرحباً بك، يرجى تسجيل الدخول للمتابعة",
+                email: "البريد الإلكتروني", password: "كلمة المرور", forgotBtn: "نسيت كلمة السر؟", loginSubmit: "تسجيل الدخول",
+                forgotTitle: "استعادة كلمة المرور", forgotDesc: "أدخل بريدك الإلكتروني لإرسال كود التحقيق", sendCode: "أرسل كود التحقيق",
+                codeInputLabel: "كود التحقيق (6 أرقام)", confirmCode: "تأكيد الكود", newPasswordLabel: "كلمة المرور الجديدة",
+                savePassword: "حفظ كلمة المرور الجديدة", backToLogin: "العودة لتسجيل الدخول", errCreds: "عذراً، البريد الإلكتروني أو كلمة المرور غير صحيحة",
+                errRole: "عذراً، لم يتم تحديد صلاحيات لهذا الحساب", errCode: "كود التحقيق غير صحيح أو انتهت صلاحيته",
+                errGeneral: "حدث خطأ: تأكد من أن البريد الإلكتروني مسجل بالفعل", errSave: "فشل الحفظ: لا يمكنك استخدام كلمة مرور استخدمتها سابقاً!",
+                succSent: "تم إرسال كود التحقيق إلى بريدك الإلكتروني", succVerified: "تم تأكيد الكود بنجاح! يمكنك الآن كتابة كلمة المرور الجديدة",
                 alertFinal: "تمت إعادة تعيين كلمة المرور بنجاح تام! يمكنك الآن تسجيل الدخول بها."
             },
             en: {
-                dir: "ltr",
-                portalTitle: "Academy Educational Portal",
-                portalSubtitle: "Welcome, please log in to continue",
-                email: "Email Address",
-                password: "Password",
-                forgotBtn: "Forgot Password?",
-                loginSubmit: "Login",
-                forgotTitle: "Reset Password",
-                forgotDesc: "Enter your email to send the verification code",
-                sendCode: "Send Verification Code",
-                codeInputLabel: "Verification Code (8 characters/numbers)",
-                confirmCode: "Confirm Code",
-                newPasswordLabel: "New Password",
-                savePassword: "Save New Password",
-                backToLogin: "Back to Login",
-                errCreds: "Sorry, the email or password is incorrect",
-                errRole: "Sorry, no permissions have been assigned to this account",
-                errCode: "The verification code is incorrect or expired",
-                errGeneral: "An error occurred: Make sure the email is already registered",
-                errSave: "Save failed: You cannot use a password you have used previously!",
-                succSent: "An 8-character verification code has been sent to your email",
-                succVerified: "Code verified successfully! You can now type your new password",
-                alertFinal: "Password reset successfully! You can now log in with your new credentials."
+                dir: "ltr", portalTitle: "Academy Educational Portal", portalSubtitle: "Welcome, please log in to continue",
+                email: "Email Address", password: "Password", forgotBtn: "Forgot Password?", loginSubmit: "Login",
+                forgotTitle: "Reset Password", forgotDesc: "Enter your email to send the verification code", sendCode: "Send Verification Code",
+                codeInputLabel: "Verification Code (6 digits)", confirmCode: "Confirm Code", newPasswordLabel: "New Password",
+                savePassword: "Save New Password", backToLogin: "Back to Login", errCreds: "Sorry, the email or password is incorrect",
+                errRole: "Sorry, no permissions have been assigned to this account", errCode: "The verification code is incorrect or expired",
+                errGeneral: "An error occurred: Make sure the email is already registered", errSave: "Save failed!",
+                succSent: "A verification code has been sent to your email", succVerified: "Code verified successfully!",
+                alertFinal: "Password reset successfully! You can now log in."
+            },
+            hi: {
+                dir: "ltr", portalTitle: "अकादमी शैक्षिक पोर्टल", portalSubtitle: "जारी रखने के लिए कृपया लॉग इन करें",
+                email: "ईमेल पता", password: "पासवर्ड", forgotBtn: "पासवर्ड भूल गए?", loginSubmit: "लॉग इन करें",
+                forgotTitle: "पासवर्ड रीसेट करें", forgotDesc: "अपना ईमेल दर्ज करें", sendCode: "सत्यापन कोड भेजें",
+                codeInputLabel: "सत्यापन कोड", confirmCode: "पुष्टि करें", newPasswordLabel: "नया पासवर्ड",
+                savePassword: "नया पासवर्ड सहेजें", backToLogin: "वापस जाएं", errCreds: "ईमेल या पासवर्ड गलत है",
+                errRole: "इस खाते को कोई अनुमति नहीं दी गई है", errCode: "सत्यापन कोड गलत है",
+                errGeneral: "एक त्रुटि हुई", errSave: "सहेजना विफल!",
+                succSent: "सत्यापन कोड भेजा गया", succVerified: "सत्यापित!", alertFinal: "पासवर्ड रीसेट किया गया!"
             }
         };
 
@@ -282,8 +262,11 @@
             document.getElementById('reset-code').value = '';
             document.getElementById('new-password').value = '';
 
-            const browserLang = navigator.language || navigator.userLanguage;
-            const detectedLang = browserLang.startsWith('ar') ? 'ar' : 'en';
+            const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
+            let detectedLang = 'en'; 
+            if (browserLang.startsWith('ar')) detectedLang = 'ar';
+            else if (browserLang.startsWith('hi')) detectedLang = 'hi';
+
             langSwitcher.value = detectedLang;
             applyLanguage(detectedLang);
         }
@@ -292,32 +275,21 @@
         langSwitcher.addEventListener('change', (e) => applyLanguage(e.target.value));
 
         document.getElementById('btn-forgot-password').addEventListener('click', () => {
-            loginSection.classList.add('hidden');
-            forgotSection.classList.remove('hidden');
-            resetForgotFlow();
+            loginSection.classList.add('hidden'); forgotSection.classList.remove('hidden'); resetForgotFlow();
         });
 
         document.getElementById('btn-back-to-login').addEventListener('click', () => {
-            forgotSection.classList.add('hidden');
-            loginSection.classList.remove('hidden');
-            errorMsg.classList.add('hidden');
-            successMsg.classList.add('hidden');
-            initPageLanguageAndClearInputs();
+            forgotSection.classList.add('hidden'); loginSection.classList.remove('hidden');
+            errorMsg.classList.add('hidden'); successMsg.classList.add('hidden'); initPageLanguageAndClearInputs();
         });
 
         function resetForgotFlow() {
-            forgotForm1.classList.remove('hidden');
-            forgotForm2.classList.add('hidden');
-            forgotForm3.classList.add('hidden');
-            forgotTitle.innerText = translations[currentLang].forgotTitle;
-            forgotDesc.innerText = translations[currentLang].forgotDesc;
-            errorMsg.classList.add('hidden');
-            successMsg.classList.add('hidden');
+            forgotForm1.classList.remove('hidden'); forgotForm2.classList.add('hidden'); forgotForm3.classList.add('hidden');
+            forgotTitle.innerText = translations[currentLang].forgotTitle; forgotDesc.innerText = translations[currentLang].forgotDesc;
+            errorMsg.classList.add('hidden'); successMsg.classList.add('hidden');
         }
 
-        // ================= الدخول والتوجه للبروفايل =================
- 
-              // ================= الدخول والتوجه للبروفايل =================
+        // ================= الدخول والتوجه الذكي حسب الصلاحيات =================
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             errorMsg.classList.add('hidden');
@@ -329,7 +301,8 @@
             const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
             if (error) {
-                errorMsg.innerText = translations[currentLang].errCreds + " (" + error.message + ")";
+                document.getElementById('password').value = '';
+                errorMsg.innerText = translations[currentLang].errCreds;
                 errorMsg.classList.remove('hidden');
                 toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
             } else {
@@ -342,36 +315,19 @@
                     return;
                 }
 
-                // 🛑 التحقق من الإيقاف والحظر وجلب مدة الإيقاف من جدول المعلمين 🛑
-                if (profile.role === 'suspended') {
-                    const { data: tData } = await supabaseClient.from('teachers').select('status').eq('id', data.user.id).single();
-                    let banMsg = currentLang === 'ar' ? "عذراً، حسابك موقوف مؤقتاً." : "Account Suspended.";
-                    
-                    if (tData && tData.status.startsWith('suspended|')) {
-                        let dateStr = tData.status.split('|')[1];
-                        if(dateStr === 'infinite') {
-                            banMsg = currentLang === 'ar' ? "حسابك موقوف لأجل غير مسمى. راجع الإدارة." : "Account suspended indefinitely.";
-                        } else {
-                            banMsg = currentLang === 'ar' ? `حسابك موقوف حتى تاريخ ${dateStr}. راجع الإدارة.` : `Account suspended until ${dateStr}.`;
-                        }
-                    }
-                    
-                    errorMsg.innerText = banMsg;
-                    errorMsg.classList.remove('hidden');
-                    await supabaseClient.auth.signOut();
-                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
-                    return;
-                } else if (profile.role === 'banned') {
-                    errorMsg.innerText = currentLang === 'ar' ? "عذراً، تم حذف حسابك نهائياً من النظام." : "Account permanently banned.";
+                if (profile.role === 'suspended' || profile.role === 'banned') {
+                    errorMsg.innerText = "عذراً، حسابك موقوف أو محظور من الإدارة.";
                     errorMsg.classList.remove('hidden');
                     await supabaseClient.auth.signOut();
                     toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
                     return;
                 }
 
-                // توجيه المستخدم حسب الصلاحية
-                if (['admin', 'super_admin', 'supervisor', 'accountant', 'content_manager'].includes(profile.role)) {
-                    window.location.href = "admin.html";
+                // التوجيه السليم لكل الأدوار بما فيها ولي الأمر
+                if (profile.role === 'parent') {
+                    window.location.href = "parent_dashboard.html";
+                } else if (['admin', 'super_admin', 'supervisor', 'accountant', 'content_manager'].includes(profile.role)) {
+                    window.location.href = "admin.html"; // تأكد من اسم صفحة الأدمن لديك
                 } else if (profile.role === 'student') {
                     window.location.href = "student.html";
                 } else if (profile.role === 'teacher') {
@@ -384,12 +340,11 @@
             }
         });
 
+        // ================= استعادة كلمة المرور =================
         forgotForm1.addEventListener('submit', async (e) => {
             e.preventDefault();
-            errorMsg.classList.add('hidden');
-            successMsg.classList.add('hidden');
+            errorMsg.classList.add('hidden'); successMsg.classList.add('hidden');
             toggleBtnLoading('btn-send-code', true, 'sendCode');
-            
             const email = document.getElementById('reset-email').value;
             const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
 
@@ -401,21 +356,16 @@
                 successMsg.innerText = translations[currentLang].succSent;
                 successMsg.classList.remove('hidden');
                 toggleBtnLoading('btn-send-code', false, 'sendCode');
-                forgotForm1.classList.add('hidden');
-                forgotForm2.classList.remove('hidden');
-                forgotDesc.innerText = "";
+                forgotForm1.classList.add('hidden'); forgotForm2.classList.remove('hidden'); forgotDesc.innerText = "";
             }
         });
 
         forgotForm2.addEventListener('submit', async (e) => {
             e.preventDefault();
-            errorMsg.classList.add('hidden');
-            successMsg.classList.add('hidden');
+            errorMsg.classList.add('hidden'); successMsg.classList.add('hidden');
             toggleBtnLoading('btn-confirm-code', true, 'confirmCode');
-            
             const email = document.getElementById('reset-email').value;
             const code = document.getElementById('reset-code').value;
-            
             const { error } = await supabaseClient.auth.verifyOtp({ email, token: code, type: 'recovery' });
 
             if (error) {
@@ -426,17 +376,14 @@
                 successMsg.innerText = translations[currentLang].succVerified;
                 successMsg.classList.add('hidden');
                 toggleBtnLoading('btn-confirm-code', false, 'confirmCode');
-                forgotForm2.classList.add('hidden');
-                forgotForm3.classList.remove('hidden');
+                forgotForm2.classList.add('hidden'); forgotForm3.classList.remove('hidden');
             }
         });
 
         forgotForm3.addEventListener('submit', async (e) => {
             e.preventDefault();
-            errorMsg.classList.add('hidden');
-            successMsg.classList.add('hidden');
+            errorMsg.classList.add('hidden'); successMsg.classList.add('hidden');
             toggleBtnLoading('btn-save-password', true, 'savePassword');
-            
             const newPassword = document.getElementById('new-password').value;
             const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
 
@@ -447,10 +394,8 @@
             } else {
                 toggleBtnLoading('btn-save-password', false, 'savePassword');
                 alert(translations[currentLang].alertFinal);
-                forgotSection.classList.add('hidden');
-                loginSection.classList.remove('hidden');
-                await supabaseClient.auth.signOut();
-                initPageLanguageAndClearInputs();
+                forgotSection.classList.add('hidden'); loginSection.classList.remove('hidden');
+                await supabaseClient.auth.signOut(); initPageLanguageAndClearInputs();
             }
         });
     </script>
