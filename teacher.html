@@ -1335,13 +1335,17 @@
                 let html = '';
                 let todaySessionsCount = 0;
                 let todayHtml = '';
-                const currentDayIndex = (new Date().getDay() + 1) % 7; // تحويل رقم اليوم ليتوافق مع نظامنا: السبت = 0
+                const currentDayIndex = (new Date().getDay() + 1) % 7; 
 
                 slots.forEach(slot => {
                     const dayName = currentLang === 'ar' ? daysAr[slot.day_index] : daysEn[slot.day_index];
-                    let h = slot.hour_index % 12 || 12;
-                    let ampm = slot.hour_index < 12 ? 'AM' : 'PM';
-                    const teacherTime = `${h.toString().padStart(2, '0')}:00 ${ampm}`;
+                    
+                    let totalMins = slot.hour_index * 30;
+                    let h24 = Math.floor(totalMins / 60);
+                    let m = totalMins % 60;
+                    let h = h24 % 12 || 12;
+                    let ampm = h24 < 12 ? 'AM' : 'PM';
+                    const teacherTime = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')} ${ampm}`;
 
                     if (slot.day_index === currentDayIndex && slot.status === 'booked') {
                         todaySessionsCount++;
@@ -1354,10 +1358,23 @@
 
                     if (slot.status === 'booked' && slot.student_id) {
                         const stu = studentsMap[slot.student_id] || { name: 'طالب مسجل', subject: 'قرآن وتجويد', local_tz: 'America/New_York' };
+                        
+                        let studentTz = stu.local_tz || 'America/New_York';
+                        let offsetHours = getCairoOffset(studentTz);
+                        let studentTotalMins = totalMins + (offsetHours * 60);
+                        if(studentTotalMins >= 1440) studentTotalMins -= 1440;
+                        else if(studentTotalMins < 0) studentTotalMins += 1440;
+
+                        let sH24 = Math.floor(studentTotalMins / 60);
+                        let sM = studentTotalMins % 60;
+                        let sH = sH24 % 12 || 12;
+                        let sAmpm = sH24 < 12 ? 'AM' : 'PM';
+                        const studentTimeFormatted = `${sH.toString().padStart(2, '0')}:${sM.toString().padStart(2, '0')} ${sAmpm}`;
+
                         html += `<tr class="hover-lift transition-all">
                                     <td class="p-4 font-bold text-slate-900">${dayName}</td>
                                     <td class="p-4 text-xs font-black text-emerald-600 font-mono" dir="ltr">${teacherTime}</td>
-                                    <td class="p-4 text-xs font-bold text-blue-600" dir="ltr">${teacherTime} (${stu.local_tz || 'America/New_York'})</td>
+                                    <td class="p-4 text-xs font-bold text-blue-600" dir="ltr">${studentTimeFormatted} (${studentTz.split('/')[1] || studentTz})</td>
                                     <td class="p-4 font-bold text-slate-700">👤 ${stu.name} <span class="block text-[10px] text-slate-400">${stu.subject || ''}</span></td>
                                     <td class="p-4 text-center"><a href="${currentTeacherObj?.zoom_link || 'https://zoom.us'}" target="_blank" class="bg-slate-800 text-white text-[10px] px-3 py-1.5 rounded-lg hover:bg-slate-900 transition font-bold whitespace-nowrap block w-full sm:inline">بدء الحصة 💻</a></td>
                                 </tr>`;
@@ -1381,7 +1398,6 @@
 
             } catch (err) { tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-red-500 font-bold">حدث خطأ في تحميل المواعيد.</td></tr>`; }
         }
-
         // ================= سجل الحضور الذكي =================
         async function updateAttendanceDayAndList() {
             const attDateEl = document.getElementById('attendance-date');
@@ -1872,7 +1888,7 @@
                 }
             } catch(e) { console.log("No previous data to autofill."); }
         };
-        window.saveAttendanceLog = async function() {
+       window.saveAttendanceLog = async function() {
             const absentees = [];
             const attDateEl = document.getElementById('attendance-date');
             const attDate = attDateEl ? attDateEl.value : new Date().toISOString().split('T')[0];
@@ -1882,7 +1898,6 @@
             const studentNotifsToUpload = [];
             const studentUpdates = []; 
 
-            // حفظ للحضور المعروضين في الجدول فقط (تحديث سجل الحضور الذكي)
             const rows = document.querySelectorAll('#live-attendance-list tr');
             if(!rows || rows.length === 0 || rows[0].innerText.includes('جاري')) return showToast('الرجاء التأكد من وجود طلاب لعرضهم', 'warning');
 
@@ -1957,6 +1972,12 @@
 
             try {
                 if(recordsToUpload.length > 0) {
+                    for (let rec of recordsToUpload) {
+                        // 🟢 حذف أي سجل حضور سابق لنفس الطالب في نفس اليوم لمنع التكرار
+                        await supabaseClient.from('attendance').delete()
+                            .eq('student_id', rec.student_id)
+                            .eq('date', rec.date);
+                    }
                     await supabaseClient.from('attendance').insert(recordsToUpload);
                 }
                 for(let updateObj of studentUpdates) {
@@ -1988,14 +2009,11 @@
                     }
                 }
                 showToast('✅ تم حفظ الحضور بنجاح!');
-                
-                // تحديث الماليات فوراً بعد تسجيل الحضور لتظهر الحصص الفعلية
                 renderFinancials();
             } catch(e) { 
                 showToast('❌ حدث خطأ في إرسال الكشف: ' + e.message, 'error'); 
             }
         };
-
         window.printDailyReport = function() {
             const stdId = document.getElementById('form-student-select').value;
             const std = dbStudents.find(s => String(s.id).trim() === String(stdId).trim());
@@ -2175,6 +2193,11 @@
                     showToast('⏳ جاري إرسال التقرير الذكي...');
 
                     try {
+                        // 🟢 حذف أي سجل قديم لنفس الطالب في نفس اليوم لمنع تكرار الحصة
+                        await supabaseClient.from('attendance').delete()
+                            .eq('student_id', stdId)
+                            .eq('date', dateStr);
+
                         await supabaseClient.from('attendance').insert([{
                             teacher_id: currentTeacherObj.id, tName: tNameStr, student_id: stdId, sName: std.name,
                             date: dateStr, status: 'present', notes: jsonPayload
@@ -2195,7 +2218,6 @@
                         }]);
 
                         showToast('🚀 تم توثيق التقرير بنجاح وإرساله للإدارة ولولي الأمر!');
-                        
                         document.getElementById('form-lesson-num').value = parseInt(reportData.session) + 1;
                     } catch(err) {
                         showToast('❌ حدث خطأ في الإرسال: ' + err.message, 'error');
@@ -2203,7 +2225,6 @@
                 });
             }
         }, 1000);
-
         function initQuranDropdowns() {
             const selectorsFrom = ['quran-new-s-from', 'quran-rec-s-from', 'quran-dis-s-from', 'quran-next-s-from', 'quran-next-rec-s-from', 'quran-next-dis-s-from', 'sanad-rep-s-from'];
             const selectorsTo = ['quran-new-s-to', 'quran-rec-s-to', 'quran-dis-s-to', 'quran-next-s-to', 'quran-next-rec-s-to', 'quran-next-dis-s-to', 'sanad-rep-s-to'];
@@ -2564,7 +2585,7 @@
             });
         };
 
-        window.populateSanadKhatmasForReport = function(studentId) {
+      window.populateSanadKhatmasForReport = function(studentId) {
             const khatmaSelect = document.getElementById('sanad-form-khatma');
             if(!khatmaSelect) return;
             khatmaSelect.innerHTML = '';
@@ -2578,7 +2599,8 @@
             
             khatmaSelect.disabled = false;
             student.active_khatmas.forEach((k, idx) => {
-                khatmaSelect.innerHTML += `<option value="${k.qiraa} - ${k.rewayah}">${idx + 1}. ${k.qiraa} (${k.rewayah}) | ${k.matn}</option>`;
+                // 🟢 تخزين اسم المتن في خاصية data-matn لسهولة استرجاعه
+                khatmaSelect.innerHTML += `<option value="${k.qiraa} - ${k.rewayah}" data-matn="${k.matn}">${idx + 1}. ${k.qiraa} (${k.rewayah}) | المتن: ${k.matn}</option>`;
             });
             
             initQuranDropdowns();
@@ -2587,8 +2609,12 @@
         window.submitSanadReport = async function(e) {
             e.preventDefault();
             const studentId = document.getElementById('sanad-form-student').value;
-            const khatmaVal = document.getElementById('sanad-form-khatma').value;
+            const khatmaSelect = document.getElementById('sanad-form-khatma');
+            const khatmaVal = khatmaSelect.value;
             if(!studentId || !khatmaVal) return showToast('الرجاء اختيار الطالب والختمة أولاً', 'warning');
+
+            const selectedOption = khatmaSelect.options[khatmaSelect.selectedIndex];
+            const matnName = selectedOption ? (selectedOption.getAttribute('data-matn') || '---') : '---';
 
             const student = dbStudents.find(s => String(s.id) === String(studentId));
             const dateStr = new Date().toISOString().split('T')[0];
@@ -2605,48 +2631,77 @@
             const isAr = currentLang === 'ar';
             const getSurahName = (id) => { const s = quranSurahs.find(x => x.id == parseInt(id)); return s ? (isAr ? s.ar : s.en) : '---'; };
 
+            const surahFrom = getSurahName(sF);
+            const surahTo = getSurahName(sT);
+
             const reportObj = {
-                type: 'sanad_report',
+                track: 'sanad',
                 khatma: khatmaVal,
-                read_from: `${getSurahName(sF)} - آية ${aF}`,
-                read_to: `${getSurahName(sT)} - آية ${aT}`,
+                matn: matnName,
+                read_from: { surah: surahFrom, ayah: aF },
+                read_to: { surah: surahTo, ayah: aT },
                 matn_evaluation: matnRate,
                 general_evaluation: generalRate,
                 notes: notes
             };
 
             const tNameStr = currentTeacherObj.name_ar || "معلم السند";
+            
+            const formattedReportText = `🎓 تقرير جلسة إقراء ختمة السند:
+📖 الختمة: ${khatmaVal}
+📜 اسم المتن: ${matnName}
+📍 مقدار القراءة: من سورة ${surahFrom} (آية ${aF}) إلى سورة ${surahTo} (آية ${aT})
+📋 تقييم تسميع المتن المرفق: ${matnRate}
+⭐ الأداء العام في التلاوة والأحكام: ${generalRate}
+💬 ملاحظات دقيقة: ${notes || 'لا توجد ملاحظات'}
+`;
+
             const jsonPayload = `[JSON_REPORT] ${JSON.stringify(reportObj)}`;
 
-            showToast('⏳ جاري إرسال تقرير السند...');
+            showToast('⏳ جاري إرسال تقرير السند المفصل...');
 
             try {
+                // 🟢 حذف أي سجل قديم لنفس الطالب في نفس اليوم لمنع تكرار الحصة
+                await supabaseClient.from('attendance').delete()
+                    .eq('student_id', studentId)
+                    .eq('date', dateStr);
+
+                // حفظ التقرير في سجل الحضور (attendance)
                 await supabaseClient.from('attendance').insert([{
-                    teacher_id: currentTeacherObj.id, tName: tNameStr, student_id: studentId, sName: student.name,
-                    date: dateStr, status: 'present', notes: jsonPayload
+                    teacher_id: currentTeacherObj.id,
+                    tName: tNameStr,
+                    student_id: studentId,
+                    sName: student.name,
+                    date: dateStr,
+                    status: 'present',
+                    notes: jsonPayload
                 }]);
 
+                // إشعار للإدارة
                 await supabaseClient.from('notifications').insert([{
-                    target_id: 'all', target_name: 'الإدارة العامة', type: 'info',
+                    target_id: 'all',
+                    target_name: 'الإدارة العامة',
+                    type: 'info',
                     title: `🎓 تقرير جلسة سند: ${student.name}`,
-                    body: `أتم المعلم (${tNameStr}) جلسة إقراء للسند للطالب (${student.name}). الختمة: ${khatmaVal}. يرجى مراجعة سجل الطالب لعرض التقرير.`,
+                    body: `أتم المعلم (${tNameStr}) جلسة إقراء للسند للطالب (${student.name}). الختمة: ${khatmaVal} | المتن: ${matnName}.`,
                     expiry: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
                 }]);
 
+                // إرسال التقرير بالكامل مباشرة إلى إشعارات الطالب (student_notifications)
                 await supabaseClient.from('student_notifications').insert([{
-                    target: student.name, type: 'success',
-                    title: `🎓 تقرير جلسة السند جاهز!`,
-                    body: `تقبل الله طاعتك. تم إرسال تقرير جلسة الإقراء الخاصة بك بواسطة الشيخ (${tNameStr}). راجع التقارير لمعرفة تقدمك وتوجيهات الشيخ لك.`,
+                    target: student.name,
+                    type: 'success',
+                    title: `🎓 تقرير جلسة السند جاهز (${dateStr})`,
+                    body: formattedReportText,
                     expiry: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
                 }]);
 
-                showToast('🚀 تم توثيق جلسة السند بنجاح وإرسالها للإدارة!');
+                showToast('🚀 تم توثيق جلسة السند وإرسال التقرير المفصل للطالب والإدارة بنجاح!', 'success');
                 document.getElementById('sanad-rep-notes').value = '';
             } catch(err) {
                 showToast('❌ حدث خطأ في الإرسال: ' + err.message, 'error');
             }
         };
-
         // ================= المواعيد الإضافية =================
         window.loadStudentScheduleInfo = function() {
             const studentId = document.getElementById('schedule-student-select').value;
@@ -2735,30 +2790,30 @@
             if(!stuHStr || !stuMStr || !stuAmpm) return;
             
             let h = parseInt(stuHStr);
+            let m = parseInt(stuMStr) || 0;
             if(stuAmpm === 'PM' && h !== 12) h += 12;
             if(stuAmpm === 'AM' && h === 12) h = 0;
             
-            let offset = 0;
-            if(studentTz.includes('New_York') || studentTz.includes('EST') || studentTz.includes('Chicago')) offset = 7;
-            else if(studentTz.includes('London')) offset = 2;
-            else if(studentTz.includes('Toronto')) offset = 7;
-            else if(studentTz.includes('Sydney')) offset = -8;
+            let studentTotalMins = h * 60 + m;
+            let offsetHours = getCairoOffset(studentTz); // الفارق بين الطالب والقاهرة
             
-            let cairoH = h + offset;
-            if(cairoH >= 24) cairoH -= 24;
-            else if(cairoH < 0) cairoH += 24;
+            // تحويل توقيت الطالب إلى توقيت القاهرة بدقة
+            let cairoTotalMins = studentTotalMins - (offsetHours * 60);
+            if(cairoTotalMins >= 1440) cairoTotalMins -= 1440;
+            else if(cairoTotalMins < 0) cairoTotalMins += 1440;
 
-            let displayH = cairoH;
-            let suffix = "AM";
-            if(displayH >= 12) {
-                suffix = "PM";
-                if(displayH > 12) displayH -= 12;
-            }
-            if(displayH === 0) { displayH = 12; suffix = "AM"; }
+            let cairoH24 = Math.floor(cairoTotalMins / 60);
+            let cairoM = cairoTotalMins % 60;
+            
+            // حساب مؤشر النصف ساعة (0 إلى 47) لتخزينه في hour_index
+            let slotIndex = Math.floor(cairoTotalMins / 30);
+
+            let displayH = cairoH24 % 12 || 12;
+            let suffix = cairoH24 < 12 ? "AM" : "PM";
             
             document.getElementById(`cairo-h-${rowIndex}`).value = displayH.toString();
-            document.getElementById(`cairo-h-${rowIndex}`).setAttribute('data-real-hour', cairoH); 
-            document.getElementById(`cairo-m-${rowIndex}`).value = stuMStr;
+            document.getElementById(`cairo-h-${rowIndex}`).setAttribute('data-real-slot', slotIndex); 
+            document.getElementById(`cairo-m-${rowIndex}`).value = cairoM.toString().padStart(2, '0');
             document.getElementById(`cairo-ampm-${rowIndex}`).value = suffix;
         };
 
@@ -2774,9 +2829,9 @@
             rows.forEach(row => {
                 const idx = row.getAttribute('data-index');
                 const dayIndex = document.getElementById(`day-select-${idx}`).value;
-                const cairoHour = document.getElementById(`cairo-h-${idx}`).getAttribute('data-real-hour');
+                const slotIndex = document.getElementById(`cairo-h-${idx}`).getAttribute('data-real-slot');
 
-                if(!cairoHour || cairoHour === "") {
+                if(slotIndex === null || slotIndex === "") {
                     hasError = true;
                     return;
                 }
@@ -2785,7 +2840,7 @@
                     teacher_id: currentTeacherId,
                     student_id: studentId,
                     day_index: parseInt(dayIndex),
-                    hour_index: parseInt(cairoHour),
+                    hour_index: parseInt(slotIndex), // حفظ مؤشر النصف ساعة (0-47)
                     status: 'booked'
                 });
             });
@@ -2822,7 +2877,7 @@
                     dbAvailability[currentTeacherId][cellKey] = { status: 'booked', studentId: studentId };
                 });
 
-                showToast('✅ تم التسكين بنجاح! السيرفر استلم المواعيد.', 'success');
+                showToast('✅ تم التسكين بنجاح!', 'success');
                 
                 if (typeof fetchMySchedule === 'function') fetchMySchedule();
                 renderAllDataDynamic();
@@ -2839,6 +2894,11 @@
             if(!container) return;
             
             const isAr = (typeof currentLang !== 'undefined' && currentLang === 'ar');
+            
+            // 🟢 التعريف الصحيح لمصفوفة الأيام حسب لغة التطبيق
+            const daysAr = ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
+            const daysEn = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+            const daysArr = isAr ? daysAr : daysEn;
 
             if (!currentTeacherId) {
                 container.innerHTML = `
@@ -2853,7 +2913,7 @@
                 container.innerHTML = `
                     <div class="p-12 text-center flex flex-col items-center justify-center gap-2 bg-slate-900 rounded-2xl text-white border border-slate-800">
                         <div class="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-                        <p class="text-[11px] font-bold text-slate-400">${isAr ? 'جاري تحميل شبكة المواعيد...' : 'Loading schedule grid...'}</p>
+                        <p class="text-[11px] font-bold text-slate-400">${isAr ? 'جاري تحميل شبكة المواعيد (نظام النصف ساعة)...' : 'Loading 30-min schedule grid...'}</p>
                     </div>`;
 
                 if (typeof dbAvailability === 'undefined') window.dbAvailability = {};
@@ -2871,14 +2931,19 @@
                         dbAvailability[currentTeacherId][cellKey] = { status: slot.status, studentId: slot.student_id };
                     });
                 }
-
-                const daysArr = isAr ? ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"] : ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
                 
+                // توليد 48 خانة (كل 30 دقيقة)
                 let localHoursGrid = []; 
-                for (let i = 0; i < 24; i++) { 
-                    let h = i % 12 || 12; 
-                    let ampm = i < 12 ? 'AM' : 'PM'; 
-                    localHoursGrid.push(`${h.toString().padStart(2, '0')}:00 ${ampm}`); 
+                for (let i = 0; i < 48; i++) { 
+                    let totalMins = i * 30;
+                    let h24 = Math.floor(totalMins / 60);
+                    let m = totalMins % 60;
+                    let h = h24 % 12 || 12; 
+                    let ampm = h24 < 12 ? 'AM' : 'PM'; 
+                    localHoursGrid.push({
+                        index: i,
+                        label: `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')} ${ampm}`
+                    }); 
                 }
 
                 const mySlots = dbAvailability[currentTeacherId] || {};
@@ -2889,7 +2954,7 @@
                         <div class="px-4 py-3 bg-slate-800/90 border-b border-slate-700 flex flex-wrap justify-between items-center gap-3">
                             <div class="flex items-center gap-2">
                                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                                <span class="font-bold text-slate-200 text-xs">${isAr ? 'انقر على أي خانة لفتحها (متاح) أو إغلاقها' : 'Click any slot to open or close'}</span>
+                                <span class="font-bold text-slate-200 text-xs">${isAr ? 'مواعيد كل 30 دقيقة (انقر لفتح/إغلاق)' : '30-min Slots (Click to open/close)'}</span>
                             </div>
                             <div class="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-700">
                                 <button onclick="setBookingFilter('all')" class="px-3 py-1.5 rounded-lg font-semibold transition ${currentBookingFilter === 'all' ? 'bg-slate-700 text-white shadow-xs' : 'text-slate-400 hover:text-slate-200'}">${isAr ? 'الكل' : 'All'}</button>
@@ -2898,7 +2963,7 @@
                             </div>
                         </div>
 
-                        <div class="overflow-x-auto custom-scrollbar max-h-[550px]">
+                        <div class="overflow-x-auto custom-scrollbar max-h-[600px]">
                             <table class="w-full min-w-[900px] border-collapse text-center">
                                 <thead class="bg-slate-800 text-slate-300 font-bold sticky top-0 z-30 shadow-xs">
                                     <tr class="border-b border-slate-700">
@@ -2910,12 +2975,12 @@
                 
                 html += `</tr></thead><tbody class="divide-y divide-slate-800/60 bg-slate-900">`;
                 
-                localHoursGrid.forEach((time, hIndex) => {
+                localHoursGrid.forEach((timeObj) => {
                     html += `<tr class="hover:bg-slate-800/40 transition-colors">`;
-                    html += `<td class="p-2.5 font-mono font-bold text-slate-400 sticky right-0 bg-slate-800/95 backdrop-blur-xs z-20 border-r border-slate-700 text-xs" dir="ltr">${time}</td>`;
+                    html += `<td class="p-2.5 font-mono font-bold text-slate-400 sticky right-0 bg-slate-800/95 backdrop-blur-xs z-20 border-r border-slate-700 text-xs" dir="ltr">${timeObj.label}</td>`;
                     
                     for(let d = 0; d < 7; d++) {
-                        let cellKey = `${d}_${hIndex}`;
+                        let cellKey = `${d}_${timeObj.index}`;
                         let slotInfo = mySlots[cellKey];
                         let statusType = slotInfo ? slotInfo.status : 'closed';
 
@@ -2938,13 +3003,13 @@
                                 </div>`;
                         } else if (slotInfo && slotInfo.status === 'available') {
                             html += `
-                                <button type="button" onclick="makeSlotUnavailable('${cellKey}')" class="w-full bg-emerald-900/60 text-emerald-300 hover:bg-rose-900/60 hover:text-rose-300 py-2 px-2 rounded-xl font-bold border border-emerald-700/60 transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm" title="${isAr ? 'متاح - انقر للإغلاق' : 'Available - Click to close'}">
+                                <button type="button" onclick="makeSlotUnavailable('${cellKey}')" class="w-full bg-emerald-900/60 text-emerald-300 hover:bg-rose-900/60 hover:text-rose-300 py-2 px-2 rounded-xl font-bold border border-emerald-700/60 transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
                                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                                     <span class="text-xs">${isAr ? 'متاح' : 'Open'}</span>
                                 </button>`;
                         } else {
                             html += `
-                                <button type="button" onclick="makeSlotAvailable('${cellKey}')" class="w-full bg-slate-800/50 text-slate-500 hover:bg-emerald-900/50 hover:text-emerald-300 py-2 px-2 rounded-xl font-semibold border border-slate-700 border-dashed transition-all cursor-pointer flex items-center justify-center shadow-xs" title="${isAr ? 'مغلق - انقر للفتح' : 'Closed - Click to open'}">
+                                <button type="button" onclick="makeSlotAvailable('${cellKey}')" class="w-full bg-slate-800/50 text-slate-500 hover:bg-emerald-900/50 hover:text-emerald-300 py-2 px-2 rounded-xl font-semibold border border-slate-700 border-dashed transition-all cursor-pointer flex items-center justify-center shadow-xs">
                                     <span class="text-xs opacity-60">${isAr ? 'مغلق' : 'Closed'}</span>
                                 </button>`;
                         }
@@ -2961,7 +3026,6 @@
                 container.innerHTML = `<div class="p-6 text-center text-rose-400 font-bold bg-slate-900 rounded-2xl border border-rose-900 text-xs">حدث خطأ في تحميل الشبكة: ${error.message}</div>`;
             }
         };
-
         window.setBookingFilter = function(filterType) {
             currentBookingFilter = filterType;
             renderBookingGrid();
@@ -3348,6 +3412,36 @@ window.saveQuranTracker = async function() {
                 showToast(currentLang === 'ar' ? '✅ تم التعامل مع الاعتذار بنجاح!' : '✅ Apology handled successfully!', 'success');
             } catch(e) { showToast('❌ خطأ: ' + e.message, 'error'); }
         };
+        // 🟢 دالة ديناميكية دقيقة جداً تحسب الفارق الزمني (حتى النصف ساعة) لأي دولة تلقائياً
+        function getCairoOffset(studentTz) {
+            try {
+                const now = new Date();
+                const formatterCairo = new Intl.DateTimeFormat('en-US', { timeZone: 'Africa/Cairo', hour: 'numeric', minute: 'numeric', hour12: false });
+                const formatterStudent = new Intl.DateTimeFormat('en-US', { timeZone: studentTz || 'Africa/Cairo', hour: 'numeric', minute: 'numeric', hour12: false });
+                
+                const getMins = (formatter) => {
+                    const parts = formatter.formatToParts(now);
+                    let h = 0, m = 0;
+                    for (let p of parts) {
+                        if (p.type === 'hour') h = parseInt(p.value, 10);
+                        if (p.type === 'minute') m = parseInt(p.value, 10);
+                    }
+                    if (h === 24) h = 0;
+                    return h * 60 + m;
+                };
+                
+                let cairoMins = getMins(formatterCairo);
+                let studentMins = getMins(formatterStudent);
+                
+                let diffMins = studentMins - cairoMins;
+                if (diffMins > 720) diffMins -= 1440;
+                if (diffMins < -720) diffMins += 1440;
+                
+                return diffMins / 60; // إرجاع الفارق بالساعات (مع دعم الكسور مثل 1.5)
+            } catch (e) {
+                return 0;
+            }
+        }
     </script>
 </body>
 </html>
