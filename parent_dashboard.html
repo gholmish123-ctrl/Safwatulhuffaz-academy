@@ -232,7 +232,6 @@
 
         document.getElementById('current-year').innerText = new Date().getFullYear();
 
-        // 🟢 مصفوفة السور المطلوبة لعمل التقارير بدون أخطاء
         const quranSurahs = [
             {id: 1, ar: "الفاتحة", en: "Al-Fatihah", ayahs: 7}, {id: 2, ar: "البقرة", en: "Al-Baqarah", ayahs: 286}, {id: 3, ar: "آل عمران", en: "Aal-Imran", ayahs: 200}, {id: 4, ar: "النساء", en: "An-Nisa", ayahs: 176}, {id: 5, ar: "المائدة", en: "Al-Ma'idah", ayahs: 120}, {id: 6, ar: "الأنعام", en: "Al-An'am", ayahs: 165}, {id: 7, ar: "الأعراف", en: "Al-A'raf", ayahs: 206}, {id: 8, ar: "الأنفال", en: "Al-Anfal", ayahs: 75}, {id: 9, ar: "التوبة", en: "At-Tawbah", ayahs: 129}, {id: 10, ar: "يونس", en: "Yunus", ayahs: 109},
             {id: 11, ar: "هود", en: "Hud", ayahs: 123}, {id: 12, ar: "يوسف", en: "Yusuf", ayahs: 111}, {id: 13, ar: "الرعد", en: "Ar-Ra'd", ayahs: 43}, {id: 14, ar: "إبراهيم", en: "Ibrahim", ayahs: 52}, {id: 15, ar: "الحجر", en: "Al-Hijr", ayahs: 99}, {id: 16, ar: "النحل", en: "An-Nahl", ayahs: 128}, {id: 17, ar: "الإسراء", en: "Al-Isra", ayahs: 111}, {id: 18, ar: "الكهف", en: "Al-Kahf", ayahs: 110}, {id: 19, ar: "مريم", en: "Maryam", ayahs: 98}, {id: 20, ar: "طه", en: "Taha", ayahs: 135},
@@ -248,7 +247,6 @@
             {id: 111, ar: "المسد", en: "Al-Masad", ayahs: 5}, {id: 112, ar: "الإخلاص", en: "Al-Ikhlas", ayahs: 4}, {id: 113, ar: "الفلق", en: "Al-Falaq", ayahs: 5}, {id: 114, ar: "الناس", en: "An-Nas", ayahs: 6}
         ];
 
-        // ================== قاموس الترجمة ==================
         const dict = {
             ar: {
                 dir: 'rtl', navTitle: 'بوابة أولياء الأمور', navSub: 'أكاديمية صفوة الحفاظ', logout: 'تسجيل الخروج', loading: 'جاري جلب بيانات الأبناء...',
@@ -328,29 +326,83 @@
             await fetchParentData();
         };
 
+        // 🟢 الدالة الذكية المحدثة: البحث الشامل بالإيميل ورقم الهاتف واسم ولي الأمر معاً
         async function fetchParentData() {
             try {
                 const { data: teachers } = await supabaseClient.from('teachers').select('id, name, zoom_link');
                 if (teachers) teachers.forEach(t => teachersMap[t.id] = t);
 
-                const { data: kids, error } = await supabaseClient.from('students').select('*').eq('parent_email', currentUser.email).neq('status', 'deleted');
+                let parentEmail = currentUser.email ? currentUser.email.trim() : "";
+
+                // 1. البحث أولاً بمعرفة الهاتف والاسم المرتبطين بإيميل ولي الأمر الحالي
+                let { data: primaryKids } = await supabaseClient
+                    .from('students')
+                    .select('parent_phone, parent_name')
+                    .ilike('parent_email', parentEmail)
+                    .neq('status', 'deleted');
+
+                let phonesToSearch = new Set();
+                let namesToSearch = new Set();
+
+                if (primaryKids && primaryKids.length > 0) {
+                    primaryKids.forEach(k => {
+                        if (k.parent_phone) phonesToSearch.add(k.parent_phone.trim());
+                        if (k.parent_name) namesToSearch.add(k.parent_name.trim());
+                    });
+                }
+
+                let authPhone = currentUser.user_metadata?.phone || currentUser.phone || "";
+                if (authPhone) phonesToSearch.add(authPhone.trim());
+
+                // 2. جلب جميع الأبناء عبر المطابقة التامة (بالإيميل، أو برقم الهاتف المشترك، أو بالاسم) لضمان جلب من لديهم NULL في الإيميل
+                let query = supabaseClient.from('students').select('*').neq('status', 'deleted');
+                let conditions = [`parent_email.ilike.${parentEmail}`];
+
+                phonesToSearch.forEach(phone => {
+                    if (phone) conditions.push(`parent_phone.eq.${phone}`);
+                });
+                namesToSearch.forEach(name => {
+                    if (name) conditions.push(`parent_name.ilike.%${name}%`);
+                });
+
+                if (conditions.length > 0) {
+                    query = query.or(conditions.join(','));
+                }
+
+                const { data: kids, error } = await query;
                 if (error) throw error;
-                document.getElementById('loader').classList.add('hidden'); document.getElementById('main-content').classList.remove('hidden');
-                if (!kids || kids.length === 0) return document.getElementById('no-children-msg').classList.remove('hidden');
+
+                document.getElementById('loader').classList.add('hidden'); 
+                document.getElementById('main-content').classList.remove('hidden');
+
+                if (!kids || kids.length === 0) {
+                    document.getElementById('no-children-msg').classList.remove('hidden');
+                    return;
+                }
                 
-                childrenList = kids; const childIds = kids.map(k => k.id);
+                childrenList = Array.from(new Set(kids.map(k => k.id)))
+                    .map(id => kids.find(k => k.id === id));
+
+                const childIds = childrenList.map(k => k.id);
                 
-                const { data: att, error: attError } = await supabaseClient.from('attendance').select('*').in('student_id', childIds).order('created_at', { ascending: false });
+                const { data: att } = await supabaseClient.from('attendance').select('*').in('student_id', childIds).order('created_at', { ascending: false });
                 if (att) attendanceList = att;
 
-                try { const { data: pays } = await supabaseClient.from('payments').select('*').in('student_id', childIds).order('created_at', { ascending: false }); if(pays) paymentsList = pays; } catch(e){}
+                try { 
+                    const { data: pays } = await supabaseClient.from('payments').select('*').in('student_id', childIds).order('created_at', { ascending: false }); 
+                    if(pays) paymentsList = pays; 
+                } catch(e){}
 
-                populateChildSelector(); renderChildData();
-            } catch (err) { alert("حدث خطأ أثناء جلب البيانات: " + (err.message || err)); }
+                populateChildSelector(); 
+                renderChildData();
+            } catch (err) { 
+                alert("حدث خطأ أثناء جلب البيانات: " + (err.message || err)); 
+            }
         }
 
         function populateChildSelector() {
-            const selector = document.getElementById('child-selector'); const currentIndex = selector.value;
+            const selector = document.getElementById('child-selector'); 
+            const currentIndex = selector.value;
             selector.innerHTML = childrenList.map((k, index) => `<option value="${index}">${dict[currentLang].studentPrefix}${k.name}</option>`).join('');
             if(currentIndex && childrenList[currentIndex]) selector.value = currentIndex;
         }
