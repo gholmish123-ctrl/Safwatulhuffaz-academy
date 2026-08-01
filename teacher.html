@@ -1752,8 +1752,7 @@
             } catch(e) { showToast('❌ حدث خطأ في الإرسال.', 'error'); }
         };
 
-        // ================= التحديث الآلي لنموذج التقرير بناءً على بيانات آخر حصة =================
-        window.onStudentChange = async function(studentId) {
+       window.onStudentChange = async function(studentId) {
             const studentObj = dbStudents.find(s => String(s.id).trim() === String(studentId).trim());
             if (!studentObj) return;
 
@@ -1761,6 +1760,53 @@
             const quranBox = document.getElementById('dynamic-fields-quran');
             const arabicBox = document.getElementById('dynamic-fields-arabic');
             const lessonNumInput = document.getElementById('form-lesson-num');
+
+            // ==========================================================
+            // 🟢 شرط تقييد التقارير: إذا كان الطالب ملتحقاً بمادة "السند"
+            // ==========================================================
+            const isSanad = studentObj.subject && (
+                studentObj.subject === 'السند' || 
+                studentObj.subject === 'إجازات سند' || 
+                studentObj.subject.includes('سند')
+            );
+
+            const dailyBtn = document.getElementById('btn-mode-daily');
+            const placeBtn = document.getElementById('btn-mode-placement');
+            const sanadBtn = document.getElementById('btn-mode-sanad');
+
+            if (isSanad) {
+                // 🔒 إخفاء زر التقرير اليومي وزر تحديد المستوى تماماً
+                if (dailyBtn) dailyBtn.style.display = 'none';
+                if (placeBtn) placeBtn.style.display = 'none';
+                if (sanadBtn) sanadBtn.style.display = 'block';
+                
+                // فتح واختيار تقرير السند تلقائياً
+                toggleReportMode('sanad');
+
+                if(systemBadge) {
+                    systemBadge.innerText = currentLang === 'ar' ? "مسار السند والقراءات" : "Sanad Track";
+                    systemBadge.className = "w-full block px-4 py-3 rounded-xl border border-amber-200 bg-amber-50 text-sm font-black text-center text-amber-800 shadow-inner";
+                }
+
+                // ربط الطالب تلقائياً بنموذج تقرير السند
+                const sanadRepSelect = document.getElementById('sanad-form-student');
+                if(sanadRepSelect) {
+                    sanadRepSelect.value = studentId;
+                    populateSanadKhatmasForReport(studentId);
+                }
+                return; // إيقاف إكمال الكود العادي لأن الطالب خاص بالسند فقط
+            } else {
+                // 🔓 إذا لم يكن طالب سند، إعادة إظهار الأزرار العادية
+                if (dailyBtn) dailyBtn.style.display = 'block';
+                if (placeBtn) placeBtn.style.display = 'block';
+                
+                // إذا كان العرض الحالي على السند، نعيده تلقائياً للتقرير اليومي
+                const sanadBox = document.getElementById('box-report-sanad');
+                if (sanadBox && !sanadBox.classList.contains('hidden')) {
+                    toggleReportMode('daily');
+                }
+            }
+            // ==========================================================
 
             if(lessonNumInput) {
                 lessonNumInput.value = '⏳';
@@ -1826,7 +1872,6 @@
                 }
             } catch(e) { console.log("No previous data to autofill."); }
         };
-
         window.saveAttendanceLog = async function() {
             const absentees = [];
             const attDateEl = document.getElementById('attendance-date');
@@ -3225,6 +3270,52 @@ window.saveQuranTracker = async function() {
                 showToast(currentLang === 'ar' ? '✅ تم إرسال الرفض للطالب' : '✅ Rejection sent', 'success');
             } catch(e) { showToast('❌ خطأ: ' + e.message, 'error'); }
         };
+        function handleStudentTrackRestriction(studentId) {
+    // البحث عن الطالب المختاره من القائمة (تأكد من مطابقة اسم مصفوفة الطلاب لديك مثل dbStudents)
+    const student = dbStudents.find(s => String(s.id) === String(studentId));
+    if (!student) return;
+
+    // تحديد عناصر التبويبات الثلاثة الظاهرة أعلى الصفحة
+    // (يجب التأكد من مطابقة الـ IDs الخاصة بالأزرار لديك في الـ HTML)
+    const btnProgress = document.getElementById('tab-progress-btn');       // زر تبويب Fill Progress Report
+    const btnPlacement = document.getElementById('tab-placement-btn');     // زر تبويب Placement Rubric
+    const btnSanad = document.getElementById('tab-sanad-btn');             // زر تبويب Sanad Recitation Report
+
+    // التحقق مما إذا كان الطالب مسجلاً في السند
+    const isSanad = student.subject && (
+        student.subject === 'السند' || 
+        student.subject === 'إجازات سند' || 
+        student.subject.includes('سند')
+    );
+
+    if (isSanad) {
+        // 🔒 إذا كان طالب سند: إخفاء التقارير الأخرى تماماً
+        if (btnProgress) btnProgress.style.display = 'none';
+        if (btnPlacement) btnPlacement.style.display = 'none';
+        
+        // فتح تبويب السند حصراً وتنشيطه تلقائياً
+        if (btnSanad) {
+            btnSanad.style.display = 'block';
+            // استدعاء دالة التبديل الخاصة بفتح قسم السند لديك (مثلاً switchReportTab('sanad'))
+            switchReportTab('sanad'); 
+        }
+
+        // تحديث حقل "Student Track (Auto)" الظاهر في الشاشة ليطابق السند
+        const trackInput = document.getElementById('student-track-display');
+        if (trackInput) trackInput.innerText = "Sanad Track";
+
+    } else {
+        // 🔓 إذا لم يكن طالب سند: إظهار التقارير الطبيعية
+        if (btnProgress) btnProgress.style.display = 'block';
+        if (btnPlacement) btnPlacement.style.display = 'block';
+        
+        // إخفاء تبويب السند عن باقي الطلاب (إذا رغبت في ذلك)
+        if (btnSanad) btnSanad.style.display = 'none';
+
+        // الانتقال لتقرير التقدم كافتراضي
+        switchReportTab('progress');
+    }
+}
 
         // هـ. التعامل مع اعتذار الطالب (إدارة الغياب الذكي)
         window.adminHandleApology = async function(studentId, targetDate, actionType, studentName, btnElement) {

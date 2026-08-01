@@ -426,11 +426,21 @@
                             
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 mb-2">المادة المرادة</label>
-                                <select id="s-subject" required class="w-full p-3 border border-blue-200 rounded-xl bg-blue-50 text-blue-900 text-sm font-black outline-none cursor-pointer">
-                                    <option value="القرآن الكريم">📖 القرآن الكريم</option>
-                                    <option value="اللغة العربية">📚 اللغة العربية</option>
-                                    <option value="نور البيان">👶 نور البيان</option>
-                                </select>
+                               <div class="relative">
+    <select id="student-subject" name="subject" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 block px-4 py-3.5 font-bold cursor-pointer transition-all duration-200 shadow-sm hover:bg-white hover:border-emerald-300 outline-none appearance-none">
+        <option value="" disabled selected>-- اختر المادة الدراسية --</option>
+        <option value="القرآن الكريم">📖 القرآن الكريم</option>
+        <option value="اللغة العربية">📚 اللغة العربية</option>
+        <option value="نور البيان">👶 نور البيان</option>
+        <option value="السند">📜 السند</option>
+    </select>
+    <!-- أيقونة السهم المخصصة لتكون منسقة مع الـ RTL -->
+    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+        </svg>
+    </div>
+</div>
                             </div>
                             
                             <div>
@@ -4137,43 +4147,71 @@ if (typeof window.renderCountriesDropdown === 'function') {
         };
 
         window.renderAdminSanadSection = function() {
-            const qContainer = document.getElementById('admin-qiraat-container');
-            const mContainer = document.getElementById('admin-mutoon-container');
-            const rContainer = document.getElementById('admin-ruwat-container');
+    // 🟢 تصفية مرنة تشمل "السند" أو "إجازات سند" أو أي نص يحتوي على كلمة سند
+    const studentSelect = document.getElementById('admin-sanad-student-select');
+    if (studentSelect) {
+        const sanadStudents = dbStudents.filter(s => 
+            s.status !== 'deleted' && 
+            s.subject && 
+            (s.subject === 'السند' || s.subject === 'إجازات سند' || s.subject.includes('سند'))
+        );
+        
+        if (sanadStudents.length === 0) {
+            studentSelect.innerHTML = `<option value="" disabled selected>لا توجد طلاب مسجلين بمادة السند</option>`;
+            const container = document.getElementById('admin-active-khatmas-container');
+            if(container) container.innerHTML = `<p class="text-xs text-slate-400 font-bold col-span-2 text-center py-4 bg-white rounded-xl border border-slate-100">لا يوجد طلاب مسجلين بمادة السند حالياً.</p>`;
+        } else {
+            const currentSelected = studentSelect.value;
+            studentSelect.innerHTML = `<option value="">-- اختر طالب السند --</option>` + 
+                sanadStudents.map(s => `<option value="${s.id}">${s.name} (ولي الأمر: ${s.parent_name})</option>`).join('');
             
-            if(qContainer) {
-                qContainer.innerHTML = '';
-                Object.keys(adminQiraatMap).forEach(q => {
-                    const isSel = adminSelectedQiraat.has(q);
-                    const baseClass = isSel ? 'bg-amber-600 text-white shadow-md scale-105' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50';
-                    qContainer.innerHTML += `<button type="button" onclick="adminToggleQiraa('${q}')" class="px-3 py-2 rounded-xl text-xs font-bold transition-all ${baseClass} cursor-pointer">${q}</button>`;
-                });
+            // الحفاظ على الطالب المختار أو اختيار الأول تلقائياً
+            if (currentSelected && sanadStudents.some(s => String(s.id) === String(currentSelected))) {
+                studentSelect.value = currentSelected;
+            } else if (sanadStudents.length > 0) {
+                studentSelect.value = sanadStudents[0].id;
+                window.renderAdminStudentKhatmas(sanadStudents[0].id);
             }
+        }
+    }
 
-            if(rContainer) {
-                rContainer.innerHTML = '';
-                if (adminSelectedQiraat.size === 0) {
-                    rContainer.innerHTML = `<p class="text-xs text-slate-400 w-full text-center py-2">يرجى اختيار قراءة أولاً لتظهر رواياتها</p>`;
-                } else {
-                    adminSelectedQiraat.forEach(q => {
-                        adminQiraatMap[q].forEach(r => {
-                            const isSel = adminSelectedRuwat.has(r);
-                            const baseClass = isSel ? 'bg-blue-600 text-white shadow-md scale-105' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50';
-                            rContainer.innerHTML += `<button type="button" onclick="adminToggleRewaya('${r}')" class="px-3 py-2 rounded-xl text-xs font-bold transition-all ${baseClass} cursor-pointer">${r} (عن ${q.split(' ')[0]})</button>`;
-                        });
-                    });
-                }
-            }
+    const qContainer = document.getElementById('admin-qiraat-container');
+    const mContainer = document.getElementById('admin-mutoon-container');
+    const rContainer = document.getElementById('admin-ruwat-container');
+    
+    if(qContainer) {
+        qContainer.innerHTML = '';
+        Object.keys(adminQiraatMap).forEach(q => {
+            const isSel = adminSelectedQiraat.has(q);
+            const baseClass = isSel ? 'bg-amber-600 text-white shadow-md scale-105' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50';
+            qContainer.innerHTML += `<button type="button" onclick="adminToggleQiraa('${q}')" class="px-3 py-2 rounded-xl text-xs font-bold transition-all ${baseClass} cursor-pointer">${q}</button>`;
+        });
+    }
 
-            if(mContainer) {
-                mContainer.innerHTML = '';
-                adminMutoonList.forEach(m => {
-                    const isSel = adminSelectedMutoon.has(m);
-                    const baseClass = isSel ? 'bg-emerald-600 text-white shadow-md scale-105' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50';
-                    mContainer.innerHTML += `<button type="button" onclick="adminToggleMatn('${m}')" class="px-3 py-2 rounded-xl text-xs font-bold transition-all ${baseClass} cursor-pointer">${m}</button>`;
+    if(rContainer) {
+        rContainer.innerHTML = '';
+        if (adminSelectedQiraat.size === 0) {
+            rContainer.innerHTML = `<p class="text-xs text-slate-400 w-full text-center py-2">يرجى اختيار قراءة أولاً لتظهر رواياتها</p>`;
+        } else {
+            adminSelectedQiraat.forEach(q => {
+                adminQiraatMap[q].forEach(r => {
+                    const isSel = adminSelectedRuwat.has(r);
+                    const baseClass = isSel ? 'bg-blue-600 text-white shadow-md scale-105' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50';
+                    rContainer.innerHTML += `<button type="button" onclick="adminToggleRewaya('${r}')" class="px-3 py-2 rounded-xl text-xs font-bold transition-all ${baseClass} cursor-pointer">${r} (عن ${q.split(' ')[0]})</button>`;
                 });
-            }
-        };
+            });
+        }
+    }
+
+    if(mContainer) {
+        mContainer.innerHTML = '';
+        adminMutoonList.forEach(m => {
+            const isSel = adminSelectedMutoon.has(m);
+            const baseClass = isSel ? 'bg-emerald-600 text-white shadow-md scale-105' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50';
+            mContainer.innerHTML += `<button type="button" onclick="adminToggleMatn('${m}')" class="px-3 py-2 rounded-xl text-xs font-bold transition-all ${baseClass} cursor-pointer">${m}</button>`;
+        });
+    }
+};
 
         window.adminToggleQiraa = function(q) {
             if(adminSelectedQiraat.has(q)) {
