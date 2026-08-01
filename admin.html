@@ -359,12 +359,13 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 mb-2">العملة المفضلة</label>
-                                <select id="s-currency" class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 font-bold outline-none cursor-pointer">
-                                    <option value="USD">دولار أمريكي ($)</option>
-                                    <option value="EUR">يورو (€)</option>
-                                    <option value="EGP">جنيه مصري (EGP)</option>
-                                    <option value="SAR">ريال سعودي (SAR)</option>
-                                </select>
+                               <select id="s-currency" class="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 font-bold outline-none cursor-pointer">
+    <option value="USD">دولار أمريكي ($)</option>
+    <option value="EUR">يورو (€)</option>
+    <option value="GBP">جنيه إسترليني (£)</option> <!-- 🟢 الإضافة الجديدة -->
+    <option value="EGP">جنيه مصري (EGP)</option>
+    <option value="SAR">ريال سعودي (SAR)</option>
+</select>
                             </div>
                             
                             <!-- خيار الحصة التجريبية -->
@@ -1406,7 +1407,7 @@
     { 
         region: "أوروبا 🇬🇧🇫🇷", 
         list: [ 
-            {n: "بريطانيا (UK - لندن)", c: "+44", tz: "Europe/London"}, 
+            {n: "بريطانيا (المملكة المتحدة - لندن)", c: "+44", tz: "Europe/London"}, 
             {n: "فرنسا (France)", c: "+33", tz: "Europe/Paris"}, 
             {n: "ألمانيا (Germany)", c: "+49", tz: "Europe/Berlin"}, 
             {n: "السويد (Sweden)", c: "+46", tz: "Europe/Stockholm"} 
@@ -1419,7 +1420,8 @@
             {n: "السعودية (KSA - الرياض)", c: "+966", tz: "Asia/Riyadh"}, 
             {n: "الإمارات (UAE - دبي)", c: "+971", tz: "Asia/Dubai"},
             {n: "الكويت (Kuwait)", c: "+965", tz: "Asia/Kuwait"},
-            {n: "الأردن (Jordan)", c: "+962", tz: "Asia/Amman"}
+            {n: "الأردن (Jordan)", c: "+962", tz: "Asia/Amman"},
+            {n: "قطر (Qatar)", c: "+974", tz: "Asia/Doha"}
         ] 
     },
     { 
@@ -1431,7 +1433,6 @@
         ] 
     }
 ];
-
         const adminQiraatMap = {
             "نافع المدني": ["قالون", "ورش"], 
             "ابن كثير المكي": ["البزي", "قنبل"], 
@@ -1595,6 +1596,9 @@ countriesList.forEach(g => {
 
 const cs1 = document.getElementById('s-country'); if(cs1) cs1.innerHTML = cHtml;
 const cs2 = document.getElementById('edit-s-country'); if(cs2) cs2.innerHTML = cHtml;
+if (typeof window.renderCountriesDropdown === 'function') {
+        window.renderCountriesDropdown();
+    }
 
             if(document.getElementById('att-date')) document.getElementById('att-date').valueAsDate = new Date();
             const nextWeek = new Date(); 
@@ -4645,6 +4649,27 @@ window.sendWelcomeWhatsApp = function(studentName, studentPhone, studentEmail, i
     const whatsappUrl = `https://wa.me/${phone.replace('+', '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
     window.showToast('📲 تم فتح واتساب لإرسال رسالة الترحيب للطالب بنجاح');
+};
+window.renderCountriesDropdown = function() {
+    // جلب جميع عناصر اختيار الدول في النظام (سواء في شاشة إضافة طالب أو تعديله)
+    const selectElements = [document.getElementById('s-country'), document.getElementById('edit-s-country')];
+
+    selectElements.forEach(selectEl => {
+        if (!selectEl) return;
+
+        let html = `<option value="">-- اختر دولة الإقامة / المدينة --</option>`;
+
+        countriesList.forEach(group => {
+            html += `<optgroup label="${group.region}">`;
+            group.list.forEach(item => {
+                // نخزن الـ Timezone في الـ value، ونعرض اسم المدينة وكود الهاتف للمستخدم
+                html += `<option value="${item.tz}">${item.n} (${item.c})</option>`;
+            });
+            html += `</optgroup>`;
+        });
+
+        selectEl.innerHTML = html;
+    });
 };
     </script>
 </body>
