@@ -1486,71 +1486,78 @@ function setupStudentRealtimeListener() {
                 const loggedDates = new Set((attendances || []).map(a => a.date));
 
                 const now = new Date();
-                const currentDayIdx = (now.getDay() + 1) % 7; 
-                const currentHour = now.getHours();
-                const currentMinute = now.getMinutes();
+                const currentBrowserDayIdx = (now.getDay() + 1) % 7; 
 
+                const studentTz = studentData.local_tz || 'America/New_York';
+                const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                
+                let studentOffset = window.getCairoOffset(studentTz);
+                let browserOffset = window.getCairoOffset(browserTz);
+
+                let minDiffMs = Infinity;
                 let closestSlot = null;
                 let closestDate = null;
-                let minDiffMs = Infinity;
-
-                let tz = studentData.local_tz || 'America/New_York';
-                let offset = 0;
-                if(tz.includes('New_York') || tz.includes('EST') || tz.includes('Chicago')) offset = -7;
-                else if(tz.includes('London')) offset = -2;
-                else if(tz.includes('Toronto')) offset = -7;
-                else if(tz.includes('Sydney')) offset = 8;
+                let closestStudentDisplay = null;
 
                 for (const slot of slots) {
-                    let dayDiff = slot.day_index - currentDayIdx;
-                    let localHour = slot.hour_index + offset;
-                    let actualDayDiff = dayDiff;
+                    let cairoTotalMins = slot.hour_index * 30;
+                    
+                    // حساب وقت المتصفح الفعلي لبناء العد التنازلي الدقيق
+                    let browserTotalMins = cairoTotalMins + (browserOffset * 60);
+                    let browserDayIdx = slot.day_index;
+                    if (browserTotalMins >= 1440) { browserTotalMins -= 1440; browserDayIdx = (browserDayIdx + 1) % 7; } 
+                    else if (browserTotalMins < 0) { browserTotalMins += 1440; browserDayIdx = (browserDayIdx - 1 + 7) % 7; }
+                    
+                    let bH24 = Math.floor(browserTotalMins / 60);
+                    let bM = Math.floor(browserTotalMins % 60);
 
-                    if (localHour < 0) { localHour += 24; actualDayDiff -= 1; }
-                    else if (localHour >= 24) { localHour -= 24; actualDayDiff += 1; }
+                    let dayDiff = browserDayIdx - currentBrowserDayIdx;
+                    let targetDate = new Date(now);
+                    targetDate.setHours(bH24, bM, 0, 0);
 
-                    if (actualDayDiff < 0) actualDayDiff += 7;
+                    if (dayDiff < 0) { dayDiff += 7; } 
+                    else if (dayDiff === 0 && targetDate.getTime() <= now.getTime()) { dayDiff += 7; }
 
-                    if (actualDayDiff === 0 && (localHour < currentHour || (localHour === currentHour && 0 <= currentMinute))) {
-                        actualDayDiff += 7;
-                    }
+                    targetDate.setDate(now.getDate() + dayDiff);
 
-                    let slotDate = new Date(now.getTime());
-                    slotDate.setDate(now.getDate() + actualDayDiff);
-                    slotDate.setHours(localHour, 0, 0, 0);
-
-                    let dateStrCheck = getLocalDateString(slotDate);
+                    let dateStrCheck = getLocalDateString(targetDate);
                     while (loggedDates.has(dateStrCheck)) {
-                        slotDate.setDate(slotDate.getDate() + 7);
-                        dateStrCheck = getLocalDateString(slotDate);
+                        targetDate.setDate(targetDate.getDate() + 7);
+                        dateStrCheck = getLocalDateString(targetDate);
                     }
 
-                    let diffMs = slotDate.getTime() - now.getTime();
+                    let diffMs = targetDate.getTime() - now.getTime();
                     if (diffMs > 0 && diffMs < minDiffMs) {
                         minDiffMs = diffMs;
                         closestSlot = slot;
-                        closestDate = slotDate;
-                        closestSlot.localHour = localHour; 
+                        closestDate = targetDate;
+                        
+                        // حساب وقت الطالب المحلي للعرض في الكارت
+                        let studentTotalMins = cairoTotalMins + (studentOffset * 60);
+                        let studentDayIdx = slot.day_index;
+                        if (studentTotalMins >= 1440) { studentTotalMins -= 1440; studentDayIdx = (studentDayIdx + 1) % 7; } 
+                        else if (studentTotalMins < 0) { studentTotalMins += 1440; studentDayIdx = (studentDayIdx - 1 + 7) % 7; }
+                        
+                        let sH24 = Math.floor(studentTotalMins / 60);
+                        let sM = Math.floor(studentTotalMins % 60);
+                        
+                        closestStudentDisplay = { dayIdx: studentDayIdx, h24: sH24, m: sM };
                     }
                 }
 
-                if (closestSlot && closestDate) {
+                if (closestSlot && closestDate && closestStudentDisplay) {
                     nextSessionTargetDate = closestDate;
 
                     const daysAr = ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"];
-                    const daysEn = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+                    const daysEn = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
                     const daysArr = currentLang === 'ar' ? daysAr : daysEn;
 
-                    let h = closestSlot.localHour % 12 || 12;
-                    let ampm = closestSlot.localHour < 12 ? 'AM' : 'PM';
-
-                    let localDayIdx = closestSlot.day_index;
-                    let cairoH = closestSlot.hour_index + offset;
-                    if(cairoH < 0) localDayIdx = (localDayIdx - 1 + 7) % 7;
-                    if(cairoH >= 24) localDayIdx = (localDayIdx + 1) % 7;
+                    let sH12 = closestStudentDisplay.h24 % 12 || 12;
+                    let sAmpm = closestStudentDisplay.h24 < 12 ? 'AM' : 'PM';
+                    let sM_str = closestStudentDisplay.m.toString().padStart(2, '0');
 
                     if (dateEl) {
-                        dateEl.innerText = `${daysArr[localDayIdx]} | ${h.toString().padStart(2, '0')}:00 ${ampm}`;
+                        dateEl.innerText = `${daysArr[closestStudentDisplay.dayIdx]} | ${sH12.toString().padStart(2, '0')}:${sM_str} ${sAmpm}`;
                     }
 
                     const gcalBtn = document.getElementById('gcal-link');
@@ -1572,7 +1579,6 @@ function setupStudentRealtimeListener() {
                 }
             } catch (err) { console.error("Error calculating next session:", err); }
         };
-
         window.runCountdownTimer = function() {
             const countdownEl = document.getElementById('session-countdown');
             const apologizeBtn = document.getElementById('btn-apologize-session');
@@ -2191,16 +2197,16 @@ function setupStudentRealtimeListener() {
 
                 let html = '';
                 let studentTz = (studentObj && studentObj.local_tz) ? studentObj.local_tz : 'America/New_York';
-                let offsetHours = getCairoOffset(studentTz);
+                let offsetHours = window.getCairoOffset(studentTz);
 
                 slots.forEach(slot => {
-                    // 🟢 حساب وقت القاهرة الأساسي بالدقائق (خانة النصف ساعة * 30)
+                    // تحويل مؤشر النصف ساعة بتوقيت القاهرة لدقائق
                     let totalCairoMins = slot.hour_index * 30;
                     
-                    // 🟢 تحويل وقت القاهرة إلى توقيت الطالب
+                    // تحويل لتوقيت الطالب المحلي بدقة
                     let studentTotalMins = totalCairoMins + (offsetHours * 60);
-                    
                     let displayDayIndex = slot.day_index;
+                    
                     if(studentTotalMins >= 1440) {
                         studentTotalMins -= 1440;
                         displayDayIndex = (slot.day_index + 1) % 7;
@@ -2210,7 +2216,7 @@ function setupStudentRealtimeListener() {
                     }
 
                     let sH24 = Math.floor(studentTotalMins / 60);
-                    let sM = studentTotalMins % 60;
+                    let sM = Math.floor(studentTotalMins % 60);
                     let sH = sH24 % 12 || 12;
                     let ampm = sH24 < 12 ? 'AM' : 'PM';
                     
@@ -2232,12 +2238,12 @@ function setupStudentRealtimeListener() {
                             <td class="p-4 font-bold text-slate-700">👨‍🏫 ${teacherName}</td>
                             <td class="p-4 text-center"><span class="bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-md text-[10px] font-black shadow-sm">✔️ ${isAr ? 'مؤكد' : 'Confirmed'}</span></td>
                             <td class="p-4 text-center">
-                                <div class="flex items-center justify-center gap-2">
-                                    <a href="${zoomLink}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition hover-lift whitespace-nowrap">
-                                        💻 ${isAr ? 'دخول الزووم' : 'Join Zoom'}
+                                <div class="flex items-center justify-center gap-2 flex-wrap">
+                                    <a href="${zoomLink}" target="_blank" class="bg-slate-800 hover:bg-slate-900 text-white text-[10px] font-bold px-4 py-2.5 rounded-lg shadow-sm transition hover-lift whitespace-nowrap flex items-center gap-1.5">
+                                        💻 ${isAr ? 'بدء الحصة' : 'Start'}
                                     </a>
-                                    <button onclick="startReschedule('${slot.id}', ${slot.day_index}, ${slot.hour_index}, '${displayDayName}', '${localTimeFormatted}')" class="bg-amber-50 hover:bg-amber-500 hover:text-white text-amber-700 border border-amber-200 px-4 py-2.5 rounded-xl text-xs font-bold transition hover-lift whitespace-nowrap flex items-center gap-1.5">
-                                        <span>🔄</span> <span>${isAr ? 'تغيير الموعد' : 'Reschedule'}</span>
+                                    <button onclick="startReschedule('${slot.id}', ${slot.day_index}, ${slot.hour_index}, '${displayDayName}', '${localTimeFormatted}')" class="bg-amber-50 hover:bg-amber-500 hover:text-white text-amber-700 border border-amber-200 px-4 py-2.5 rounded-lg text-[10px] font-bold transition hover-lift whitespace-nowrap flex items-center gap-1.5">
+                                        <span>🔄</span> <span>${isAr ? 'تغيير' : 'Reschedule'}</span>
                                     </button>
                                 </div>
                             </td>
@@ -3423,12 +3429,13 @@ window.fetchReports = async function() {
         console.error("Error loading student notifications:", err);
     }
 };
-// 🟢 دالة ديناميكية دقيقة تحسب الفارق (كل نصف ساعة) لأي دولة تلقائياً
+// // 🟢 دالة ديناميكية دقيقة تحسب الفارق الزمني (حتى النصف ساعة) للطالب مقارنة بتوقيت القاهرة
         window.getCairoOffset = function(studentTz) {
+            if (!studentTz) return 0;
             try {
                 const now = new Date();
                 const formatterCairo = new Intl.DateTimeFormat('en-US', { timeZone: 'Africa/Cairo', hour: 'numeric', minute: 'numeric', hour12: false });
-                const formatterStudent = new Intl.DateTimeFormat('en-US', { timeZone: studentTz || 'Africa/Cairo', hour: 'numeric', minute: 'numeric', hour12: false });
+                const formatterStudent = new Intl.DateTimeFormat('en-US', { timeZone: studentTz, hour: 'numeric', minute: 'numeric', hour12: false });
                 
                 const getMins = (formatter) => {
                     const parts = formatter.formatToParts(now);
@@ -3450,7 +3457,7 @@ window.fetchReports = async function() {
                 
                 return diffMins / 60; // إرجاع الفارق بالساعات (مع دعم الكسور)
             } catch (e) {
-                return 0;
+                return 0; // في حال وجود توقيت وهمي يعود لتوقيت القاهرة افتراضياً
             }
         };
         window.bookThisSlot = async function(teacherId, cairoDay, cairoHourIdx) {
