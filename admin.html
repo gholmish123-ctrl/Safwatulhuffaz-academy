@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="html-tag">
 <head>
+    <link rel="icon" type="image/png" href="logo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title class="academy-name-text">القيادة العُليا | أكاديمية صفوة الحفاظ</title>
@@ -2918,7 +2919,8 @@ if (typeof window.renderCountriesDropdown === 'function') {
             country_code: selectedTzValue,
             local_tz: selectedTzValue, // 🟢 حفظ المنطقة الزمنية بدقة للطالب الجديد
             phone: studentPhone, parent_name: parentName, parent_phone: phone,
-            subject: document.getElementById('student-subject').value,
+            // ابحث عن السطر الذي يحتوي على s-subject داخل دالة addStudent وعدله إلى:
+subject: document.getElementById('student-subject').value,
             session_price: price, sessions_per_month: sessions,
             paid_amount: paid, remaining_sessions: sessions,
             applied_coupon: couponCode, subscription_type: subType,
