@@ -1392,11 +1392,45 @@
         
         const commonNames = { 'عبد الله':'Abdullah', 'محمود':'Mahmoud', 'محمد':'Mohamed', 'أحمد':'Ahmed', 'إبراهيم':'Ibrahim', 'فاطمة':'Fatima' };
         const arabicToEnglishMap = { 'ا':'A','أ':'A','إ':'E','ب':'B','ت':'T','ث':'Th','ج':'J','ح':'H','خ':'Kh','د':'D','ذ':'Z','ر':'R','ز':'Z','س':'S','ش':'Sh','ص':'S','ض':'D','ط':'T','ظ':'Z','ع':'A','غ':'Gh','ف':'F','ق':'Q','ك':'K','ل':'L','م':'M','ن':'N','ه':'H','و':'W','ي':'Y','ى':'A','ة':'A',' ':' ' };
-        const countriesList = [ 
-            { region: "أمريكا الشمالية", list: [ {n:"USA", c:"+1"}, {n:"Canada", c:"+1"} ] }, 
-            { region: "أوروبا", list: [ {n:"UK", c:"+44"}, {n:"France", c:"+33"}, {n:"Germany", c:"+49"}, {n:"Sweden", c:"+46"} ] }, 
-            { region: "الدول العربية", list: [ {n:"Egypt", c:"+20"}, {n:"KSA", c:"+966"}, {n:"UAE", c:"+971"} ] } 
-        ];
+        const countriesList = [
+    { 
+        region: "أمريكا الشمالية 🇺🇸🇨🇦", 
+        list: [ 
+            {n: "أمريكا - الشرق (نيويورك / فيلادلفيا)", c: "+1", tz: "America/New_York"}, 
+            {n: "أمريكا - الوسط (شيكاغو)", c: "+1", tz: "America/Chicago"}, 
+            {n: "أمريكا - الغرب (لوس أنجلوس)", c: "+1", tz: "America/Los_Angeles"}, 
+            {n: "كندا - تورنتو", c: "+1", tz: "America/Toronto"},
+            {n: "كندا - فانكوفر", c: "+1", tz: "America/Vancouver"} 
+        ] 
+    }, 
+    { 
+        region: "أوروبا 🇬🇧🇫🇷", 
+        list: [ 
+            {n: "بريطانيا (UK - لندن)", c: "+44", tz: "Europe/London"}, 
+            {n: "فرنسا (France)", c: "+33", tz: "Europe/Paris"}, 
+            {n: "ألمانيا (Germany)", c: "+49", tz: "Europe/Berlin"}, 
+            {n: "السويد (Sweden)", c: "+46", tz: "Europe/Stockholm"} 
+        ] 
+    }, 
+    { 
+        region: "الدول العربية 🇸🇦🇪🇬", 
+        list: [ 
+            {n: "مصر (Egypt - القاهرة)", c: "+20", tz: "Africa/Cairo"}, 
+            {n: "السعودية (KSA - الرياض)", c: "+966", tz: "Asia/Riyadh"}, 
+            {n: "الإمارات (UAE - دبي)", c: "+971", tz: "Asia/Dubai"},
+            {n: "الكويت (Kuwait)", c: "+965", tz: "Asia/Kuwait"},
+            {n: "الأردن (Jordan)", c: "+962", tz: "Asia/Amman"}
+        ] 
+    },
+    { 
+        region: "آسيا وباقي العالم 🇮🇳", 
+        list: [ 
+            {n: "الهند (India - نيودلهي)", c: "+91", tz: "Asia/Kolkata"},
+            {n: "ماليزيا (Malaysia)", c: "+60", tz: "Asia/Kuala_Lumpur"},
+            {n: "أستراليا (Australia - سيدني)", c: "+61", tz: "Australia/Sydney"}
+        ] 
+    }
+];
 
         const adminQiraatMap = {
             "نافع المدني": ["قالون", "ورش"], 
@@ -1552,15 +1586,15 @@
             window.applyGlobalSettings();
             await window.checkAuthAndRoles();
             
-            let cHtml = `<option value="">-- دولة الإقامة --</option>`; 
-            countriesList.forEach(g => { 
-                cHtml += `<optgroup label="${g.region}">`; 
-                g.list.forEach(c => cHtml += `<option value="${c.c}">${c.n}</option>`); 
-                cHtml += `</optgroup>`; 
-            }); 
-            
-            const cs1 = document.getElementById('s-country'); if(cs1) cs1.innerHTML = cHtml;
-            const cs2 = document.getElementById('edit-s-country'); if(cs2) cs2.innerHTML = cHtml;
+           let cHtml = `<option value="">-- اختر دولة الإقامة / المدينة --</option>`; 
+countriesList.forEach(g => { 
+    cHtml += `<optgroup label="${g.region}">`; 
+    g.list.forEach(c => cHtml += `<option value="${c.tz}">${c.n} (${c.c})</option>`); 
+    cHtml += `</optgroup>`; 
+}); 
+
+const cs1 = document.getElementById('s-country'); if(cs1) cs1.innerHTML = cHtml;
+const cs2 = document.getElementById('edit-s-country'); if(cs2) cs2.innerHTML = cHtml;
 
             if(document.getElementById('att-date')) document.getElementById('att-date').valueAsDate = new Date();
             const nextWeek = new Date(); 
@@ -2805,6 +2839,7 @@
     const sessions = parseInt(document.getElementById('s-total-sessions')?.value || 0);
     const paid = parseFloat(document.getElementById('s-paid')?.value || 0);
     const couponCode = document.getElementById('s-coupon')?.value.trim().toUpperCase() || null;
+    const selectedTzValue = document.getElementById('s-country').value; // جلب المنطقة الزمنية المختارة
 
     if (!/^[a-zA-Z\s]+$/.test(nameEn)) return window.showToast('⚠️ يرجى كتابة اسم الطالب بحروف إنجليزية فقط.', 'error');
     if (nameEn.length < 3) return window.showToast('⚠️ اسم الطالب قصير جداً.', 'error');
@@ -2866,7 +2901,8 @@
         const newStudent = {
             id: studentUID, email: generatedEmail, name: nameEn,
             is_arab: document.getElementById('s-is-arab').value === 'true',
-            country_code: document.getElementById('s-country').value,
+            country_code: selectedTzValue,
+            local_tz: selectedTzValue, // 🟢 حفظ المنطقة الزمنية بدقة للطالب الجديد
             phone: studentPhone, parent_name: parentName, parent_phone: phone,
             subject: document.getElementById('s-subject').value,
             session_price: price, sessions_per_month: sessions,
@@ -2940,7 +2976,7 @@
             document.getElementById('student-settings-modal').classList.remove('hidden'); 
         };
 
-        window.saveStudentSettings = async function() { 
+       window.saveStudentSettings = async function() { 
             const id = document.getElementById('edit-s-id').value; 
             const nameEn = document.getElementById('edit-s-name').value.trim(); 
             const parentName = document.getElementById('edit-s-pname').value.trim(); 
@@ -2951,6 +2987,7 @@
             const paid = parseFloat(document.getElementById('edit-s-paid').value) || 0; 
             const remaining = parseInt(document.getElementById('edit-s-rem').value) || 0;
             const couponCode = document.getElementById('edit-s-coupon').value.trim().toUpperCase() || null;
+            const selectedTzValue = document.getElementById('edit-s-country').value; // جلب المنطقة الزمنية المختارة
 
             if (!/^[a-zA-Z\s]+$/.test(nameEn)) return window.showToast('⚠️ يرجى كتابة اسم الطالب بحروف إنجليزية فقط.', 'error');
             if (nameEn.length < 3) return window.showToast('⚠️ اسم الطالب قصير جداً.', 'error');
@@ -2964,7 +3001,8 @@
 
             const updates = { 
                 name: nameEn, 
-                country_code: document.getElementById('edit-s-country').value, 
+                country_code: selectedTzValue, 
+                local_tz: selectedTzValue, // 🟢 تم إضافة حفظ الـ Timezone هنا
                 is_arab: document.getElementById('edit-s-is-arab').value === 'true', 
                 parent_name: parentName, phone: studentPhone, parent_phone: parentPhone, 
                 subject: document.getElementById('edit-s-subject').value, 

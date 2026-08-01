@@ -1658,8 +1658,7 @@
                            <td class="p-4 flex items-center flex-wrap gap-2 align-top">
                                 <button onclick="switchTab('reports'); document.getElementById('form-student-select').value='${std.id}'; onStudentChange('${std.id}');" class="bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs px-3 py-1.5 rounded-lg font-bold cursor-pointer transition shadow-xs flex-1 sm:flex-none text-center">${isAr?'تقرير':'Report'}</button>
                                 <button onclick="awardStudentStars('${std.id}', '${std.name}')" class="bg-amber-50 text-amber-700 hover:bg-amber-100 text-xs px-3 py-1.5 rounded-lg font-bold cursor-pointer transition shadow-xs flex-1 sm:flex-none text-center">${isAr?'⭐ مكافأة':'⭐ Award'}</button>
-                                <button onclick="openQuranTrackerModal('${std.id}', '${std.name}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 text-xs px-3 py-1.5 rounded-lg font-bold cursor-pointer transition shadow-xs flex-1 sm:flex-none text-center">${isAr?'🌳 الشجرة':'🌳 Tree'}</button>
-                            </td>
+                               <button onclick="openQuranTrackerModal('${std.id}', '${std.name}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 text-xs px-3 py-1.5 rounded-lg font-bold cursor-pointer transition shadow-xs flex-1 sm:flex-none text-center">🌳 الشجرة</button>
                         </tr>`;
                 }
 
@@ -3057,9 +3056,207 @@
                 showToast('❌ حدث خطأ أثناء إرسال التقييم.', 'error');
             }
         };
+     window.openQuranTrackerModal = async function(studentId, studentName) {
+    const modal = document.getElementById('quran-tracker-modal');
+    const nameEl = document.getElementById('tracker-student-name');
+    const gridEl = document.getElementById('teacher-quran-grid');
+    
+    if(!modal || !gridEl) return;
+    
+    modal.classList.remove('hidden');
+    if(nameEl) nameEl.innerText = `${currentLang === 'ar' ? 'الطالب' : 'Student'}: ${studentName}`;
+    window.currentEditingStudentId = studentId;
+    
+    gridEl.innerHTML = `<div class="col-span-full p-8 text-center text-slate-400 font-bold">جاري تحميل شجرة الإنجاز...</div>`;
+
+    try {
+        const { data: studentObj, error } = await supabaseClient.from('students').select('quran_progress').eq('id', studentId).single();
+        if(error) throw error;
+
+        let progress = studentObj?.quran_progress || {};
+        if (typeof progress === 'string') {
+            try { progress = JSON.parse(progress); } catch(e) { progress = {}; }
+        }
+        window.currentStudentQuranProgress = progress;
+
+        let html = '';
+        quranSurahs.forEach(surah => {
+            const status = progress[surah.id] || 'locked'; // 'completed', 'learning', 'locked'
+            
+            let bgClass = "bg-slate-50 border-slate-200 text-slate-500";
+            let statusText = currentLang === 'ar' ? "لم تبدأ" : "Locked";
+            
+            if (status === 'completed') {
+                bgClass = "bg-emerald-500 text-white border-emerald-600 shadow-md";
+                statusText = currentLang === 'ar' ? "مكتملة" : "Done";
+            } else if (status === 'learning') {
+                bgClass = "bg-amber-400 text-slate-900 border-amber-500 shadow-md";
+                statusText = currentLang === 'ar' ? "قيد الحفظ" : "Learning";
+            }
+
+            html += `
+                <div onclick="toggleSurahStatus(${surah.id}, this)" data-surah="${surah.id}" data-status="${status}" class="cursor-pointer rounded-xl border-2 ${bgClass} p-2 text-center transition hover:scale-105 flex flex-col justify-center items-center h-20 select-none shadow-xs">
+                    <span class="text-[10px] font-bold opacity-75 mb-0.5">${surah.id}</span>
+                    <span class="text-xs font-black font-calligraphy truncate w-full px-1">${currentLang === 'ar' ? surah.ar : surah.en}</span>
+                    <span class="text-[9px] font-bold mt-1 bg-black/10 px-2 py-0.5 rounded-full">${statusText}</span>
+                </div>
+            `;
+        });
+        gridEl.innerHTML = html;
+
+    } catch (err) {
+        gridEl.innerHTML = `<div class="col-span-full p-8 text-center text-red-500 font-bold">حدث خطأ في جلب بيانات الشجرة.</div>`;
+    }
+};
+
+// دالة تغيير حالة السورة عند الضغط عليها (دورة: لم تبدأ ➔ قيد الحفظ ➔ مكتملة)
+window.toggleSurahStatus = function(surahId, el) {
+    if (!window.currentStudentQuranProgress) window.currentStudentQuranProgress = {};
+    
+    let currentStatus = el.getAttribute('data-status');
+    let nextStatus = 'learning';
+    
+    if (currentStatus === 'locked') nextStatus = 'learning';
+    else if (currentStatus === 'learning') nextStatus = 'completed';
+    else if (currentStatus === 'completed') nextStatus = 'locked';
+
+    window.currentStudentQuranProgress[surahId] = nextStatus;
+    el.setAttribute('data-status', nextStatus);
+
+    let bgClass = "bg-slate-50 border-slate-200 text-slate-500";
+    let statusText = currentLang === 'ar' ? "لم تبدأ" : "Locked";
+
+    if (nextStatus === 'completed') {
+        bgClass = "bg-emerald-500 text-white border-emerald-600 shadow-md";
+        statusText = currentLang === 'ar' ? "مكتملة" : "Done";
+    } else if (nextStatus === 'learning') {
+        bgClass = "bg-amber-400 text-slate-900 border-amber-500 shadow-md";
+        statusText = currentLang === 'ar' ? "قيد الحفظ" : "Learning";
+    }
+
+    el.className = `cursor-pointer rounded-xl border-2 ${bgClass} p-2 text-center transition hover:scale-105 flex flex-col justify-center items-center h-20 select-none shadow-xs`;
+    el.querySelector('span:last-child').innerText = statusText;
+};
+
+// دالة حفظ التحديثات في قاعدة البيانات
+window.saveQuranTracker = async function() {
+    if (!window.currentEditingStudentId || !window.currentStudentQuranProgress) return;
+    
+    showToast(currentLang === 'ar' ? '⏳ جاري حفظ التحديثات...' : '⏳ Saving updates...', 'info');
+
+    try {
+        const { error } = await supabaseClient
+            .from('students')
+            .update({ quran_progress: window.currentStudentQuranProgress })
+            .eq('id', window.currentEditingStudentId);
+
+        if (error) throw error;
+
+        showToast(currentLang === 'ar' ? '✅ تم حفظ شجرة الإنجاز بنجاح وتحديثها لدى الطالب!' : '✅ Quran tree updated successfully!', 'success');
+        document.getElementById('quran-tracker-modal').classList.add('hidden');
         
-        // باقي الكود الخاص بطلبات التغيير للمواعيد ومعمل الصوت وغيرها 
-        // موجود بالفعل داخل الكود بالكامل، تم كتابة الأجزاء الرئيسية أعلاه.
+        if (typeof fetchMyStudents === 'function') fetchMyStudents();
+    } catch (err) {
+        showToast(currentLang === 'ar' ? '❌ خطأ في الحفظ: ' + err.message : '❌ Error saving: ' + err.message, 'error');
+    }
+};
+
+      // =======================================================
+        // دوال الإشعارات التفاعلية الخاصة بطلبات الطلاب (تغيير موعد، تعويض، اعتذار)
+        // =======================================================
+
+        // أ. الموافقة على تغيير موعد حصة لطالب
+        window.approveStudentReschedule = async function(studentId, studentName, oldDay, oldHour, newDay, newHour, btnElement) {
+            if(!confirm(currentLang === 'ar' ? 'تأكيد الموافقة على تغيير الموعد؟' : 'Confirm approving reschedule?')) return;
+            try {
+                hideNotificationCard(btnElement);
+                // حذف الموعد القديم وتسجيل الموعد الجديد
+                await supabaseClient.from('teacher_slots').delete().match({ teacher_id: currentTeacherId, day_index: parseInt(oldDay), hour_index: parseInt(oldHour), student_id: studentId });
+                await supabaseClient.from('teacher_slots').delete().match({ teacher_id: currentTeacherId, day_index: parseInt(newDay), hour_index: parseInt(newHour) });
+                await supabaseClient.from('teacher_slots').insert({ teacher_id: currentTeacherId, day_index: parseInt(newDay), hour_index: parseInt(newHour), status: 'booked', student_id: studentId });
+                
+                await supabaseClient.from('student_notifications').insert([{ target: studentName, type: 'success', title: currentLang === 'ar' ? '✅ تمت الموافقة على الموعد' : '✅ Reschedule Approved', body: currentLang === 'ar' ? 'وافق معلمك على طلب تغيير الموعد. تم تحديث جدولك بنجاح!' : 'Your teacher approved the reschedule request.' }]);
+                await supabaseClient.from('notifications').delete().like('body', `%نقل حصته من%`).like('title', `%${studentName}%`);
+                
+                showToast(currentLang === 'ar' ? '✅ تم تحديث الموعد بنجاح!' : '✅ Schedule updated successfully!', 'success');
+                fetchMySchedule();
+            } catch(e) { showToast('❌ خطأ: ' + e.message, 'error'); }
+        };
+
+        // ب. رفض واقتراح موعد بديل لتغيير الحصة
+        window.rejectAndSuggestReschedule = async function(studentId, studentName, requestedTime, btnElement) {
+            let suggestion = prompt(currentLang === 'ar' ? 'اكتب رسالة تقترح فيها مواعيد أخرى للطالب:' : 'Enter a message suggesting other times:');
+            if(suggestion === null) return;
+            try {
+                hideNotificationCard(btnElement);
+                await supabaseClient.from('student_notifications').insert([{ target: studentName, type: 'error', title: currentLang === 'ar' ? '❌ رفض تغيير الموعد' : '❌ Reschedule Rejected', body: `${currentLang === 'ar' ? 'الموعد المطلوب غير مناسب.' : 'Requested time not suitable.'} ${suggestion || ''}` }]);
+                await supabaseClient.from('notifications').delete().like('body', `%نقل حصته من%`).like('title', `%${studentName}%`);
+                showToast(currentLang === 'ar' ? '✅ تم إرسال ردك للطالب' : '✅ Response sent to student', 'success');
+            } catch(e) { showToast('❌ خطأ: ' + e.message, 'error'); }
+        };
+
+        // ج. الموافقة على حصة التعويض (وتثبيت الموعد وخصم التوكن)
+        window.approveMakeupSlot = async function(studentId, studentName, dayIdx, hourIdx, btnElement) {
+            if(!confirm(currentLang === 'ar' ? 'تأكيد الموافقة على حجز حصة التعويض (وخصمها من رصيد الطالب)؟' : 'Confirm approving makeup slot?')) return;
+            try {
+                hideNotificationCard(btnElement);
+                await supabaseClient.from('teacher_slots').update({ status: 'booked', student_id: studentId }).match({ teacher_id: currentTeacherId, day_index: dayIdx, hour_index: hourIdx });
+                
+                const { data: stData } = await supabaseClient.from('students').select('makeup_tokens').eq('id', studentId).single();
+                if(stData && stData.makeup_tokens > 0) {
+                    await supabaseClient.from('students').update({ makeup_tokens: stData.makeup_tokens - 1 }).eq('id', studentId);
+                }
+                
+                await supabaseClient.from('student_notifications').insert([{ target: studentName, type: 'success', title: currentLang === 'ar' ? '✅ تم تأكيد حصة التعويض' : '✅ Makeup Slot Confirmed', body: currentLang === 'ar' ? 'تم حجز موعد التعويض بنجاح وتم خصمه من رصيد تعويضاتك.' : 'Makeup slot booked successfully.' }]);
+                await supabaseClient.from('notifications').delete().like('body', `%حصة تعويضية%`).like('title', `%${studentName}%`);
+                
+                showToast(currentLang === 'ar' ? '✅ تم تثبيت موعد التعويض' : '✅ Makeup slot secured', 'success');
+                fetchMySchedule();
+            } catch(e) { showToast('❌ خطأ: ' + e.message, 'error'); }
+        };
+
+        // د. رفض حصة التعويض
+        window.rejectMakeupSlot = async function(studentId, studentName, btnElement) {
+            if(!confirm(currentLang === 'ar' ? 'تأكيد الرفض؟' : 'Confirm rejection?')) return;
+            try {
+                hideNotificationCard(btnElement);
+                await supabaseClient.from('student_notifications').insert([{ target: studentName, type: 'error', title: currentLang === 'ar' ? '❌ رفض طلب التعويض' : '❌ Makeup Rejected', body: currentLang === 'ar' ? 'نعتذر، الموعد الذي طلبته للتعويض غير متاح لدى المعلم حالياً.' : 'Sorry, the requested makeup slot is unavailable.' }]);
+                await supabaseClient.from('notifications').delete().like('body', `%حصة تعويضية%`).like('title', `%${studentName}%`);
+                showToast(currentLang === 'ar' ? '✅ تم إرسال الرفض للطالب' : '✅ Rejection sent', 'success');
+            } catch(e) { showToast('❌ خطأ: ' + e.message, 'error'); }
+        };
+
+        // هـ. التعامل مع اعتذار الطالب (إدارة الغياب الذكي)
+        window.adminHandleApology = async function(studentId, targetDate, actionType, studentName, btnElement) {
+            if(!confirm(currentLang === 'ar' ? 'تأكيد تنفيذ هذا الإجراء؟' : 'Confirm action?')) return;
+            try {
+                hideNotificationCard(btnElement);
+                let status = actionType === 'reject' ? 'absent_unexcused' : 'absent_excused';
+                let notes = actionType === 'makeup' ? 'تم قبول الاعتذار ومنح الطالب حصة تعويض.' :
+                            (actionType === 'postpone' ? 'تم قبول الاعتذار وترحيل الحصة للشهر القادم.' : 'تم رفض الاعتذار وحُسبت الحصة غياب.');
+
+                let studentMsg = actionType === 'makeup' ? `تم قبول اعتذارك عن حصة ${targetDate} وتمت إضافة حصة تعويض لرصيدك.` :
+                               (actionType === 'postpone' ? `تم قبول اعتذارك عن حصة ${targetDate}. وتم ترحيل الحصة ليتم خصم قيمتها لاحقاً.` : `نعتذر، لم يتم قبول طلب الاعتذار وتم احتساب الحصة غياب.`);
+
+                if (actionType === 'makeup') {
+                    const { data: sData } = await supabaseClient.from('students').select('makeup_tokens').eq('id', studentId).single();
+                    await supabaseClient.from('students').update({ makeup_tokens: (sData?.makeup_tokens || 0) + 1 }).eq('id', studentId);
+                } else if (actionType === 'postpone') {
+                    const { data: sData } = await supabaseClient.from('students').select('remaining_sessions').eq('id', studentId).single();
+                    await supabaseClient.from('students').update({ remaining_sessions: (sData?.remaining_sessions || 0) + 1 }).eq('id', studentId);
+                }
+
+                await supabaseClient.from('attendance').insert([{
+                    student_id: studentId, teacher_id: currentTeacherId, sName: studentName,
+                    tName: currentTeacherObj?.name_ar || 'المعلم', date: targetDate, status: status, notes: `[نظام الاعتذار الذكي] ${notes}`
+                }]);
+
+                await supabaseClient.from('student_notifications').insert([{ target: studentName, type: actionType === 'reject' ? 'error' : 'success', title: 'تحديث حالة الاعتذار', body: studentMsg }]);
+                await supabaseClient.from('notifications').delete().like('body', `%${studentName}%`).like('body', `%${targetDate}%`);
+                
+                showToast(currentLang === 'ar' ? '✅ تم التعامل مع الاعتذار بنجاح!' : '✅ Apology handled successfully!', 'success');
+            } catch(e) { showToast('❌ خطأ: ' + e.message, 'error'); }
+        };
     </script>
 </body>
 </html>

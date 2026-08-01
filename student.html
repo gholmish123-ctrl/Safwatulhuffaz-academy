@@ -1050,24 +1050,33 @@
         });
     }
 
-    async function initStudentApp() {
+   async function initStudentApp() {
+        // 1. التحقق من تسجيل الدخول وطرد أي شخص غير مسجل
         const { data: { user } } = await supabaseClient.auth.getUser();
         if (!user) {
-            const nameEl = document.getElementById('student-name');
-            if(nameEl) nameEl.innerText = currentLang === 'ar' ? "الرجاء تسجيل الدخول أولاً." : "Please login first.";
+            window.location.href = "index.html";
             return;
         }
 
-        let query = supabaseClient.from('students').select('*, teachers(*)');
-        if (user.email) query = query.eq('email', user.email);
-        else if (user.phone) query = query.eq('phone', user.phone);
+        // 2. التحقق من أن المستخدم يمتلك صلاحية "طالب" وطرد أي رتبة أخرى (كالمعلم أو الإدارة)
+        const { data: profile } = await supabaseClient.from('profiles').select('role').eq('id', user.id).maybeSingle();
+        if (!profile || profile.role !== 'student') { 
+            showToast('⚠️ ليس لديك إذن للدخول كطالب!', 'error');
+            setTimeout(async () => {
+                await supabaseClient.auth.signOut();
+                window.location.href = "index.html"; 
+            }, 1500);
+            return; 
+        }
 
-        const { data: students, error: studentsErr } = await query;
+        // 3. جلب بيانات الطالب بناءً على الـ ID مباشرة (أسرع وأدق ويتفادى مشكلة الحروف)
+        const { data: students, error: studentsErr } = await supabaseClient
+            .from('students')
+            .select('*, teachers(*)')
+            .eq('id', user.id);
 
         if (studentsErr || !students || students.length === 0) {
-            const nameEl = document.getElementById('student-name');
-            if(nameEl) nameEl.innerText = currentLang === 'ar' ? "لا يوجد طلاب مسجلين بهذا الحساب." : "No student records found.";
-            showToast("❌ " + (currentLang==='ar'?'لم يتم العثور على ملف طالب مرتبط بهذا البريد.':'No student profile associated with this email.'), "error");
+            showToast("❌ لم يتم العثور على ملف طالب مرتبط بهذا الحساب.", "error");
             return;
         }
 
@@ -1105,17 +1114,11 @@
         // تفعيل بيانات الطالب الأول وافتتاح جلسة الإشعارات
         switchFamilyMember(students[0].id);
         
-        // 🚀 جلب الإشعارات فوراً عند فتح الصفحة
-        if (typeof fetchStudentNotifications === 'function') {
-            fetchStudentNotifications();
-        }
+        if (typeof fetchStudentNotifications === 'function') fetchStudentNotifications();
 
-        // تحديث دوري للإشعارات كل 15 ثانية
         setInterval(() => { if(typeof studentData !== 'undefined' && studentData) fetchStudentNotifications(); }, 15000);
         
-        // تفعيل التحديث اللحظي (Realtime) لتظهر الإشعارات فور إرسالها من الأدمن
         setupStudentRealtimeListener();
-
         if(typeof updateQuranUI === 'function') updateQuranUI();
     }
 
@@ -1380,7 +1383,7 @@ function setupStudentRealtimeListener() {
             showToast(currentLang==='ar'?'✅ شكراً لتقييمك! تمت إضافة 5 نجوم لرصيدك.':'✅ Thank you! 5 Stars added to your balance.', 'success');
         };
 
-        window.renderQuranTracker = function() {
+       window.renderQuranTracker = function() {
             const container = document.getElementById('quran-juz-grid');
             if(!container || !studentData) return;
             
@@ -1390,8 +1393,25 @@ function setupStudentRealtimeListener() {
             }
             const currentProgress = studentData.quran_progress || {};
 
+            // 🟢 الترتيب: السور النشطة (قيد الحفظ ثم المكتملة) في الأعلى،
+            // وباقي السور تترتب تنازلياً من سورة الناس (114) إلى الفاتحة (1)
+            let sortedSurahs = [...quranSurahs].sort((a, b) => {
+                const stateA = currentProgress[a.id] || 'locked';
+                const stateB = currentProgress[b.id] || 'locked';
+                
+                const priority = { 'learning': 1, 'completed': 2, 'locked': 3 };
+                
+                let pA = priority[stateA] || 3;
+                let pB = priority[stateB] || 3;
+                
+                if (pA !== pB) return pA - pB;
+                
+                // لو الحالات متشابهة، رتب تنازلياً من الناس (114) إلى الفاتحة (1)
+                return b.id - a.id; 
+            });
+
             let html = '';
-            quranSurahs.forEach((surah) => {
+            sortedSurahs.forEach((surah) => {
                 const state = currentProgress[surah.id] || 'locked';
 
                 let statusClass = "bg-slate-50 border-slate-200 text-slate-400 grayscale opacity-60";
@@ -1410,7 +1430,7 @@ function setupStudentRealtimeListener() {
 
                 html += `
                 <div class="rounded-xl border-2 ${statusClass} p-2 text-center transition hover-lift flex flex-col justify-center items-center h-20" onclick="showToast('${surahName} - ${ayahsText}', 'info')">
-                    <span class="text-[9px] font-bold block opacity-60 mb-0.5">${surah.id}</span>
+                    <span class="text-[9px] font-bold block opacity-60 mb-0.5">رقم ${surah.id}</span>
                     <span class="text-xs font-black block mb-1 font-calligraphy whitespace-nowrap overflow-hidden text-ellipsis w-full px-1" title="${surahName}">${surahName}</span>
                     <span class="text-sm">${icon}</span>
                 </div>`;
@@ -1891,134 +1911,149 @@ function setupStudentRealtimeListener() {
         };
 
         window.renderBookingGrid = async function() {
-            const container = document.getElementById('booking-grid-container');
-            if(!container) return;
-            const isAr = currentLang === 'ar';
+    const container = document.getElementById('booking-grid-container');
+    if (!container) return;
 
-            let isTrial = studentData && (studentData.status === 'trial' || studentData.status === 'تجريبي');
-            let currentTokens = studentData ? (parseInt(studentData.makeup_tokens) || 0) : 0;
-            let isRescheduling = slotToReschedule !== null; 
-            
-            if (currentTokens <= 0 && !isTrial && !isRescheduling) {
-                container.innerHTML = `
-                    <div class="p-12 text-center bg-amber-50/50 rounded-2xl border border-amber-200 space-y-3">
-                        <span class="text-3xl">⚠️</span>
-                        <h4 class="font-black text-amber-900 text-sm">${isAr ? 'عذراً، شبكة الحجز مغلقة حالياً' : 'Booking Grid Locked'}</h4>
-                        <p class="text-xs text-amber-700 font-bold leading-relaxed">
-                            ${isAr ? 'تفتح الشبكة في 3 حالات فقط: (حصة تجريبية، امتلاك رصيد تعويض، أو عند طلب تغيير موعدك من جدولك الأساسي).' : 'Grid is locked. You need a makeup token or must be rescheduling an existing slot.'}
-                        </p>
-                    </div>`;
-                return;
-            }
+    const isAr = (typeof currentLang !== 'undefined' && currentLang === 'ar');
 
-            if(!studentData || !studentData.teacher_id) {
-                container.innerHTML = `<div class="p-8 text-center text-red-600 font-bold bg-red-50 rounded-2xl">⚠️ ${isAr ? 'لم يتم ربطك بمعلم بعد. تواصل مع الإدارة.' : 'No teacher assigned yet.'}</div>`;
-                return;
-            }
+    // التأكد من وجود بيانات الطالب
+    if (typeof studentData === 'undefined' || !studentData) {
+        container.innerHTML = `<div class="p-6 text-center text-red-500 font-bold">${isAr ? 'بيانات الطالب غير متوفرة.' : 'Student data not available.'}</div>`;
+        return;
+    }
 
-            container.innerHTML = `<div class="p-12 text-center flex flex-col items-center justify-center gap-3">
-                <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                <p class="text-xs font-bold text-slate-500">📡 ${isAr ? 'جاري سحب الأوقات المتاحة لدى معلمك...' : 'Fetching availability...'}</p>
+    try {
+        container.innerHTML = `
+            <div class="p-12 text-center flex flex-col items-center justify-center gap-2 bg-slate-900 rounded-2xl text-white border border-slate-800">
+                <div class="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                <p class="text-[11px] font-bold text-slate-400">${isAr ? 'جاري التحقق من الحصص وشبكة الحجز...' : 'Checking sessions and booking grid...'}</p>
             </div>`;
 
-            try {
-                const { data: slots, error } = await supabaseClient.from('teacher_slots').select('*').eq('teacher_id', studentData.teacher_id);
-                if(error) throw error;
+        // 1. حساب حصص الطالب الأسبوعية (مثلاً لو الباقة 8 حصص شهرياً يبقى النصاب الأسبوعي حصتان)
+        let weeklyLimit = Math.round((studentData.sessions_per_month || 8) / 4) || 1;
 
-                const daysArr = isAr ? ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"] : ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
-                let tz = studentData.local_tz || 'America/New_York';
-                let offset = 0;
-                if(tz.includes('New_York') || tz.includes('EST') || tz.includes('Chicago')) offset = -7;
-                else if(tz.includes('London')) offset = -2;
-                else if(tz.includes('Toronto')) offset = -7;
-                else if(tz.includes('Sydney')) offset = -8;
-
-                let gridTitle = "";
-                let gridDesc = "";
-                
-                if (isRescheduling) {
-                    gridTitle = isAr ? 'شبكة تغيير الموعد 🔄' : 'Reschedule Grid 🔄';
-                    gridDesc = isAr ? `أنت الآن تطلب تغيير موعدك (${slotToReschedule.localDayName} الساعة ${slotToReschedule.localTime}). اختر الموعد البديل:` : `Rescheduling slot (${slotToReschedule.localDayName} ${slotToReschedule.localTime}). Select new slot:`;
-                } else if (isTrial) {
-                    gridTitle = isAr ? 'شبكة حجز الحصة التجريبية 🎯' : 'Trial Session Booking 🎯';
-                    gridDesc = isAr ? 'أهلاً بك! اختر موعداً مناسباً لحصتك التجريبية للتقييم:' : 'Welcome! Select a suitable slot for your free trial session:';
-                } else {
-                    gridTitle = isAr ? 'شبكة حجز حصة تعويضية ➕' : 'Makeup Booking Grid ➕';
-                    gridDesc = isAr ? `لديك (${currentTokens}) حصة تعويض متاحة. اختر موعداً للحجز:` : `You have ${currentTokens} makeup token(s). Select a slot:`;
-                }
-
-                let html = `
-                    <div class="mb-5 bg-blue-50/50 border border-blue-200 p-5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div>
-                            <h4 class="font-black text-blue-900 text-base">${gridTitle}</h4>
-                            <p class="text-xs text-blue-700 font-bold mt-1.5">${gridDesc}</p>
-                        </div>
-                        ${isRescheduling ? `<button onclick="slotToReschedule=null; renderBookingGrid();" class="bg-rose-100 text-rose-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-rose-200 transition shadow-sm">${isAr ? 'إلغاء التغيير ❌' : 'Cancel ❌'}</button>` : ''}
-                    </div>
-
-                    <div class="overflow-x-auto custom-scrollbar max-h-[500px] border border-slate-200 rounded-2xl shadow-sm">
-                    <table class="w-full min-w-[900px] border-collapse text-center text-sm bg-white">
-                        <thead class="bg-slate-50 text-slate-500 font-bold sticky top-0 z-30 shadow-sm border-b border-slate-200">
-                            <tr><th class="p-3 sticky right-0 bg-slate-50 z-40 w-32 border-l border-slate-200 text-blue-700">${isAr?'توقيتك المحلي':'Your Time'}</th>`;
-                
-                for(let d=0; d<7; d++) { html += `<th class="p-3 w-32 border-l border-slate-200">${daysArr[d]}</th>`; }
-                html += `</tr></thead><tbody class="divide-y divide-slate-100">`;
-
-                for(let localH = 0; localH < 24; localH++) {
-                    let ampm = localH >= 12 ? 'PM' : 'AM';
-                    let displayH = localH % 12 || 12;
-                    let localTimeFormatted = `${displayH.toString().padStart(2, '0')}:00 ${ampm}`;
-
-                    html += `<tr class="hover:bg-slate-50/50 transition">
-                            <td class="p-3 font-mono font-black text-slate-700 sticky right-0 bg-white/95 backdrop-blur-md shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)] z-20 text-xs border-l border-slate-100" dir="ltr">${localTimeFormatted}<br><span class="text-[9px] text-blue-500 bg-blue-50 px-1 rounded block mt-0.5">${tz.split('/')[1]||tz}</span></td>`;
-
-                    for(let localD = 0; localD < 7; localD++) {
-                        let cairoH = localH + offset; let cairoD = localD;
-                        if(cairoH >= 24) { cairoH -= 24; cairoD = (cairoD + 1) % 7; }
-                        else if(cairoH < 0) { cairoH += 24; cairoD = (cairoD - 1 + 7) % 7; }
-
-                        let slotMatch = slots.find(s => s.day_index === cairoD && s.hour_index === cairoH);
-
-                        html += `<td class="p-2 border-l border-slate-100">`;
-                        if(slotMatch && slotMatch.status === 'available') {
-                            
-                            let btnText = isAr ? 'متاح للحجز ✔️' : 'Available ✔️';
-                            let btnSub = "";
-                            let actionCall = "";
-
-                            if (isRescheduling) {
-                                btnText = isAr ? 'اختيار كبديل 🔄' : 'Select Alternative';
-                                btnSub = isAr ? 'نقل الموعد هنا' : 'Move here';
-                                actionCall = `confirmReschedule(${cairoD}, ${cairoH}, '${daysArr[localD]}', '${localTimeFormatted}')`;
-                            } else if (isTrial) {
-                                btnSub = isAr ? 'حجز التقييم المجاني' : 'Book Free Trial';
-                                actionCall = `confirmMakeupBooking(${cairoD}, ${cairoH}, '${daysArr[localD]}', '${localTimeFormatted}')`;
-                            } else {
-                                btnSub = isAr ? 'استهلاك حصة تعويض' : 'Use makeup token';
-                                actionCall = `confirmMakeupBooking(${cairoD}, ${cairoH}, '${daysArr[localD]}', '${localTimeFormatted}')`;
-                            }
-
-                            html += `
-                                <button onclick="${actionCall}" class="w-full bg-emerald-50 hover:bg-emerald-500 hover:text-white text-emerald-700 p-3 rounded-xl font-bold text-xs border border-emerald-200 shadow-sm transition hover-lift flex flex-col items-center gap-1.5 cursor-pointer">
-                                    <span>${btnText}</span>
-                                    <span class="text-[9px] opacity-80 underline decoration-emerald-300 underline-offset-2">${btnSub}</span>
-                                </button>`;
-                        } else {
-                            html += `<div class="w-full bg-slate-50 text-slate-400 p-3 rounded-xl font-bold text-[10px] border border-slate-100 border-dashed opacity-50">-- ${isAr ? 'غير متاح' : 'Unavailable'} --</div>`;
-                        }
-                        html += `</td>`;
+        // 2. عد الحصص اللي الطالب حجزها بالفعل
+        let currentBookedCount = 0;
+        if (typeof dbAvailability !== 'undefined') {
+            Object.keys(dbAvailability).forEach(tKey => {
+                Object.keys(dbAvailability[tKey]).forEach(cell => {
+                    if (dbAvailability[tKey][cell].status === 'booked' && String(dbAvailability[tKey][cell].studentId) === String(studentData.id)) {
+                        currentBookedCount++;
                     }
-                    html += `</tr>`;
+                });
+            });
+        }
+
+        // 3. التحقق من النصاب الأسبوعي للحصص (حلقتين في الاسبوع)
+        if (currentBookedCount >= weeklyLimit) {
+            // قفل الشبكة وإظهار رسالة اكتمال النصاب
+            container.innerHTML = `
+                <div class="p-8 text-center bg-amber-50 rounded-2xl border border-amber-200 text-amber-900">
+                    <span class="text-4xl">⚠️</span>
+                    <h4 class="text-md font-black mt-3">${isAr ? 'شبكة الحجز مقفولة لهذا الأسبوع' : 'Booking Grid Locked'}</h4>
+                    <p class="text-xs font-bold text-amber-700 mt-2">
+                        ${isAr ? `لقد قمت بحجز الحصص المقررة لك هذا الأسبوع بنجاح (${weeklyLimit} حصص).` : `You have successfully booked your scheduled sessions for this week (${weeklyLimit} sessions).`}
+                    </p>
+                </div>`;
+            return;
+        }
+
+        // إذا لم يتم استنفاد الحصص الأسبوعية، يتم فتح الشبكة وعرض المواعيد المتاحة للمعلم
+        let teacherId = studentData.teacher_id;
+        if (!teacherId) {
+            container.innerHTML = `<div class="p-6 text-center text-slate-500 font-bold">${isAr ? 'لم يتم ربطك بمعلم حتى الآن.' : 'No teacher assigned yet.'}</div>`;
+            return;
+        }
+
+        const { data: slotsData, error } = await supabaseClient
+            .from('teacher_slots')
+            .select('*')
+            .eq('teacher_id', teacherId);
+
+        if (error) throw error;
+
+        if (typeof dbAvailability === 'undefined') window.dbAvailability = {};
+        dbAvailability[teacherId] = {};
+        if (slotsData) {
+            slotsData.forEach(slot => {
+                let cellKey = `${slot.day_index}_${slot.hour_index}`;
+                dbAvailability[teacherId][cellKey] = { status: slot.status, studentId: slot.student_id };
+            });
+        }
+
+        const daysAr = isAr ? ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة"] : ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+        
+        let localHoursGrid = []; 
+        for (let i = 0; i < 24; i++) { 
+            let h = i % 12 || 12; 
+            let ampm = i < 12 ? 'AM' : 'PM'; 
+            localHoursGrid.push(`${h.toString().padStart(2, '0')}:00 ${ampm}`); 
+        }
+
+        const mySlots = dbAvailability[teacherId] || {};
+
+        let html = `
+            <div class="bg-slate-900 rounded-2xl border border-slate-800/80 shadow-xl overflow-hidden text-slate-100 text-xs">
+                <div class="px-4 py-3 bg-slate-800/90 border-b border-slate-700 flex flex-wrap justify-between items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                        <span class="font-bold text-slate-200 text-xs">${isAr ? `انقر على أي موعد أخضر للحجز (متبقي لك ${weeklyLimit - currentBookedCount} حصص هذا الأسبوع)` : 'Click any green slot to book'}</span>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar max-h-[550px]">
+                    <table class="w-full min-w-[900px] border-collapse text-center">
+                        <thead class="bg-slate-800 text-slate-300 font-bold sticky top-0 z-30 shadow-xs">
+                            <tr class="border-b border-slate-700">
+                                <th class="p-3 sticky right-0 bg-slate-800 z-40 w-28 text-center text-emerald-400 font-mono text-xs uppercase tracking-wider border-r border-slate-700">${isAr?'الساعة':'Time'}</th>`;
+        
+        for(let d = 0; d < 7; d++) { 
+            html += `<th class="p-3 w-32 border-r border-slate-700 font-bold tracking-wide">${daysAr[d]}</th>`; 
+        }
+        
+        html += `</tr></thead><tbody class="divide-y divide-slate-800/60 bg-slate-900">`;
+        
+        localHoursGrid.forEach((time, hIndex) => {
+            html += `<tr class="hover:bg-slate-800/40 transition-colors">`;
+            html += `<td class="p-2.5 font-mono font-bold text-slate-400 sticky right-0 bg-slate-800/95 backdrop-blur-xs z-20 border-r border-slate-700 text-xs" dir="ltr">${time}</td>`;
+            
+            for(let d = 0; d < 7; d++) {
+                let cellKey = `${d}_${hIndex}`;
+                let slotInfo = mySlots[cellKey];
+
+                html += `<td class="p-2 border-r border-slate-800/40 align-middle">`;
+                
+                if (slotInfo && slotInfo.status === 'booked') {
+                    let isMyBooking = String(slotInfo.studentId) === String(studentData.id);
+                    html += `
+                        <div class="w-full ${isMyBooking ? 'bg-emerald-900/60 text-emerald-300 border-emerald-700' : 'bg-rose-900/50 text-rose-300 border-rose-800/60'} py-2 px-2 rounded-xl font-bold border shadow-xs flex items-center justify-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full ${isMyBooking ? 'bg-emerald-400' : 'bg-rose-500'}"></span>
+                            <span class="truncate text-xs">${isMyBooking ? (isAr ? 'حجزك الحالي' : 'Your Booking') : (isAr ? 'محجوز' : 'Booked')}</span>
+                        </div>`;
+                } else if (slotInfo && slotInfo.status === 'available') {
+                    html += `
+                        <button type="button" onclick="bookThisSlot('${teacherId}', ${d}, ${hIndex})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-2 rounded-xl font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
+                            <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                            <span class="text-xs">${isAr ? 'احجز الان' : 'Book Now'}</span>
+                        </button>`;
+                } else {
+                    html += `<div class="w-full py-2 rounded-xl bg-slate-800/20 text-slate-600 text-xs">—</div>`;
                 }
-
-                html += `</tbody></table></div>`;
-                container.innerHTML = html;
-            } catch(e) {
-                container.innerHTML = `<div class="p-8 text-center text-red-600 font-bold bg-red-50 rounded-2xl">❌ ${isAr ? 'خطأ في جلب شبكة المعلم.' : 'Error loading teacher grid.'}</div>`;
+                html += `</td>`;
             }
-        };
+            html += `</tr>`;
+        });
+        
+        html += `</tbody></table></div></div>`;
+        container.innerHTML = html;
 
-        window.confirmMakeupBooking = async function(newCairoDay, newCairoHour, localDayName, localTimeFormatted) {
+    } catch (error) {
+        console.error(error);
+        container.innerHTML = `<div class="p-6 text-center text-rose-400 font-bold bg-slate-900 rounded-2xl border border-rose-900 text-xs">حدث خطأ في تحميل الشبكة: ${error.message}</div>`;
+    }
+};
+
+       window.confirmMakeupBooking = async function(newCairoDay, newCairoHour, localDayName, localTimeFormatted) {
             if (!studentData || !studentData.id || !studentData.teacher_id) {
                 showToast('خطأ في بيانات الطالب أو المعلم', 'error');
                 return;
@@ -2028,12 +2063,24 @@ function setupStudentRealtimeListener() {
             let currentTokens = parseInt(studentData.makeup_tokens) || 0;
             const isAr = currentLang === 'ar';
 
-            if (currentTokens <= 0 && !isTrial) {
+            // 🟢 تحقق هل الطالب له مواعيد مسجلة أساساً عند المعلم ولا لأ؟ (لتسكين الطالب الجديد)
+            let hasScheduledSlots = false;
+            try {
+                const { count } = await supabaseClient
+                    .from('teacher_slots')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('student_id', studentData.id)
+                    .eq('status', 'booked');
+                if (count && count > 0) hasScheduledSlots = true;
+            } catch(e) {}
+
+            // الشرط: يسمح بالحجز لو عنده رصيد، أو حصة تجريبية، أو (أنه طالب جديد ليس له مواعيد أساسية مسجلة بعد)
+            if (currentTokens <= 0 && !isTrial && hasScheduledSlots) {
                 showToast(isAr ? 'عذراً، لا تملك رصيد تعويض كافٍ للحجز!' : 'Not enough tokens!', 'warning');
                 return;
             }
 
-            if (!isTrial) {
+            if (!isTrial && hasScheduledSlots) {
                 try {
                     const { data: regularSlots } = await supabaseClient.from('teacher_slots').select('day_index').eq('student_id', studentData.id).eq('status', 'booked');
                     if (regularSlots && regularSlots.length > 0) {
@@ -2048,7 +2095,9 @@ function setupStudentRealtimeListener() {
 
             let confirmMsg = isTrial 
                 ? (isAr ? `تأكيد حجز الحصة التجريبية للتقييم يوم ${localDayName} الساعة ${localTimeFormatted}؟` : `Confirm booking trial session?`)
-                : (isAr ? `تأكيد إرسال طلب حجز حصة التعويض يوم ${localDayName} الساعة ${localTimeFormatted}؟\nسيتم إرسال الطلب للمعلم للموافقة عليه أولاً.` : `Confirm sending makeup request?`);
+                : (!hasScheduledSlots 
+                    ? (isAr ? `تأكيد اختيار هذا الموعد الأساسي يوم ${localDayName} الساعة ${localTimeFormatted}؟\nسيتم إرسال الطلب للمعلم للاعتماد والتسكين.` : `Confirm initial schedule slot?`)
+                    : (isAr ? `تأكيد إرسال طلب حجز حصة التعويض يوم ${localDayName} الساعة ${localTimeFormatted}؟\nسيتم إرسال الطلب للمعلم للموافقة عليه أولاً.` : `Confirm sending makeup request?`));
 
             if (!confirm(confirmMsg)) return;
 
@@ -2057,14 +2106,14 @@ function setupStudentRealtimeListener() {
             try {
                 const teacherName = teacherData ? (teacherData.name_ar || teacherData.name) : 'المعلم';
                 
-                let titleAdmin = isTrial ? `🎯 طلب حجز حصة تجريبية: ${studentData.name}` : `🎯 طلب حجز حصة تعويضية: ${studentData.name}`;
-                let titleTeacher = isTrial ? `🎯 حجز حصة تجريبية جديدة` : `🎯 طلب حجز حصة تعويضية جديدة`;
+                let titleAdmin = isTrial ? `🎯 طلب حجز حصة تجريبية: ${studentData.name}` : (!hasScheduledSlots ? `📌 طلب تسكين جدول أساسي: ${studentData.name}` : `🎯 طلب حجز حصة تعويضية: ${studentData.name}`);
+                let titleTeacher = isTrial ? `🎯 حجز حصة تجريبية جديدة` : (!hasScheduledSlots ? `📌 طلب اختيار مواعيد الجدول الأساسي` : `🎯 طلب حجز حصة تعويضية جديدة`);
                 
                 let actionBtn = isTrial 
                     ? `<button onclick="approveTrialSlot('${studentData.id}', '${studentData.name}', ${newCairoDay}, ${newCairoHour}, this)" style="background:#059669; color:white; padding:8px; border-radius:8px; border:none; width:100%; cursor:pointer;">تأكيد الحصة التجريبية ✔️</button>`
-                    : `<button onclick="approveMakeupSlot('${studentData.id}', '${studentData.name}', ${newCairoDay}, ${newCairoHour}, this)" style="background:#059669; color:white; padding:8px; border-radius:8px; border:none; width:100%; cursor:pointer;">موافقة على التعويض ✔️</button>`;
+                    : `<button onclick="approveMakeupSlot('${studentData.id}', '${studentData.name}', ${newCairoDay}, ${newCairoHour}, this)" style="background:#059669; color:white; padding:8px; border-radius:8px; border:none; width:100%; cursor:pointer;">موافقة وتسكين الموعد ✔️</button>`;
 
-                const requestBody = `يطلب الطالب (${studentData.name}) حجز ${isTrial ? 'حصة تجريبية لتقييم المستوى' : 'حصة تعويضية إضافية'} يوم (${localDayName} ${localTimeFormatted} بتوقيت الطالب).
+                const requestBody = `يطلب الطالب (${studentData.name}) حجز ${isTrial ? 'حصة تجريبية لتقييم المستوى' : (!hasScheduledSlots ? 'موعد ضمن جدوله الأساسي' : 'حصة تعويضية إضافية')} يوم (${localDayName} ${localTimeFormatted} بتوقيت الطالب).
                 <div style="display:flex; gap:8px; margin-top:12px;">
                     ${actionBtn}
                     <button onclick="rejectMakeupSlot('${studentData.id}', '${studentData.name}', this)" style="background:#e11d48; color:white; padding:8px; border-radius:8px; font-size:11px; font-weight:bold; cursor:pointer; width:100%; border:none;">رفض واعتذار ❌</button>
@@ -2078,7 +2127,7 @@ function setupStudentRealtimeListener() {
                 await supabaseClient.from('student_notifications').insert([{
                     target: studentData.name, type: 'info',
                     title: `⏳ تم إرسال طلب الحجز`,
-                    body: `تم إرسال طلبك لحجز الحصة يوم ${localDayName} (${localTimeFormatted}) بنجاح. بانتظار التأكيد.`
+                    body: `تم إرسال طلبك لحجز الموعد يوم ${localDayName} (${localTimeFormatted}) بنجاح. بانتظار التأكيد.`
                 }]);
 
                 showToast(isAr ? '✅ تم إرسال الطلب بنجاح! راقب إشعاراتك لمتابعة الموافقة.' : '✅ Request sent successfully!', 'success');
@@ -2091,7 +2140,6 @@ function setupStudentRealtimeListener() {
                 showToast('❌ حدث خطأ أثناء إرسال الطلب: ' + err.message, 'error');
             }
         };
-
         window.fetchSchedule = async function(studentId) {
             const container = document.getElementById('schedule-list');
             if(!container) return;
