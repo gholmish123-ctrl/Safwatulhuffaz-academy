@@ -422,16 +422,16 @@
                             </div>
                         </div>
 
-                        <!-- 🟢 مسار القرآن الكريم -->
+                    <!-- 🟢 مسار القرآن الكريم -->
                         <div id="dynamic-fields-quran" class="hidden space-y-6">
                             
                             <!-- الجديد اليوم (أخضر) -->
                             <div class="border border-emerald-200 rounded-2xl bg-white overflow-hidden relative shadow-sm hover-lift transition">
-                                <div class="absolute top-4 right-4 flex items-center gap-2">
-                                    <span class="font-black text-emerald-800 text-sm" data-ar="الجديد اليوم" data-en="New Lesson">الجديد اليوم</span>
-                                    <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                                <div class="absolute top-4 right-4 flex items-center gap-2 z-10">
+                                    <input type="checkbox" id="enable-quran-new" checked onchange="document.getElementById('quran-new-body').classList.toggle('opacity-30', !this.checked); document.getElementById('quran-new-body').classList.toggle('pointer-events-none', !this.checked);" class="w-4 h-4 accent-emerald-600 cursor-pointer">
+                                    <label for="enable-quran-new" class="font-black text-emerald-800 text-sm cursor-pointer select-none" data-ar="الجديد اليوم" data-en="New Lesson">الجديد اليوم</label>
                                 </div>
-                                <div class="pt-12 pb-5 px-3 sm:px-5 bg-emerald-50/30">
+                                <div id="quran-new-body" class="pt-12 pb-5 px-3 sm:px-5 bg-emerald-50/30 transition-opacity duration-300">
                                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4" dir="rtl">
                                         <div><label class="text-[10px] font-bold text-slate-500 text-right block mb-1" data-ar="من سورة" data-en="From Surah">من سورة</label><select id="quran-new-s-from" onchange="loadAyahs(this, 'quran-new-a-from'); updateSurahToOptions(this, 'quran-new-s-to', 'quran-new-a-to');" class="w-full p-2.5 border-2 border-emerald-400 bg-emerald-100 text-emerald-900 rounded-lg text-xs sm:text-sm font-black shadow-sm cursor-pointer outline-none"></select></div>
                                         <div><label class="text-[10px] font-bold text-slate-500 text-right block mb-1" data-ar="من آية" data-en="From Ayah">من آية</label><select id="quran-new-a-from" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm font-bold bg-white cursor-pointer outline-none"></select></div>
@@ -451,11 +451,11 @@
 
                             <!-- الماضي القريب (أزرق) -->
                             <div class="border border-blue-200 rounded-2xl bg-white overflow-hidden relative shadow-sm hover-lift transition">
-                                <div class="absolute top-4 right-4 flex items-center gap-2">
-                                    <span class="font-black text-blue-800 text-sm" data-ar="الماضي القريب" data-en="Recent Revision">الماضي القريب</span>
-                                    <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                                <div class="absolute top-4 right-4 flex items-center gap-2 z-10">
+                                    <input type="checkbox" id="enable-quran-rec" checked onchange="document.getElementById('quran-rec-body').classList.toggle('opacity-30', !this.checked); document.getElementById('quran-rec-body').classList.toggle('pointer-events-none', !this.checked);" class="w-4 h-4 accent-blue-600 cursor-pointer">
+                                    <label for="enable-quran-rec" class="font-black text-blue-800 text-sm cursor-pointer select-none" data-ar="الماضي القريب" data-en="Recent Revision">الماضي القريب</label>
                                 </div>
-                                <div class="pt-12 pb-5 px-3 sm:px-5 bg-blue-50/30">
+                                <div id="quran-rec-body" class="pt-12 pb-5 px-3 sm:px-5 bg-blue-50/30 transition-opacity duration-300">
                                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4" dir="rtl">
                                         <div><label class="text-[10px] font-bold text-slate-500 text-right block mb-1" data-ar="من سورة" data-en="From Surah">من سورة</label><select id="quran-rec-s-from" onchange="loadAyahs(this, 'quran-rec-a-from'); updateSurahToOptions(this, 'quran-rec-s-to', 'quran-rec-a-to');" class="w-full p-2.5 border-2 border-blue-400 bg-blue-100 text-blue-900 rounded-lg text-xs sm:text-sm font-black shadow-sm cursor-pointer outline-none"></select></div>
                                         <div><label class="text-[10px] font-bold text-slate-500 text-right block mb-1" data-ar="من آية" data-en="From Ayah">من آية</label><select id="quran-rec-a-from" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm font-bold bg-white cursor-pointer outline-none"></select></div>
@@ -475,11 +475,11 @@
 
                             <!-- الماضي البعيد (أصفر) -->
                             <div class="border border-amber-200 rounded-2xl bg-white overflow-hidden relative shadow-sm hover-lift transition">
-                                <div class="absolute top-4 right-4 flex items-center gap-2">
-                                    <span class="font-black text-amber-800 text-sm" data-ar="الماضي البعيد" data-en="Distant Revision">الماضي البعيد</span>
-                                    <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                                <div class="absolute top-4 right-4 flex items-center gap-2 z-10">
+                                    <input type="checkbox" id="enable-quran-dis" checked onchange="document.getElementById('quran-dis-body').classList.toggle('opacity-30', !this.checked); document.getElementById('quran-dis-body').classList.toggle('pointer-events-none', !this.checked);" class="w-4 h-4 accent-amber-600 cursor-pointer">
+                                    <label for="enable-quran-dis" class="font-black text-amber-800 text-sm cursor-pointer select-none" data-ar="الماضي البعيد" data-en="Distant Revision">الماضي البعيد</label>
                                 </div>
-                                <div class="pt-12 pb-5 px-3 sm:px-5 bg-amber-50/20">
+                                <div id="quran-dis-body" class="pt-12 pb-5 px-3 sm:px-5 bg-amber-50/20 transition-opacity duration-300">
                                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4" dir="rtl">
                                         <div><label class="text-[10px] font-bold text-slate-500 text-right block mb-1" data-ar="من سورة" data-en="From Surah">من سورة</label><select id="quran-dis-s-from" onchange="loadAyahs(this, 'quran-dis-a-from'); updateSurahToOptions(this, 'quran-dis-s-to', 'quran-dis-a-to');" class="w-full p-2.5 border-2 border-amber-400 bg-amber-100 text-amber-900 rounded-lg text-xs sm:text-sm font-black shadow-sm cursor-pointer outline-none"></select></div>
                                         <div><label class="text-[10px] font-bold text-slate-500 text-right block mb-1" data-ar="من آية" data-en="From Ayah">من آية</label><select id="quran-dis-a-from" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm font-bold bg-white cursor-pointer outline-none"></select></div>
@@ -504,36 +504,36 @@
                                 </div>
                                 
                                 <div class="space-y-5">
-                                    <div class="border-b border-slate-700 pb-5">
+                                    <div class="border-b border-slate-700 pb-5 relative">
                                         <div class="flex items-center gap-2 mb-3">
-                                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                            <p class="text-[11px] font-bold text-emerald-400" data-ar="الجديد للقادم" data-en="Next New Lesson">الجديد للقادم</p>
+                                            <input type="checkbox" id="enable-quran-next" checked onchange="document.getElementById('quran-next-body').classList.toggle('opacity-30', !this.checked); document.getElementById('quran-next-body').classList.toggle('pointer-events-none', !this.checked);" class="w-3.5 h-3.5 accent-emerald-500 cursor-pointer z-10">
+                                            <label for="enable-quran-next" class="text-[11px] font-bold text-emerald-400 cursor-pointer select-none z-10" data-ar="الجديد للقادم" data-en="Next New Lesson">الجديد للقادم</label>
                                         </div>
-                                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-slate-800">
+                                        <div id="quran-next-body" class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-slate-800 transition-opacity duration-300">
                                             <div><select id="quran-next-s-from" onchange="loadAyahs(this, 'quran-next-a-from'); updateSurahToOptions(this, 'quran-next-s-to', 'quran-next-a-to');" class="w-full p-1.5 border-2 border-emerald-400 bg-emerald-50 text-emerald-900 rounded-lg text-xs font-black cursor-pointer outline-none"></select></div>
                                             <div><select id="quran-next-a-from" class="w-full p-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white cursor-pointer outline-none"></select></div>
                                             <div><select id="quran-next-s-to" onchange="loadAyahs(this, 'quran-next-a-to')" class="w-full p-1.5 border-2 border-emerald-400 bg-emerald-50 text-emerald-900 rounded-lg text-xs font-black cursor-pointer outline-none"></select></div>
                                             <div><select id="quran-next-a-to" class="w-full p-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white cursor-pointer outline-none"></select></div>
                                         </div>
                                     </div>
-                                    <div class="border-b border-slate-700 pb-5">
+                                    <div class="border-b border-slate-700 pb-5 relative">
                                         <div class="flex items-center gap-2 mb-3">
-                                            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                                            <p class="text-[11px] font-bold text-blue-400" data-ar="المراجعة القريبة" data-en="Next Recent Revision">المراجعة القريبة</p>
+                                            <input type="checkbox" id="enable-quran-next-rec" checked onchange="document.getElementById('quran-next-rec-body').classList.toggle('opacity-30', !this.checked); document.getElementById('quran-next-rec-body').classList.toggle('pointer-events-none', !this.checked);" class="w-3.5 h-3.5 accent-blue-500 cursor-pointer z-10">
+                                            <label for="enable-quran-next-rec" class="text-[11px] font-bold text-blue-400 cursor-pointer select-none z-10" data-ar="المراجعة القريبة" data-en="Next Recent Revision">المراجعة القريبة</label>
                                         </div>
-                                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-slate-800">
+                                        <div id="quran-next-rec-body" class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-slate-800 transition-opacity duration-300">
                                             <div><select id="quran-next-rec-s-from" onchange="loadAyahs(this, 'quran-next-rec-a-from'); updateSurahToOptions(this, 'quran-next-rec-s-to', 'quran-next-rec-a-to');" class="w-full p-1.5 border-2 border-blue-400 bg-blue-50 text-blue-900 rounded-lg text-xs font-black cursor-pointer outline-none"></select></div>
                                             <div><select id="quran-next-rec-a-from" class="w-full p-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white cursor-pointer outline-none"></select></div>
                                             <div><select id="quran-next-rec-s-to" onchange="loadAyahs(this, 'quran-next-rec-a-to')" class="w-full p-1.5 border-2 border-blue-400 bg-blue-50 text-blue-900 rounded-lg text-xs font-black cursor-pointer outline-none"></select></div>
                                             <div><select id="quran-next-rec-a-to" class="w-full p-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white cursor-pointer outline-none"></select></div>
                                         </div>
                                     </div>
-                                    <div class="border-b border-slate-700 pb-5">
+                                    <div class="border-b border-slate-700 pb-5 relative">
                                         <div class="flex items-center gap-2 mb-3">
-                                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                                            <p class="text-[11px] font-bold text-amber-400" data-ar="المراجعة البعيدة" data-en="Next Distant Revision">المراجعة البعيدة</p>
+                                            <input type="checkbox" id="enable-quran-next-dis" checked onchange="document.getElementById('quran-next-dis-body').classList.toggle('opacity-30', !this.checked); document.getElementById('quran-next-dis-body').classList.toggle('pointer-events-none', !this.checked);" class="w-3.5 h-3.5 accent-amber-500 cursor-pointer z-10">
+                                            <label for="enable-quran-next-dis" class="text-[11px] font-bold text-amber-400 cursor-pointer select-none z-10" data-ar="المراجعة البعيدة" data-en="Next Distant Revision">المراجعة البعيدة</label>
                                         </div>
-                                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-slate-800">
+                                        <div id="quran-next-dis-body" class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-slate-800 transition-opacity duration-300">
                                             <div><select id="quran-next-dis-s-from" onchange="loadAyahs(this, 'quran-next-dis-a-from'); updateSurahToOptions(this, 'quran-next-dis-s-to', 'quran-next-dis-a-to');" class="w-full p-1.5 border-2 border-amber-400 bg-amber-50 text-amber-900 rounded-lg text-xs font-black cursor-pointer outline-none"></select></div>
                                             <div><select id="quran-next-dis-a-from" class="w-full p-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white cursor-pointer outline-none"></select></div>
                                             <div><select id="quran-next-dis-s-to" onchange="loadAyahs(this, 'quran-dis-a-to')" class="w-full p-1.5 border-2 border-amber-400 bg-amber-50 text-amber-900 rounded-lg text-xs font-black cursor-pointer outline-none"></select></div>
@@ -921,7 +921,38 @@
             </div>
         </div>
     </div>
-
+<!-- نافذة تعديل موعد متاح -->
+    <div id="edit-slot-modal" class="hidden fixed inset-0 bg-slate-900/60 z-[200] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="glass-modal rounded-3xl shadow-2xl w-full max-w-sm p-6 sm:p-8 border border-slate-200 relative bg-white text-center">
+            <h3 class="text-xl font-black mb-4 text-slate-800 flex items-center justify-center gap-2"><span>🔄</span> <span data-ar="تعديل الموعد المتاح" data-en="Edit Available Slot">تعديل الموعد المتاح</span></h3>
+            <div class="space-y-4 text-start bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 mb-1" data-ar="اليوم الجديد:" data-en="New Day:">اليوم الجديد:</label>
+                    <select id="edit-slot-day" class="w-full p-2.5 border border-slate-300 rounded-xl text-xs font-bold bg-white outline-none focus:border-blue-500 shadow-sm cursor-pointer">
+                        <option value="0">السبت / Saturday</option><option value="1">الأحد / Sunday</option><option value="2">الإثنين / Monday</option>
+                        <option value="3">الثلاثاء / Tuesday</option><option value="4">الأربعاء / Wednesday</option><option value="5">الخميس / Thursday</option><option value="6">الجمعة / Friday</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 mb-1" data-ar="التوقيت الجديد (بتوقيت القاهرة):" data-en="New Time (Cairo):">التوقيت الجديد (بتوقيت القاهرة):</label>
+                    <div class="flex gap-2 justify-center w-full" dir="ltr">
+                        <select id="edit-slot-h" class="flex-1 p-2.5 border border-blue-300 bg-blue-50 text-blue-900 rounded-xl text-xs font-black outline-none text-center shadow-sm cursor-pointer"></select>
+                        <span class="font-bold self-center text-slate-500">:</span>
+                        <select id="edit-slot-m" class="flex-1 p-2.5 border border-blue-300 bg-blue-50 text-blue-900 rounded-xl text-xs font-black outline-none text-center shadow-sm cursor-pointer">
+                            <option value="00">00</option><option value="30">30</option>
+                        </select>
+                        <select id="edit-slot-ampm" class="flex-1 p-2.5 border border-blue-300 bg-blue-50 text-blue-900 rounded-xl text-xs font-black outline-none text-center shadow-sm cursor-pointer">
+                            <option value="AM">AM</option><option value="PM">PM</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="saveEditedAvailableSlot()" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3 rounded-xl transition shadow-md hover-lift cursor-pointer" data-ar="حفظ التعديل ✔️" data-en="Save ✔️">حفظ التعديل ✔️</button>
+                <button onclick="document.getElementById('edit-slot-modal').classList.add('hidden')" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3 rounded-xl transition cursor-pointer" data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+            </div>
+        </div>
+    </div>
     <!-- الإشعارات الجانبية (Toasts) -->
     <div id="toast-container" class="fixed bottom-6 left-6 space-y-3 z-[250] flex flex-col items-start pointer-events-none w-64 sm:w-auto"></div>
 
@@ -1308,17 +1339,57 @@
             } catch (e) { console.warn(e); }
         }
 
-        // ================= تسكين المواعيد وجدول الحصص =================
-        async function fetchMySchedule() {
+       // 1️⃣ دالة حذف الموعد المتاح (لازم تكون موجودة عشان زرار الحذف يشتغل)
+        window.deleteAvailableSlot = async function(dayIdx, hourIdx) {
+            const isAr = currentLang === 'ar';
+            if(!confirm(isAr ? 'هل أنت متأكد من حذف هذا الموعد المتاح من جدولك؟' : 'Are you sure you want to delete this available slot?')) return;
+
+            showToast(isAr ? '⏳ جاري الحذف...' : '⏳ Deleting...', 'info');
+
+            try {
+                const { error } = await supabaseClient
+                    .from('teacher_slots')
+                    .delete()
+                    .match({
+                        teacher_id: currentTeacherId,
+                        day_index: dayIdx,
+                        hour_index: hourIdx,
+                        status: 'available'
+                    });
+
+                if (error) throw error;
+
+                let cellKey = `${dayIdx}_${hourIdx}`;
+                if(dbAvailability && dbAvailability[currentTeacherId] && dbAvailability[currentTeacherId][cellKey]) {
+                    delete dbAvailability[currentTeacherId][cellKey];
+                }
+
+                showToast(isAr ? '✅ تم حذف الموعد بنجاح' : '✅ Slot deleted successfully', 'success');
+                
+                fetchMySchedule(); 
+                if (typeof renderBookingGrid === 'function') renderBookingGrid();
+                
+            } catch (e) {
+                showToast('❌ خطأ في الحذف: ' + e.message, 'error');
+            }
+        };
+
+        // 2️⃣ دالة جلب المواعيد (تم إصلاح السطر المفقود وتعريف isAr)
+        window.fetchMySchedule = async function() {
             if (!currentTeacherId) return;
             const tbody = document.getElementById('live-schedule-view-list');
             if (!tbody) return;
             tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 font-bold animate-pulse">جاري تحميل المواعيد المجدولة...</td></tr>`;
 
             try {
+                // تعريف اللغة عشان أزرار التعديل والحذف تقرأها صح
+                const isAr = currentLang === 'ar';
+
                 const { data: slots, error } = await supabaseClient.from('teacher_slots').select('*').eq('teacher_id', currentTeacherId).neq('status', 'closed').order('day_index', { ascending: true }).order('hour_index', { ascending: true });
+                
+                // 🔥 هذا هو السطر الذي كان مفقوداً وتسبب في انهيار الكود 🔥
                 if (error || !slots || slots.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 font-bold">${currentLang === 'ar' ? 'لا توجد مواعيد مسكنة في جدولك حالياً.' : 'No scheduled slots found.'}</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 font-bold">${isAr ? 'لا توجد مواعيد مسكنة في جدولك حالياً.' : 'No scheduled slots found.'}</td></tr>`;
                     document.getElementById('live-today-sessions').innerHTML = `<div class="text-center text-slate-400 font-bold py-4">لا توجد حصص مجدولة اليوم</div>`;
                     return;
                 }
@@ -1336,10 +1407,24 @@
                 let html = '';
                 let todaySessionsCount = 0;
                 let todayHtml = '';
-                const currentDayIndex = (new Date().getDay() + 1) % 7; 
+                
+                const now = new Date();
+                const currentDayIndex = (now.getDay() + 1) % 7; 
+
+                const formatterCairo = new Intl.DateTimeFormat('en-US', { timeZone: 'Africa/Cairo', hour: 'numeric', minute: 'numeric', hour12: false });
+                const parts = formatterCairo.formatToParts(now);
+                let currentCairoH = 0, currentCairoM = 0;
+                for (let p of parts) {
+                    if (p.type === 'hour') currentCairoH = parseInt(p.value, 10);
+                    if (p.type === 'minute') currentCairoM = parseInt(p.value, 10);
+                }
+                if (currentCairoH === 24) currentCairoH = 0;
+                const currentCairoMins = (currentCairoH * 60) + currentCairoM;
+                
+                let isNextSessionFound = false;
 
                 slots.forEach(slot => {
-                    const dayName = currentLang === 'ar' ? daysAr[slot.day_index] : daysEn[slot.day_index];
+                    const dayName = isAr ? daysAr[slot.day_index] : daysEn[slot.day_index];
                     
                     let totalMins = slot.hour_index * 30;
                     let h24 = Math.floor(totalMins / 60);
@@ -1351,9 +1436,21 @@
                     if (slot.day_index === currentDayIndex && slot.status === 'booked') {
                         todaySessionsCount++;
                         const stu = studentsMap[slot.student_id] || { name: 'طالب مسجل' };
-                        todayHtml += `<div class="bg-emerald-50 border border-emerald-100 p-2 rounded-lg flex justify-between items-center shadow-sm hover-lift mb-2">
+                        
+                        let sessionEndMins = totalMins + 30; 
+                        let rowClass = "bg-emerald-50 border-emerald-100 text-slate-700"; 
+                        let indicatorIcon = "";
+
+                        if (!isNextSessionFound && sessionEndMins > currentCairoMins) {
+                            rowClass = "bg-gradient-to-r from-amber-50 to-amber-100 border-2 border-amber-400 shadow-md transform scale-[1.02] ring-2 ring-amber-400/30";
+                            indicatorIcon = `<span class="absolute -top-2.5 -right-2.5 bg-amber-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm animate-pulse">الحالية ⏳</span>`;
+                            isNextSessionFound = true;
+                        }
+
+                        todayHtml += `<div class="relative flex justify-between items-center p-2.5 rounded-xl mb-3 transition-all duration-300 hover-lift ${rowClass}">
+                            ${indicatorIcon}
                             <span class="text-xs font-black text-emerald-800" dir="ltr">${teacherTime}</span>
-                            <span class="text-xs font-bold text-slate-700">${stu.name}</span>
+                            <span class="text-xs font-bold">${stu.name}</span>
                         </div>`;
                     }
 
@@ -1385,7 +1482,16 @@
                                     <td class="p-4 text-xs font-black text-emerald-600 font-mono" dir="ltr">${teacherTime}</td>
                                     <td class="p-4 text-xs font-bold text-slate-400">—</td>
                                     <td class="p-4 font-bold text-emerald-600">🟢 متاح (بانتظار تسكين طالب)</td>
-                                    <td class="p-4 text-center"><span class="text-[10px] text-slate-400 font-bold whitespace-nowrap block w-full sm:inline">موعد شاغر</span></td>
+                                    <td class="p-4 text-center">
+                                        <div class="flex items-center justify-center gap-2 flex-wrap">
+                                            <button onclick="openEditSlotModal(${slot.day_index}, ${slot.hour_index})" class="bg-amber-50 hover:bg-amber-500 hover:text-white text-amber-600 border border-amber-200 px-3 py-1.5 rounded-lg text-[10px] font-bold transition hover-lift whitespace-nowrap flex items-center justify-center gap-1 shadow-sm cursor-pointer">
+                                                <span>🔄</span> <span>${isAr ? 'تعديل' : 'Edit'}</span>
+                                            </button>
+                                            <button onclick="deleteAvailableSlot(${slot.day_index}, ${slot.hour_index})" class="bg-red-50 hover:bg-red-500 hover:text-white text-red-600 border border-red-200 px-3 py-1.5 rounded-lg text-[10px] font-bold transition hover-lift whitespace-nowrap flex items-center justify-center gap-1 shadow-sm cursor-pointer">
+                                                <span>🗑️</span> <span>${isAr ? 'حذف' : 'Delete'}</span>
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>`;
                     }
                 });
@@ -1397,8 +1503,10 @@
                 if(todayHtml === '') todayHtml = `<div class="text-center text-slate-400 font-bold py-4">لا توجد حصص مجدولة اليوم</div>`;
                 document.getElementById('live-today-sessions').innerHTML = todayHtml;
 
-            } catch (err) { tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-red-500 font-bold">حدث خطأ في تحميل المواعيد.</td></tr>`; }
-        }
+            } catch (err) { 
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-red-500 font-bold">حدث خطأ في تحميل المواعيد: ${err.message}</td></tr>`; 
+            }
+        };
         // ================= سجل الحضور الذكي =================
         async function updateAttendanceDayAndList() {
             const attDateEl = document.getElementById('attendance-date');
@@ -1545,7 +1653,7 @@
                 const currentMonth = now.toLocaleString(currentLang==='ar'?'ar-EG':'en-US', {month: 'long', year: 'numeric'});
                 
                 dbStudents.forEach(std => {
-                    let sessionRate = std.hourly_rate || 10; 
+                   let sessionRate = parseFloat(std.session_price) || 0;
                     let actualSessions = sessionCounts[std.id] || 0; 
                     let total = actualSessions * sessionRate;
                     let isPaid = std.is_paid || false;
@@ -2064,19 +2172,16 @@
                             </div>
                         </div>`;
                 };
-
-                let dNew = { sF: document.getElementById('quran-new-s-from')?.value, aF: document.getElementById('quran-new-a-from')?.value, sT: document.getElementById('quran-new-s-to')?.value, aT: document.getElementById('quran-new-a-to')?.value, rt: document.getElementById('quran-new-rating')?.value };
-                let dRec = { sF: document.getElementById('quran-rec-s-from')?.value, aF: document.getElementById('quran-rec-a-from')?.value, sT: document.getElementById('quran-rec-s-to')?.value, aT: document.getElementById('quran-rec-a-to')?.value, rt: document.getElementById('quran-rec-rating')?.value };
-                let dDis = { sF: document.getElementById('quran-dis-s-from')?.value, aF: document.getElementById('quran-dis-a-from')?.value, sT: document.getElementById('quran-dis-s-to')?.value, aT: document.getElementById('quran-dis-a-to')?.value, rt: document.getElementById('quran-dis-rating')?.value };
-
+let dNew = document.getElementById('enable-quran-new')?.checked ? { sF: document.getElementById('quran-new-s-from')?.value, aF: document.getElementById('quran-new-a-from')?.value, sT: document.getElementById('quran-new-s-to')?.value, aT: document.getElementById('quran-new-a-to')?.value, rt: document.getElementById('quran-new-rating')?.value } : {};
+                let dRec = document.getElementById('enable-quran-rec')?.checked ? { sF: document.getElementById('quran-rec-s-from')?.value, aF: document.getElementById('quran-rec-a-from')?.value, sT: document.getElementById('quran-rec-s-to')?.value, aT: document.getElementById('quran-rec-a-to')?.value, rt: document.getElementById('quran-rec-rating')?.value } : {};
+                let dDis = document.getElementById('enable-quran-dis')?.checked ? { sF: document.getElementById('quran-dis-s-from')?.value, aF: document.getElementById('quran-dis-a-from')?.value, sT: document.getElementById('quran-dis-s-to')?.value, aT: document.getElementById('quran-dis-a-to')?.value, rt: document.getElementById('quran-dis-rating')?.value } : {};
                 contentDiv.innerHTML += buildBlock(isAr?'الجديد اليوم':'New Lesson', 'text-emerald-800', 'border-emerald-200', 'bg-emerald-50', 'bg-emerald-500', dNew);
                 contentDiv.innerHTML += buildBlock(isAr?'الماضي القريب':'Recent Revision', 'text-blue-800', 'border-blue-200', 'bg-blue-50', 'bg-blue-500', dRec);
                 contentDiv.innerHTML += buildBlock(isAr?'الماضي البعيد':'Distant Revision', 'text-amber-800', 'border-amber-200', 'bg-amber-50', 'bg-amber-500', dDis);
 
-                let nNew = { sF: document.getElementById('quran-next-s-from')?.value, aF: document.getElementById('quran-next-a-from')?.value, sT: document.getElementById('quran-next-s-to')?.value, aT: document.getElementById('quran-next-a-to')?.value };
-                let nRec = { sF: document.getElementById('quran-next-rec-s-from')?.value, aF: document.getElementById('quran-next-rec-a-from')?.value, sT: document.getElementById('quran-next-rec-s-to')?.value, aT: document.getElementById('quran-next-rec-s-to')?.value };
-                let nDis = { sF: document.getElementById('quran-next-dis-s-from')?.value, aF: document.getElementById('quran-next-dis-a-from')?.value, sT: document.getElementById('quran-next-dis-s-to')?.value, aT: document.getElementById('quran-next-dis-s-to')?.value };
-
+               let nNew = document.getElementById('enable-quran-next')?.checked ? { sF: document.getElementById('quran-next-s-from')?.value, aF: document.getElementById('quran-next-a-from')?.value, sT: document.getElementById('quran-next-s-to')?.value, aT: document.getElementById('quran-next-a-to')?.value } : {};
+                let nRec = document.getElementById('enable-quran-next-rec')?.checked ? { sF: document.getElementById('quran-next-rec-s-from')?.value, aF: document.getElementById('quran-next-rec-a-from')?.value, sT: document.getElementById('quran-next-rec-s-to')?.value, aT: document.getElementById('quran-next-rec-s-to')?.value } : {};
+                let nDis = document.getElementById('enable-quran-next-dis')?.checked ? { sF: document.getElementById('quran-next-dis-s-from')?.value, aF: document.getElementById('quran-next-dis-a-from')?.value, sT: document.getElementById('quran-next-dis-s-to')?.value, aT: document.getElementById('quran-next-dis-s-to')?.value } : {};
                 const buildNextRow = (title, dotColor, data) => {
                     if(!data.sF) return '';
                     return `
@@ -2153,7 +2258,11 @@
                     
                     let track = (std.subject && (std.subject.includes('قرآن') || std.subject.includes('سند'))) ? 'quran' : 'arabic';
                     
-                    const getQ = (prefix) => {
+                   const getQ = (prefix) => {
+                        // التحقق من حالة علامة الصح أولاً (لو مش متعلم عليها يمسح القسم من التقرير)
+                        const checkbox = document.getElementById(`enable-quran-${prefix}`);
+                        if (checkbox && !checkbox.checked) return null;
+
                         const sF = document.getElementById(`quran-${prefix}-s-from`)?.value;
                         if(!sF) return null;
                         return {
@@ -2991,16 +3100,24 @@
 
                         html += `<td class="p-2 border-r border-slate-800/40 align-middle">`;
                         
-                        if (!showCell) {
+                       if (!showCell) {
                             html += `<div class="w-full py-2.5 rounded-xl bg-slate-800/10 border border-slate-700/10 opacity-10">·</div>`;
                         } else if (slotInfo && slotInfo.status === 'booked') {
                             let studentObj = studentsList.find(s => String(s.id) === String(slotInfo.studentId));
                             let sName = studentObj ? studentObj.name.split(' ')[0] : (isAr ? 'طالب' : 'Student');
                             
+                            // 🔥 كارت ذكي يظهر الاسم، وعند الوقوف عليه يظهر أزرار التعديل والحذف
                             html += `
-                                <div class="w-full bg-rose-900/50 text-rose-300 py-2 px-2 rounded-xl font-bold border border-rose-800/60 shadow-xs flex items-center justify-center gap-1.5 cursor-default" title="${sName}">
-                                    <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-                                    <span class="truncate text-xs text-slate-200">${sName}</span>
+                                <div class="group w-full bg-rose-900/50 text-rose-300 py-2 px-1 rounded-xl font-bold border border-rose-800/60 shadow-xs relative overflow-hidden">
+                                    <div class="flex items-center justify-center gap-1.5 transition-opacity duration-300 group-hover:opacity-0" title="${sName}">
+                                        <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                                        <span class="truncate text-[11px] text-slate-200">${sName}</span>
+                                    </div>
+                                    <div class="absolute inset-0 flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-rose-800">
+                                        <button onclick="openEditSlotModal(${d}, ${timeObj.index}, '${slotInfo.studentId}')" title="${isAr ? 'تعديل الموعد' : 'Edit Slot'}" class="p-1 hover:bg-rose-700 hover:scale-110 transition rounded-md cursor-pointer text-sm">🔄</button>
+                                        <div class="w-px h-4 bg-rose-600/50"></div>
+                                        <button onclick="deleteBookedSlot(${d}, ${timeObj.index}, '${slotInfo.studentId}', '${sName}')" title="${isAr ? 'حذف الموعد' : 'Delete Slot'}" class="p-1 hover:bg-rose-700 hover:scale-110 transition rounded-md cursor-pointer text-sm">🗑️</button>
+                                    </div>
                                 </div>`;
                         } else if (slotInfo && slotInfo.status === 'available') {
                             html += `
@@ -3443,6 +3560,141 @@ window.saveQuranTracker = async function() {
                 return 0;
             }
         }
+       // 🟢 متغير لحفظ الموعد الجاري تعديله (أضفنا فيه الـ studentId)
+        let slotBeingEdited = null;
+
+        // 🟢 دالة فتح نافذة التعديل (تدعم المتاح والمحجوز معاً)
+        window.openEditSlotModal = function(oldDay, oldHourIdx, studentId = null) {
+            slotBeingEdited = { day: oldDay, hour: oldHourIdx, studentId: studentId };
+            
+            let hOpts = '';
+            for(let i=1; i<=12; i++) hOpts += `<option value="${i}">${i.toString().padStart(2, '0')}</option>`;
+            document.getElementById('edit-slot-h').innerHTML = hOpts;
+
+            document.getElementById('edit-slot-day').value = oldDay;
+            
+            let totalMins = oldHourIdx * 30;
+            let h24 = Math.floor(totalMins / 60);
+            let m = totalMins % 60;
+            let h12 = h24 % 12 || 12;
+            let ampm = h24 < 12 ? 'AM' : 'PM';
+
+            document.getElementById('edit-slot-h').value = h12;
+            document.getElementById('edit-slot-m').value = m === 0 ? "00" : "30";
+            document.getElementById('edit-slot-ampm').value = ampm;
+
+            document.getElementById('edit-slot-modal').classList.remove('hidden');
+        };
+
+        // 🟢 دالة حفظ التعديل في السيرفر (تدعم المتاح والمحجوز معاً)
+       // 🟢 دالة حفظ التعديل في السيرفر (محدثة لمنع التعارض وتنظيف البيانات)
+        window.saveEditedAvailableSlot = async function() {
+            if(!slotBeingEdited) return;
+
+            const isAr = currentLang === 'ar';
+            let newDay = parseInt(document.getElementById('edit-slot-day').value);
+            let h = parseInt(document.getElementById('edit-slot-h').value);
+            let mStr = document.getElementById('edit-slot-m').value;
+            let ampm = document.getElementById('edit-slot-ampm').value;
+
+            if (ampm === 'PM' && h !== 12) h += 12;
+            if (ampm === 'AM' && h === 12) h = 0;
+            
+            let totalMins = h * 60 + parseInt(mStr);
+            let newHourIdx = Math.floor(totalMins / 30);
+
+            // لو الموعد الجديد هو نفسه القديم نقفل النافذة وبس
+            if (newDay === slotBeingEdited.day && newHourIdx === slotBeingEdited.hour) {
+                document.getElementById('edit-slot-modal').classList.add('hidden');
+                return;
+            }
+
+            // 🔥 تنظيف الـ ID لو كان مبعوث ككلمة "undefined" أو "null" بالغلط
+            let sId = slotBeingEdited.studentId;
+            if (sId === 'null' || sId === 'undefined' || sId === '') sId = null;
+
+            let statusToSave = sId ? 'booked' : 'available';
+
+            // 🔥 التأكد إن المكان الجديد مش محجوز بالفعل لطالب تاني في الشبكة
+            let newKey = `${newDay}_${newHourIdx}`;
+            if(dbAvailability && dbAvailability[currentTeacherId] && dbAvailability[currentTeacherId][newKey]) {
+                if(dbAvailability[currentTeacherId][newKey].status === 'booked') {
+                    showToast(isAr ? '❌ لا يمكن نقل الموعد، الوقت الجديد محجوز بالفعل لطالب آخر!' : '❌ Time already booked!', 'error');
+                    return;
+                }
+            }
+
+            showToast(isAr ? '⏳ جاري تعديل الموعد...' : '⏳ Updating slot...', 'info');
+
+            try {
+                // 1. مسح الموعد القديم من مكانه
+                await supabaseClient.from('teacher_slots').delete().match({
+                    teacher_id: currentTeacherId,
+                    day_index: slotBeingEdited.day,
+                    hour_index: slotBeingEdited.hour
+                });
+
+                // 2. إنشاء الموعد الجديد (استخدمنا upsert عشان لو الخانة فيها داتا قديمة يتم تحديثها بالقوة بدون أخطاء تعارض)
+                const { error } = await supabaseClient.from('teacher_slots').upsert({
+                    teacher_id: currentTeacherId,
+                    day_index: newDay,
+                    hour_index: newHourIdx,
+                    status: statusToSave,
+                    student_id: sId
+                }, { onConflict: 'teacher_id, day_index, hour_index' });
+
+                if (error) throw error;
+
+                // تحديث الذاكرة المحلية (الكاش) في المتصفح
+                let oldKey = `${slotBeingEdited.day}_${slotBeingEdited.hour}`;
+                if(dbAvailability && dbAvailability[currentTeacherId]) {
+                    delete dbAvailability[currentTeacherId][oldKey];
+                    dbAvailability[currentTeacherId][newKey] = { status: statusToSave, studentId: sId };
+                }
+
+                showToast(isAr ? '✅ تم تعديل الموعد بنجاح!' : '✅ Slot updated successfully!', 'success');
+                document.getElementById('edit-slot-modal').classList.add('hidden');
+                
+                // تحديث الشاشة فوراً
+                fetchMySchedule();
+                if(typeof renderBookingGrid === 'function') renderBookingGrid();
+
+            } catch (e) {
+                showToast(isAr ? '❌ حدث خطأ في قاعدة البيانات: ' + e.message : '❌ DB Error: ' + e.message, 'error');
+            }
+        };
+
+        // 🟢 دالة لحذف موعد "محجوز لطالب" من الجدول نهائياً
+        window.deleteBookedSlot = async function(dayIdx, hourIdx, studentId, studentName) {
+            const isAr = currentLang === 'ar';
+            if(!confirm(isAr ? `هل أنت متأكد من حذف موعد الطالب (${studentName}) نهائياً من جدولك؟` : `Delete ${studentName}'s slot?`)) return;
+
+            showToast(isAr ? '⏳ جاري الحذف...' : '⏳ Deleting...', 'info');
+
+            try {
+                const { error } = await supabaseClient.from('teacher_slots').delete().match({
+                    teacher_id: currentTeacherId,
+                    day_index: dayIdx,
+                    hour_index: hourIdx,
+                    status: 'booked',
+                    student_id: studentId
+                });
+
+                if (error) throw error;
+
+                let cellKey = `${dayIdx}_${hourIdx}`;
+                if(dbAvailability && dbAvailability[currentTeacherId] && dbAvailability[currentTeacherId][cellKey]) {
+                    delete dbAvailability[currentTeacherId][cellKey];
+                }
+
+                showToast(isAr ? '✅ تم حذف موعد الطالب بنجاح' : '✅ Student slot deleted', 'success');
+                
+                fetchMySchedule(); 
+                if (typeof renderBookingGrid === 'function') renderBookingGrid();
+            } catch (e) {
+                showToast('❌ خطأ في الحذف: ' + e.message, 'error');
+            }
+        };
     </script>
 </body>
 </html>

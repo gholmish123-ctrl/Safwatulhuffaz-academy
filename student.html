@@ -66,6 +66,12 @@
         html.dark .text-slate-500 { color: #94a3b8 !important; }
         html.dark .border-slate-100, html.dark .border-slate-200 { border-color: #334155 !important; }
         html.dark header { border-color: #334155 !important; background-color: #1e293b !important; }
+        /* CSS للميزات الجديدة */
+        .quran-word { cursor: pointer; position: relative; }
+        .word-tooltip { display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 6px 10px; border-radius: 8px; font-size: 14px; white-space: nowrap; z-index: 50; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); font-family: 'Tajawal', sans-serif; font-weight: bold;}
+        .quran-word:hover .word-tooltip { display: block; }
+        .masked-word { color: transparent !important; text-shadow: 0 0 15px rgba(255, 255, 255, 0.5); user-select: none; }
+        .cinematic-active { position: fixed !important; top: 0; left: 0; width: 100vw !important; height: 100vh !important; z-index: 99999 !important; border-radius: 0 !important; display: flex; flex-direction: column; justify-content: center; background: #020617 !important; padding: 5vw !important; margin: 0 !important; }
 
         /* محرك الشاشة الجانبية المحسن لمنع الأخطاء */
         @media (max-width: 767px) {
@@ -214,6 +220,9 @@
                 <button type="button" onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer hover-lift">
                     🏆 <span data-ar="الشهادات والاختبارات" data-en="Exams & Certs">الشهادات والاختبارات</span>
                 </button>
+                <button type="button" onclick="switchTab('leaderboard')" id="nav-leaderboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer hover-lift">
+    🏆 <span data-ar="لوحة الشرف للأبطال" data-en="Leaderboard">لوحة الشرف للأبطال</span>
+</button>
                 <button type="button" onclick="switchTab('resources')" id="nav-resources" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer hover-lift">
                     📚 <span data-ar="المكتبة الرقمية" data-en="Digital Library">المكتبة الرقمية</span>
                 </button>
@@ -399,6 +408,38 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- 5. متابعة الصلوات الخمس -->
+<div class="md:col-span-2 p-5 rounded-2xl border border-blue-200 bg-blue-50 shadow-sm mt-2">
+    <div class="flex justify-between items-center border-b border-blue-100 pb-3 mb-4">
+        <div>
+            <h4 class="text-sm font-black text-blue-900" data-ar="🕌 متابعة الصلوات الخمس" data-en="🕌 Daily Prayers Tracker">🕌 متابعة الصلوات الخمس</h4>
+            <p class="text-[11px] text-blue-700 mt-1 font-bold" data-ar="صلاتك هي حياتك، حافظ عليها واكسب النجوم!" data-en="Keep up with your prayers and earn stars!">صلاتك هي حياتك، حافظ عليها واكسب النجوم!</p>
+        </div>
+        <span class="text-xs font-black text-amber-700 bg-amber-100 px-3 py-1 rounded-xl shadow-inner shrink-0" dir="ltr">+2 ⭐</span>
+    </div>
+    <div class="flex flex-wrap justify-between gap-2">
+        <label class="flex-1 flex flex-col items-center gap-2 cursor-pointer group bg-white p-3 rounded-xl border border-blue-100 shadow-sm hover:border-blue-300 transition">
+            <span class="text-xs font-bold text-slate-600 group-hover:text-blue-600 transition" data-ar="الفجر" data-en="Fajr">الفجر</span>
+            <input type="checkbox" id="chk-pray_fajr" onchange="processQuestCompletion('pray_fajr', 2, false)" class="w-6 h-6 text-blue-600 rounded focus:ring-blue-500 cursor-pointer">
+        </label>
+        <label class="flex-1 flex flex-col items-center gap-2 cursor-pointer group bg-white p-3 rounded-xl border border-blue-100 shadow-sm hover:border-blue-300 transition">
+            <span class="text-xs font-bold text-slate-600 group-hover:text-blue-600 transition" data-ar="الظهر" data-en="Dhuhr">الظهر</span>
+            <input type="checkbox" id="chk-pray_dhuhr" onchange="processQuestCompletion('pray_dhuhr', 2, false)" class="w-6 h-6 text-blue-600 rounded focus:ring-blue-500 cursor-pointer">
+        </label>
+        <label class="flex-1 flex flex-col items-center gap-2 cursor-pointer group bg-white p-3 rounded-xl border border-blue-100 shadow-sm hover:border-blue-300 transition">
+            <span class="text-xs font-bold text-slate-600 group-hover:text-blue-600 transition" data-ar="العصر" data-en="Asr">العصر</span>
+            <input type="checkbox" id="chk-pray_asr" onchange="processQuestCompletion('pray_asr', 2, false)" class="w-6 h-6 text-blue-600 rounded focus:ring-blue-500 cursor-pointer">
+        </label>
+        <label class="flex-1 flex flex-col items-center gap-2 cursor-pointer group bg-white p-3 rounded-xl border border-blue-100 shadow-sm hover:border-blue-300 transition">
+            <span class="text-xs font-bold text-slate-600 group-hover:text-blue-600 transition" data-ar="المغرب" data-en="Maghrib">المغرب</span>
+            <input type="checkbox" id="chk-pray_maghrib" onchange="processQuestCompletion('pray_maghrib', 2, false)" class="w-6 h-6 text-blue-600 rounded focus:ring-blue-500 cursor-pointer">
+        </label>
+        <label class="flex-1 flex flex-col items-center gap-2 cursor-pointer group bg-white p-3 rounded-xl border border-blue-100 shadow-sm hover:border-blue-300 transition">
+            <span class="text-xs font-bold text-slate-600 group-hover:text-blue-600 transition" data-ar="العشاء" data-en="Isha">العشاء</span>
+            <input type="checkbox" id="chk-pray_isha" onchange="processQuestCompletion('pray_isha', 2, false)" class="w-6 h-6 text-blue-600 rounded focus:ring-blue-500 cursor-pointer">
+        </label>
+    </div>
+</div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="daily-quests-list">
                             <!-- 1. مهمة القراءة (يدوية) -->
@@ -475,97 +516,146 @@
                     </div>
                 </section>
 
-                <!-- 🎙️ SECTION 5: AUDIO LAB -->
-                <section id="sec-audiolab" class="tab-content hidden space-y-6">
-                    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
-                        <div class="border-b border-slate-100 pb-4">
-                            <span class="bg-purple-100 text-purple-800 text-[10px] font-black px-3 py-1 rounded-full uppercase" data-ar="ميزة حصرية 🎙️" data-en="Exclusive Feature 🎙️">ميزة حصرية 🎙️</span>
-                            <h3 class="text-xl font-black text-slate-800 mt-2" data-ar="معمل التلاوة والواجبات الصوتي التفاعلي" data-en="Interactive Audio Lab & Assignments">معمل التلاوة والواجبات الصوتي التفاعلي</h3>
-                            <p class="text-xs text-slate-500 mt-1 font-bold" data-ar="سجل قراءتك للآيات وأرسلها ليقوم المعلم بتقييمها ووضع النجوم." data-en="Record your recitation and send to your teacher.">سجل قراءتك للآيات وأرسلها ليقوم المعلم بتقييمها ووضع النجوم.</p>
-                        </div>
-                        
-                        <!-- 🎧 المشغل القرآني -->
-                        <div class="bg-gradient-to-br from-slate-900 to-indigo-900 p-6 sm:p-8 rounded-3xl shadow-2xl border border-indigo-500/30 text-white relative overflow-hidden mb-6">
-                            <div class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500 rounded-full blur-[90px] opacity-20 pointer-events-none"></div>
+         <!-- 🎙️ SECTION 5: AUDIO LAB -->
+<section id="sec-audiolab" class="tab-content hidden space-y-6">
+    <!-- الحاوية الرئيسية للمعمل -->
+    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col gap-6 w-full overflow-hidden">
+        
+        <!-- عنوان المعمل -->
+        <div class="border-b border-slate-100 pb-4">
+            <span class="bg-purple-100 text-purple-800 text-[10px] font-black px-3 py-1 rounded-full uppercase" data-ar="ميزة حصرية 🎙️" data-en="Exclusive Feature 🎙️">ميزة حصرية 🎙️</span>
+            <h3 class="text-xl font-black text-slate-800 mt-2" data-ar="معمل التلاوة والواجبات الصوتي التفاعلي" data-en="Interactive Audio Lab & Assignments">معمل التلاوة والواجبات الصوتي التفاعلي</h3>
+            <p class="text-xs text-slate-500 mt-1 font-bold" data-ar="سجل قراءتك للآيات وأرسلها ليقوم المعلم بتقييمها ووضع النجوم." data-en="Record your recitation and send to your teacher.">سجل قراءتك للآيات وأرسلها ليقوم المعلم بتقييمها ووضع النجوم.</p>
+        </div>
+        
+        <!-- 🎧 المشغل القرآني (واخد المساحة العلوية بالكامل) -->
+        <div id="quran-player-container" class="bg-gradient-to-br from-slate-900 to-indigo-900 p-5 sm:p-8 rounded-3xl shadow-2xl border border-indigo-500/30 text-white relative overflow-hidden transition-all duration-500 w-full flex flex-col gap-6">
+            <div class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500 rounded-full blur-[90px] opacity-20 pointer-events-none"></div>
 
-                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-white/10 pb-4 gap-4 relative z-10">
-                                <div>
-                                    <span data-ar="جديد ✨" data-en="New ✨" class="bg-indigo-500/20 text-indigo-300 text-[10px] font-black px-3 py-1 rounded-full uppercase border border-indigo-500/30">جديد ✨</span>
-                                    <h3 class="text-xl font-black mt-2 text-white" id="player-title" data-ar="المشغل القرآني الذكي" data-en="Smart Quran Player">المشغل القرآني الذكي</h3>
-                                    <p class="text-xs text-indigo-200 mt-1 font-bold" data-ar="يقرأ واجبك تلقائياً من أحدث تقرير لتبدأ الحفظ والمراجعة." data-en="Automatically loads your assignment from the latest report.">يقرأ واجبك تلقائياً من أحدث تقرير لتبدأ الحفظ والمراجعة.</p>
-                                </div>
-                                <div class="flex gap-2 bg-white/5 p-1.5 rounded-xl border border-white/10 flex-wrap w-full sm:w-auto">
-                                    <button onclick="loadAssignmentToPlayer('new')" data-ar="الجديد" data-en="New Lesson" class="flex-1 sm:flex-none bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs font-black transition shadow-md hover-lift">الجديد</button>
-                                    <button onclick="loadAssignmentToPlayer('rec')" data-ar="المراجعة القريبة" data-en="Recent Rev." class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-black transition shadow-md hover-lift">المراجعة القريبة</button>
-                                    <button onclick="loadAssignmentToPlayer('dis')" data-ar="البعيدة" data-en="Distant Rev." class="flex-1 sm:flex-none bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-xs font-black transition shadow-md hover-lift">البعيدة</button>
-                                </div>
-                            </div>
+            <!-- 1️⃣ العنوان + أزرار الميزات (تم حل مشكلة التداخل هنا) -->
+            <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center border-b border-white/10 pb-4 gap-4 relative z-10 w-full">
+                <!-- العنوان (shrink-0 تمنعه من الانضغاط) -->
+                <div class="shrink-0 mb-2 xl:mb-0">
+                    <span class="bg-indigo-500/20 text-indigo-300 text-[10px] font-black px-3 py-1 rounded-full uppercase border border-indigo-500/30" data-ar="جديد ✨" data-en="New ✨">جديد ✨</span>
+                    <h3 class="text-xl font-black mt-2 text-white" id="player-title" data-ar="المشغل القرآني الذكي" data-en="Smart Quran Player">المشغل القرآني الذكي</h3>
+                    <p class="text-[11px] text-indigo-200 mt-1 font-bold leading-relaxed" data-ar="يقرأ واجبك تلقائياً من أحدث تقرير." data-en="Auto-loads assignment from latest report.">يقرأ واجبك تلقائياً من أحدث تقرير.</p>
+                </div>
+                
+                <!-- الأزرار (flex-wrap يخليها تنزل سطر جديد لو مفيش مكان) -->
+                <div class="flex flex-wrap items-center gap-2 w-full xl:w-auto xl:justify-end">
+                    <button onclick="loadAssignmentToPlayer('new')" data-ar="الجديد" data-en="New Lesson" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-xs font-black shadow-md transition hover-lift">الجديد</button>
+                    <button onclick="loadAssignmentToPlayer('rec')" data-ar="المراجعة" data-en="Recent Rev." class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-black shadow-md transition hover-lift">المراجعة</button>
+                    <button onclick="loadAssignmentToPlayer('dis')" data-ar="البعيدة" data-en="Distant Rev." class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-xs font-black shadow-md transition hover-lift">البعيدة</button>
+                    
+                    <div class="w-px h-6 bg-white/20 mx-1 hidden sm:block"></div>
+                    
+                    <!-- 🔍 التحكم في الخط -->
+                    <div class="flex bg-slate-700 rounded-lg shadow-md overflow-hidden shrink-0">
+                        <button onclick="zoomFont(1)" title="تكبير الخط" class="text-white hover:bg-slate-600 px-3 py-2 text-sm font-black transition border-e border-slate-600">A+</button>
+                        <button onclick="zoomFont(-1)" title="تصغير الخط" class="text-white hover:bg-slate-600 px-3 py-2 text-sm font-black transition">A-</button>
+                    </div>
 
-                            <div class="mt-6 grid grid-cols-1 md:grid-cols-12 gap-6 relative z-10 items-center">
-                                <div class="md:col-span-5 flex items-center gap-4">
-                                    <div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center text-3xl border border-white/20 shadow-inner shrink-0" id="player-icon">📖</div>
-                                    <div>
-                                        <p class="text-[10px] text-white font-black px-3 py-1 rounded-full uppercase border inline-block mb-2 bg-white/10 border-white/20" id="playing-type" data-ar="لم يتم تحديد مقطع" data-en="No assignment selected">لم يتم تحديد مقطع</p>
-                                        <h4 class="font-black text-xl text-white font-calligraphy" id="playing-surah">---</h4>
-                                        <p class="text-xs font-bold text-indigo-200 mt-1 font-mono" id="playing-ayah" data-ar="الآية: -- / --" data-en="Ayah: -- / --">الآية: -- / --</p>
-                                    </div>
-                                </div>
+                    <!-- 🌙 مؤقت النوم -->
+                    <button id="btn-sleep-timer" onclick="toggleSleepTimer()" title="مؤقت النوم" class="bg-slate-700 hover:bg-slate-600 text-white w-9 h-9 rounded-lg flex items-center justify-center text-sm shadow-md transition shrink-0">🌙</button>
+                    <!-- 🙈 ميزة إخفاء الكلمات -->
+                    <button id="btn-mask-mode" onclick="toggleMaskMode()" title="اختبار الحفظ" class="bg-slate-700 hover:bg-slate-600 text-white w-9 h-9 rounded-lg flex items-center justify-center text-sm shadow-md transition shrink-0">🙈</button>
+                    <!-- 🎬 التركيز السينمائي -->
+                    <button onclick="toggleCinematic()" title="التركيز السينمائي" class="bg-slate-700 hover:bg-slate-600 text-white w-9 h-9 rounded-lg flex items-center justify-center text-sm shadow-md transition shrink-0">🎬</button>
+                </div>
+            </div>
 
-                                <div class="md:col-span-7 bg-white/5 border border-white/10 p-4 rounded-2xl flex flex-col gap-4">
-                                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                                       <select id="quran-reciter" onchange="changeReciter()" class="bg-slate-800 text-white text-xs font-bold px-3 py-2.5 rounded-lg outline-none border border-slate-700 flex-1 cursor-pointer w-full">
-    <option value="Alafasy_128kbps" data-ar="🎙️ مشاري العفاسي" data-en="🎙️ Mishari Alafasy">🎙️ مشاري العفاسي</option>
-    <option value="Husary_128kbps" data-ar="🎙️ محمود خليل الحصري (مرتل)" data-en="🎙️ Mahmoud Al-Husary (Murattal)">🎙️ محمود خليل الحصري (مرتل)</option>
-    <option value="Husary_Muallim_128kbps" data-ar="🎙️ محمود خليل الحصري (معلم)" data-en="🎙️ Mahmoud Al-Husary (Teacher)">🎙️ محمود خليل الحصري (معلم)</option>
-    <option value="Minshawy_Murattal_128kbps" data-ar="🎙️ محمد صديق المنشاوي (مرتل)" data-en="🎙️ Siddiq Al-Minshawi (Murattal)">🎙️ محمد صديق المنشاوي (مرتل)</option>
-    <option value="Minshawy_Teacher_128kbps" data-ar="🎙️ محمد صديق المنشاوي (معلم)" data-en="🎙️ Siddiq Al-Minshawi (Teacher)">🎙️ محمد صديق المنشاوي (معلم)</option>
-    <option value="Muhammad_Ayyub_128kbps" data-ar="🎙️ محمد أيوب" data-en="🎙️ Muhammad Ayyub">🎙️ محمد أيوب</option>
-    <option value="Abdul_Basit_Murattal_192kbps" data-ar="🎙️ عبد الباسط عبد الصمد" data-en="🎙️ Abdul Basit">🎙️ عبد الباسط عبد الصمد</option>
-    <option value="MaherAlMuaiqly128kbps" data-ar="🎙️ ماهر المعيقلي" data-en="🎙️ Maher Al-Muaiqly">🎙️ ماهر المعيقلي</option>
-</select>
+            <!-- 2️⃣ شاشة النص التفاعلي -->
+            <div class="bg-[#0f172a] rounded-2xl border border-white/10 p-6 sm:p-10 min-h-[160px] w-full shadow-inner relative z-10 flex items-center justify-center overflow-hidden">
+                <div id="interactive-ayah-text" class="text-3xl sm:text-4xl text-white font-calligraphy leading-[2.5] text-center w-full" dir="rtl" style="word-wrap: break-word; white-space: normal;">
+                    <span class="text-sm font-sans font-bold text-indigo-300 opacity-70" data-ar="اضغط تشغيل لتبدأ التلاوة التفاعلية 📖" data-en="Press play to start interactive recitation 📖">اضغط تشغيل لتبدأ التلاوة التفاعلية 📖</span>
+                </div>
+            </div>
 
-                                        <div class="flex items-center justify-between gap-2 bg-slate-800 px-3 py-2 rounded-lg border border-slate-700 w-full sm:w-auto">
-                                            <span data-ar="تكرار الآية:" data-en="Repeat:" class="text-[10px] font-bold text-slate-300">تكرار الآية:</span>
-                                            <input type="number" id="quran-repeat" value="1" min="1" max="20" class="w-12 bg-transparent text-white text-center text-sm font-black outline-none">
-                                        </div>
-                                    </div>
+            <!-- 3️⃣ معلومات السورة والتحكم الصوتي -->
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-6 relative z-10 bg-white/5 border border-white/10 p-5 rounded-2xl w-full">
+                
+                <!-- معلومات السورة -->
+                <div class="flex items-center gap-4 w-full lg:w-auto">
+                    <div class="w-14 h-14 rounded-2xl bg-slate-800 flex items-center justify-center text-2xl border border-slate-700 shadow-inner shrink-0" id="player-icon">📖</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[10px] text-white font-black px-3 py-1 rounded-full uppercase border inline-block mb-1 bg-slate-800 border-slate-700" id="playing-type" data-ar="لم يتم تحديد مقطع" data-en="No assignment">لم يتم تحديد مقطع</p>
+                        <h4 class="font-black text-lg text-white font-calligraphy truncate w-full" id="playing-surah">---</h4>
+                        <p class="text-[11px] font-bold text-indigo-200 font-mono" id="playing-ayah" data-ar="الآية: -- / --" data-en="Ayah: -- / --">الآية: -- / --</p>
+                    </div>
+                </div>
 
-                                    <div class="flex items-center justify-center gap-3 mt-1">
-                                        <button onclick="skipAyah(-1)" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition cursor-pointer">⏮️</button>
-                                        <button onclick="toggleQuranPlay()" id="btn-quran-play" class="w-14 h-14 rounded-full bg-indigo-500 hover:bg-indigo-600 flex items-center justify-center text-xl shadow-lg transition hover:scale-105 cursor-pointer">▶️</button>
-                                        <button onclick="skipAyah(1)" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition cursor-pointer">⏭️</button>
-                                        <div class="w-px h-8 bg-white/20 mx-2"></div>
-                                        <button onclick="stopQuran()" class="w-10 h-10 rounded-full bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 flex items-center justify-center transition cursor-pointer">⏹️</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-  
-                        <!-- مسجل الصوت -->
-                        <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-xl flex flex-col items-center justify-center text-center relative overflow-hidden">
-                            <div class="w-16 h-16 rounded-full bg-red-500/20 border-2 border-red-500 flex items-center justify-center text-3xl mb-3" id="record-btn-icon">🎙️</div>
-                            <h4 class="font-black text-base" id="record-status-text" data-ar="اضغط للبدء في تسجيل التلاوة / الواجب" data-en="Click to Start Recording">اضغط للبدء في تسجيل التلاوة / الواجب</h4>
-                            <p class="text-xs text-slate-400 mt-1 font-mono" id="record-timer">00:00</p>
-                            <div class="flex gap-1.5 items-center justify-center h-8 my-4 opacity-30" id="audio-wave">
-                                <span class="w-1 h-3 bg-emerald-400 rounded-full"></span><span class="w-1 h-6 bg-emerald-400 rounded-full"></span><span class="w-1 h-8 bg-emerald-400 rounded-full"></span><span class="w-1 h-4 bg-emerald-400 rounded-full"></span><span class="w-1 h-7 bg-emerald-400 rounded-full"></span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row gap-3 w-full max-w-sm mt-4">
-                                <button type="button" onclick="toggleAudioRecord()" id="btn-record-action" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl text-xs font-black transition shadow-lg cursor-pointer hover-lift">
-                                    🔴 <span data-ar="بدء التسجيل الآن" data-en="Start Recording">بدء التسجيل الآن</span>
-                                </button>
-                                <button type="button" onclick="submitAudioAssignment()" id="btn-send-audio" disabled class="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white py-3 rounded-xl text-xs font-black transition shadow-lg cursor-pointer hover-lift">
-                                    🚀 <span data-ar="إرسال للمعلم" data-en="Submit to Teacher">إرسال للمعلم</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 class="font-black text-slate-800 text-sm mb-4 border-b border-slate-100 pb-2" data-ar="📑 سجل الواجبات الصوتية وتقييم المعلم" data-en="📑 Previous Submissions & Feedback">📑 سجل الواجبات الصوتية وتقييم المعلم</h4>
-                            <div class="space-y-3" id="audio-submissions-list">
-                                <p class="text-xs text-slate-400 text-center py-4" data-ar="لا توجد واجبات مرسلة." data-en="No submissions yet.">لا توجد واجبات مرسلة.</p>
-                            </div>
+                <!-- التحكم وقائمة المشايخ (تمت الترجمة هنا) -->
+                <div class="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
+                    <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                        <select id="quran-reciter" onchange="changeReciter()" class="bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl outline-none border border-slate-700 cursor-pointer w-full sm:w-48">
+                            <option value="Alafasy_128kbps" data-ar="🎙️ مشاري العفاسي" data-en="🎙️ Mishari Alafasy">🎙️ مشاري العفاسي</option>
+                            <option value="Husary_128kbps" data-ar="🎙️ الحصري (مرتل)" data-en="🎙️ Al-Husary (Murattal)">🎙️ الحصري (مرتل)</option>
+                            <option value="Husary_Muallim_128kbps" data-ar="🎙️ الحصري (معلم)" data-en="🎙️ Al-Husary (Teacher)">🎙️ الحصري (معلم)</option>
+                            <option value="Minshawy_Murattal_128kbps" data-ar="🎙️ المنشاوي (مرتل)" data-en="🎙️ Al-Minshawi (Murattal)">🎙️ المنشاوي (مرتل)</option>
+                            <option value="Minshawy_Teacher_128kbps" data-ar="🎙️ المنشاوي (معلم)" data-en="🎙️ Al-Minshawi (Teacher)">🎙️ المنشاوي (معلم)</option>
+                            <option value="Muhammad_Ayyub_128kbps" data-ar="🎙️ محمد أيوب" data-en="🎙️ Muhammad Ayyub">🎙️ محمد أيوب</option>
+                            <option value="Abdul_Basit_Murattal_192kbps" data-ar="🎙️ عبد الباسط" data-en="🎙️ Abdul Basit">🎙️ عبد الباسط</option>
+                            <option value="MaherAlMuaiqly128kbps" data-ar="🎙️ ماهر المعيقلي" data-en="🎙️ Maher Al-Muaiqly">🎙️ ماهر المعيقلي</option>
+                        </select>
+
+                        <div class="flex items-center justify-between gap-2 bg-slate-800 px-3 py-2 rounded-xl border border-slate-700 w-full sm:w-auto shrink-0">
+                            <span data-ar="تكرار:" data-en="Repeat:" class="text-[11px] font-bold text-slate-300">تكرار:</span>
+                            <input type="number" id="quran-repeat" value="1" min="1" max="20" class="w-10 bg-transparent text-white text-center text-sm font-black outline-none">
                         </div>
                     </div>
-                </section>
+
+                    <!-- أزرار التشغيل والسلحفاة -->
+                    <div class="flex items-center justify-center gap-2 bg-slate-800/50 p-2 rounded-2xl border border-slate-700 w-full sm:w-auto shrink-0">
+                        <button onclick="skipAyah(-1)" class="w-9 h-9 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition text-xs">⏮️</button>
+                        <button onclick="toggleQuranPlay()" id="btn-quran-play" class="w-11 h-11 rounded-full bg-indigo-500 hover:bg-indigo-600 flex items-center justify-center text-lg shadow-lg transition hover:scale-105">▶️</button>
+                        <button onclick="skipAyah(1)" class="w-9 h-9 rounded-full bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition text-xs">⏭️</button>
+                        <div class="w-px h-6 bg-slate-600 mx-1"></div>
+                        <button onclick="stopQuran()" class="w-9 h-9 rounded-full bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 flex items-center justify-center transition text-xs">⏹️</button>
+                        <button onclick="toggleSnailMode()" id="btn-snail-mode" title="قراءة بطيئة" class="w-9 h-9 rounded-full bg-slate-700 flex items-center justify-center text-sm grayscale opacity-60 transition">🐢</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🎤 قسم التسجيل وسجل الواجبات (جنب بعض في الشاشات الكبيرة) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
+            
+            <!-- مسجل الصوت -->
+            <div class="lg:col-span-5 bg-slate-900 text-white p-6 rounded-3xl shadow-xl flex flex-col items-center justify-center text-center relative overflow-hidden w-full h-full">
+                <div class="w-16 h-16 rounded-full bg-red-500/20 border-2 border-red-500 flex items-center justify-center text-3xl mb-3" id="record-btn-icon">🎙️</div>
+                <h4 class="font-black text-sm" id="record-status-text" data-ar="تسجيل الواجب الصوتي" data-en="Record Homework">تسجيل الواجب الصوتي</h4>
+                <p class="text-xs text-slate-400 mt-1 font-mono" id="record-timer">00:00</p>
+                
+                <div class="flex gap-1.5 items-center justify-center h-8 my-4 opacity-30" id="audio-wave">
+                    <span class="w-1 h-3 bg-emerald-400 rounded-full"></span><span class="w-1 h-6 bg-emerald-400 rounded-full"></span><span class="w-1 h-8 bg-emerald-400 rounded-full"></span><span class="w-1 h-4 bg-emerald-400 rounded-full"></span><span class="w-1 h-7 bg-emerald-400 rounded-full"></span>
+                </div>
+                
+                <div class="flex flex-col w-full gap-2 mt-auto">
+                    <button type="button" onclick="toggleAudioRecord()" id="btn-record-action" class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl text-xs font-black shadow-md transition">
+                        🔴 <span data-ar="بدء التسجيل" data-en="Start Recording">بدء التسجيل</span>
+                    </button>
+                    <div class="flex gap-2 w-full">
+                        <button type="button" onclick="playVoiceMirror()" id="btn-mirror-audio" class="hidden flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl text-[11px] font-black shadow-md transition justify-center gap-1">
+                            🎧 <span data-ar="مقارنة" data-en="Compare">مقارنة</span>
+                        </button>
+                        <button type="button" onclick="submitAudioAssignment()" id="btn-send-audio" disabled class="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-40 text-white py-3 rounded-xl text-[11px] font-black shadow-md transition justify-center gap-1">
+                            🚀 <span data-ar="إرسال" data-en="Submit">إرسال</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- سجل الواجبات -->
+            <div class="lg:col-span-7 bg-slate-50 p-6 rounded-3xl border border-slate-200 w-full flex flex-col h-full min-h-[300px]">
+                <h4 class="font-black text-slate-800 text-sm mb-4 border-b border-slate-200 pb-3" data-ar="📑 سجل الواجبات وتقييم المعلم" data-en="📑 Submissions & Feedback">📑 سجل الواجبات وتقييم المعلم</h4>
+                <div class="space-y-3 overflow-y-auto flex-1 custom-scrollbar pr-2" id="audio-submissions-list">
+                    <p class="text-xs text-slate-400 text-center py-4" data-ar="لا توجد واجبات مرسلة." data-en="No submissions yet.">لا توجد واجبات مرسلة.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
 
                 <!-- 🎁 SECTION 6: SHOP -->
                 <section id="sec-shop" class="tab-content hidden space-y-6">
@@ -797,7 +887,23 @@
                         </div>
                     </div>
                 </section>
-
+<!-- 🏆 SECTION: LEADERBOARD -->
+<section id="sec-leaderboard" class="tab-content hidden space-y-6">
+    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+            <div>
+                <h3 class="text-xl font-black text-slate-800" data-ar="🏆 لوحة الشرف وأبطال الأكاديمية" data-en="🏆 Academy Leaderboard">🏆 لوحة الشرف وأبطال الأكاديمية</h3>
+                <p class="text-xs text-slate-500 font-bold mt-1" data-ar="ترتيب الأبطال بناءً على المهام والواجبات المنجزة." data-en="Rankings based on completed quests and tasks.">ترتيب الأبطال بناءً على المهام والواجبات المنجزة.</p>
+            </div>
+            <span class="text-4xl">👑</span>
+        </div>
+        
+        <div id="leaderboard-list" class="space-y-3">
+            <!-- سيتم تحميل الأبطال من الجافاسكريبت -->
+            <p class="text-center text-slate-400 font-bold text-xs py-8">جاري تحديث لوحة الشرف... 📡</p>
+        </div>
+    </div>
+</section>
             </div>
         </main>
     </div>
@@ -1348,12 +1454,15 @@ function setupStudentRealtimeListener() {
                 const questsStars = document.getElementById('quests-stars-balance');
                 if (questsStars) questsStars.innerText = `${starBalance} ${currentLang === 'ar' ? 'نجمة' : 'Stars'}`;
 
+               // ابحث عن هذا الجزء داخل processQuestCompletion
                 let taskName = "";
                 if(questId === 'q_audio') taskName = isAr ? "إرسال الواجب الصوتي 🎙️" : "Audio Upload 🎙️";
                 if(questId === 'q_attend') taskName = isAr ? "الحضور في الموعد ⏰" : "Punctuality ⏰";
                 if(questId === 'q_listen') taskName = isAr ? "الاستماع للتلاوة 🎧" : "Listening 🎧";
                 if(questId === 'q_read') taskName = isAr ? "قراءة الورد 📖" : "Reading 📖";
-
+                
+                // ضف هذا السطر تحته مباشرة
+                if(questId.startsWith('pray_')) taskName = isAr ? "أداء الصلاة 🕌" : "Prayer 🕌";
                 showToast(currentLang === 'ar' 
                     ? `🎉 رائع جداً! تم إنجاز (${taskName}) وكسبت ${stars} نجوم.` 
                     : `🎉 Auto-Quest Complete! Earned ${stars} stars.`, 'success');
@@ -3082,54 +3191,141 @@ window.fetchReports = async function() {
             }
         };
 
-        window.playCurrentAyah = function() {
+     // 🎙️ خريطة دقيقة جداً لأكواد القراء المعتمدة في Quran.com API v4
+        const reciterMap = {
+            "Alafasy_128kbps": 7,              // مشاري العفاسي
+            "Husary_128kbps": 5,              // محمود خليل الحصري (مرتل)
+            "Husary_Muallim_128kbps": 10,     // محمود خليل الحصري (معلم)
+            "Minshawy_Murattal_128kbps": 9,     // محمد صديق المنشاوي (مرتل)
+            "Minshawy_Teacher_128kbps": 8,      // محمد صديق المنشاوي (معلم/مجود)
+            "Muhammad_Ayyub_128kbps": 4,        // محمد أيوب
+            "Abdul_Basit_Murattal_192kbps": 2,  // عبد الباسط عبد الصمد
+            "MaherAlMuaiqly128kbps": 12         // ماهر المعيقلي
+        };
+
+       let animationFrameId = null; // لإيقاف محرك التلوين عند التوقف
+
+        window.playCurrentAyah = async function() {
             if (currentAyahIndex >= quranPlaylist.length) return; 
 
             let item = quranPlaylist[currentAyahIndex];
-            let reciter = document.getElementById('quran-reciter').value;
+            let reciterValue = document.getElementById('quran-reciter').value;
             
-            let sStr = String(item.surah).padStart(3, '0');
-            let aStr = String(item.ayah).padStart(3, '0');
-            let url = `https://everyayah.com/data/${reciter}/${sStr}${aStr}.mp3`;
+            const textContainer = document.getElementById('interactive-ayah-text');
+            const btnPlay = document.getElementById('btn-quran-play');
+            const iconEl = document.getElementById('player-icon');
+            const isAr = currentLang === 'ar';
 
-            if (!quranAudioPlayer.src.includes(`${sStr}${aStr}.mp3`)) {
-                quranAudioPlayer.src = url;
-            }
+            textContainer.innerHTML = `<span class="text-sm font-sans font-bold text-indigo-300 animate-pulse">${isAr ? 'جاري تحميل الآية والصوت... ⏳' : 'Loading Ayah... ⏳'}</span>`;
+            btnPlay.innerHTML = '⏳';
 
-            quranAudioPlayer.play().then(() => {
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+            try {
+                const verseKey = `${item.surah}:${item.ayah}`;
+
+               // 1. جلب الكلمات بالرسم العثماني الدقيق مع الترجمة
+                const langQuery = isAr ? 'ar' : 'en';
+                const wordsRes = await fetch(`https://api.quran.com/api/v4/verses/by_key/${verseKey}?words=true&word_fields=text_uthmani&language=${langQuery}`);
+                const wordsData = await wordsRes.json();
+                const wordsArray = wordsData.verse.words;
+
+                // 2. رسم الكلمات وإعطائها كلاس (quran-word) للتعرف عليها لاحقاً
+                textContainer.innerHTML = '';
+                wordsArray.forEach((word) => {
+                    if (word.char_type_name !== 'end') {
+                        textContainer.innerHTML += `<span id="word-pos-${word.position}" class="quran-word transition-all duration-150 px-1 rounded text-white inline">${word.text_uthmani}</span> `;
+                    }
+                });
+                // 3. رسم الكلمات وإعطائها كلاس (quran-word) للإخفاء والتفسير
+                textContainer.innerHTML = '';
+                wordsArray.forEach((word) => {
+                    if (word.char_type_name !== 'end') {
+                        // لو وضع الحفظ مفعل، هنخفي الكلمة عشوائياً (بنسبة 40%)
+                        let maskClass = (window.isMaskMode && Math.random() > 0.6) ? 'masked-word' : '';
+                        
+                        // جلب الترجمة للكلمة لعرضها عند الوقوف عليها (Tooltip)
+                        let translation = word.translation ? word.translation.text : '';
+                        
+                        textContainer.innerHTML += `<span id="word-pos-${word.position}" onclick="this.classList.remove('masked-word')" class="quran-word transition-all duration-75 px-1 rounded text-white inline ${maskClass}">${word.text_uthmani}<span class="word-tooltip">${translation}</span></span> `;
+                    }
+                });
+
+                // 3. 🎧 إرجاع الصوت من (EveryAyah) لضمان تشغيل المنشاوي معلم وكل المشايخ الأصليين
+                let sStr = String(item.surah).padStart(3, '0');
+                let aStr = String(item.ayah).padStart(3, '0');
+                let finalUrl = `https://everyayah.com/data/${reciterValue}/${sStr}${aStr}.mp3`;
+                
+                if (quranAudioPlayer.src !== finalUrl) quranAudioPlayer.src = finalUrl;
+
+               await quranAudioPlayer.play();
+                quranAudioPlayer.playbackRate = isSnailMode ? 0.75 : 1.0; // 💡 الحفاظ على السرعة المختارة
+                
                 isQuranPlaying = true;
-                document.getElementById('btn-quran-play').innerHTML = '⏸️';
-                document.getElementById('player-icon').classList.add('animate-pulse', 'text-indigo-400');
+                btnPlay.innerHTML = '⏸️';
+                iconEl.classList.add('animate-pulse', 'text-indigo-400');
                 updateQuranUI();
-            }).catch(e => {
-                console.error(e);
-                showToast('❌ خطأ في تحميل الصوت', 'error');
+
+                // 4. 🎯 محرك التلوين الرياضي التكيفي (يعمل مع أي شيخ بدون الحاجة لـ API توقيتات)
+                const trackHighlighting = () => {
+                    if (!isQuranPlaying) return;
+                    
+                    const duration = quranAudioPlayer.duration || 1;
+                    const currentTime = quranAudioPlayer.currentTime;
+                    
+                    const wordsElements = document.querySelectorAll('.quran-word');
+                    const totalWords = wordsElements.length;
+                    
+                    if (totalWords > 0) {
+                        // حساب نسبة تقدم الصوت (Progress) ومطابقتها مع ترتيب الكلمات
+                        const progress = currentTime / duration;
+                        let activeIndex = Math.floor(progress * totalWords);
+                        
+                        // تأمين حدود الـ Index حتى لا يتخطى الكلمات
+                        if (activeIndex >= totalWords) activeIndex = totalWords - 1;
+                        if (activeIndex < 0) activeIndex = 0;
+
+                        wordsElements.forEach((el, index) => {
+                            if (index === activeIndex) {
+                                // تلوين الكلمة الحالية
+                                el.classList.add('text-emerald-400', 'bg-emerald-500/20', 'scale-105', 'font-black');
+                                el.classList.remove('text-white');
+                            } else {
+                                // إزالة التلوين عن باقي الكلمات
+                                el.classList.remove('text-emerald-400', 'bg-emerald-500/20', 'scale-105', 'font-black');
+                                el.classList.add('text-white');
+                            }
+                        });
+                    }
+                    
+                    animationFrameId = requestAnimationFrame(trackHighlighting);
+                };
+
+                // بدء عملية التلوين
+                trackHighlighting();
+
+            } catch (error) {
+                textContainer.innerHTML = `<span class="text-sm font-sans font-bold text-red-400">❌ ${isAr ? 'حدث خطأ في تحميل البيانات' : 'Error loading data'}</span>`;
+                btnPlay.innerHTML = '▶️';
+                isQuranPlaying = false;
+            }
+        };
+
+        // دالة الإيقاف (محدثة لإيقاف محرك التلوين عند توقف الصوت)
+        window.stopQuran = function() {
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            quranAudioPlayer.pause();
+            quranAudioPlayer.currentTime = 0;
+            isQuranPlaying = false;
+            document.getElementById('btn-quran-play').innerHTML = '▶️';
+            document.getElementById('player-icon').classList.remove('animate-pulse', 'text-indigo-400');
+            
+            // إعادة النص للون الأبيض عند الإيقاف
+            document.querySelectorAll('.quran-word').forEach(el => {
+                el.classList.remove('text-emerald-400', 'bg-emerald-500/20', 'scale-105', 'font-black');
+                el.classList.add('text-white');
             });
         };
-
-        quranAudioPlayer.onended = function() {
-            currentAyahRepeat++;
-            let targetRepeat = parseInt(document.getElementById('quran-repeat').value) || 1;
-            
-            if (currentAyahRepeat < targetRepeat) {
-                quranAudioPlayer.play(); 
-            } else {
-                currentAyahRepeat = 0;
-                currentAyahIndex++;
-                
-                if (currentAyahIndex >= quranPlaylist.length) {
-                    stopQuran();
-                    showToast(currentLang === 'ar' ? '🎉 اكتمل المقطع! بارك الله فيك.' : '🎉 Assignment completed!', 'success');
-                    
-                    if (typeof processQuestCompletion === 'function') {
-                        processQuestCompletion('q_listen', 5, true);
-                    }
-                } else {
-                    playCurrentAyah(); 
-                }
-            }
-        };
-
         window.skipAyah = function(direction) {
             if (quranPlaylist.length === 0) return;
             currentAyahIndex += direction;
@@ -3144,18 +3340,48 @@ window.fetchReports = async function() {
             else updateQuranUI();
         };
 
-        window.stopQuran = function() {
-            quranAudioPlayer.pause();
-            quranAudioPlayer.currentTime = 0;
-            isQuranPlaying = false;
-            document.getElementById('btn-quran-play').innerHTML = '▶️';
-            document.getElementById('player-icon').classList.remove('animate-pulse', 'text-indigo-400');
-        };
 
         window.changeReciter = function() {
             if (isQuranPlaying) {
                 quranAudioPlayer.src = '';
                 playCurrentAyah(); 
+            }
+        };
+        // 🔄 محرك الانتقال والتكرار الذكي
+        quranAudioPlayer.onended = function() {
+            currentAyahRepeat++;
+            let targetRepeat = parseInt(document.getElementById('quran-repeat').value) || 1;
+            
+            if (currentAyahRepeat < targetRepeat) {
+                // 1️⃣ تكرار نفس الآية (إرجاع العداد لصفر ثم التشغيل)
+                quranAudioPlayer.currentTime = 0;
+                
+                // ثانية راحة قبل إعادة التلاوة
+                setTimeout(() => {
+                    quranAudioPlayer.play().then(() => {
+                        isQuranPlaying = true;
+                    });
+                }, 600); 
+
+            } else {
+                // 2️⃣ الانتقال للآية اللي بعدها
+                currentAyahRepeat = 0;
+                currentAyahIndex++;
+                if (currentAyahIndex >= quranPlaylist.length) {
+                    // 🎉 خلص المقطع كله
+                    stopQuran();
+                    shootStars(); // 🌟 انطلاق الألعاب النارية
+                    showToast(currentLang === 'ar' ? '🎉 اكتمل المقطع! بارك الله فيك.' : '🎉 Assignment completed!', 'success');
+                    // ✅ إنجاز مهمة الاستماع اليومية تلقائياً
+                    if (typeof processQuestCompletion === 'function') {
+                        processQuestCompletion('q_listen', 5, true);
+                    }
+                } else {
+                    // تشغيل الآية الجديدة بعد ثانية راحة
+                    setTimeout(() => {
+                        playCurrentAyah(); 
+                    }, 800);
+                }
             }
         };
 
@@ -3481,6 +3707,234 @@ window.fetchReports = async function() {
             } catch (e) {
                 showToast('❌ عذراً، لم نتمكن من الحجز. قد يكون الموعد محجوزاً من قبل طالب آخر.', 'error');
             }
+        };
+        // ================= 🐢 محرك القراءة البطيئة =================
+        let isSnailMode = false;
+        window.toggleSnailMode = function() {
+            isSnailMode = !isSnailMode;
+            const btn = document.getElementById('btn-snail-mode');
+            const isAr = currentLang === 'ar';
+            
+            if (isSnailMode) {
+                quranAudioPlayer.playbackRate = 0.75; // تبطيء السرعة بنسبة 25%
+                btn.classList.remove('grayscale', 'opacity-60', 'bg-slate-700');
+                btn.classList.add('bg-emerald-500', 'ring-2', 'ring-emerald-300');
+                showToast(isAr ? '🐢 تم تفعيل القراءة البطيئة' : '🐢 Slow reading activated', 'info');
+            } else {
+                quranAudioPlayer.playbackRate = 1.0; // السرعة الطبيعية
+                btn.classList.add('grayscale', 'opacity-60', 'bg-slate-700');
+                btn.classList.remove('bg-emerald-500', 'ring-2', 'ring-emerald-300');
+                showToast(isAr ? '🐇 تم العودة للسرعة الطبيعية' : '🐇 Normal speed restored', 'info');
+            }
+        };
+
+        // ================= 🎉 محرك احتفال النجوم =================
+        window.shootStars = function() {
+            const colors = ['#f59e0b', '#fbbf24', '#34d399', '#60a5fa', '#a78bfa'];
+            for (let i = 0; i < 40; i++) {
+                let star = document.createElement('div');
+                star.innerHTML = i % 3 === 0 ? '✨' : '⭐'; // دمج بين النجوم اللامعة والعادية
+                star.style.position = 'fixed';
+                star.style.left = '50%';
+                star.style.top = '50%';
+                star.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                star.style.zIndex = '99999';
+                star.style.pointerEvents = 'none';
+                star.style.transition = 'all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                
+                // اتجاه عشوائي لكل نجمة
+                let angle = Math.random() * Math.PI * 2;
+                let distance = Math.random() * 300 + 100;
+                let tx = Math.cos(angle) * distance;
+                let ty = Math.sin(angle) * distance;
+                
+                document.body.appendChild(star);
+                
+                // تحريك النجمة ثم إخفاؤها
+                setTimeout(() => {
+                    star.style.transform = `translate(${tx}px, ${ty}px) rotate(${Math.random() * 360}deg) scale(0)`;
+                    star.style.opacity = '0';
+                }, 20);
+                
+                // تنظيف المتصفح
+                setTimeout(() => star.remove(), 1600);
+            }
+        };
+      // ================= 1️⃣ ميزة اختبار الحفظ (Masking Mode 🙈) =================
+        window.isMaskMode = false;
+        window.toggleMaskMode = function() {
+            window.isMaskMode = !window.isMaskMode;
+            const btn = document.getElementById('btn-mask-mode');
+            const isAr = currentLang === 'ar';
+            
+            if (window.isMaskMode) {
+                // تلوين الزر بالأخضر لبيان تفعيله
+                btn.classList.replace('bg-slate-700', 'bg-emerald-500');
+                btn.classList.replace('hover:bg-slate-600', 'hover:bg-emerald-600');
+                showToast(isAr ? '🙈 تم تفعيل اختبار الحفظ (المس الكلمة المخفية لإظهارها)' : '🙈 Mask Mode Active (Touch word to reveal)', 'info');
+            } else {
+                // إرجاع الزر للونه الطبيعي
+                btn.classList.replace('bg-emerald-500', 'bg-slate-700');
+                btn.classList.replace('hover:bg-emerald-600', 'hover:bg-slate-600');
+                showToast(isAr ? '👁️ تم إيقاف اختبار الحفظ' : '👁️ Mask Mode Disabled', 'info');
+            }
+            
+            // 🎯 تطبيق الإخفاء فوراً على الكلمات المعروضة حالياً بدون إعادة تشغيل
+            document.querySelectorAll('.quran-word').forEach(el => {
+                // نخفي 40% من الكلمات بشكل عشوائي كاختبار للطالب
+                if (window.isMaskMode && Math.random() > 0.6) {
+                    el.classList.add('masked-word');
+                } else {
+                    el.classList.remove('masked-word');
+                }
+            });
+        };
+        // ================= 2️⃣ ميزة وضع التركيز السينمائي (Cinematic Focus 🎬) =================
+        window.isCinematic = false;
+        window.toggleCinematic = function() {
+            const container = document.getElementById('quran-player-container');
+            isCinematic = !isCinematic;
+            if (isCinematic) {
+                container.classList.add('cinematic-active');
+                showToast('🎬 تم تفعيل وضع التركيز السينمائي. اضغط مرة أخرى للإلغاء.', 'info');
+            } else {
+                container.classList.remove('cinematic-active');
+            }
+        };
+
+        // ================= 3️⃣ ميزة المرآة الصوتية (Voice Mirror 🎙️) =================
+        window.playVoiceMirror = async function() {
+            if (!audioBlob) return showToast('⚠️ يرجى تسجيل صوتك أولاً!', 'warning');
+            
+            showToast('🎧 جاري تشغيل صوت الشيخ... استمع جيداً', 'info');
+            
+            // تشغيل صوت الشيخ أولاً
+            quranAudioPlayer.currentTime = 0;
+            await quranAudioPlayer.play();
+            
+            // بمجرد انتهاء الشيخ، نشغل صوت الطالب
+            quranAudioPlayer.onended = function() {
+                showToast('🎙️ الآن يتم تشغيل تسجيلك للمقارنة...', 'info');
+                let studentAudio = new Audio(URL.createObjectURL(audioBlob));
+                studentAudio.play();
+                
+                studentAudio.onended = () => {
+                    showToast('✅ انتهت المقارنة، هل لاحظت الفرق؟', 'success');
+                    // إرجاع دالة onended الأصلية للمشغل
+                    quranAudioPlayer.onended = originalOnEndedFunction; 
+                };
+            };
+        };
+        window.renderLeaderboard = function() {
+            const list = document.getElementById('leaderboard-list');
+            if(!list) return;
+            
+            const heroes = [
+                { name: studentData ? studentData.name : 'أنت', stars: starBalance, isMe: true },
+                { name: 'أحمد محمود', stars: 120, isMe: false },
+                { name: 'فاطمة علي', stars: 95, isMe: false },
+                { name: 'عمر خالد', stars: 80, isMe: false },
+                { name: 'زينب محمد', stars: 60, isMe: false }
+            ].sort((a, b) => b.stars - a.stars); // ترتيب تنازلي
+
+            list.innerHTML = heroes.map((hero, index) => {
+                let rankIcon = index === 0 ? '🥇' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : '🎖️'));
+                let bgClass = hero.isMe ? 'bg-indigo-50 border-indigo-200 shadow-md transform scale-[1.02]' : 'bg-slate-50 border-slate-100';
+                let nameClass = hero.isMe ? 'text-indigo-900 font-black' : 'text-slate-700 font-bold';
+                
+                return `
+                <div class="flex items-center justify-between p-4 rounded-2xl border ${bgClass} transition hover:bg-slate-100">
+                    <div class="flex items-center gap-4">
+                        <span class="text-3xl">${rankIcon}</span>
+                        <span class="${nameClass} text-sm">${hero.name} ${hero.isMe ? '(أنت)' : ''}</span>
+                    </div>
+                    <div class="bg-amber-100 text-amber-800 font-black px-3 py-1.5 rounded-xl text-xs font-mono shadow-inner">
+                        ⭐ ${hero.stars}
+                    </div>
+                </div>`;
+            }).join('');
+        };
+        
+        // ربطها بعرض الشاشات
+        const oldSwitchTabLB = window.switchTab;
+        window.switchTab = function(tabId) {
+            oldSwitchTabLB(tabId);
+            if(tabId === 'leaderboard') renderLeaderboard();
+        };
+        // ================= 🔍 ميزة التحكم في حجم الخط (Readability) =================
+        let currentAyahFontSize = 2.25; // الحجم الافتراضي (rem)
+        window.zoomFont = function(direction) {
+            const textContainer = document.getElementById('interactive-ayah-text');
+            const isAr = currentLang === 'ar';
+            
+            // تكبير أو تصغير بمقدار 0.25rem (بحد أقصى 4 وبحد أدنى 1.5)
+            if (direction > 0 && currentAyahFontSize < 4.5) {
+                currentAyahFontSize += 0.25;
+            } else if (direction < 0 && currentAyahFontSize > 1.5) {
+                currentAyahFontSize -= 0.25;
+            } else {
+                return showToast(isAr ? 'وصول للحد الأقصى/الأدنى للخط' : 'Font size limit reached', 'warning');
+            }
+            
+            textContainer.style.fontSize = `${currentAyahFontSize}rem`;
+            // تعديل ارتفاع السطر ليتناسب مع الخط الجديد
+            textContainer.style.lineHeight = `${currentAyahFontSize * 1.5}rem`;
+        };
+
+        // ================= 🌙 ميزة مؤقت النوم (Sleep Timer) =================
+        let sleepTimerId = null;
+        let sleepFadeId = null;
+
+        window.toggleSleepTimer = function() {
+            const btn = document.getElementById('btn-sleep-timer');
+            const isAr = currentLang === 'ar';
+
+            // لو المؤقت شغال، نلغيه
+            if (sleepTimerId) {
+                clearTimeout(sleepTimerId);
+                clearInterval(sleepFadeId);
+                sleepTimerId = null;
+                quranAudioPlayer.volume = 1.0; // إرجاع الصوت لطبيعته
+                btn.classList.replace('bg-indigo-500', 'bg-slate-700');
+                btn.classList.replace('hover:bg-indigo-600', 'hover:bg-slate-600');
+                showToast(isAr ? '☀️ تم إلغاء مؤقت النوم' : '☀️ Sleep timer canceled', 'info');
+                return;
+            }
+
+            // لو مش شغال، نطلب من الطالب تحديد المدة بالدقائق
+            let mins = prompt(isAr ? 'كم دقيقة تريد قبل إيقاف التلاوة تلقائياً؟ (مثال: 15)' : 'How many minutes until auto-stop? (e.g., 15)', '15');
+            
+            if (mins === null) return; // المستخدم ضغط إلغاء
+            
+            mins = parseInt(mins);
+            if (isNaN(mins) || mins <= 0) return showToast(isAr ? '❌ رقم غير صحيح' : '❌ Invalid number', 'error');
+
+            // تلوين الزر لبيان التفعيل
+            btn.classList.replace('bg-slate-700', 'bg-indigo-500');
+            btn.classList.replace('hover:bg-slate-600', 'hover:bg-indigo-600');
+            showToast(isAr ? `🌙 سيتم إيقاف التلاوة ببطء بعد ${mins} دقيقة` : `🌙 Audio will fade out in ${mins} mins`, 'success');
+
+            const msUntilStop = mins * 60 * 1000;
+            const fadeOutDuration = 30000; // آخر 30 ثانية الصوت هيوطى تدريجياً
+
+            sleepTimerId = setTimeout(() => {
+                // بدأ عملية التخفيض التدريجي للصوت (Fade Out)
+                showToast(isAr ? '💤 جاري إيقاف التلاوة...' : '💤 Stopping audio...', 'info');
+                let vol = 1.0;
+                
+                sleepFadeId = setInterval(() => {
+                    vol -= 0.05;
+                    if (vol <= 0) {
+                        vol = 0;
+                        clearInterval(sleepFadeId);
+                        stopQuran(); // إيقاف تام
+                        quranAudioPlayer.volume = 1.0; // إعادة ضبط الصوت للمرة القادمة
+                        toggleSleepTimer(); // إعادة الزر لشكله الطبيعي
+                    }
+                    quranAudioPlayer.volume = vol;
+                }, fadeOutDuration / 20); // ينقص 20 مرة خلال الـ 30 ثانية
+
+            }, msUntilStop - fadeOutDuration);
         };
     </script>
 </body>
