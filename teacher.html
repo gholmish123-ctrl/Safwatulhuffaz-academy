@@ -79,6 +79,13 @@
             0% { background-position: 100% 0; }
             100% { background-position: -100% 0; }
         }
+        @media print {
+    body.print-daily > *:not(#daily-print-zone) { display: none !important; }
+    body.print-daily #daily-print-zone { display: block !important; }
+
+    body.print-exam > *:not(#exam-print-zone) { display: none !important; }
+    body.print-exam #exam-print-zone { display: block !important; }
+}
     </style>
 </head>
 <body class="bg-gray-50 flex flex-col h-screen overflow-hidden text-slate-800">
@@ -94,7 +101,7 @@
     <header class="bg-white border-b border-slate-100 px-4 sm:px-6 py-4 flex items-center justify-between shadow-xs relative z-40 transition-colors duration-300">
         <div class="flex items-center gap-3">
             <button onclick="toggleSidebar()" class="md:hidden text-2xl text-slate-600 hover:text-emerald-600 transition cursor-pointer">☰</button>
-            <img src="logo.png" alt="Logo" class="w-10 h-10 object-contain rounded-full border border-slate-100 shadow-xs hover-lift" onerror="this.src='https://ui-avatars.com/api/?name=Shafaa&background=047857&color=fff'">
+            <img src="logo.png" alt="Logo" class="w-10 h-10 object-contain rounded-full border border-slate-100 shadow-xs hover-lift"onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Shafaa&background=047857&color=fff'"
             <div class="hidden sm:block">
                 <h1 class="text-lg font-bold text-slate-900 tracking-tight" data-ar="أكاديمية صفوة الحفاظ | لوحة المعلم" data-en="Safwat Al-Huffaz Academy | Teacher Portal">أكاديمية صفوة الحفاظ | لوحة المعلم</h1>
                 <p class="text-[10px] font-medium text-slate-400" id="header-teacher-name" data-ar="مرحباً بك فضيلة المعلم" data-en="Welcome, Respected Teacher">مرحباً بك فضيلة المعلم</p>
@@ -1036,6 +1043,7 @@
     </div>
 </div>
 </section>
+
             <!-- ================= القسم 10: السند ================= -->
             <section id="sec-sanad" class="tab-content hidden space-y-6">
                 <div class="bg-amber-50 p-4 sm:p-6 rounded-3xl border border-amber-200 shadow-sm mx-auto max-w-5xl">
@@ -1237,7 +1245,7 @@
     <div id="daily-print-zone" class="hidden bg-white min-h-screen font-sans p-8" dir="rtl">
         <div class="border-4 border-double border-slate-300 p-8 rounded-3xl relative">
             <div class="text-center mb-6 border-b-2 border-slate-100 pb-4">
-                <img src="logo.png" onerror="this.src='https://ui-avatars.com/api/?name=Shafaa&background=047857&color=fff'" class="w-16 h-16 mx-auto rounded-full mb-2 shadow-md">
+                <img src="logo.png" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Shafaa&background=047857&color=fff'" class="w-16 h-16 mx-auto rounded-full mb-2 shadow-md">
                 <h1 class="text-2xl font-black text-slate-800 mb-1" id="p-daily-title">أكاديمية صفوة الحفاظ للقرآن واللغات</h1>
                 <p class="text-xs font-bold text-slate-500" id="p-daily-sub">تقرير متابعة الحصة التعليمية</p>
             </div>
@@ -1257,7 +1265,7 @@
     <div id="exam-print-zone" class="hidden bg-white min-h-screen font-sans p-8" dir="rtl">
         <div class="border-4 border-slate-800 p-8 rounded-3xl relative">
             <div class="text-center mb-6 border-b-2 border-slate-200 pb-4">
-                <img src="logo.png" onerror="this.src='https://ui-avatars.com/api/?name=Shafaa&background=047857&color=fff'" class="w-16 h-16 mx-auto rounded-full mb-2 shadow-md">
+                <img src="logo.png"onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Shafaa&background=047857&color=fff'" class="w-16 h-16 mx-auto rounded-full mb-2 shadow-md">
                 <h1 class="text-2xl font-black text-slate-800 mb-1" id="p-exam-title">تقرير تقييم واختبار</h1>
                 <p class="text-xs font-bold text-slate-500" id="p-exam-sub">أكاديمية صفوة الحفاظ للقرآن الكريم واللغات</p>
             </div>
@@ -1370,6 +1378,28 @@
             <div class="flex gap-2 pt-2">
                 <button type="button" onclick="confirmSaveMistake()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-black py-3 rounded-xl text-xs transition shadow-md cursor-pointer">رصد الخطأ 🔴</button>
                 <button type="button" onclick="closeMistakePopover()" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-3 rounded-xl text-xs cursor-pointer">إلغاء</button>
+            </div>
+        </div>
+    </div>
+    <!-- منبثق العرض السريع لآخر تقرير سند للطالب -->
+    <div id="sanad-last-report-modal" class="hidden fixed inset-0 bg-slate-950/60 z-[500] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border-2 border-amber-400 dark:border-amber-600 w-full max-w-lg p-6 shadow-2xl relative max-h-[90vh] flex flex-col">
+            <button type="button" onclick="document.getElementById('sanad-last-report-modal').classList.add('hidden')" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-slate-500 hover:bg-rose-500 hover:text-white transition cursor-pointer">✕</button>
+            
+            <div class="flex items-center gap-3 mb-5 border-b border-slate-100 dark:border-slate-800 pb-4">
+                <span class="text-4xl">📜</span>
+                <div>
+                    <h3 class="text-lg font-black text-amber-900 dark:text-amber-400">آخر تقرير إقراء وتسميع للسند</h3>
+                    <p id="sanad-last-report-student" class="text-xs font-bold text-slate-500 dark:text-slate-400 mt-1">الطالب: ---</p>
+                </div>
+            </div>
+
+            <div id="sanad-last-report-content" class="overflow-y-auto custom-scrollbar flex-1 space-y-4 text-start">
+                <p class="text-center text-slate-400 font-bold py-10 animate-pulse">⏳ جاري جلب التقرير السابق...</p>
+            </div>
+            
+            <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+                <button type="button" onclick="document.getElementById('sanad-last-report-modal').classList.add('hidden')" class="bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/50 dark:hover:bg-amber-800 text-amber-800 dark:text-amber-200 px-6 py-2.5 rounded-xl font-black text-sm transition cursor-pointer shadow-sm">حسناً، استمر بالرصد ✔️</button>
             </div>
         </div>
     </div>
@@ -1507,16 +1537,22 @@
             };
         }
 
-        function convertCairoToStudentTime(dIdx, hIdx, studentTz) {
-            if (!studentTz) return null;
-            try {
-                const cairoDate = new Date(`2026-08-${15 + dIdx}T${String(Math.floor(hIdx / 2)).padStart(2, '0')}:${(hIdx % 2 === 0 ? '00' : '30')}:00+03:00`);
-                const locale = currentLang === 'ar' ? 'ar-EG' : 'en-US';
-                const timeFormatter = new Intl.DateTimeFormat(locale, { timeZone: studentTz, hour: '2-digit', minute: '2-digit', hour12: true });
-                const dayFormatter = new Intl.DateTimeFormat(locale, { timeZone: studentTz, weekday: 'long' });
-                return { day: dayFormatter.format(cairoDate), time: timeFormatter.format(cairoDate), tz: studentTz };
-            } catch(e) { return null; }
-        }
+      function convertCairoToStudentTime(dIdx, hIdx, studentTz) {
+    if (!studentTz) return null;
+    try {
+        const now = new Date();
+        const diffDays = (dIdx - (now.getDay() + 1) % 7 + 7) % 7; 
+        const targetDate = new Date(now);
+        targetDate.setDate(now.getDate() + diffDays);
+        const dateStr = targetDate.toISOString().split('T')[0];
+        
+        const cairoDate = new Date(`${dateStr}T${String(Math.floor(hIdx / 2)).padStart(2, '0')}:${(hIdx % 2 === 0 ? '00' : '30')}:00+03:00`);
+        const locale = currentLang === 'ar' ? 'ar-EG' : 'en-US';
+        const timeFormatter = new Intl.DateTimeFormat(locale, { timeZone: studentTz, hour: '2-digit', minute: '2-digit', hour12: true });
+        const dayFormatter = new Intl.DateTimeFormat(locale, { timeZone: studentTz, weekday: 'long' });
+        return { day: dayFormatter.format(cairoDate), time: timeFormatter.format(cairoDate), tz: studentTz };
+    } catch(e) { return null; }
+}
 
         function getCairoOffset(studentTz) {
             try {
@@ -1588,35 +1624,40 @@
             updateAttendanceDayAndList();
         };
 
-        window.switchTab = function(tabId) {
-            document.querySelectorAll('.tab-content').forEach(section => section.classList.add('hidden'));
-            document.querySelectorAll('#sidebar-nav button').forEach(btn => {
-                btn.classList.remove('theme-bg', 'text-white', 'shadow-xs'); 
-                btn.classList.add('text-slate-600');
-            });
-            const sec = document.getElementById(`sec-${tabId}`);
-            if(sec) sec.classList.remove('hidden');
-            const activeBtn = document.getElementById(`nav-${tabId}`); 
-            if(activeBtn) {
-                activeBtn.classList.add('theme-bg', 'text-white', 'shadow-xs');
-                activeBtn.classList.remove('text-slate-600');
-            }
-            
-            if(window.innerWidth < 768) {
-                const sidebar = document.getElementById('main-sidebar');
-                if(!sidebar.classList.contains('translate-x-full')) toggleSidebar();
-            }
-            
-            if(tabId === 'schedule' && dbStudents.length > 0) loadStudentScheduleInfo();
-            if(tabId === 'sanad') renderSanadSection();
-            if(tabId === 'bookings') renderBookingGrid();
-            if(tabId === 'exams') renderExamStudentsMultiList();
-            if(tabId === 'audiolab') fetchPendingAudioAssignments();
-            if(tabId === 'leaderboard') renderLeaderboard();
-            if(tabId === 'attendance') updateAttendanceDayAndList();
-            if(tabId === 'payments') renderFinancials();
-        };
-
+      window.switchTab = function(tabId) {
+    document.querySelectorAll('.tab-content').forEach(section => section.classList.add('hidden'));
+    document.querySelectorAll('#sidebar-nav button').forEach(btn => {
+        btn.classList.remove('theme-bg', 'text-white', 'shadow-xs'); 
+        btn.classList.add('text-slate-600');
+    });
+    const sec = document.getElementById(`sec-${tabId}`);
+    if(sec) sec.classList.remove('hidden');
+    const activeBtn = document.getElementById(`nav-${tabId}`); 
+    if(activeBtn) {
+        activeBtn.classList.add('theme-bg', 'text-white', 'shadow-xs');
+        activeBtn.classList.remove('text-slate-600');
+    }
+    
+    if(window.innerWidth < 768) {
+        const sidebar = document.getElementById('main-sidebar');
+        if(!sidebar.classList.contains('translate-x-full')) toggleSidebar();
+    }
+    
+    if(tabId === 'schedule' && dbStudents.length > 0) loadStudentScheduleInfo();
+    if(tabId === 'sanad') renderSanadSection();
+    if(tabId === 'bookings') renderBookingGrid();
+    if(tabId === 'exams') {
+        renderExamStudentsMultiList();
+        loadTeacherExamsDropdown(); // تم إضافته هنا
+    }
+    if(tabId === 'audiolab') fetchPendingAudioAssignments();
+    if(tabId === 'leaderboard') {
+        renderLeaderboard();
+        updateMonthlyResetTimer(); // تم إضافته هنا
+    }
+    if(tabId === 'attendance') updateAttendanceDayAndList();
+    if(tabId === 'payments') renderFinancials();
+};
         window.toggleDarkMode = function() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
@@ -2776,7 +2817,7 @@ async function loadLastReportForActiveTrack(studentId) {
 // =========================================================================
 // 🚀 الدالة الشاملة لجلب بيانات الطالب وفتح التقرير (مع محرك الدورات الشهرية)
 // =========================================================================
-window.onStudentChange = async function(studentId) {
+window.onStudentChange = async function(studentId, isInitialLoad = false) {
     const studentObj = dbStudents.find(s => String(s.id).trim() === String(studentId).trim());
     if (!studentObj) return;
 
@@ -2796,13 +2837,12 @@ window.onStudentChange = async function(studentId) {
     const isArabic = sub.includes('عرب') || sub.includes('arabic');
     const isSanad = sub.includes('سند') || sub.includes('sanad');
 
-    // إذا كان طالب سند، نفتح نموذج السند ونوقف الدالة هنا
-    if (isSanad) {
+ if (isSanad) {
         if (typeof toggleReportMode === 'function') toggleReportMode('sanad');
         const sanadFormStudent = document.getElementById('sanad-form-student');
         if (sanadFormStudent) {
             sanadFormStudent.value = studentId;
-            if (typeof populateSanadKhatmasForReport === 'function') populateSanadKhatmasForReport(studentId);
+            if (typeof populateSanadKhatmasForReport === 'function') populateSanadKhatmasForReport(studentId, isInitialLoad);
         }
         return; 
     }
@@ -3493,7 +3533,7 @@ window.checkExamDeadlineLock = function(examExpiryDate) {
     const notesInput = document.getElementById(`notes-${assignmentId}`).value.trim();
     const starsInput = parseInt(document.getElementById(`stars-${assignmentId}`).value) || 5;
 
-    if(!confirm(currentLang === 'ar' ? `تأكيد تقييم الطالب (${studentName}) ومنحه ${starsInt = starsInput} نجوم؟` : `Confirm grading (${studentName}) with ${starsInput} stars?`)) return;
+   if(!confirm(currentLang === 'ar' ? `تأكيد تقييم الطالب (${studentName}) ومنحه ${starsInput} نجوم؟` : `Confirm grading (${studentName}) with ${starsInput} stars?`)) return;
 
     showToast(currentLang === 'ar' ? '⏳ جاري اعتماد التقييم...' : '⏳ Submitting review...', 'info');
 
@@ -3681,15 +3721,7 @@ if (!window.monthlyTimerIntervalSet) {
     setInterval(updateMonthlyResetTimer, 1000);
 }
 
-// تحديث دالة الـ switchTab لتفعيل لوحة الشرف عند فتحها
-const oldSwitchTabTeacher = window.switchTab;
-window.switchTab = function(tabId) {
-    if (typeof oldSwitchTabTeacher === 'function') oldSwitchTabTeacher(tabId);
-    if (tabId === 'leaderboard') {
-        renderLeaderboard();
-        updateMonthlyResetTimer();
-    }
-};
+
         window.renderFinancials = async function() {
             const list = document.getElementById('financial-students-list');
             if(!list || !currentTeacherId) return;
@@ -3834,10 +3866,9 @@ window.switchTab = function(tabId) {
                 if(sanadRepSelect && std.subject && std.subject.includes('سند')) { sanadRepSelect.innerHTML += optionHtml; }
                 if(examSelect) examSelect.innerHTML += optionHtml;
             });
-
-            if(selectDropdown && selectDropdown.options.length > 0) {
+if(selectDropdown && selectDropdown.options.length > 0) {
                 selectDropdown.value = dbStudents[0].id;
-                onStudentChange(dbStudents[0].id);
+                onStudentChange(dbStudents[0].id, true); // true = Initial Auto Load
             }
             if(sanadSelect && sanadSelect.options.length > 0) renderStudentKhatmas(sanadSelect.value);
             if(sanadRepSelect && sanadRepSelect.options.length > 0) populateSanadKhatmasForReport(sanadRepSelect.value);
@@ -5096,220 +5127,156 @@ window.saveEditedAvailableSlot = async function() {
                 </div>
             `).join('');
         };
-
-      window.populateSanadKhatmasForReport = function(studentId) {
-            const khatmaSelect = document.getElementById('sanad-form-khatma');
-            if(!khatmaSelect) return;
-            const student = dbStudents.find(s => String(s.id) === String(studentId));
-            if(!student || !student.active_khatmas || student.active_khatmas.length === 0) {
-                khatmaSelect.innerHTML = `<option value="">${currentLang === 'ar' ? 'الطالب ليس لديه ختمات معتمدة بعد.' : 'No approved Khatmas available.'}</option>`;
-                khatmaSelect.disabled = true;
-                return;
-            }
-            khatmaSelect.disabled = false;
-            khatmaSelect.innerHTML = student.active_khatmas.map((k, idx) => `<option value="${k.qiraa} - ${k.rewayah}">${idx + 1}. ${k.qiraa} (${k.rewayah})</option>`).join('');
-        };
-
-document.addEventListener('DOMContentLoaded', () => {
-    initMatnDropdown();
+  window.populateSanadKhatmasForReport = function(studentId, isInitialLoad = false) { 
+    const khatmaSelect = document.getElementById('sanad-form-khatma');
+    if(!khatmaSelect) return;
     
-    const repForm = document.getElementById('report-form');
-    if(repForm) {
-        repForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const stdId = document.getElementById('form-student-select').value;
-            const std = dbStudents.find(s => String(s.id).trim() === String(stdId).trim());
-            const dateStr = document.getElementById('form-date-input').value;
-            if(!std || !currentTeacherObj) return;
+    const student = dbStudents.find(s => String(s.id) === String(studentId));
+    if(!student || !student.active_khatmas || student.active_khatmas.length === 0) {
+        khatmaSelect.innerHTML = `<option value="">${currentLang === 'ar' ? 'الطالب ليس لديه ختمات معتمدة بعد.' : 'No approved Khatmas available.'}</option>`;
+        khatmaSelect.disabled = true;
+        
+        // إخفاء الزر إن وجد لأن الطالب ليس لديه ختمات
+        const oldBtn = document.getElementById('btn-show-last-sanad');
+        if (oldBtn) oldBtn.classList.add('hidden');
+        return;
+    }
+    
+    khatmaSelect.disabled = false;
+    khatmaSelect.innerHTML = student.active_khatmas.map((k, idx) => `<option value="${k.qiraa} - ${k.rewayah}">${idx + 1}. ${k.qiraa} (${k.rewayah})</option>`).join('');
 
-            const fileInput = document.getElementById('report-attachment-file');
-            let uploadedAttachments = []; 
+    // إنشاء زر (عرض آخر تقرير) برمجياً بجانب اختيار الختمة بدلاً من الفتح التلقائي المزعج
+    let btn = document.getElementById('btn-show-last-sanad');
+    if (!btn) {
+        btn = document.createElement('button');
+        btn.id = 'btn-show-last-sanad';
+        btn.type = 'button';
+        btn.className = 'mt-3 text-xs font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 px-4 py-2 rounded-xl transition shadow-sm border border-amber-200 cursor-pointer w-full flex items-center justify-center gap-2';
+        khatmaSelect.parentElement.appendChild(btn);
+    }
+    btn.classList.remove('hidden');
+    btn.innerHTML = currentLang === 'ar' ? '📜 عرض آخر تقرير إقراء وتسميع' : '📜 View Last Recitation Report';
+    btn.onclick = () => showLastSanadReport(studentId, student.name);
+};
 
-            if (fileInput && fileInput.files[0]) {
-                showToast(currentLang === 'ar' ? '⏳ جاري رفع الملف المرفق...' : '⏳ Uploading file...', 'info');
-                const file = fileInput.files[0];
-                const fileExt = file.name.split('.').pop();
-                const fileName = `rep_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-                const { error: upErr } = await supabaseClient.storage.from('documents').upload(fileName, file);
-                if (!upErr) {
-                    const { data: urlData } = supabaseClient.storage.from('documents').getPublicUrl(fileName);
-                    uploadedAttachments.push(urlData.publicUrl);
-                }
-            }
+        // 🌟 الدالة الجديدة المخصصة لجلب وعرض آخر تقرير سند للطالب 🌟
+        window.showLastSanadReport = async function(studentId, studentName) {
+            const modal = document.getElementById('sanad-last-report-modal');
+            const contentDiv = document.getElementById('sanad-last-report-content');
+            const nameEl = document.getElementById('sanad-last-report-student');
+            
+            if (!modal || !contentDiv) return;
 
-            // سحب اسم درس اللغة العربية ومستواه بدقة
-            const arabicLessonEl = document.getElementById('arabic-lesson-select');
-            const arabicLessonName = arabicLessonEl && arabicLessonEl.options.length > 0 ? arabicLessonEl.options[arabicLessonEl.selectedIndex].text : '';
-
-            const currentSessionNum = document.getElementById('form-lesson-num').value;
-
-            // التحقق من حالة الشيك بوكس لمسار القرآن
-            const chkNew = document.getElementById('enable-quran-new')?.checked;
-            const chkRec = document.getElementById('enable-quran-rec')?.checked;
-            const chkDis = document.getElementById('enable-quran-dis')?.checked;
-            const chkMatn = document.getElementById('enable-matn-track')?.checked;
-
-            const chkNextNew = document.getElementById('enable-quran-next')?.checked;
-            const chkNextRec = document.getElementById('enable-quran-next-rec')?.checked;
-            const chkNextDis = document.getElementById('enable-quran-next-dis')?.checked;
-            const chkNextMatn = document.getElementById('enable-matn-next')?.checked;
-
-            // التحقق من حالة الشيك بوكس لمسار الأحاديث
-            const chkHadith = document.getElementById('enable-hadith-track')?.checked;
-            const chkNextHadith = document.getElementById('enable-hadith-next')?.checked;
-
-            // بناء بيانات التقرير الشاملة (تشمل القرآن، اللغة العربية، والأحاديث)
-            let reportData = {
-                track: currentActiveReportTrack,
-                duration: document.getElementById('form-duration').value,
-                session: currentSessionNum,
-                attachments: uploadedAttachments,
-                
-                hadith: chkHadith ? {
-                    category: document.getElementById('hadith-category-select')?.value,
-                    number: document.getElementById('hadith-number-input')?.value
-                } : null,
-                
-                next_hadith: chkNextHadith ? {
-                    category: document.getElementById('hadith-next-category-select')?.value,
-                    number: document.getElementById('hadith-next-number-input')?.value
-                } : null,
-
-                quran: currentActiveReportTrack === 'quran' ? {
-                    new: chkNew ? {
-                        sF: document.getElementById('quran-new-s-from')?.value,
-                        aF: document.getElementById('quran-new-a-from')?.value,
-                        sT: document.getElementById('quran-new-s-to')?.value,
-                        aT: document.getElementById('quran-new-a-to')?.value,
-                        rt: document.getElementById('quran-new-rating')?.value
-                    } : null,
-                    rec: chkRec ? {
-                        sF: document.getElementById('quran-rec-s-from')?.value,
-                        aF: document.getElementById('quran-rec-a-from')?.value,
-                        sT: document.getElementById('quran-rec-s-to')?.value,
-                        aT: document.getElementById('quran-rec-a-to')?.value,
-                        rt: document.getElementById('quran-rec-rating')?.value
-                    } : null,
-                    dis: chkDis ? {
-                        sF: document.getElementById('quran-dis-s-from')?.value,
-                        aF: document.getElementById('quran-dis-a-from')?.value,
-                        sT: document.getElementById('quran-dis-s-to')?.value,
-                        aT: document.getElementById('quran-dis-a-to')?.value,
-                        rt: document.getElementById('quran-dis-rating')?.value
-                    } : null,
-                    matn: chkMatn ? {
-                        name: document.getElementById('matn-name-select')?.value,
-                        from: document.getElementById('matn-line-from')?.value,
-                        to: document.getElementById('matn-line-to')?.value,
-                        rating: document.getElementById('matn-rating-select')?.value
-                    } : null,
-                    next_new: chkNextNew ? {
-                        sF: document.getElementById('quran-next-s-from')?.value,
-                        aF: document.getElementById('quran-next-a-from')?.value,
-                        sT: document.getElementById('quran-next-s-to')?.value,
-                        aT: document.getElementById('quran-next-a-to')?.value
-                    } : null,
-                    next_rec: chkNextRec ? {
-                        sF: document.getElementById('quran-next-rec-s-from')?.value,
-                        aF: document.getElementById('quran-next-rec-a-from')?.value,
-                        sT: document.getElementById('quran-next-rec-s-to')?.value,
-                        aT: document.getElementById('quran-next-rec-a-to')?.value
-                    } : null,
-                    next_dis: chkNextDis ? {
-                        sF: document.getElementById('quran-next-dis-s-from')?.value,
-                        aF: document.getElementById('quran-next-dis-a-from')?.value,
-                        sT: document.getElementById('quran-next-dis-s-to')?.value,
-                        aT: document.getElementById('quran-next-dis-a-to')?.value
-                    } : null,
-                    next_matn: chkNextMatn ? {
-                        name: document.getElementById('matn-next-name-select')?.value,
-                        from: document.getElementById('matn-next-line-from')?.value,
-                        to: document.getElementById('matn-next-line-to')?.value
-                    } : null,
-                    notes: document.getElementById('quran-final-notes')?.value.trim()
-                } : null,
-                arabic: currentActiveReportTrack === 'arabic' ? {
-                    level: document.getElementById('arabic-level-select')?.value,
-                    unitId: document.getElementById('arabic-lesson-select')?.value,
-                    lessonName: arabicLessonName,
-                    rt: document.getElementById('arabic-rating')?.value,
-                    next: document.getElementById('arabic-next-assignment')?.value.trim(),
-                    notes: document.getElementById('arabic-notes')?.value.trim()
-                } : null
-            };
-
-            const jsonPayload = `[JSON_REPORT] ${JSON.stringify(reportData)}`;
-            showToast(currentLang === 'ar' ? '⏳ جاري حفظ التقرير...' : '⏳ Saving report...', 'info');
+            nameEl.innerText = currentLang === 'ar' ? `الطالب: ${studentName}` : `Student: ${studentName}`;
+            contentDiv.innerHTML = `<p class="text-center text-slate-400 font-bold py-10 animate-pulse">⏳ ${currentLang === 'ar' ? 'جاري جلب التقرير السابق...' : 'Loading previous report...'}</p>`;
+            modal.classList.remove('hidden');
 
             try {
-                const { error: insertError } = await supabaseClient.from('attendance').insert([{
-                    teacher_id: currentTeacherObj.id,
-                    tName: currentTeacherObj.name_ar,
-                    student_id: stdId,
-                    sName: std.name,
-                    date: dateStr,
-                    status: 'present',
-                    notes: jsonPayload 
-                }]);
+                // جلب آخر التقارير للبحث عن تقرير السند
+                const { data: reports, error } = await supabaseClient
+                    .from('attendance')
+                    .select('*')
+                    .eq('student_id', studentId)
+                    .order('date', { ascending: false })
+                    .limit(10);
 
-                if (insertError) throw insertError;
+                if (error) throw error;
 
-                // صياغة محتوى الإشعار للطالب بناءً على المسار النشط والأحاديث
-                let msgBody = currentLang === 'ar' ? `تم توثيق تقرير حصتك بنجاح 🌟\n` : `Session Report Logged Successfully 🌟\n`;
+                let lastSanadReport = null;
+                let reportDate = '';
+
+                if (reports && reports.length > 0) {
+                    for (let rep of reports) {
+                        if (rep.notes && rep.notes.includes('[JSON_REPORT]')) {
+                            try {
+                                const parsed = JSON.parse(rep.notes.replace('[JSON_REPORT]', '').trim());
+                                if (parsed.track === 'sanad') {
+                                    lastSanadReport = parsed;
+                                    reportDate = rep.date;
+                                    break;
+                                }
+                            } catch(e) {}
+                        }
+                    }
+                }
+
+                if (!lastSanadReport) {
+                    contentDiv.innerHTML = `
+                        <div class="p-8 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-center border border-slate-200 dark:border-slate-700">
+                            <span class="text-4xl mb-3 block opacity-60">🤷‍♂️</span>
+                            <p class="text-sm font-bold text-slate-600 dark:text-slate-300">لا يوجد تقرير سابق لإقراء السند مسجل لهذا الطالب حتى الآن.</p>
+                        </div>`;
+                    return;
+                }
+
+                // تجميع وتنسيق البيانات للعرض
+                const getSurahName = (id) => { 
+                    const s = (typeof quranSurahs !== 'undefined' ? quranSurahs : []).find(x => parseInt(x.id) === parseInt(id)); 
+                    return s ? (currentLang === 'ar' ? s.ar : s.en) : id; 
+                };
+
+                const sF = lastSanadReport.read_from?.surah || '?';
+                const aF = lastSanadReport.read_from?.ayah || '?';
+                const sT = lastSanadReport.read_to?.surah || '?';
+                const aT = lastSanadReport.read_to?.ayah || '?';
                 
-                if (currentActiveReportTrack === 'arabic' && reportData.arabic) {
-                    const levelTxt = document.getElementById('arabic-level-select')?.options[document.getElementById('arabic-level-select').selectedIndex]?.text || '';
-                    msgBody += currentLang === 'ar'
-                        ? `\n• المستوى: ${levelTxt}\n• الوحدة والدرس: ${arabicLessonName}\n• التقييم: ${reportData.arabic.rt}\n• الواجب: ${reportData.arabic.next || '---'}`
-                        : `\n• Level: ${levelTxt}\n• Unit/Lesson: ${arabicLessonName}\n• Evaluation: ${reportData.arabic.rt}\n• Homework: ${reportData.arabic.next || '---'}`;
-                } else if (reportData.quran) {
-                    const getSurahName = (id) => { const s = quranSurahs.find(x => parseInt(x.id) === parseInt(id)); return s ? (currentLang === 'ar' ? s.ar : s.en) : id; };
-                    const getMatnName = (matnName) => { const m = tajweedMutoonDB.find(x => x.name === matnName || x.nameEn === matnName); return m ? (currentLang === 'ar' ? m.name : m.nameEn) : matnName; };
-
-                    if (chkNew && reportData.quran.new) {
-                        msgBody += `\n• الجديد: سورة ${getSurahName(reportData.quran.new.sF)} إلى ${getSurahName(reportData.quran.new.sT)}`;
-                    }
-                    if (chkRec && reportData.quran.rec) {
-                        msgBody += `\n• المراجعة القريبة: سورة ${getSurahName(reportData.quran.rec.sF)} إلى ${getSurahName(reportData.quran.rec.sT)}`;
-                    }
-                    if (chkDis && reportData.quran.dis) {
-                        msgBody += `\n• المراجعة البعيدة: سورة ${getSurahName(reportData.quran.dis.sF)} إلى ${getSurahName(reportData.quran.dis.sT)}`;
-                    }
-                    if (chkMatn && reportData.quran.matn) {
-                        msgBody += `\n• المتن: ${getMatnName(reportData.quran.matn.name)}`;
-                    }
+                // 🌟 استدعاء دالة التعبئة التلقائية لنقطة الانطلاق الجديدة 🌟
+                if (sT !== '?' && aT !== '?') {
+                    autoFillNextSanadRecitation(sT, aT);
                 }
+                
+                
+                const khatma = lastSanadReport.khatma || 'غير محدد';
+                const evalGen = lastSanadReport.general_evaluation || 'غير محدد';
+                const matn = lastSanadReport.matn || 'بدون متن';
+                const matnEval = lastSanadReport.matn_evaluation || '---';
+                const notes = lastSanadReport.notes || 'لا توجد أخطاء مسجلة أو ملاحظات إضافية.';
 
-                // 🌟 إضافة بيانات الأحاديث إلى نص الإشعار 🌟
-                if (chkHadith && reportData.hadith) {
-                    let catName = reportData.hadith.category === 'kids' ? (currentLang === 'ar' ? 'قسم الأطفال' : 'Kids') : (currentLang === 'ar' ? 'قسم الكبار' : 'Adults');
-                    msgBody += currentLang === 'ar' 
-                        ? `\n• الحديث الشريف المطلوب: الحديث رقم (${reportData.hadith.number}) - ${catName}` 
-                        : `\n• Assigned Hadith: Hadith #${reportData.hadith.number} (${catName})`;
-                }
-                if (chkNextHadith && reportData.next_hadith) {
-                    let catNextName = reportData.next_hadith.category === 'kids' ? (currentLang === 'ar' ? 'قسم الأطفال' : 'Kids') : (currentLang === 'ar' ? 'قسم الكبار' : 'Adults');
-                    msgBody += currentLang === 'ar' 
-                        ? `\n• حديث الحصة القادمة: الحديث رقم (${reportData.next_hadith.number}) - ${catNextName}` 
-                        : `\n• Next Hadith Assignment: Hadith #${reportData.next_hadith.number} (${catNextName})`;
-                }
+                contentDiv.innerHTML = `
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div class="bg-amber-50 dark:bg-amber-950/40 p-4 rounded-xl border border-amber-200 dark:border-amber-800 shadow-sm">
+                            <span class="block text-[10px] text-amber-700 dark:text-amber-500 font-bold mb-1 uppercase tracking-widest">الختمة المسجلة</span>
+                            <span class="text-xs font-black text-amber-950 dark:text-amber-100 leading-snug">${khatma}</span>
+                        </div>
+                        <div class="bg-blue-50 dark:bg-blue-950/40 p-4 rounded-xl border border-blue-200 dark:border-blue-800 shadow-sm">
+                            <span class="block text-[10px] text-blue-700 dark:text-blue-500 font-bold mb-1 uppercase tracking-widest">تاريخ آخر حلقة</span>
+                            <span class="text-base font-black text-blue-950 dark:text-blue-100 font-mono" dir="ltr">${reportDate}</span>
+                        </div>
+                    </div>
 
-                await supabaseClient.from('student_notifications').insert([{
-                    target: std.name,
-                    type: 'success',
-                    title: currentLang === 'ar' ? `📝 تقرير الحصة رقم (${currentSessionNum})` : `📝 Session Report #${currentSessionNum}`,
-                    body: msgBody,
-                    expiry: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-                }]);
+                    <div class="bg-emerald-50 dark:bg-emerald-950/40 p-5 rounded-xl border border-emerald-200 dark:border-emerald-800 shadow-sm">
+                        <h4 class="text-xs font-black text-emerald-800 dark:text-emerald-400 mb-2 border-b border-emerald-200/50 dark:border-emerald-800 pb-2">📖 النطاق الذي تم تسميعه وإقراؤه:</h4>
+                        <p class="text-sm font-bold text-emerald-950 dark:text-emerald-100 leading-relaxed">
+                            من سورة <b>${getSurahName(sF)}</b> (آية ${aF}) <br>
+                            إلى سورة <b>${getSurahName(sT)}</b> (آية ${aT})
+                        </p>
+                    </div>
 
-                showToast(currentLang === 'ar' ? '🚀 تم حفظ التقرير وإرساله للطالب بنجاح!' : '🚀 Report saved and sent successfully!', 'success');
-                document.getElementById('form-lesson-num').value = parseInt(currentSessionNum) + 1;
-            } catch(err) {
-                showToast('❌ خطأ: ' + err.message, 'error');
+                    <div class="grid grid-cols-2 gap-3 mb-2">
+                        <div class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                            <span class="block text-[10px] text-slate-500 dark:text-slate-400 font-bold mb-1 uppercase">التقييم العام للورد</span>
+                            <span class="text-sm font-black text-slate-800 dark:text-slate-200">${evalGen}</span>
+                        </div>
+                        <div class="bg-purple-50 dark:bg-purple-950/40 p-4 rounded-xl border border-purple-200 dark:border-purple-800 shadow-sm">
+                            <span class="block text-[10px] text-purple-700 dark:text-purple-400 font-bold mb-1 uppercase truncate" title="${matn}">المتن: ${matn}</span>
+                            <span class="text-xs font-black text-purple-950 dark:text-purple-100">${matn !== 'بدون متن' ? matnEval : '---'}</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-xl border-2 border-rose-100 dark:border-rose-900/50 shadow-sm mt-3">
+                        <h4 class="text-xs font-black text-rose-800 dark:text-rose-400 mb-3 flex items-center gap-1.5 border-b border-rose-100 dark:border-rose-900/50 pb-2">
+                            <span>🔴</span> الأخطاء المرصودة وضبط الأوجه:
+                        </h4>
+                        <div class="text-xs font-bold text-slate-700 dark:text-slate-300 leading-loose whitespace-pre-wrap">${notes}</div>
+                    </div>
+                `;
+
+            } catch (e) {
+                console.error("Error loading last sanad report:", e);
+                contentDiv.innerHTML = `<p class="text-center text-rose-500 font-bold py-6">❌ حدث خطأ أثناء جلب التقرير السابق، يرجى المحاولة لاحقاً.</p>`;
             }
-        });
-    }
-});
+        };
+
         window.printDailyReport = function() {
     const stdId = document.getElementById('form-student-select').value;
     const std = dbStudents.find(s => String(s.id).trim() === String(stdId).trim());
@@ -5470,183 +5437,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.print();
             setTimeout(() => document.body.classList.remove('print-exam'), 1000);
         };
- document.addEventListener('DOMContentLoaded', () => {
-    initMatnDropdown();
-    
-    const repForm = document.getElementById('report-form');
-    if(repForm) {
-        repForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const stdId = document.getElementById('form-student-select').value;
-            const std = dbStudents.find(s => String(s.id).trim() === String(stdId).trim());
-            const dateStr = document.getElementById('form-date-input').value;
-            if(!std || !currentTeacherObj) return;
-
-           const fileInput = document.getElementById('report-attachment-file');
-let uploadedAttachments = []; 
-
-if (fileInput && fileInput.files[0]) {
-    showToast(currentLang === 'ar' ? '⏳ جاري رفع الملف المرفق...' : '⏳ Uploading file...', 'info');
-    const file = fileInput.files[0];
-    const fileExt = file.name.split('.').pop();
-    const fileName = `rep_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-    const { error: upErr } = await supabaseClient.storage.from('documents').upload(fileName, file);
-    if (!upErr) {
-        const { data: urlData } = supabaseClient.storage.from('documents').getPublicUrl(fileName);
-        
-        // 🌟 التعديل الجذري هنا: حفظ الرابط مع الاسم الأصلي للملف (اسم المحاضرة) ككائن (Object) 🌟
-        uploadedAttachments.push({
-            url: urlData.publicUrl,
-            name: file.name
-        });
-    }
-}
-
-            // سحب اسم درس اللغة العربية ومستواه بدقة
-            const arabicLessonEl = document.getElementById('arabic-lesson-select');
-            const arabicLessonName = arabicLessonEl && arabicLessonEl.options.length > 0 ? arabicLessonEl.options[arabicLessonEl.selectedIndex].text : '';
-
-            const currentSessionNum = document.getElementById('form-lesson-num').value;
-
-            // التحقق من حالة الشيك بوكس لمسار القرآن
-            const chkNew = document.getElementById('enable-quran-new')?.checked;
-            const chkRec = document.getElementById('enable-quran-rec')?.checked;
-            const chkDis = document.getElementById('enable-quran-dis')?.checked;
-            const chkMatn = document.getElementById('enable-matn-track')?.checked;
-
-            const chkNextNew = document.getElementById('enable-quran-next')?.checked;
-            const chkNextRec = document.getElementById('enable-quran-next-rec')?.checked;
-            const chkNextDis = document.getElementById('enable-quran-next-dis')?.checked;
-            const chkNextMatn = document.getElementById('enable-matn-next')?.checked;
-
-            // بناء بيانات التقرير الشاملة (تشمل القرآن واللغة العربية)
-            let reportData = {
-                track: currentActiveReportTrack,
-                duration: document.getElementById('form-duration').value,
-                session: currentSessionNum,
-                attachments: uploadedAttachments,
-                quran: currentActiveReportTrack === 'quran' ? {
-                    new: chkNew ? {
-                        sF: document.getElementById('quran-new-s-from')?.value,
-                        aF: document.getElementById('quran-new-a-from')?.value,
-                        sT: document.getElementById('quran-new-s-to')?.value,
-                        aT: document.getElementById('quran-new-a-to')?.value,
-                        rt: document.getElementById('quran-new-rating')?.value
-                    } : null,
-                    rec: chkRec ? {
-                        sF: document.getElementById('quran-rec-s-from')?.value,
-                        aF: document.getElementById('quran-rec-a-from')?.value,
-                        sT: document.getElementById('quran-rec-s-to')?.value,
-                        aT: document.getElementById('quran-rec-a-to')?.value,
-                        rt: document.getElementById('quran-rec-rating')?.value
-                    } : null,
-                    dis: chkDis ? {
-                        sF: document.getElementById('quran-dis-s-from')?.value,
-                        aF: document.getElementById('quran-dis-a-from')?.value,
-                        sT: document.getElementById('quran-dis-s-to')?.value,
-                        aT: document.getElementById('quran-dis-a-to')?.value,
-                        rt: document.getElementById('quran-dis-rating')?.value
-                    } : null,
-                    matn: chkMatn ? {
-                        name: document.getElementById('matn-name-select')?.value,
-                        from: document.getElementById('matn-line-from')?.value,
-                        to: document.getElementById('matn-line-to')?.value,
-                        rating: document.getElementById('matn-rating-select')?.value
-                    } : null,
-                    next_new: chkNextNew ? {
-                        sF: document.getElementById('quran-next-s-from')?.value,
-                        aF: document.getElementById('quran-next-a-from')?.value,
-                        sT: document.getElementById('quran-next-s-to')?.value,
-                        aT: document.getElementById('quran-next-a-to')?.value
-                    } : null,
-                    next_rec: chkNextRec ? {
-                        sF: document.getElementById('quran-next-rec-s-from')?.value,
-                        aF: document.getElementById('quran-next-rec-a-from')?.value,
-                        sT: document.getElementById('quran-next-rec-s-to')?.value,
-                        aT: document.getElementById('quran-next-rec-a-to')?.value
-                    } : null,
-                    next_dis: chkNextDis ? {
-                        sF: document.getElementById('quran-next-dis-s-from')?.value,
-                        aF: document.getElementById('quran-next-dis-a-from')?.value,
-                        sT: document.getElementById('quran-next-dis-s-to')?.value,
-                        aT: document.getElementById('quran-next-dis-a-to')?.value
-                    } : null,
-                    next_matn: chkNextMatn ? {
-                        name: document.getElementById('matn-next-name-select')?.value,
-                        from: document.getElementById('matn-next-line-from')?.value,
-                        to: document.getElementById('matn-next-line-to')?.value
-                    } : null,
-                    notes: document.getElementById('quran-final-notes')?.value.trim()
-                } : null,
-                arabic: currentActiveReportTrack === 'arabic' ? {
-                    level: document.getElementById('arabic-level-select')?.value,
-                    unitId: document.getElementById('arabic-lesson-select')?.value,
-                    lessonName: arabicLessonName,
-                    rt: document.getElementById('arabic-rating')?.value,
-                    next: document.getElementById('arabic-next-assignment')?.value.trim(),
-                    notes: document.getElementById('arabic-notes')?.value.trim()
-                } : null
-            };
-
-            const jsonPayload = `[JSON_REPORT] ${JSON.stringify(reportData)}`;
-            showToast(currentLang === 'ar' ? '⏳ جاري حفظ التقرير...' : '⏳ Saving report...', 'info');
-
-            try {
-                const { error: insertError } = await supabaseClient.from('attendance').insert([{
-                    teacher_id: currentTeacherObj.id,
-                    tName: currentTeacherObj.name_ar,
-                    student_id: stdId,
-                    sName: std.name,
-                    date: dateStr,
-                    status: 'present',
-                    notes: jsonPayload 
-                }]);
-
-                if (insertError) throw insertError;
-
-                // صياغة محتوى الإشعار للطالب بناءً على المسار النشط
-                let msgBody = currentLang === 'ar' ? `تم توثيق تقرير حصتك بنجاح 🌟\n` : `Session Report Logged Successfully 🌟\n`;
-                
-                if (currentActiveReportTrack === 'arabic' && reportData.arabic) {
-                    const levelTxt = document.getElementById('arabic-level-select')?.options[document.getElementById('arabic-level-select').selectedIndex]?.text || '';
-                    msgBody += currentLang === 'ar'
-                        ? `\n• المستوى: ${levelTxt}\n• الوحدة والدرس: ${arabicLessonName}\n• التقييم: ${reportData.arabic.rt}\n• الواجب: ${reportData.arabic.next || '---'}`
-                        : `\n• Level: ${levelTxt}\n• Unit/Lesson: ${arabicLessonName}\n• Evaluation: ${reportData.arabic.rt}\n• Homework: ${reportData.arabic.next || '---'}`;
-                } else if (reportData.quran) {
-                    const getSurahName = (id) => { const s = quranSurahs.find(x => parseInt(x.id) === parseInt(id)); return s ? (currentLang === 'ar' ? s.ar : s.en) : id; };
-                    const getMatnName = (matnName) => { const m = tajweedMutoonDB.find(x => x.name === matnName || x.nameEn === matnName); return m ? (currentLang === 'ar' ? m.name : m.nameEn) : matnName; };
-
-                    if (chkNew && reportData.quran.new) {
-                        msgBody += `\n• الجديد: سورة ${getSurahName(reportData.quran.new.sF)} إلى ${getSurahName(reportData.quran.new.sT)}`;
-                    }
-                    if (chkRec && reportData.quran.rec) {
-                        msgBody += `\n• المراجعة القريبة: سورة ${getSurahName(reportData.quran.rec.sF)} إلى ${getSurahName(reportData.quran.rec.sT)}`;
-                    }
-                    if (chkDis && reportData.quran.dis) {
-                        msgBody += `\n• المراجعة البعيدة: سورة ${getSurahName(reportData.quran.dis.sF)} إلى ${getSurahName(reportData.quran.dis.sT)}`;
-                    }
-                    if (chkMatn && reportData.quran.matn) {
-                        msgBody += `\n• المتن: ${getMatnName(reportData.quran.matn.name)}`;
-                    }
-                }
-
-                await supabaseClient.from('student_notifications').insert([{
-                    target: std.name,
-                    type: 'success',
-                    title: currentLang === 'ar' ? `📝 تقرير الحصة رقم (${currentSessionNum})` : `📝 Session Report #${currentSessionNum}`,
-                    body: msgBody,
-                    expiry: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-                }]);
-
-                showToast(currentLang === 'ar' ? '🚀 تم حفظ التقرير وإرساله للطالب بنجاح!' : '🚀 Report saved and sent successfully!', 'success');
-                document.getElementById('form-lesson-num').value = parseInt(currentSessionNum) + 1;
-            } catch(err) {
-                showToast('❌ خطأ: ' + err.message, 'error');
-            }
-        });
-    }
-});
-
+  
 window.autoFillNextHomework = function(isManual = false) {
     const sT = parseInt(document.getElementById('quran-new-s-to')?.value || 1);
     const aT = parseInt(document.getElementById('quran-new-a-to')?.value || 1);
@@ -6211,10 +6002,6 @@ const setMatnRecitation = (prefix, matnData) => {
     if (ratingSel && matnData.rating) ratingSel.value = matnData.rating;
 };
 
-// تشغيل التهيئة فور تحميل الصفحة لضمان ظهور الخيارات في القوائم دائماً
-document.addEventListener('DOMContentLoaded', () => {
-    initMatnDropdown();
-});
 // ================= 🎯 معالجة طلبات اعتذار الطلاب عن الحصص =================
 window.adminHandleApology = async function(studentId, targetDateStr, action, studentName, btnElement) {
     if (!currentTeacherId) return;
@@ -6425,13 +6212,6 @@ window.calcSanadPages = async function() {
     }
 };
 
-// اربط الدالة بحدث تغيير السور والآيات في نموذج تقرير السند
-document.addEventListener('DOMContentLoaded', () => {
-    ['sanad-rep-s-from', 'sanad-rep-a-from', 'sanad-rep-s-to', 'sanad-rep-a-to'].forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.addEventListener('change', calcSanadPages);
-    });
-});
 // ================= دالة التحويل من توقيت الطالب إلى القاهرة =================
 window.convertStudentTimeToCairo = function(studentDayIdx, studentHourIdx, studentTz) {
     let offsetHours = getCairoOffset(studentTz); 
@@ -6655,14 +6435,281 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// استدعاء جلب الاختبارات عند فتح تبويب الاختبارات
-const originalSwitchTab = window.switchTab;
-window.switchTab = function(tabId) {
-    if (typeof originalSwitchTab === 'function') originalSwitchTab(tabId);
-    if (tabId === 'exams') {
-        loadTeacherExamsDropdown();
+// 🌟 دالة الحساب التلقائي للورد القادم في السند بناءً على آخر نقطة توقف 🌟
+window.autoFillNextSanadRecitation = function(lastSurahTo, lastAyahTo) {
+    let sT = parseInt(lastSurahTo) || 1;
+    let aT = parseInt(lastAyahTo) || 0;
+    
+    // جلب بيانات السورة لمعرفة عدد آياتها
+    let surahObj = quranSurahs.find(s => parseInt(s.id) === sT);
+    
+    let nextSF = sT;
+    let nextAF = aT + 1;
+    
+    // إذا كانت الآية هي نهاية السورة، انتقل للسورة التالية
+    if (surahObj && nextAF > surahObj.ayahs) {
+        nextSF = sT < 114 ? sT + 1 : 1; // إذا وصل للناس يعود للفاتحة
+        nextAF = 1;
+    }
+    
+    // تعيين مقدار افتراضي للقراءة الجديدة (مثلاً 5 آيات للأمام)
+    let nextST = nextSF;
+    let nextAT = nextAF + 5; 
+    let nextSurahObj = quranSurahs.find(s => parseInt(s.id) === nextST);
+    if (nextSurahObj && nextAT > nextSurahObj.ayahs) {
+        nextAT = nextSurahObj.ayahs; // حتى لا يتخطى عدد آيات السورة
+    }
+
+    const sFromEl = document.getElementById('sanad-rep-s-from');
+    if (sFromEl) {
+        sFromEl.value = nextSF;
+        if (typeof loadAyahs === 'function') loadAyahs(sFromEl, 'sanad-rep-a-from');
+        if (typeof updateSurahToOptions === 'function') updateSurahToOptions(sFromEl, 'sanad-rep-s-to', 'sanad-rep-a-to');
+        
+        // تأخير بسيط لضمان بناء قوائم الآيات (Options) في الـ DOM
+        setTimeout(() => {
+            const aFromEl = document.getElementById('sanad-rep-a-from');
+            const sToEl = document.getElementById('sanad-rep-s-to');
+            const aToEl = document.getElementById('sanad-rep-a-to');
+            
+            if (aFromEl) aFromEl.value = nextAF;
+            if (sToEl) {
+                sToEl.value = nextST;
+                if (typeof loadAyahs === 'function') loadAyahs(sToEl, 'sanad-rep-a-to');
+            }
+            // تأخير آخر لملء آيات "إلى"
+            setTimeout(() => {
+                if (aToEl) aToEl.value = nextAT;
+                if (typeof calcSanadPages === 'function') calcSanadPages();
+            }, 50);
+            
+        }, 100);
     }
 };
+// ================= الدالة الشاملة لتحميل الصفحة وإرسال التقرير (يجب أن توضع مرة واحدة فقط في الكود) =================
+document.addEventListener('DOMContentLoaded', () => {
+    initMatnDropdown();
+    
+    // منع اختيار تاريخ ماضي في بث الاختبارات
+    const expiryInput = document.getElementById('exam-broadcast-expiry');
+    if (expiryInput) {
+        const todayStr = new Date().toISOString().split('T')[0];
+        expiryInput.min = todayStr;
+    }
+
+    const repForm = document.getElementById('report-form');
+    if(repForm) {
+        // استخدمنا onsubmit بدلاً من addEventListener لضمان عدم ارتباطها أكثر من مرة نهائياً
+        repForm.onsubmit = async function(e) {
+            e.preventDefault();
+            const submitBtn = repForm.querySelector('button[type="submit"]');
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.style.opacity = '0.6'; }
+
+            const stdId = document.getElementById('form-student-select').value;
+            const std = dbStudents.find(s => String(s.id).trim() === String(stdId).trim());
+            const dateStr = document.getElementById('form-date-input').value;
+            if(!std || !currentTeacherObj) {
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.style.opacity = '1'; }
+                return;
+            }
+
+            const fileInput = document.getElementById('report-attachment-file');
+            let uploadedAttachments = []; 
+
+            if (fileInput && fileInput.files[0]) {
+                showToast(currentLang === 'ar' ? '⏳ جاري رفع الملف المرفق...' : '⏳ Uploading file...', 'info');
+                const file = fileInput.files[0];
+                const fileExt = file.name.split('.').pop();
+                const fileName = `rep_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+                const { error: upErr } = await supabaseClient.storage.from('documents').upload(fileName, file);
+                if (!upErr) {
+                    const { data: urlData } = supabaseClient.storage.from('documents').getPublicUrl(fileName);
+                    uploadedAttachments.push({
+                        url: urlData.publicUrl,
+                        name: file.name
+                    });
+                }
+            }
+
+            // سحب اسم درس اللغة العربية ومستواه بدقة
+            const arabicLessonEl = document.getElementById('arabic-lesson-select');
+            const arabicLessonName = arabicLessonEl && arabicLessonEl.options.length > 0 ? arabicLessonEl.options[arabicLessonEl.selectedIndex].text : '';
+
+            const currentSessionNum = document.getElementById('form-lesson-num').value;
+
+            // التحقق من حالة الشيك بوكس لمسار القرآن
+            const chkNew = document.getElementById('enable-quran-new')?.checked;
+            const chkRec = document.getElementById('enable-quran-rec')?.checked;
+            const chkDis = document.getElementById('enable-quran-dis')?.checked;
+            const chkMatn = document.getElementById('enable-matn-track')?.checked;
+
+            const chkNextNew = document.getElementById('enable-quran-next')?.checked;
+            const chkNextRec = document.getElementById('enable-quran-next-rec')?.checked;
+            const chkNextDis = document.getElementById('enable-quran-next-dis')?.checked;
+            const chkNextMatn = document.getElementById('enable-matn-next')?.checked;
+
+            // التحقق من حالة الشيك بوكس لمسار الأحاديث
+            const chkHadith = document.getElementById('enable-hadith-track')?.checked;
+            const chkNextHadith = document.getElementById('enable-hadith-next')?.checked;
+
+            // بناء بيانات التقرير الشاملة
+            let reportData = {
+                track: currentActiveReportTrack,
+                duration: document.getElementById('form-duration').value,
+                session: currentSessionNum,
+                attachments: uploadedAttachments,
+                
+                hadith: chkHadith ? {
+                    category: document.getElementById('hadith-category-select')?.value,
+                    number: document.getElementById('hadith-number-input')?.value
+                } : null,
+                
+                next_hadith: chkNextHadith ? {
+                    category: document.getElementById('hadith-next-category-select')?.value,
+                    number: document.getElementById('hadith-next-number-input')?.value
+                } : null,
+
+                quran: currentActiveReportTrack === 'quran' ? {
+                    new: chkNew ? {
+                        sF: document.getElementById('quran-new-s-from')?.value,
+                        aF: document.getElementById('quran-new-a-from')?.value,
+                        sT: document.getElementById('quran-new-s-to')?.value,
+                        aT: document.getElementById('quran-new-a-to')?.value,
+                        rt: document.getElementById('quran-new-rating')?.value
+                    } : null,
+                    rec: chkRec ? {
+                        sF: document.getElementById('quran-rec-s-from')?.value,
+                        aF: document.getElementById('quran-rec-a-from')?.value,
+                        sT: document.getElementById('quran-rec-s-to')?.value,
+                        aT: document.getElementById('quran-rec-a-to')?.value,
+                        rt: document.getElementById('quran-rec-rating')?.value
+                    } : null,
+                    dis: chkDis ? {
+                        sF: document.getElementById('quran-dis-s-from')?.value,
+                        aF: document.getElementById('quran-dis-a-from')?.value,
+                        sT: document.getElementById('quran-dis-s-to')?.value,
+                        aT: document.getElementById('quran-dis-a-to')?.value,
+                        rt: document.getElementById('quran-dis-rating')?.value
+                    } : null,
+                    matn: chkMatn ? {
+                        name: document.getElementById('matn-name-select')?.value,
+                        from: document.getElementById('matn-line-from')?.value,
+                        to: document.getElementById('matn-line-to')?.value,
+                        rating: document.getElementById('matn-rating-select')?.value
+                    } : null,
+                    next_new: chkNextNew ? {
+                        sF: document.getElementById('quran-next-s-from')?.value,
+                        aF: document.getElementById('quran-next-a-from')?.value,
+                        sT: document.getElementById('quran-next-s-to')?.value,
+                        aT: document.getElementById('quran-next-a-to')?.value
+                    } : null,
+                    next_rec: chkNextRec ? {
+                        sF: document.getElementById('quran-next-rec-s-from')?.value,
+                        aF: document.getElementById('quran-next-rec-a-from')?.value,
+                        sT: document.getElementById('quran-next-rec-s-to')?.value,
+                        aT: document.getElementById('quran-next-rec-a-to')?.value
+                    } : null,
+                    next_dis: chkNextDis ? {
+                        sF: document.getElementById('quran-next-dis-s-from')?.value,
+                        aF: document.getElementById('quran-next-dis-a-from')?.value,
+                        sT: document.getElementById('quran-next-dis-s-to')?.value,
+                        aT: document.getElementById('quran-next-dis-a-to')?.value
+                    } : null,
+                    next_matn: chkNextMatn ? {
+                        name: document.getElementById('matn-next-name-select')?.value,
+                        from: document.getElementById('matn-next-line-from')?.value,
+                        to: document.getElementById('matn-next-line-to')?.value
+                    } : null,
+                    notes: document.getElementById('quran-final-notes')?.value.trim()
+                } : null,
+                arabic: currentActiveReportTrack === 'arabic' ? {
+                    level: document.getElementById('arabic-level-select')?.value,
+                    unitId: document.getElementById('arabic-lesson-select')?.value,
+                    lessonName: arabicLessonName,
+                    rt: document.getElementById('arabic-rating')?.value,
+                    next: document.getElementById('arabic-next-assignment')?.value.trim(),
+                    notes: document.getElementById('arabic-notes')?.value.trim()
+                } : null
+            };
+
+            const jsonPayload = `[JSON_REPORT] ${JSON.stringify(reportData)}`;
+            showToast(currentLang === 'ar' ? '⏳ جاري حفظ التقرير...' : '⏳ Saving report...', 'info');
+
+            try {
+                // 🌟 التعديل الجذري هنا: مسح أي تسجيل حضور سابق لنفس اليوم لنفس الطالب (مثل زر الحضور المباشر) حتى يحل التقرير محله كحصة واحدة! 🌟
+                await supabaseClient.from('attendance').delete().eq('student_id', stdId).eq('date', dateStr);
+
+                const { error: insertError } = await supabaseClient.from('attendance').insert([{
+                    teacher_id: currentTeacherObj.id,
+                    tName: currentTeacherObj.name_ar,
+                    student_id: stdId,
+                    sName: std.name,
+                    date: dateStr,
+                    status: 'present',
+                    notes: jsonPayload 
+                }]);
+
+                if (insertError) throw insertError;
+
+                let msgBody = currentLang === 'ar' ? `تم توثيق تقرير حصتك بنجاح 🌟\n` : `Session Report Logged Successfully 🌟\n`;
+                
+                if (currentActiveReportTrack === 'arabic' && reportData.arabic) {
+                    const levelTxt = document.getElementById('arabic-level-select')?.options[document.getElementById('arabic-level-select').selectedIndex]?.text || '';
+                    msgBody += currentLang === 'ar'
+                        ? `\n• المستوى: ${levelTxt}\n• الوحدة والدرس: ${arabicLessonName}\n• التقييم: ${reportData.arabic.rt}\n• الواجب: ${reportData.arabic.next || '---'}`
+                        : `\n• Level: ${levelTxt}\n• Unit/Lesson: ${arabicLessonName}\n• Evaluation: ${reportData.arabic.rt}\n• Homework: ${reportData.arabic.next || '---'}`;
+                } else if (reportData.quran) {
+                    const getSurahName = (id) => { const s = quranSurahs.find(x => parseInt(x.id) === parseInt(id)); return s ? (currentLang === 'ar' ? s.ar : s.en) : id; };
+                    const getMatnName = (matnName) => { const m = tajweedMutoonDB.find(x => x.name === matnName || x.nameEn === matnName); return m ? (currentLang === 'ar' ? m.name : m.nameEn) : matnName; };
+
+                    if (chkNew && reportData.quran.new) {
+                        msgBody += `\n• الجديد: سورة ${getSurahName(reportData.quran.new.sF)} إلى ${getSurahName(reportData.quran.new.sT)}`;
+                    }
+                    if (chkRec && reportData.quran.rec) {
+                        msgBody += `\n• المراجعة القريبة: سورة ${getSurahName(reportData.quran.rec.sF)} إلى ${getSurahName(reportData.quran.rec.sT)}`;
+                    }
+                    if (chkDis && reportData.quran.dis) {
+                        msgBody += `\n• المراجعة البعيدة: سورة ${getSurahName(reportData.quran.dis.sF)} إلى ${getSurahName(reportData.quran.dis.sT)}`;
+                    }
+                    if (chkMatn && reportData.quran.matn) {
+                        msgBody += `\n• المتن: ${getMatnName(reportData.quran.matn.name)}`;
+                    }
+                }
+
+                if (chkHadith && reportData.hadith) {
+                    let catName = reportData.hadith.category === 'kids' ? (currentLang === 'ar' ? 'قسم الأطفال' : 'Kids') : (currentLang === 'ar' ? 'قسم الكبار' : 'Adults');
+                    msgBody += currentLang === 'ar' 
+                        ? `\n• الحديث الشريف المطلوب: الحديث رقم (${reportData.hadith.number}) - ${catName}` 
+                        : `\n• Assigned Hadith: Hadith #${reportData.hadith.number} (${catName})`;
+                }
+                if (chkNextHadith && reportData.next_hadith) {
+                    let catNextName = reportData.next_hadith.category === 'kids' ? (currentLang === 'ar' ? 'قسم الأطفال' : 'Kids') : (currentLang === 'ar' ? 'قسم الكبار' : 'Adults');
+                    msgBody += currentLang === 'ar' 
+                        ? `\n• حديث الحصة القادمة: الحديث رقم (${reportData.next_hadith.number}) - ${catNextName}` 
+                        : `\n• Next Hadith Assignment: Hadith #${reportData.next_hadith.number} (${catNextName})`;
+                }
+
+                await supabaseClient.from('student_notifications').insert([{
+                    target: std.name,
+                    type: 'success',
+                    title: currentLang === 'ar' ? `📝 تقرير الحصة رقم (${currentSessionNum})` : `📝 Session Report #${currentSessionNum}`,
+                    body: msgBody,
+                    expiry: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+                }]);
+
+                showToast(currentLang === 'ar' ? '🚀 تم حفظ التقرير بنجاح! ولن تحتسب كحصة مكررة.' : '🚀 Report saved as single session!', 'success');
+                document.getElementById('form-lesson-num').value = parseInt(currentSessionNum) + 1;
+                renderFinancials(); // لتحديث إحصائيات الراتب
+                
+            } catch(err) {
+                showToast('❌ خطأ: ' + err.message, 'error');
+            } finally {
+                // تفعيل الزر مجدداً بعد الانتهاء
+                if (submitBtn) { submitBtn.disabled = false; submitBtn.style.opacity = '1'; }
+            }
+        };
+    }
+});
     </script>
 </body>
 </html>
