@@ -145,6 +145,9 @@
                 <button type="button" onclick="switchTab('exams')" id="nav-exams" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">📋 <span data-ar="الاختبارات والتقييم" data-en="Exams & Grading">الاختبارات والتقييم</span></button>
                 <button type="button" onclick="switchTab('sanad')" id="nav-sanad" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-amber-600 bg-amber-50 hover:bg-amber-100 border border-amber-100 transition cursor-pointer shadow-sm hover-lift">🎓 <span data-ar="ختمات السند والقراءات" data-en="Sanad & Qira'at">ختمات السند والقراءات</span></button>
                 <button type="button" onclick="switchTab('leaderboard')" id="nav-leaderboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">🏆 <span data-ar="لوحة الشرف" data-en="Leaderboard">لوحة الشرف</span></button>
+                <button type="button" onclick="switchTab('shop')" id="nav-shop" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">
+    🎁 <span data-ar="سجل الهدايا والجوائز" data-en="Rewards Log">سجل الهدايا والجوائز</span>
+</button>
             </nav>
         </aside>
 
@@ -947,7 +950,29 @@
                     </div>
                 </div>
             </section>
-
+          <!-- ================= القسم الخاص بسجل الهدايا والجوائز ================= -->
+<section id="sec-shop" class="tab-content hidden space-y-6">
+    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+        <h3 class="text-xl font-black text-slate-800 border-b border-slate-100 pb-4" data-ar="🎁 سجل جوائز عجلة الحظ والمشتريات" data-en="🎁 Wheel & Shop Rewards Log">🎁 سجل جوائز عجلة الحظ والمشتريات</h3>
+        
+        <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-2xl">
+            <table class="w-full text-start text-sm min-w-[600px]">
+                <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                    <tr>
+                        <th class="p-3 text-start">تاريخ الجائزة</th>
+                        <th class="p-3 text-start">الطالب</th>
+                        <th class="p-3 text-start">الهدية / الجائزة</th>
+                        <th class="p-3 text-center">التكلفة</th>
+                        <th class="p-3 text-center">الحالة</th>
+                    </tr>
+                </thead>
+                <tbody id="teacher-rewards-log" class="divide-y divide-slate-100 text-slate-700 bg-white">
+                    <tr><td colspan="5" class="p-6 text-center text-slate-400 font-bold">جاري تحميل السجل...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
             <!-- ================= القسم 9: الاختبارات وبث الروابط ================= -->
             <section id="sec-exams" class="tab-content hidden space-y-6">
                 <!-- بث رابط اختبار للطلاب -->
@@ -1653,10 +1678,15 @@
     if(tabId === 'audiolab') fetchPendingAudioAssignments();
     if(tabId === 'leaderboard') {
         renderLeaderboard();
-        updateMonthlyResetTimer(); // تم إضافته هنا
+        if (typeof updateMonthlyResetTimer === 'function') updateMonthlyResetTimer();
     }
     if(tabId === 'attendance') updateAttendanceDayAndList();
     if(tabId === 'payments') renderFinancials();
+    
+    // 🌟 هذا هو السطر الجديد الخاص بالمتجر 🌟
+    if(tabId === 'shop') {
+        if (typeof fetchTeacherStudentsRewardsLog === 'function') fetchTeacherStudentsRewardsLog();
+    }
 };
         window.toggleDarkMode = function() {
             document.documentElement.classList.toggle('dark');
@@ -6710,6 +6740,56 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 });
+window.fetchTeacherStudentsRewardsLog = async function() {
+    const tbody = document.getElementById('teacher-rewards-log');
+    if (!tbody || !currentTeacherId || dbStudents.length === 0) return;
+
+    // استخراج أرقام (IDs) طلاب هذا المعلم فقط
+    const myStudentIds = dbStudents.map(s => s.id);
+
+    try {
+        const { data: logs, error } = await supabaseClient
+            .from('reward_orders')
+            .select('*')
+            .in('student_id', myStudentIds)
+            .order('created_at', { ascending: false })
+            .limit(20);
+
+        if (error) throw error;
+
+        if (!logs || logs.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 font-bold bg-slate-50">لا توجد هدايا أو جوائز مسجلة لطلابك حتى الآن 📭</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = logs.map(log => {
+            const dateStr = new Date(log.created_at).toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'});
+            
+            // تمييز جائزة عجلة الحظ عن الشراء العادي
+            const isWheel = log.reward_id && log.reward_id.includes('wheel_prize');
+            const costHtml = isWheel 
+                ? `<span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-[10px] font-black">مجانية 🎡</span>`
+                : `<span class="font-mono font-black text-amber-600">⭐ ${log.cost}</span>`;
+            
+            const statusHtml = log.status === 'approved' 
+                ? `<span class="text-emerald-600 font-black">تم التسليم ✔️</span>` 
+                : `<span class="text-amber-600 font-black">قيد المعالجة ⏳</span>`;
+
+            return `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="p-3 text-xs font-bold text-slate-500 font-mono" dir="ltr">${dateStr}</td>
+                    <td class="p-3 font-black text-blue-900">${log.student_name}</td>
+                    <td class="p-3 font-bold text-slate-800 ${isWheel ? 'text-amber-700' : ''}">${log.reward_name}</td>
+                    <td class="p-3 text-center">${costHtml}</td>
+                    <td class="p-3 text-center text-xs">${statusHtml}</td>
+                </tr>
+            `;
+        }).join('');
+
+    } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-red-500 font-bold bg-red-50">❌ حدث خطأ في جلب السجل</td></tr>`;
+    }
+};
     </script>
 </body>
 </html>
