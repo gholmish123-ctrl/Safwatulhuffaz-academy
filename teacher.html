@@ -859,6 +859,9 @@
                 <select id="sanad-form-khatma" class="w-full p-3 border border-amber-300 rounded-xl bg-amber-50 text-amber-900 text-xs font-black outline-none cursor-pointer"></select>
             </div>
         </div>
+        <button type="button" onclick="openTeacherReportsHistory('sanad')" class="mt-3 text-xs font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 px-4 py-2.5 rounded-xl transition shadow-sm border border-amber-200 cursor-pointer w-full flex items-center justify-center gap-2">
+    📜 عرض وتعديل تقارير السند السابقة
+</button>
         
         <div class="bg-amber-50/50 p-4 rounded-xl border border-amber-200 grid grid-cols-2 sm:grid-cols-4 gap-2" dir="rtl">
             <select id="sanad-rep-s-from" onchange="loadAyahs(this, 'sanad-rep-a-from'); updateSurahToOptions(this, 'sanad-rep-s-to', 'sanad-rep-a-to'); calcSanadPages();" class="p-2 border border-amber-300 rounded-lg text-xs font-bold cursor-pointer"></select>
@@ -1370,13 +1373,21 @@
         </div>
     </div>
 
-    <!-- منبثق رصد الخطأ السريع -->
+   <!-- منبثق رصد الخطأ السريع -->
     <div id="word-mistake-popover" class="hidden fixed inset-0 bg-slate-950/70 z-[400] flex items-center justify-center p-4 backdrop-blur-xs">
         <div class="bg-white dark:bg-slate-800 rounded-3xl border-2 border-emerald-500 dark:border-slate-600 w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
             
             <div class="text-center border-b border-slate-100 dark:border-slate-700 pb-3">
-                <span class="text-[10px] font-bold text-slate-400 block mb-1">الكلمة المختارة في المصحف:</span>
-                <h4 id="popover-correct-word" class="text-3xl font-calligraphy font-black text-emerald-800 dark:text-emerald-400">---</h4>
+                <span class="text-[10px] font-bold text-slate-400 block mb-2">النطاق المحدد للخطأ:</span>
+                
+                <!-- 🌟 الأزرار الجديدة لتوسيع التحديد 🌟 -->
+                <div class="flex items-center justify-center gap-3 mb-2" dir="rtl">
+                    <button type="button" onclick="expandMistakeSelection('next')" class="text-[10px] bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-600 dark:text-slate-300 px-2.5 py-1.5 rounded-lg font-bold transition shadow-sm">الكلمة التالية ➕</button>
+                    
+                    <h4 id="popover-correct-word" class="text-3xl font-calligraphy font-black text-emerald-800 dark:text-emerald-400 px-2 leading-relaxed">---</h4>
+                    
+                    <button type="button" onclick="expandMistakeSelection('prev')" class="text-[10px] bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-600 dark:text-slate-300 px-2.5 py-1.5 rounded-lg font-bold transition shadow-sm">➕ الكلمة السابقة</button>
+                </div>
             </div>
 
             <div>
@@ -1390,13 +1401,14 @@
                     <select id="popover-mistake-type" class="w-full p-2.5 border border-slate-300 dark:border-slate-600 rounded-xl text-xs font-bold bg-white dark:bg-slate-700 outline-none">
                         <option value="لحن جلي (تشكيل/حرف)">لحن جلي (تشكيل/حرف)</option>
                         <option value="لحن خفي (تجويد/مد/غنة)">لحن خفي (تجويد/مد/غنة)</option>
+                        <option value="خطأ في الوصل / الوقف">خطأ في الوصل / الوقف</option>
                         <option value="خلف في الرواية">خلف في الرواية</option>
                         <option value="تردد / نسيان">تردد / نسيان</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 mb-1">ملاحظات المعلم للتصويب:</label>
-                    <input type="text" id="popover-qiraa-note" placeholder="مثال: ضبط حركة / تفخيم" class="w-full p-2.5 border border-slate-300 dark:border-slate-600 rounded-xl text-xs bg-white dark:bg-slate-700 outline-none">
+                    <input type="text" id="popover-qiraa-note" placeholder="مثال: ترقيق الراء / إدغام بغنة" class="w-full p-2.5 border border-slate-300 dark:border-slate-600 rounded-xl text-xs bg-white dark:bg-slate-700 outline-none">
                 </div>
             </div>
 
@@ -1405,6 +1417,7 @@
                 <button type="button" onclick="closeMistakePopover()" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-3 rounded-xl text-xs cursor-pointer">إلغاء</button>
             </div>
         </div>
+    </div>
     </div>
     <!-- منبثق العرض السريع لآخر تقرير سند للطالب -->
     <div id="sanad-last-report-modal" class="hidden fixed inset-0 bg-slate-950/60 z-[500] flex items-center justify-center p-4 backdrop-blur-sm">
@@ -1426,6 +1439,14 @@
             <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
                 <button type="button" onclick="document.getElementById('sanad-last-report-modal').classList.add('hidden')" class="bg-amber-100 hover:bg-amber-200 dark:bg-amber-900/50 dark:hover:bg-amber-800 text-amber-800 dark:text-amber-200 px-6 py-2.5 rounded-xl font-black text-sm transition cursor-pointer shadow-sm">حسناً، استمر بالرصد ✔️</button>
             </div>
+        </div>
+    </div>
+    <!-- نافذة سجل التقارير للمعلم للتعديل -->
+    <div id="teacher-reports-history-modal" class="hidden fixed inset-0 bg-slate-950/70 z-[500] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border-2 border-blue-400 w-full max-w-2xl p-6 shadow-2xl relative max-h-[85vh] flex flex-col">
+            <button type="button" onclick="document.getElementById('teacher-reports-history-modal').classList.add('hidden')" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 hover:bg-rose-500 hover:text-white transition cursor-pointer">✕</button>
+            <h3 class="text-lg font-black text-blue-900 mb-4 border-b pb-3 flex items-center gap-2"><span>📜</span> سجل التقارير السابقة</h3>
+            <div id="teacher-reports-history-content" class="overflow-y-auto custom-scrollbar flex-1 space-y-3 pr-2"></div>
         </div>
     </div>
     <!-- Scripts Logic -->
@@ -5587,7 +5608,7 @@ window.loadMushafSurahWords = async function(surahId) {
             const words = ayahText.split(/\s+/).filter(w => w.trim().length > 0);
 
             words.forEach((wordText, wordIdx) => {
-                const wordKey = `w_${ayah.numberInSurah}_${wordIdx + 1}`;
+                const wordKey = `w_${currentAssessedSurah}_${ayah.numberInSurah}_${wordIdx + 1}`;
                 const isMistake = currentAssessedMistakes.some(m => m.domId === wordKey);
 
                 let badgeClass = isMistake 
@@ -5623,73 +5644,118 @@ window.closeMushafModal = function() {
     const modal = document.getElementById('mushaf-assessment-modal');
     if (modal) modal.classList.add('hidden');
 };
+let currentSelectedWords = []; // مصفوفة لحفظ الكلمات المتعددة
 
-// 4. النقر على كلمة لفتح منبثق التعديل/الرصد
+// تحديث الدالة الحالية لتلائم المصفوفة
 window.onWordClicked = function(domId, wordText, ayahNum, wordPos) {
     const riwayahSelect = document.getElementById('mushaf-riwayah-select');
     const riwayahName = riwayahSelect ? riwayahSelect.options[riwayahSelect.selectedIndex].text : 'مصحف حفص';
 
-    selectedWordData = { domId, wordText, ayahNum, wordPos, surahNum: currentAssessedSurah, riwayah: riwayahName };
+    currentSelectedWords = [{ domId, wordText, ayahNum, wordPos, surahNum: currentAssessedSurah, riwayah: riwayahName }];
+    updatePopoverWordDisplay();
     
-    document.getElementById('popover-correct-word').innerText = wordText;
     document.getElementById('popover-student-error').value = '';
-    
     const noteInput = document.getElementById('popover-qiraa-note');
     if (noteInput) noteInput.value = '';
-    
     const typeSelect = document.getElementById('popover-mistake-type');
     if (typeSelect) typeSelect.selectedIndex = 0;
 
     document.getElementById('word-mistake-popover').classList.remove('hidden');
 };
 
-// 5. إغلاق منبثق الخطأ
-window.closeMistakePopover = function() {
-    document.getElementById('word-mistake-popover').classList.add('hidden');
-    selectedWordData = null;
+window.updatePopoverWordDisplay = function() {
+    currentSelectedWords.sort((a,b) => {
+        if(a.ayahNum !== b.ayahNum) return a.ayahNum - b.ayahNum;
+        return a.wordPos - b.wordPos;
+    });
+    const combinedText = currentSelectedWords.map(w => w.wordText).join(' ');
+    document.getElementById('popover-correct-word').innerText = combinedText;
 };
 
-// 6. تأكيد وحفظ الخطأ وتلوين الكلمة بالأحمر
+// الدالة المسؤولة عن إضافة الكلمات السابقة والتالية
+window.expandMistakeSelection = function(dir) {
+    if(currentSelectedWords.length === 0) return;
+    
+    let targetAyah, targetPos;
+    if(dir === 'next') {
+        const last = currentSelectedWords[currentSelectedWords.length - 1];
+        targetAyah = last.ayahNum;
+        targetPos = last.wordPos + 1;
+    } else {
+        const first = currentSelectedWords[0];
+        targetAyah = first.ayahNum;
+        targetPos = first.wordPos - 1;
+    }
+
+    let nextDomId = `w_${currentAssessedSurah}_${targetAyah}_${targetPos}`;
+    let nextEl = document.getElementById(nextDomId);
+    
+    if(!nextEl) {
+        if(dir === 'next') { targetAyah += 1; targetPos = 1; } 
+        else {
+            targetAyah -= 1;
+            let prevAyahWords = document.querySelectorAll(`[id^="w_${currentAssessedSurah}_${targetAyah}_"]`);
+            if(prevAyahWords.length > 0) targetPos = prevAyahWords.length;
+        }
+        nextDomId = `w_${currentAssessedSurah}_${targetAyah}_${targetPos}`;
+        nextEl = document.getElementById(nextDomId);
+    }
+
+    if(nextEl) {
+        let wordTextOnly = nextEl.childNodes[0].nodeValue ? nextEl.childNodes[0].nodeValue.trim() : nextEl.innerText.split('\n')[0];
+        const riwayahName = document.getElementById('mushaf-riwayah-select')?.options[document.getElementById('mushaf-riwayah-select').selectedIndex].text || 'مصحف حفص';
+
+        currentSelectedWords.push({ domId: nextDomId, wordText: wordTextOnly, ayahNum: targetAyah, wordPos: targetPos, surahNum: currentAssessedSurah, riwayah: riwayahName });
+        updatePopoverWordDisplay();
+    }
+};
+
+window.closeMistakePopover = function() {
+    document.getElementById('word-mistake-popover').classList.add('hidden');
+    currentSelectedWords = [];
+};
+
+// تعديل دالة تأكيد الخطأ
 window.confirmSaveMistake = async function() {
-    if (!selectedWordData || !currentTeacherObj || !currentAssessmentStudent) return;
+    if (currentSelectedWords.length === 0 || !currentTeacherObj || !currentAssessmentStudent) return;
 
     const errorSpoken = document.getElementById('popover-student-error').value.trim() || 'لحن/تغيير ضبط';
     const mistakeType = document.getElementById('popover-mistake-type')?.value || 'لحن جلي (تشكيل/حرف)';
     const qiraaNote = document.getElementById('popover-qiraa-note')?.value.trim() || '';
 
+    const combinedText = currentSelectedWords.map(w => w.wordText).join(' ');
+    const mainWord = currentSelectedWords[0];
+
     const mistakeObj = {
         student_id: currentAssessmentStudent.id,
         teacher_id: currentTeacherObj.id,
-        surah_number: selectedWordData.surahNum,
-        ayah_number: selectedWordData.ayahNum,
-        word_position: selectedWordData.wordPos,
-        correct_word: selectedWordData.wordText,
+        surah_number: mainWord.surahNum,
+        ayah_number: mainWord.ayahNum,
+        word_position: mainWord.wordPos,
+        correct_word: combinedText,
         student_mistake: errorSpoken,
-        qiraa_context: selectedWordData.riwayah,
+        qiraa_context: mainWord.riwayah,
         mistake_type: mistakeType,
         notes: qiraaNote
     };
 
-    try {
-        await supabaseClient.from('recitation_mistakes').insert([mistakeObj]);
-    } catch(e) { }
+    try { await supabaseClient.from('recitation_mistakes').insert([mistakeObj]); } catch(e) { }
 
-    currentAssessedMistakes.push({ ...selectedWordData, studentMistake: errorSpoken, type: mistakeType, note: qiraaNote });
+    currentAssessedMistakes.push({ 
+        domId: currentSelectedWords.map(w=>w.domId).join(','), 
+        wordText: combinedText, ayahNum: mainWord.ayahNum, surahNum: mainWord.surahNum, riwayah: mainWord.riwayah, studentMistake: errorSpoken, type: mistakeType, note: qiraaNote 
+    });
 
-    const el = document.getElementById(selectedWordData.domId);
-    if (el) {
-        el.className = "inline-block px-2 py-0.5 rounded-xl cursor-pointer bg-rose-600 text-white shadow-lg font-bold scale-105 transition-all select-none";
-    }
+    currentSelectedWords.forEach(w => {
+        const el = document.getElementById(w.domId);
+        if (el) el.className = "inline-block px-2 py-0.5 rounded-xl cursor-pointer bg-rose-600 text-white shadow-lg font-bold scale-105 transition-all select-none";
+    });
 
     const counterEl = document.getElementById('session-mistakes-counter');
-    if (counterEl) {
-        counterEl.innerText = `${currentLang === 'ar' ? 'الأخطاء المرصودة' : 'Mistakes'}: ${currentAssessedMistakes.length}`;
-    }
+    if (counterEl) counterEl.innerText = `الأخطاء المرصودة: ${currentAssessedMistakes.length}`;
     
     closeMistakePopover();
-    showToast(currentLang === 'ar' ? 'تم رصد الخطأ 🔴' : 'Mistake flagged 🔴', 'warning');
 };
-
 // 7. نقل واعتماد الأخطاء إلى تقرير السند
 window.applyMistakesToSanadReport = function() {
     try {
@@ -6142,6 +6208,7 @@ window.adminHandleApology = async function(studentId, targetDateStr, action, stu
         allButtons.forEach(b => { b.disabled = false; b.style.opacity = '1'; });
     }
 };
+
 window.submitSanadReport = async function(e) {
     if (e) e.preventDefault();
     const stdId = document.getElementById('sanad-form-student')?.value;
@@ -6185,28 +6252,51 @@ window.submitSanadReport = async function(e) {
     const jsonPayload = `[JSON_REPORT] ${JSON.stringify(reportData)}`;
     showToast('⏳ جاري حفظ وإرسال تقرير السند...', 'info');
 
-    try {
-        await supabaseClient.from('attendance').insert([{
-            teacher_id: currentTeacherObj.id,
-            tName: currentTeacherObj.name_ar || currentTeacherObj.name,
-            student_id: stdId,
-            sName: std.name,
-            date: dateStr,
-            status: 'present',
-            notes: jsonPayload
-        }]);
+   try {
+        if (window.currentEditingAttendanceId) {
+            // 🌟 وضع التعديل: تحديث الريكورد الحالي لتقرير السند 🌟
+            const { error: updateError } = await supabaseClient.from('attendance').update({
+                notes: jsonPayload
+            }).eq('id', window.currentEditingAttendanceId);
 
-        await supabaseClient.from('student_notifications').insert([{
-            target: std.name,
-            type: 'success',
-            title: currentLang === 'ar' ? '🎓 تقرير إقراء السند الجديد' : '🎓 Sanad Recitation Report',
-            body: currentLang === 'ar' 
-                ? `أضاف معلمك تقرير ختمة السند (${khatmaName}). الأداء العام: ${generalEval}.`
-                : `Your teacher added a Sanad report.`,
-            expiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-        }]);
+            if (updateError) throw updateError;
+            
+            window.currentEditingAttendanceId = null; // إنهاء وضع التعديل
+            
+            // إرجاع شكل الزر لأصله
+            const btnSaveSanad = document.querySelector('#sanad-report-form button');
+            if(btnSaveSanad) btnSaveSanad.innerHTML = "📜 حفظ وإرسال تقرير السند";
+            
+            showToast('✅ تم تعديل وتحديث تقرير السند بنجاح!', 'success');
+        } else {
+            // 🌟 وضع الإضافة الجديد 🌟
+            await supabaseClient.from('attendance').delete().eq('student_id', stdId).eq('date', dateStr);
 
-        showToast('✅ تم حفظ وإرسال تقرير السند للطالب بنجاح!', 'success');
+            const { error: insertError } = await supabaseClient.from('attendance').insert([{
+                teacher_id: currentTeacherObj.id,
+                tName: currentTeacherObj.name_ar || currentTeacherObj.name,
+                student_id: stdId,
+                sName: std.name,
+                date: dateStr,
+                status: 'present',
+                notes: jsonPayload
+            }]);
+
+            if (insertError) throw insertError;
+
+            await supabaseClient.from('student_notifications').insert([{
+                target: std.name,
+                type: 'success',
+                title: currentLang === 'ar' ? '🎓 تقرير إقراء السند الجديد' : '🎓 Sanad Recitation Report',
+                body: currentLang === 'ar' 
+                    ? `أضاف معلمك تقرير ختمة السند (${khatmaName}). الأداء العام: ${generalEval}.`
+                    : `Your teacher added a Sanad report.`,
+                expiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+            }]);
+
+            showToast('✅ تم حفظ وإرسال تقرير السند للطالب بنجاح!', 'success');
+        }
+        
         document.getElementById('sanad-rep-notes').value = '';
     } catch (err) {
         showToast('❌ خطأ: ' + err.message, 'error');
@@ -6788,6 +6878,139 @@ window.fetchTeacherStudentsRewardsLog = async function() {
 
     } catch (e) {
         tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-red-500 font-bold bg-red-50">❌ حدث خطأ في جلب السجل</td></tr>`;
+    }
+};
+window.currentEditingAttendanceId = null; // متغير لحفظ ID التقرير المفتوح للتعديل
+
+window.openTeacherReportsHistory = async function(mode = 'normal') {
+    // تحديد الـ ID بناءً على الشاشة المفتوحة
+    const studentId = mode === 'sanad' 
+        ? document.getElementById('sanad-form-student').value 
+        : document.getElementById('form-student-select').value;
+
+    if(!studentId) return showToast('يرجى اختيار الطالب أولاً', 'warning');
+
+    const modal = document.getElementById('teacher-reports-history-modal');
+    const content = document.getElementById('teacher-reports-history-content');
+    modal.classList.remove('hidden');
+    content.innerHTML = '<p class="text-center text-slate-500 font-bold py-6 animate-pulse">⏳ جاري جلب التقارير...</p>';
+
+    try {
+        const { data: reports, error } = await supabaseClient.from('attendance')
+            .select('*')
+            .eq('student_id', studentId)
+            .in('status', ['present', 'حضور منتظم']) 
+            .order('date', { ascending: false })
+            .limit(15);
+
+        if(error) throw error;
+        if(!reports || reports.length === 0) {
+            content.innerHTML = '<p class="text-center text-slate-500 font-bold py-6">لا توجد تقارير سابقة لهذا الطالب.</p>';
+            return;
+        }
+
+        content.innerHTML = reports.map(rep => {
+            let trackName = rep.notes.includes('sanad') ? 'إقراء سند' : (rep.notes.includes('arabic') ? 'لغة عربية' : 'قرآن كريم');
+            let colorClass = rep.notes.includes('sanad') ? 'text-amber-700 bg-amber-100' : 'text-blue-700 bg-blue-100';
+            
+            return `
+            <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center hover:bg-slate-100 transition shadow-sm mb-2">
+                <div>
+                    <span class="text-sm font-black text-slate-800 block mb-1">📅 بتاريخ: <span dir="ltr">${rep.date}</span></span>
+                    <span class="text-[10px] ${colorClass} px-2 py-0.5 rounded font-bold">مسار: ${trackName}</span>
+                </div>
+                <button onclick="editAcademicReport('${rep.id}', '${rep.date}')" class="bg-slate-800 text-white hover:bg-slate-700 px-4 py-2.5 rounded-xl text-xs font-black transition cursor-pointer shadow-sm">✏️ تعديل التقرير</button>
+            </div>
+            `;
+        }).join('');
+    } catch(e) {
+        content.innerHTML = '<p class="text-center text-red-500 font-bold py-6">❌ حدث خطأ أثناء جلب التقارير</p>';
+    }
+};
+
+window.editAcademicReport = async function(reportId, reportDate) {
+    document.getElementById('teacher-reports-history-modal').classList.add('hidden');
+    showToast('⏳ جاري تجهيز التقرير للتعديل...', 'info');
+
+    try {
+        const { data: rep, error } = await supabaseClient.from('attendance').select('*').eq('id', reportId).single();
+        if(error || !rep) throw error;
+
+        document.getElementById('form-date-input').value = reportDate;
+
+        const jsonStr = rep.notes.replace('[JSON_REPORT]', '').trim();
+        const parsed = JSON.parse(jsonStr);
+
+        window.currentEditingAttendanceId = reportId; // 🌟 تفعيل وضع التعديل
+
+        switchTab('reports');
+
+        // 🟢 إذا كان تقرير سند
+        if (parsed.track === 'sanad') {
+            toggleReportMode('sanad');
+            document.getElementById('sanad-form-student').value = rep.student_id;
+            
+            // تعبئة بيانات السند
+            if (typeof populateSanadKhatmasForReport === 'function') populateSanadKhatmasForReport(rep.student_id);
+            
+            setTimeout(() => {
+                document.getElementById('sanad-form-khatma').value = parsed.khatma || '';
+                document.getElementById('sanad-general-rating').value = parsed.general_evaluation || 'ممتاز';
+                document.getElementById('sanad-rep-notes').value = parsed.notes || '';
+                
+                if (parsed.read_from) {
+                    document.getElementById('sanad-rep-s-from').value = parsed.read_from.surah;
+                    loadAyahs(document.getElementById('sanad-rep-s-from'), 'sanad-rep-a-from');
+                    setTimeout(() => { document.getElementById('sanad-rep-a-from').value = parsed.read_from.ayah; }, 100);
+                }
+                if (parsed.read_to) {
+                    document.getElementById('sanad-rep-s-to').value = parsed.read_to.surah;
+                    loadAyahs(document.getElementById('sanad-rep-s-to'), 'sanad-rep-a-to');
+                    setTimeout(() => { document.getElementById('sanad-rep-a-to').value = parsed.read_to.ayah; }, 100);
+                }
+
+                if (parsed.matn && parsed.matn !== 'بدون متن') {
+                    document.getElementById('enable-sanad-matn').checked = true;
+                    document.getElementById('sanad-matn-body').classList.remove('hidden');
+                    document.getElementById('sanad-matn-name').value = parsed.matn;
+                    document.getElementById('sanad-matn-from').value = parsed.matn_from || 1;
+                    document.getElementById('sanad-matn-to').value = parsed.matn_to || 10;
+                    document.getElementById('sanad-matn-rating').value = parsed.matn_evaluation || 'ممتاز';
+                } else {
+                    document.getElementById('enable-sanad-matn').checked = false;
+                    document.getElementById('sanad-matn-body').classList.add('hidden');
+                }
+
+                // تغيير نص الزر
+                const btnSaveSanad = document.querySelector('#sanad-report-form button');
+                if(btnSaveSanad) btnSaveSanad.innerHTML = "📜 تحديث وتعديل تقرير السند 🔄";
+
+            }, 300);
+
+        } 
+        // 🔵 إذا كان تقرير قرآن أو لغة عربية
+        else {
+            toggleReportMode('daily');
+            document.getElementById('form-student-select').value = rep.student_id;
+            
+            if (typeof setMultiTrackMode === 'function') setMultiTrackMode(parsed.track);
+
+            if (parsed.track === 'quran' && parsed.quran) {
+                document.getElementById('quran-final-notes').value = parsed.quran.notes || '';
+            } else if (parsed.track === 'arabic' && parsed.arabic) {
+                document.getElementById('arabic-notes').value = parsed.arabic.notes || '';
+                document.getElementById('arabic-next-assignment').value = parsed.arabic.next || '';
+            }
+
+            const btnSave = document.querySelector('#report-form button[type="submit"] span:last-child');
+            if(btnSave) btnSave.innerText = "تحديث وتعديل التقرير 🔄";
+        }
+
+        showToast('✏️ التقرير جاهز! عدل الملاحظات واضغط تحديث.', 'success');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    } catch(err) {
+        showToast('❌ تعذر تحميل التقرير للتعديل', 'error');
     }
 };
     </script>
