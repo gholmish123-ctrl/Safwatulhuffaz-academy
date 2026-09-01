@@ -420,11 +420,16 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- 5. متابعة الصلوات الخمس -->
+                      <!-- 5. متابعة الصلوات الخمس -->
 <div class="md:col-span-2 p-5 rounded-2xl border border-blue-200 bg-blue-50 shadow-sm mt-2">
-    <div class="flex justify-between items-center border-b border-blue-100 pb-3 mb-4">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-blue-100 pb-3 mb-4 gap-2">
         <div>
-            <h4 class="text-sm font-black text-blue-900" data-ar="🕌 متابعة الصلوات الخمس" data-en="🕌 Daily Prayers Tracker">🕌 متابعة الصلوات الخمس</h4>
+            <div class="flex items-center gap-2 flex-wrap">
+                <h4 class="text-sm font-black text-blue-900" data-ar="🕌 متابعة الصلوات الخمس" data-en="🕌 Daily Prayers Tracker">🕌 متابعة الصلوات الخمس</h4>
+                <span id="prayer-tracker-date" class="text-[11px] font-bold text-blue-800 bg-white/90 border border-blue-200 px-2.5 py-0.5 rounded-lg shadow-xs">
+                    <!-- سيتم تحديث التاريخ تلقائياً عبر JavaScript -->
+                </span>
+            </div>
             <p class="text-[11px] text-blue-700 mt-1 font-bold" data-ar="صلاتك هي حياتك، حافظ عليها واكسب النجوم!" data-en="Keep up with your prayers and earn stars!">صلاتك هي حياتك، حافظ عليها واكسب النجوم!</p>
         </div>
         <span class="text-xs font-black text-amber-700 bg-amber-100 px-3 py-1 rounded-xl shadow-inner shrink-0" dir="ltr">+2 ⭐</span>
@@ -452,7 +457,6 @@
         </label>
     </div>
 </div>
-
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="daily-quests-list">
                             <!-- 1. مهمة القراءة (يدوية) -->
                             <label class="flex items-center gap-4 p-5 rounded-2xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-blue-50 transition group shadow-sm">
@@ -1079,6 +1083,39 @@
                         </div>
                     </div>
                 </section>
+                <section id="sec-chatbot" class="tab-content hidden space-y-6 h-[80vh]">
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-xl flex flex-col h-full overflow-hidden max-w-4xl mx-auto">
+        <!-- هيدر الشات -->
+        <div class="bg-gradient-to-r from-blue-700 to-indigo-800 p-4 flex items-center gap-4 shadow-md z-10">
+            <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-2xl shadow-inner relative">
+                🤖<span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-white rounded-full"></span>
+            </div>
+            <div>
+                <h3 class="text-white font-black text-lg">المعلم الذكي (AI Tutor)</h3>
+                <p class="text-blue-200 text-xs font-bold">متصل الآن - جاهز لممارسة العربية معك</p>
+            </div>
+        </div>
+
+        <!-- منطقة الرسائل -->
+        <div id="chat-messages" class="flex-1 bg-slate-50 p-6 overflow-y-auto custom-scrollbar flex flex-col gap-4">
+            <!-- رسالة من البوت -->
+            <div class="flex gap-3 max-w-[80%]">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-sm shrink-0">🤖</div>
+                <div class="bg-white border border-slate-200 p-4 rounded-2xl rounded-tr-none shadow-sm text-sm font-bold text-slate-700 leading-relaxed">
+                    أَهْلاً بِكَ يَا صَدِيقِي! كَيْفَ حَالُكَ الْيَوْمَ؟ هَلْ أَنْتَ مُسْتَعِدٌّ لِلْمُحَادَثَةِ بِاللُّغَةِ الْعَرَبِيَّةِ؟
+                </div>
+            </div>
+        </div>
+
+        <!-- منطقة الإدخال -->
+        <div class="p-4 bg-white border-t border-slate-100 flex gap-2 items-center">
+            <input type="text" id="chat-input" placeholder="Type your message in Arabic or English..." class="flex-1 p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold outline-none focus:border-blue-500 transition">
+            <button onclick="sendChatMessage()" class="w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl flex items-center justify-center text-xl shadow-lg transition cursor-pointer hover:-translate-y-1">
+                🚀
+            </button>
+        </div>
+    </div>
+</section>
 
                <!-- 🏆 SECTION 10: EXAMS & RESULTS -->
 <section id="sec-exams" class="tab-content hidden space-y-6">
@@ -1553,9 +1590,10 @@
             syncNextSession(); 
             renderQuranTracker();
             window.renderShopItems();
-        };
+      updatePrayerTrackerDate();
+};
 
-     window.onload = async () => {
+  window.onload = async () => {
         if(localStorage.getItem('Safwatulhuffaz-student-dark') === 'true') {
             document.documentElement.classList.add('dark');
             const dBtn = document.getElementById('dark-mode-btn');
@@ -1582,7 +1620,7 @@
         });
     }
 
-   async function initStudentApp() {
+async function initStudentApp() {
         // 1. التحقق من تسجيل الدخول وطرد أي شخص غير مسجل
         const { data: { user } } = await supabaseClient.auth.getUser();
         if (!user) {
@@ -1590,7 +1628,7 @@
             return;
         }
 
-        // 2. التحقق من أن المستخدم يمتلك صلاحية "طالب" وطرد أي رتبة أخرى (كالمعلم أو الإدارة)
+        // 2. التحقق من أن المستخدم يمتلك صلاحية "طالب" وطرد أي رتبة أخرى
         const { data: profile } = await supabaseClient.from('profiles').select('role').eq('id', user.id).maybeSingle();
         if (!profile || profile.role !== 'student') { 
             showToast('⚠️ ليس لديك إذن للدخول كطالب!', 'error');
@@ -1601,7 +1639,7 @@
             return; 
         }
 
-        // 3. جلب بيانات الطالب بناءً على الـ ID مباشرة (أسرع وأدق ويتفادى مشكلة الحروف)
+        // 3. جلب بيانات الطالب بناءً على الـ ID مباشرة
         const { data: students, error: studentsErr } = await supabaseClient
             .from('students')
             .select('*, teachers(*)')
@@ -1611,6 +1649,30 @@
             showToast("❌ لم يتم العثور على ملف طالب مرتبط بهذا الحساب.", "error");
             return;
         }
+
+        // =====================================================================
+        // 🚀 نظام التصفير التلقائي الشهري الذكي (يعمل في الخلفية بصمت)
+        // =====================================================================
+        const now = new Date();
+        const currentMonthStr = now.toISOString().slice(0, 7); // مثال: "2026-09"
+
+        for (let student of students) {
+            // فحص هل دخلنا في شهر جديد ولم يتم تصفير الطالب بعد؟
+            if (student.last_reset_month !== currentMonthStr) {
+                // نقل الرصيد القديم للخزنة، وتصفير الحالي، وتحديث تاريخ التصفير
+                student.last_month_stars = student.stars_balance || 0;
+                student.stars_balance = 0;
+                student.last_reset_month = currentMonthStr;
+
+                // تحديث قاعدة البيانات فوراً بدون إزعاج الطالب
+                await supabaseClient.from('students').update({
+                    last_month_stars: student.last_month_stars,
+                    stars_balance: 0,
+                    last_reset_month: currentMonthStr
+                }).eq('id', student.id);
+            }
+        }
+        // =====================================================================
 
         const switcher = document.getElementById('family-switcher');
         if (switcher) {
@@ -1650,10 +1712,9 @@
 
         setInterval(() => { if(typeof studentData !== 'undefined' && studentData) fetchStudentNotifications(); }, 15000);
         
-        setupStudentRealtimeListener();
+        if(typeof setupStudentRealtimeListener === 'function') setupStudentRealtimeListener();
         if(typeof updateQuranUI === 'function') updateQuranUI();
     }
-
  window.fetchStudentNotifications = async function() {
     if (!window.studentData || !window.studentData.id) return;
     
@@ -4785,8 +4846,8 @@ if (nMatn && nMatn.name) nextHtml += `<div class="text-xs font-bold text-slate-2
                 };
             };
         };
- window.renderLeaderboard = async function() {
-    const list = document.getElementById('leaderboard-list');
+  window.renderLeaderboard = async function() {
+    const list = document.getElementById('leaderboard-list') || document.getElementById('leaderboard-container'); 
     if (!list) return;
 
     const isAr = (typeof currentLang !== 'undefined' && currentLang === 'ar');
@@ -4795,67 +4856,122 @@ if (nMatn && nMatn.name) nextHtml += `<div class="text-xs font-bold text-slate-2
     try {
         const { data: studentsList, error } = await supabaseClient
             .from('students')
-            .select('*')
-            .order('stars_balance', { ascending: false });
+            .select('*');
 
         if (error || !studentsList || studentsList.length === 0) {
             list.innerHTML = `<div class="p-8 text-center text-slate-400 font-bold bg-slate-900 rounded-3xl border border-slate-800 text-xs">${isAr ? 'لا توجد بيانات متاحة حالياً.' : 'No data available.'}</div>`;
             return;
         }
 
+        // =========================================================
+        // 1. إظهار الرصيد الحالي المصفّر دائماً (بدون انتظار ليوم 2)
+        // =========================================================
+        studentsList.forEach(s => {
+            s.effective_score = s.stars_balance || 0;
+        });
+
+        // ترتيب تنازلي بناءً على النقاط
+        studentsList.sort((a, b) => b.effective_score - a.effective_score);
+
+        // =========================================================
+        // 2. باليتة الألوان الفخمة والداكنة
+        // =========================================================
+        const cardPalettes = [
+            { bg: 'bg-gradient-to-r from-[#0f172a] via-[#1e1b4b] to-[#0f172a]', border: 'border-indigo-500/40', textHighlight: 'text-indigo-300', glow: 'shadow-[0_0_15px_rgba(99,102,241,0.1)]' },
+            { bg: 'bg-gradient-to-r from-[#0f172a] via-[#064e3b] to-[#0f172a]', border: 'border-emerald-500/40', textHighlight: 'text-emerald-300', glow: 'shadow-[0_0_15px_rgba(16,185,129,0.1)]' },
+            { bg: 'bg-gradient-to-r from-[#0f172a] via-[#4c1d95] to-[#0f172a]', border: 'border-purple-500/40', textHighlight: 'text-purple-300', glow: 'shadow-[0_0_15px_rgba(168,85,247,0.1)]' },
+            { bg: 'bg-gradient-to-r from-[#0f172a] via-[#881337] to-[#0f172a]', border: 'border-rose-500/40', textHighlight: 'text-rose-300', glow: 'shadow-[0_0_15px_rgba(244,63,94,0.1)]' },
+            { bg: 'bg-gradient-to-r from-[#0f172a] via-[#0c4a6e] to-[#0f172a]', border: 'border-sky-500/40', textHighlight: 'text-sky-300', glow: 'shadow-[0_0_15px_rgba(14,165,233,0.1)]' },
+            { bg: 'bg-gradient-to-r from-[#0f172a] via-[#701a75] to-[#0f172a]', border: 'border-fuchsia-500/40', textHighlight: 'text-fuchsia-300', glow: 'shadow-[0_0_15px_rgba(217,70,239,0.1)]' }
+        ];
+
         list.innerHTML = studentsList.map((std, index) => {
             const rank = index + 1;
-            const isMe = (studentData && String(studentData.id) === String(std.id));
+            const isMe = (typeof studentData !== 'undefined' && String(studentData.id) === String(std.id));
             
             const nameParts = (std.name || '').trim().split(/\s+/);
             const fullName = nameParts.length >= 2 ? `${nameParts[0]} ${nameParts[1]}` : (nameParts[0] || 'طالب');
             
-            let displayName = fullName;
-            if (isMe) {
-                displayName += ` <span class="text-cyan-300 font-black text-xs bg-cyan-950/80 px-2 py-0.5 rounded-md border border-cyan-500/50">(${isAr ? 'أنت' : 'You'})</span>`;
+            let paletteIdx = 0;
+            if (std.id) {
+                let hash = 0;
+                for (let i = 0; i < std.id.length; i++) hash = std.id.charCodeAt(i) + ((hash << 5) - hash);
+                paletteIdx = Math.abs(hash) % cardPalettes.length;
             }
+            const currentPalette = cardPalettes[paletteIdx];
 
-            // 🌟 البلورة: المركز 1 و 2 ظاهران للجميع، والمركز 3 فما فوق يكون مبلوراً تماماً إلا إذا كان هو الطالب نفسه 🌟
-            let nameBlurClass = (rank > 2 && !isMe) ? 'filter blur-[7px] select-none opacity-60' : '';
+            let cardStyle = `${currentPalette.bg} border ${currentPalette.border} ${currentPalette.glow} text-slate-100`;
+            let rankBadge = `<div class="w-10 h-10 rounded-2xl bg-slate-800/80 text-slate-400 font-mono font-black text-sm flex items-center justify-center border border-slate-700 shadow-inner">${rank}</div>`;
+            let starsBadgeStyle = `bg-slate-900/50 border border-slate-700/50 ${currentPalette.textHighlight}`;
+            let highlightMeBadge = '';
 
-            let cardStyle = "bg-slate-900/90 border-slate-800 text-slate-200";
-            let rankBadge = `<div class="w-10 h-10 rounded-2xl bg-slate-800 text-slate-300 font-mono font-black text-sm flex items-center justify-center border border-slate-700 shadow-inner">${rank}</div>`;
-
+            // =========================================================
+            // تخصيص المراكز الثلاثة الأولى بتصميم ملكي
+            // =========================================================
             if (rank === 1) {
-                cardStyle = "bg-gradient-to-r from-amber-950/80 via-slate-900 to-slate-900 border-2 border-amber-500/80 text-amber-100 shadow-[0_0_30px_rgba(245,158,11,0.2)]";
-                rankBadge = `<div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-600 to-yellow-400 text-slate-950 font-black text-lg flex items-center justify-center shadow-lg shadow-amber-500/40">👑</div>`;
+                cardStyle = "bg-gradient-to-r from-amber-950/90 via-[#451a03] to-[#2e1065] border-2 border-amber-400 text-amber-100 shadow-[0_0_30px_rgba(245,158,11,0.3)] z-10 relative transform scale-[1.02]";
+                rankBadge = `<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-600 to-yellow-400 text-slate-950 font-black text-xl flex items-center justify-center shadow-lg shadow-amber-500/40">👑</div>`;
+                starsBadgeStyle = "bg-amber-400 text-slate-900 border-amber-300 shadow-md";
             } else if (rank === 2) {
-                cardStyle = "bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-slate-400/60 text-slate-100 shadow-[0_0_20px_rgba(148,163,184,0.15)]";
+                cardStyle = "bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 border-2 border-slate-400 text-slate-100 shadow-[0_0_25px_rgba(148,163,184,0.2)]";
                 rankBadge = `<div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-slate-400 to-slate-200 text-slate-950 font-black text-lg flex items-center justify-center shadow-lg">🥈</div>`;
+                starsBadgeStyle = "bg-slate-300 text-slate-900 border-slate-200 shadow-md";
             } else if (rank === 3) {
-                cardStyle = "bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-950 border border-amber-700/50 text-amber-200/90";
+                cardStyle = "bg-gradient-to-r from-[#451a03] via-[#78350f] to-[#451a03] border-2 border-amber-700 text-amber-100 shadow-[0_0_25px_rgba(180,83,9,0.2)]";
                 rankBadge = `<div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-700 to-amber-500 text-slate-950 font-black text-lg flex items-center justify-center shadow-lg">🥉</div>`;
+                starsBadgeStyle = "bg-amber-700 text-white border-amber-600 shadow-md";
             }
 
+            // =========================================================
+            // تمييز حساب الطالب نفسه (صاحب الشاشة)
+            // =========================================================
             if (isMe) {
                 cardStyle = "bg-gradient-to-r from-blue-950 via-indigo-900 to-slate-950 border-2 border-cyan-400 text-white shadow-[0_0_35px_rgba(6,182,212,0.35)] transform scale-[1.02] z-20 relative";
-                rankBadge = `<div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-black text-lg flex items-center justify-center shadow-lg shadow-cyan-500/50 font-mono">${rank}</div>`;
+                if(rank > 3) {
+                    rankBadge = `<div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white font-black text-lg flex items-center justify-center shadow-lg shadow-cyan-500/50 font-mono">${rank}</div>`;
+                }
+                starsBadgeStyle = "bg-cyan-500/20 text-cyan-300 border-cyan-400/50 shadow-md";
+                highlightMeBadge = `<span class="text-cyan-300 font-black text-[10px] bg-cyan-950/80 px-2.5 py-0.5 rounded-lg border border-cyan-500/50 mx-2 shadow-sm animate-pulse flex items-center gap-1"><span>👤</span> ${isAr ? 'أنت' : 'YOU'}</span>`;
             }
 
+            const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(std.name)}&background=1e293b&color=fff&size=120`;
+            const avatarImg = std.avatar_url || fallbackAvatar;
+
+            // =========================================================
+            // تطبيق البلور الصارم (الخصوصية المطلقة)
+            // =========================================================
+            const isBlurred = rank > 3 && !isMe;
+            const blurClass = isBlurred ? "filter blur-[8px] opacity-40 select-none pointer-events-none" : "";
+            const secureDisplayName = isBlurred ? (isAr ? 'طالب مجتهد' : 'Diligent Student') : fullName;
+
             return `
-                <div class="${cardStyle} p-4 sm:p-5 rounded-3xl flex items-center justify-between transition-all duration-300 backdrop-blur-xl">
+                <div class="${cardStyle} p-4 sm:p-5 rounded-3xl flex items-center justify-between mb-3 backdrop-blur-xl">
                     <div class="flex items-center gap-4">
                         ${rankBadge}
-                        <div>
-                            <h4 class="font-black text-sm sm:text-base tracking-wide ${nameBlurClass}">${displayName}</h4>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${isAr ? 'المركز الملكي ' + rank : 'Royal Rank ' + rank}</span>
+                        <div class="flex items-center gap-3 ${blurClass}">
+                            <img src="${avatarImg}" onerror="this.onerror=null; this.src='${fallbackAvatar}';" alt="Student" class="w-12 h-12 rounded-2xl object-cover border-2 border-white/20 shadow-md bg-slate-800 shrink-0">
+                            <div class="flex flex-col items-start justify-center">
+                                <div class="flex items-center">
+                                    <h4 class="font-black text-sm sm:text-base tracking-wide text-white">${secureDisplayName}</h4>
+                                    ${highlightMeBadge}
+                                </div>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">${std.subject || (isAr ? 'القرآن الكريم' : 'Holy Quran')}</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="${isMe ? 'bg-cyan-500/20 border-cyan-400/40 text-cyan-300' : 'bg-amber-500/10 border-amber-500/30 text-amber-400'} border px-4 py-2 rounded-2xl flex items-center gap-2 shadow-inner">
-                        <span class="text-base">⭐</span>
-                        <span class="font-mono font-black text-sm sm:text-base">${std.stars_balance || 0}</span>
+                    <div class="flex flex-col items-end sm:flex-row sm:items-center gap-2 shrink-0">
+                        <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest text-right sm:text-center">${isAr ? 'المركز الملكي ' : 'ROYAL RANK '}${rank}</div>
+                        <div class="${starsBadgeStyle} px-4 py-2 rounded-2xl flex items-center gap-2 transition-colors duration-300">
+                            <span class="text-base">⭐</span>
+                            <span class="font-mono font-black text-sm sm:text-base">${std.effective_score}</span>
+                        </div>
                     </div>
                 </div>`;
         }).join('');
 
     } catch (err) {
         console.error("Leaderboard Error:", err);
-        list.innerHTML = `<div class="p-6 text-center text-rose-400 font-bold bg-slate-900 rounded-3xl text-xs">❌ حدث خطأ في تحميل لوحة الشرف.</div>`;
+        list.innerHTML = `<div class="p-6 text-center text-rose-400 font-bold bg-slate-900 rounded-3xl text-xs">❌ ${isAr ? 'حدث خطأ في تحميل لوحة الشرف.' : 'Error loading leaderboard.'}</div>`;
     }
 };
 // ⏳ مؤقت تنازلي لنهاية الشهر يتجدد تلقائياً
@@ -5440,7 +5556,6 @@ function drawRoyalWheel(angle = 0) {
     }
     ctx.restore();
 }
-
 window.spinTVShowWheel = async function() {
     if (isWheelSpinning || !studentData) return;
     const btn = document.getElementById('btn-tv-spin');
@@ -5504,18 +5619,40 @@ window.spinTVShowWheel = async function() {
                     if (statMakeup) statMakeup.innerText = makeupTokens;
                 }
 
-                // إرسال إشعار للإدارة فوراً لتفعيل الجوائز الخاصة (الخصومات، الإجازة، أو أمنية الطالب)
                 try {
+                    // 1. تحديث رصيد الطالب
                     if (Object.keys(updatePayload).length > 0) {
                         await supabaseClient.from('students').update(updatePayload).eq('id', studentData.id);
                     }
-                    await supabaseClient.from('notifications').insert([{
-                        target_id: 'admin',
-                        target_name: 'الإدارة العامة',
-                        type: 'success',
-                        title: `🎡 جائزة عجلة الحظ الملكية: ${studentData.name}`,
-                        body: `فاز الطالب (${studentData.name}) في عجلة الحظ الملكية بـ: [${wonPrize.labelAr}]. يرجى اعتمادها وتطبيقها للطالب.`
+
+                    // 2. تسجيل الجائزة في جدول المشتريات
+                    await supabaseClient.from('reward_orders').insert([{
+                        student_id: studentData.id,
+                        student_name: studentData.name,
+                        reward_id: 'wheel_prize_' + wonPrize.id,
+                        reward_name: `🎡 جائزة العجلة: ${prizeText}`,
+                        cost: 0,
+                        status: 'approved'
                     }]);
+
+                    // 3. إرسال إشعار للإدارة والمعلم
+                    const teacherName = teacherData ? (teacherData.name_ar || teacherData.name) : 'المعلم';
+                    await supabaseClient.from('notifications').insert([
+                        {
+                            target_id: 'admin',
+                            target_name: 'الإدارة العامة',
+                            type: 'success',
+                            title: `🎡 جائزة عجلة الحظ: ${studentData.name}`,
+                            body: `فاز الطالب (${studentData.name}) بـ: [${prizeText}].`
+                        },
+                        {
+                            target_id: studentData.teacher_id,
+                            target_name: teacherName,
+                            type: 'success',
+                            title: `🎡 جائزة عجلة الحظ: ${studentData.name}`,
+                            body: `فاز طالبك (${studentData.name}) بـ: [${prizeText}] في عجلة أبطال الشهر.`
+                        }
+                    ]);
                 } catch(e) { console.error(e); }
 
                 const currentMonthStr = new Date().toISOString().slice(0, 7);
@@ -5523,8 +5660,8 @@ window.spinTVShowWheel = async function() {
                 if (typeof shootStars === 'function') shootStars();
                 showToast(isAr ? `🎁 تم تسجيل جائزتك واعتمادها بنجاح!` : `🎁 Reward recorded successfully!`, 'success');
             }, 500);
-        }
-    }
+        } // إغلاق كتلة else المفقودة
+    } // إغلاق دالة animateSpin المفقودة
 
     requestAnimationFrame(animateSpin);
 };
@@ -5536,82 +5673,96 @@ setInterval(() => {
     }
 }, 1000);
 window.checkWheelStateAndTimer = async function() {
-    const lockedBox = document.getElementById('wheel-locked-state');
-    const unlockedBox = document.getElementById('wheel-unlocked-state');
-    const timerEl = document.getElementById('wheel-main-countdown');
-    const badgeEl = document.getElementById('wheel-student-qualification-badge');
-    if (!lockedBox || !unlockedBox) return;
+            const lockedBox = document.getElementById('wheel-locked-state');
+            const unlockedBox = document.getElementById('wheel-unlocked-state');
+            const timerEl = document.getElementById('wheel-main-countdown');
+            const badgeEl = document.getElementById('wheel-student-qualification-badge');
+            if (!lockedBox || !unlockedBox) return;
 
-    const isAr = (typeof currentLang !== 'undefined' && currentLang === 'ar');
-    const now = new Date();
-    const currentDay = now.getDate();
-    const currentMonthStr = now.toISOString().slice(0, 7);
+            const isAr = (typeof currentLang !== 'undefined' && currentLang === 'ar');
+            const now = new Date();
+            const currentMonthStr = now.toISOString().slice(0, 7);
 
-    // 1. حساب العداد التنازلي التلفزيوني حتى أول يوم في الشهر القادم بدقة
-    const nextMonthDate = new Date(now.getFullYear(), now.getMonth() + 1, 1, 0, 0, 0);
-    const diffMs = nextMonthDate.getTime() - now.getTime();
+            // 1. حساب العداد التنازلي التلفزيوني لانتهاء الشهر الحالي بدقة
+            const nextMonthDate = new Date(now.getFullYear(), now.getMonth() + 1, 1, 0, 0, 0);
+            const diffMs = nextMonthDate.getTime() - now.getTime();
 
-    if (timerEl && diffMs > 0) {
-        const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        const secs = Math.floor((diffMs % (1000 * 60)) / 1000);
-        
-        timerEl.innerText = `${days}d : ${hours.toString().padStart(2,'0')}h : ${mins.toString().padStart(2,'0')}m : ${secs.toString().padStart(2,'0')}s`;
-    }
+            if (timerEl && diffMs > 0) {
+                const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diffMs % (1000 * 60)) / 1000);
+                
+                timerEl.innerText = `${days}d : ${hours.toString().padStart(2,'0')}h : ${mins.toString().padStart(2,'0')}m : ${secs.toString().padStart(2,'0')}s`;
+            }
 
-    // 2. فحص ترتيب الطالب وتحديث شريط الحالة مع دعم الترجمة
-    let isRankEligible = false;
-    let studentRank = null;
+            // 2. فحص ترتيب الطالب عن "الشهر الماضي" (استناداً إلى نقاطه المحفوظة)
+            let isRankEligible = false;
+            let studentRank = null;
 
-    if (studentData && studentData.id) {
-        try {
-            const { data: topStudents } = await supabaseClient
-                .from('students')
-                .select('id, stars_balance')
-                .order('stars_balance', { ascending: false });
+            if (studentData && studentData.id) {
+                try {
+                    const { data: topStudents } = await supabaseClient
+                        .from('students')
+                        .select('id, last_month_stars');
 
-            if (topStudents && topStudents.length > 0) {
-                const idx = topStudents.findIndex(s => String(s.id) === String(studentData.id));
-                if (idx !== -1) {
-                    studentRank = idx + 1;
-                    if (studentRank <= 2) isRankEligible = true;
+                    if (topStudents && topStudents.length > 0) {
+                        // ترتيب تنازلي بناءً على نقاط الشهر الماضي
+                        topStudents.sort((a, b) => (b.last_month_stars || 0) - (a.last_month_stars || 0));
+
+                        const idx = topStudents.findIndex(s => String(s.id) === String(studentData.id));
+                        // نتأكد إن الطالب جاب نقاط فعلاً مش مركزه الأول وهو جايب صفر
+                        if (idx !== -1 && (topStudents[idx].last_month_stars || 0) > 0) {
+                            studentRank = idx + 1;
+                            if (studentRank <= 2) isRankEligible = true;
+                        }
+                    }
+                } catch(e) {
+                    console.error("Error checking rank qualification:", e);
                 }
             }
-        } catch(e) {
-            console.error("Error checking rank qualification:", e);
-        }
-    }
 
-    if (badgeEl) {
-        if (isRankEligible) {
-            badgeEl.className = "mt-4 p-3 rounded-xl bg-emerald-950/80 border border-emerald-500/60 text-xs font-bold text-emerald-300 shadow-md";
-            badgeEl.innerHTML = isAr 
-                ? `👑 <b>رائع جداً!</b> أنت حالياً في <b>المركز ${studentRank}</b> ومؤهل للسحب الملكي فور فتح العجلة!`
-                : `👑 <b>Awesome!</b> You are currently in <b>Rank ${studentRank}</b> and qualified for the Royal Spin!`;
-        } else if (studentRank !== null) {
-            badgeEl.className = "mt-4 p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs font-bold text-slate-400 shadow-inner";
-            badgeEl.innerHTML = isAr 
-                ? `⚡ أنت حالياً في <b>المركز ${studentRank}</b>. اجمع المزيد من النجوم لتصل للمركز الأول أو الثاني قبل نهاية الشهر!`
-                : `⚡ You are currently in <b>Rank ${studentRank}</b>. Earn more stars to reach Top 2 before month end!`;
-        } else {
-            badgeEl.className = "mt-4 p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs font-bold text-slate-400";
-            badgeEl.innerHTML = isAr ? '📡 جاري فحص ترتيبك الحالي...' : 'Checking your ranking... 📡';
-        }
-    }
+            // 3. التحقق هل الطالب استخدم فرصته ولف العجلة في هذا الشهر أم لا
+            const alreadySpun = studentData ? (localStorage.getItem(`royal_wheel_spun_${studentData.id}`) === currentMonthStr) : false;
 
-    // 3. التحقق من فتح العجلة في اليوم الأول فقط
-    const alreadySpun = studentData ? (localStorage.getItem(`royal_wheel_spun_${studentData.id}`) === currentMonthStr) : false;
+            // 4. تحديث رسائل الصندوق المغلق وتحديد فتح العجلة
+            const lockedTitle = lockedBox.querySelector('h4');
+            const lockedDesc = lockedBox.querySelector('p');
 
-    if (currentDay === 1 && isRankEligible && !alreadySpun) {
-        lockedBox.classList.add('hidden');
-        unlockedBox.classList.remove('hidden');
-        if (typeof drawRoyalWheel === 'function') drawRoyalWheel(currentWheelAngle);
-    } else {
-        lockedBox.classList.remove('hidden');
-        unlockedBox.classList.add('hidden');
-    }
-};
+            if (alreadySpun && isRankEligible) {
+                // حالة 1: كان مؤهل ولف العجلة بالفعل
+                if (lockedTitle) lockedTitle.innerText = isAr ? "لقد استخدمت فرصتك الملكية هذا الشهر 🎡" : "You already used your Royal Spin this month 🎡";
+                if (lockedDesc) lockedDesc.innerText = isAr ? "انتظر الشهر القادم وواصل تصدرك للحصول على فرصة جديدة!" : "Wait until next month and keep leading to get a new chance!";
+                if (badgeEl) {
+                    badgeEl.className = "mt-4 p-3 rounded-xl bg-emerald-950/80 border border-emerald-500/60 text-xs font-bold text-emerald-300 shadow-md";
+                    badgeEl.innerHTML = isAr ? `👑 <b>رائع!</b> لقد كنت من أبطال الشهر الماضي (المركز ${studentRank}).` : `👑 <b>Awesome!</b> You were a champion last month (Rank ${studentRank}).`;
+                }
+            } else if (!isRankEligible) {
+                // حالة 2: الطالب مش من المركز الأول أو التاني الشهر اللي فات
+                if (lockedTitle) lockedTitle.innerText = isAr ? "العجلة مغلقة - مخصصة لأبطال الشهر الماضي 🏆" : "Wheel Locked - For Last Month's Champions 🏆";
+                if (lockedDesc) lockedDesc.innerText = isAr ? "لم تكن من المركزين الأول والثاني الشهر الماضي. اجتهد هذا الشهر لتفتح لك العجلة!" : "You weren't in the Top 2 last month. Work hard this month to unlock it!";
+                if (badgeEl) {
+                    badgeEl.className = "mt-4 p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs font-bold text-slate-400 shadow-inner";
+                    badgeEl.innerHTML = isAr ? `⚡ اجمع المزيد من النجوم لتصل للمركز الأول أو الثاني هذا الشهر!` : `⚡ Earn more stars to reach Top 2 this month!`;
+                }
+            } else {
+                // حالة 3: الطالب مؤهل ولسه ملفش العجلة
+                if (badgeEl) {
+                    badgeEl.className = "mt-4 p-3 rounded-xl bg-emerald-950/80 border border-emerald-500/60 text-xs font-bold text-emerald-300 shadow-md";
+                    badgeEl.innerHTML = isAr ? `👑 <b>مبارك!</b> أنت من أبطال الشهر الماضي (المركز ${studentRank}). العجلة متاحة لك الآن!` : `👑 <b>Congrats!</b> You are a past month champion (Rank ${studentRank}). Wheel is open!`;
+                }
+            }
+
+            // فتح العجلة في أي يوم طالما الطالب مؤهل ولم يلعبها بعد في هذا الشهر
+            if (isRankEligible && !alreadySpun) {
+                lockedBox.classList.add('hidden');
+                unlockedBox.classList.remove('hidden');
+                if (typeof drawRoyalWheel === 'function') drawRoyalWheel(currentWheelAngle);
+            } else {
+                lockedBox.classList.remove('hidden');
+                unlockedBox.classList.add('hidden');
+            }
+        };
 // ================= 📜 محرك معمل الأحاديث الذكي المتكامل =================
 // ================= 📜 محرك معمل الأحاديث الذكي المتكامل (بوابة الطالب) =================
 
@@ -6602,6 +6753,113 @@ window.switchTab = function(tabId) {
         }
     }
 };
+window.updatePrayerTrackerDate = function() {
+    const el = document.getElementById('prayer-tracker-date');
+    if (!el) return;
+
+    const now = new Date();
+    const isAr = (typeof currentLang !== 'undefined' && currentLang === 'ar');
+
+    // التاريخ الميلادي مع اليوم
+    const gregFormatter = new Intl.DateTimeFormat(isAr ? 'ar-EG' : 'en-US', {
+        weekday: 'long',
+        day: 'numeric',
+        month: isAr ? 'long' : 'short',
+        year: 'numeric'
+    });
+    const gregDate = gregFormatter.format(now);
+
+    // التاريخ الهجري (تقويم أم القرى)
+    const hijriFormatter = new Intl.DateTimeFormat(isAr ? 'ar-SA-u-ca-islamic-umalqura' : 'en-US-u-ca-islamic-umalqura', {
+        day: 'numeric',
+        month: isAr ? 'long' : 'short',
+        year: 'numeric'
+    });
+    const hijriDate = hijriFormatter.format(now);
+
+    el.innerText = isAr 
+        ? `${gregDate} م  |  ${hijriDate} هـ`
+        : `${gregDate}  |  ${hijriDate} AH`;
+};
+// ================= 🤖 محرك المعلم الذكي (الذكاء الاصطناعي) =================
+
+// دعم الإرسال عند الضغط على زر Enter
+document.getElementById('chat-input').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        sendChatMessage();
+    }
+});
+
+async function sendChatMessage() {
+    const inputEl = document.getElementById('chat-input');
+    const message = inputEl.value.trim();
+    const chatContainer = document.getElementById('chat-messages');
+
+    if (!message) return;
+
+    // 1. عرض رسالة الطالب فوراً في الشات
+    inputEl.value = '';
+    appendMessage('student', message);
+
+    // 2. إظهار مؤشر "جاري الكتابة..." للمعلم الذكي
+    const typingId = 'typing-' + Date.now();
+    appendMessage('bot', '...', typingId, true);
+
+    try {
+        // 3. إرسال الرسالة إلى السيرفر الخاص بك (Node.js)
+        // قم بتعديل هذا الرابط ليتوافق مع رابط السيرفر الخاص بك
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                message: message,
+                studentName: studentData ? studentData.name : 'الطالب' 
+            })
+        });
+
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const data = await response.json();
+
+        // 4. حذف مؤشر "جاري الكتابة" وعرض الرد الحقيقي
+        document.getElementById(typingId).remove();
+        appendMessage('bot', data.reply);
+
+    } catch (error) {
+        console.error("Chat Error:", error);
+        document.getElementById(typingId).remove();
+        appendMessage('bot', 'عُذراً يَا بُنَيّ، هُنَاكَ خَطَأٌ فِي الِاتِّصَال. هَلْ يُمْكِنُكَ إِعَادَةُ الْمُحَاوَلَةِ؟ 🔌');
+    }
+}
+
+function appendMessage(sender, text, id = '', isTyping = false) {
+    const chatContainer = document.getElementById('chat-messages');
+    const isBot = sender === 'bot';
+    
+    // تصميم رسالة الطالب مقابل رسالة البوت
+    let html = '';
+    if (isBot) {
+        let textStyle = isTyping ? 'text-slate-400 animate-pulse text-xl' : 'text-slate-700 text-sm leading-relaxed';
+        html = `
+        <div class="flex gap-3 max-w-[85%]" ${id ? `id="${id}"` : ''}>
+            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-sm shrink-0 shadow-inner border border-blue-200">🤖</div>
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl rounded-tr-none shadow-sm font-bold ${textStyle} font-arabic">
+                ${text}
+            </div>
+        </div>`;
+    } else {
+        html = `
+        <div class="flex gap-3 max-w-[85%] self-end flex-row-reverse" ${id ? `id="${id}"` : ''}>
+            <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-sm shrink-0 shadow-inner border border-emerald-200">👤</div>
+            <div class="bg-emerald-600 text-white p-4 rounded-2xl rounded-tl-none shadow-sm text-sm font-bold leading-relaxed">
+                ${text}
+            </div>
+        </div>`;
+    }
+
+    chatContainer.insertAdjacentHTML('beforeend', html);
+    chatContainer.scrollTop = chatContainer.scrollHeight; // النزول لأسفل الشات تلقائياً
+}
     </script>
 </body>
 </html>

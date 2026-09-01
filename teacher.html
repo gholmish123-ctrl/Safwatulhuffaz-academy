@@ -86,6 +86,82 @@
     body.print-exam > *:not(#exam-print-zone) { display: none !important; }
     body.print-exam #exam-print-zone { display: block !important; }
 }
+/* 🌟 التصميم الملكي لصفحات المصحف (محاكاة الورق الفعلي) 🌟 */
+.mushaf-paper {
+    background-color: #FDF9E6; /* لون ورق الشامواه المريح للعين */
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1), inset 0 0 60px rgba(184, 134, 11, 0.08);
+    padding: 25px;
+    margin: 0 auto 30px auto;
+    border-radius: 4px;
+    max-width: 900px;
+    position: relative;
+}
+
+/* البرواز الخارجي الذهبي */
+.mushaf-frame {
+    border: 2px solid #b89047;
+    padding: 4px;
+    position: relative;
+    height: 100%;
+}
+
+/* البرواز الداخلي الأخضر الفاخر */
+.mushaf-frame-inner {
+    border: 3px solid #0d3b22;
+    padding: 25px 20px;
+    position: relative;
+    height: 100%;
+    min-height: 500px;
+}
+/* خط داخلي إضافي لزيادة الواقعية */
+.mushaf-frame-inner::before {
+    content: '';
+    position: absolute;
+    top: 2px; left: 2px; right: 2px; bottom: 2px;
+    border: 1px solid #b89047;
+    pointer-events: none;
+}
+
+/* خرطوشة (بانر) اسم السورة الملكي */
+.surah-cartouche {
+    background: linear-gradient(to right, #0d3b22 0%, #1a5c38 50%, #0d3b22 100%);
+    border: 2px solid #b89047;
+    color: #fceea7;
+    padding: 12px 40px;
+    border-radius: 50px;
+    text-align: center;
+    font-family: 'Amiri Quran', serif;
+    font-size: 1.8rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3), inset 0 0 10px rgba(0,0,0,0.5);
+    position: relative;
+    margin: 10px auto 30px auto;
+    width: max-content;
+    min-width: 300px;
+}
+
+/* ترويسة الصفحة (الجزء والصفحة) */
+.mushaf-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Tajawal', sans-serif;
+    color: #0d3b22;
+    font-weight: 900;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #f0ece4;
+    padding-bottom: 8px;
+    margin-bottom: 25px;
+    opacity: 0.8;
+}
+
+/* ضبط السطور لتملأ الصفحة تماماً (Justify) */
+.mushaf-text {
+    text-align: justify;
+    text-align-last: center;
+    line-height: 3.5 !important;
+    color: #000;
+    font-family: 'Amiri Quran', 'Scheherazade New', serif;
+}
     </style>
 </head>
 <body class="bg-gray-50 flex flex-col h-screen overflow-hidden text-slate-800">
@@ -147,6 +223,7 @@
                 <button type="button" onclick="switchTab('leaderboard')" id="nav-leaderboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">🏆 <span data-ar="لوحة الشرف" data-en="Leaderboard">لوحة الشرف</span></button>
                 <button type="button" onclick="switchTab('shop')" id="nav-shop" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition cursor-pointer">
     🎁 <span data-ar="سجل الهدايا والجوائز" data-en="Rewards Log">سجل الهدايا والجوائز</span>
+    
 </button>
             </nav>
         </aside>
@@ -1072,6 +1149,7 @@
 </div>
 </section>
 
+
             <!-- ================= القسم 10: السند ================= -->
             <section id="sec-sanad" class="tab-content hidden space-y-6">
                 <div class="bg-amber-50 p-4 sm:p-6 rounded-3xl border border-amber-200 shadow-sm mx-auto max-w-5xl">
@@ -1447,6 +1525,70 @@
             <button type="button" onclick="document.getElementById('teacher-reports-history-modal').classList.add('hidden')" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500 hover:bg-rose-500 hover:text-white transition cursor-pointer">✕</button>
             <h3 class="text-lg font-black text-blue-900 mb-4 border-b pb-3 flex items-center gap-2"><span>📜</span> سجل التقارير السابقة</h3>
             <div id="teacher-reports-history-content" class="overflow-y-auto custom-scrollbar flex-1 space-y-3 pr-2"></div>
+        </div>
+    </div>
+    <!-- 🌟 شريط الرصد السريع العائم (Floating Toolbar) 🌟 -->
+<div id="quick-floating-toolbar" class="hidden absolute z-[600] bg-slate-900 border border-slate-700 text-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] flex items-center p-1.5 transition-all duration-200 opacity-0 transform scale-95" dir="rtl">
+    
+    <!-- 🔴 لحن جلي -->
+    <button type="button" onclick="quickLogMistake('لحن جلي (تشكيل/حرف)', 'bg-rose-600', 'text-white')" class="px-3 py-2 hover:bg-slate-800 rounded-xl text-xs font-black text-rose-400 transition-colors cursor-pointer flex flex-col items-center gap-1 group">
+        <span class="text-xl group-hover:scale-110 transition-transform">🔴</span> جلي
+    </button>
+    
+    <div class="w-px h-8 bg-slate-700/80 mx-0.5"></div>
+    
+    <!-- 🟠 لحن خفي (تجويد) -->
+    <button type="button" onclick="quickLogMistake('لحن خفي (تجويد/مد/غنة)', 'bg-orange-500', 'text-white')" class="px-3 py-2 hover:bg-slate-800 rounded-xl text-xs font-black text-orange-400 transition-colors cursor-pointer flex flex-col items-center gap-1 group">
+        <span class="text-xl group-hover:scale-110 transition-transform">🟠</span> تجويد
+    </button>
+
+    <div class="w-px h-8 bg-slate-700/80 mx-0.5"></div>
+    
+    <!-- 🔵 وقف وابتداء -->
+    <button type="button" onclick="quickLogMistake('خطأ في الوصل / الوقف', 'bg-blue-500', 'text-white')" class="px-3 py-2 hover:bg-slate-800 rounded-xl text-xs font-black text-blue-400 transition-colors cursor-pointer flex flex-col items-center gap-1 group">
+        <span class="text-xl group-hover:scale-110 transition-transform">🔵</span> وقف
+    </button>
+
+    <div class="w-px h-8 bg-slate-700/80 mx-0.5"></div>
+    
+    <!-- 🟡 تردد / نسيان -->
+    <button type="button" onclick="quickLogMistake('تردد / نسيان', 'bg-yellow-400', 'text-slate-900')" class="px-3 py-2 hover:bg-slate-800 rounded-xl text-xs font-black text-yellow-400 transition-colors cursor-pointer flex flex-col items-center gap-1 group">
+        <span class="text-xl group-hover:scale-110 transition-transform">🟡</span> تردد
+    </button>
+    
+    <div class="w-px h-8 bg-slate-700/80 mx-1.5"></div>
+    
+    <!-- ✏️ فتح المودال الكامل للتفاصيل -->
+    <button type="button" onclick="openFullMistakeModal()" class="px-3 py-2 hover:bg-slate-800 rounded-xl text-xs font-black text-slate-300 transition-colors cursor-pointer flex flex-col items-center gap-1 group bg-slate-800/50">
+        <span class="text-xl group-hover:scale-110 transition-transform">✏️</span> تفصيل
+    </button>
+</div>
+<!-- 🌟 نافذة سجل نقاط الطالب الملكية 🌟 -->
+    <div id="student-points-modal" class="hidden fixed inset-0 bg-slate-950/80 z-[600] flex items-center justify-center p-4 backdrop-blur-md transition-opacity duration-300">
+        <div class="bg-gradient-to-br from-slate-900 via-[#1e1b4b] to-slate-900 rounded-[2.5rem] border-2 border-amber-400/40 w-full max-w-2xl p-6 sm:p-8 shadow-[0_0_50px_rgba(245,158,11,0.15)] relative flex flex-col overflow-hidden max-h-[85vh]">
+            
+            <div class="absolute -right-20 -top-20 w-64 h-64 bg-amber-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+            <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+
+            <button type="button" onclick="document.getElementById('student-points-modal').classList.add('hidden')" class="absolute top-6 left-6 w-8 h-8 rounded-full bg-slate-800/80 flex items-center justify-center font-bold text-slate-400 hover:bg-rose-600 hover:text-white transition cursor-pointer z-20 shadow-md">✕</button>
+
+            <div class="flex items-center justify-between border-b border-white/10 pb-5 mb-5 relative z-10">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-3xl shadow-lg shadow-amber-500/20">🌟</div>
+                    <div>
+                        <h3 class="text-xl font-black text-white font-diwani tracking-wide" data-ar="السجل الملكي للنقاط والمكافآت" data-en="Royal Rewards & Points Log">السجل الملكي للنقاط والمكافآت</h3>
+                        <p id="points-modal-student-name" class="text-xs font-bold text-amber-300 mt-1">الطالب: ---</p>
+                    </div>
+                </div>
+                <div class="text-center bg-slate-950/60 px-5 py-2 rounded-2xl border border-amber-500/30 shadow-inner hidden sm:block">
+                    <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-0.5" data-ar="الرصيد المتاح" data-en="Available Balance">الرصيد المتاح</p>
+                    <p id="points-modal-total" class="text-2xl font-mono font-black text-amber-400">0</p>
+                </div>
+            </div>
+
+            <div id="points-history-content" class="overflow-y-auto custom-scrollbar flex-1 space-y-3 relative z-10 pr-2">
+                <p class="text-center text-amber-500/50 font-bold py-10 animate-pulse">⏳ جاري استدعاء سجل الإنجازات والمكافآت...</p>
+            </div>
         </div>
     </div>
     <!-- Scripts Logic -->
@@ -1877,16 +2019,40 @@
             }).subscribe();
         }
 
-        async function fetchMyStudents() {
+    async function fetchMyStudents() {
             if (!currentTeacherObj) return;
             try {
                 const { data } = await supabaseClient.from('students').select('*').eq('teacher_id', currentTeacherObj.id);
                 dbStudents = data || [];
+                
+                // ================= نظام التصفير التلقائي الشهري للمعلم =================
+                const now = new Date();
+                const currentMonthStr = now.toISOString().slice(0, 7);
+                let needsRefresh = false;
+
+                for (let s of dbStudents) {
+                    if (s.last_reset_month !== currentMonthStr) {
+                        s.last_month_stars = s.stars_balance || 0;
+                        s.stars_balance = 0;
+                        s.last_reset_month = currentMonthStr;
+
+                        supabaseClient.from('students').update({
+                            last_month_stars: s.last_month_stars,
+                            stars_balance: 0,
+                            last_reset_month: currentMonthStr
+                        }).eq('id', s.id).then(); // تحديث في الخلفية
+                        needsRefresh = true;
+                    }
+                }
+                // =====================================================================
+
                 renderAllDataDynamic();
                 renderFinancials();
+                if(needsRefresh && document.getElementById('sec-leaderboard').classList.contains('active')){
+                    renderLeaderboard();
+                }
             } catch (e) { console.warn(e); }
         }
-
         async function fetchTeacherNotifications() {
             if(!currentTeacherObj) return;
             const today = new Date().toISOString().split('T')[0];
@@ -3579,26 +3745,26 @@ window.checkExamDeadlineLock = function(examExpiryDate) {
                 container.innerHTML = `<p class="text-center text-red-500 font-bold py-8">${currentLang === 'ar' ? '❌ حدث خطأ في جلب التسجيلات.' : '❌ Error loading submissions.'}</p>`;
             }
         };
+window.submitAudioEvaluationAndPurge = async function(assignmentId, studentId, studentName, currentStars, audioUrl) {
+    const notesInput = document.getElementById(`notes-${assignmentId}`) ? document.getElementById(`notes-${assignmentId}`).value.trim() : '';
+    const starsInput = document.getElementById(`stars-${assignmentId}`) ? parseInt(document.getElementById(`stars-${assignmentId}`).value) : 5;
 
-       window.submitAudioEvaluationAndPurge = async function(assignmentId, studentId, studentName, currentStars, audioUrl) {
-    const notesInput = document.getElementById(`notes-${assignmentId}`).value.trim();
-    const starsInput = parseInt(document.getElementById(`stars-${assignmentId}`).value) || 5;
+    if(!confirm(currentLang === 'ar' ? `تأكيد تقييم الطالب (${studentName}) ومنحه ${starsInput} نجوم وحذف التلاوة نهائياً؟` : `Confirm grading and deleting recitation for (${studentName})?`)) return;
 
-   if(!confirm(currentLang === 'ar' ? `تأكيد تقييم الطالب (${studentName}) ومنحه ${starsInput} نجوم؟` : `Confirm grading (${studentName}) with ${starsInput} stars?`)) return;
+    // 🌟 1. الإخفاء الفوري من الشاشة (عشان يختفي من الأبلكيشن في نفس اللحظة) 🌟
+    const cardElement = document.getElementById(`audio-card-${assignmentId}`);
+    if (cardElement) {
+        cardElement.style.display = 'none'; // إخفاء الكارت المباشر
+    }
 
-    showToast(currentLang === 'ar' ? '⏳ جاري اعتماد التقييم...' : '⏳ Submitting review...', 'info');
+    showToast(currentLang === 'ar' ? '⏳ جاري اعتماد التقييم والحذف...' : '⏳ Submitting and purging...', 'info');
 
     try {
-        // 1. تحديث رصيد النجوم للطالب
-        const { error: starErr } = await supabaseClient
-            .from('students')
-            .update({ stars_balance: (currentStars || 0) + starsInput })
-            .eq('id', studentId);
-        
-        if (starErr) throw starErr;
+        // 2. تحديث رصيد النجوم للطالب
+        await supabaseClient.from('students').update({ stars_balance: (currentStars || 0) + starsInput }).eq('id', studentId);
 
-        // 2. إرسال إشعار للطالب بالنتيجة والملاحظات
-        const { error: notifErr } = await supabaseClient.from('student_notifications').insert([{
+        // 3. إرسال إشعار للطالب بالتقييم
+        await supabaseClient.from('student_notifications').insert([{
             target: studentName, 
             type: 'success',
             title: currentLang === 'ar' ? `⭐ تقييم واجب التلاوة الصوتية` : `⭐ Audio Recitation Graded`,
@@ -3607,60 +3773,35 @@ window.checkExamDeadlineLock = function(examExpiryDate) {
                 : `Your teacher reviewed your recitation and awarded you (${starsInput}) stars! Note: ${notesInput || 'Excellent job!'}`,
             expiry: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
         }]);
-        
-        if (notifErr) throw notifErr;
 
-        // 3. تحديث حالة الواجب إلى 'reviewed' في القاعدة (ليختفي فوراً من قائمة المعلقات)
-        const { error: updateErr } = await supabaseClient
-            .from('audio_assignments')
-            .update({ 
-                status: 'reviewed', 
-                teacher_notes: notesInput, 
-                stars_earned: starsInput 
-            })
-            .eq('id', assignmentId);
-
-        if (updateErr) throw updateErr;
-
-        // 4. محاولة حذف الملف الصوتي من التخزين (Storage) لتوفير المساحة إن أمكن
-        try {
-            if (audioUrl && audioUrl.includes('/storage/v1/object/public/')) {
-                const path = audioUrl.split('/storage/v1/object/public/')[1];
-                const bucket = path.split('/')[0];
-                const filePath = path.substring(bucket.length + 1);
-                await supabaseClient.storage.from(bucket).remove([filePath]);
+        // 4. 🗑️ حذف الملف الفعلي من مساحة التخزين (Storage) 🗑️
+        if (audioUrl) {
+            try {
+                const fileName = audioUrl.substring(audioUrl.lastIndexOf('/') + 1);
+                await supabaseClient.storage.from('audio_assignments').remove([fileName]);
+            } catch(storageErr) {
+                console.warn("Storage delete warning:", storageErr);
             }
-        } catch(storageErr) {
-            console.warn("Storage delete warning:", storageErr);
         }
 
-        showToast(currentLang === 'ar' ? '✅ تم التقييم واعتماد الواجب بنجاح!' : '✅ Audio reviewed successfully!', 'success');
+        // 5. 🗑️ حذف السجل بالكامل من قاعدة البيانات 🗑️
+        await supabaseClient.from('audio_assignments').delete().eq('id', assignmentId);
 
-        // 5. إزالة الكارت من الشاشة فوراً وبسلاسة دون الحاجة لعمل Refresh كامل
-        const cardElement = document.getElementById(`audio-card-${assignmentId}`);
-        if (cardElement) {
-            cardElement.style.transition = "all 0.4s ease";
-            cardElement.style.opacity = "0";
-            cardElement.style.transform = "scale(0.95)";
-            setTimeout(() => {
-                cardElement.remove();
-                // إذا أصبحت القائمة فارغة، اعرض رسالة "لا توجد تسجيلات"
-                const container = document.getElementById('pending-audio-container');
-                if (container && container.children.length === 0) {
-                    fetchPendingAudioAssignments();
-                }
-            }, 400);
-        } else {
-            fetchPendingAudioAssignments();
-        }
+        showToast(currentLang === 'ar' ? '✅ تم التقييم وحذف التلاوة نهائياً!' : '✅ Reviewed and purged successfully!', 'success');
+
+        // 6. 🔄 تحديث القائمة بالكامل للتأكد أن الشاشة مطابقة لقاعدة البيانات
+        fetchPendingAudioAssignments();
 
     } catch (err) {
         console.error("Evaluation error:", err);
         showToast('❌ خطأ أثناء الاعتماد: ' + err.message, 'error');
+        // في حالة فشل السيرفر، نعيد إظهار الكارت مرة أخرى
+        if (cardElement) {
+            cardElement.style.display = 'block';
+        }
     }
 };
-        // ================= الإشعارات والمكافآت واللوائح =================
-   window.renderLeaderboard = async function() {
+  window.renderLeaderboard = async function() {
     const container = document.getElementById('leaderboard-container');
     if (!container) return;
 
@@ -3670,23 +3811,33 @@ window.checkExamDeadlineLock = function(examExpiryDate) {
     try {
         const { data: studentsList, error } = await supabaseClient
             .from('students')
-            .select('*')
-            .order('stars_balance', { ascending: false });
+            .select('*');
 
         if (error || !studentsList || studentsList.length === 0) {
             container.innerHTML = `<div class="p-8 text-center text-slate-400 font-bold bg-slate-900 rounded-3xl border border-slate-800 text-xs">${isAr ? 'لا توجد بيانات متاحة حالياً.' : 'No data available.'}</div>`;
             return;
         }
 
-        // 🎨 لوحة تدرجات لونية فخمة وخاصة لكل طالب
+        // =========================================================
+        // 1. إظهار الرصيد الحالي المصفّر دائماً (سيظهر 0 من أول لحظة في يوم 1)
+        // =========================================================
+        studentsList.forEach(s => {
+            s.effective_score = s.stars_balance || 0;
+        });
+
+        // ترتيب تنازلي بناءً على النقاط الحالية
+        studentsList.sort((a, b) => b.effective_score - a.effective_score);
+
+        // =========================================================
+        // 2. باليتة الألوان الفخمة والداكنة
+        // =========================================================
         const cardPalettes = [
-            { bg: 'bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-950', border: 'border-indigo-500/50', shadow: 'shadow-[0_0_20px_rgba(99,102,241,0.15)]' },
-            { bg: 'bg-gradient-to-r from-blue-950 via-slate-900 to-slate-950', border: 'border-blue-500/50', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.15)]' },
-            { bg: 'bg-gradient-to-r from-purple-950 via-slate-900 to-slate-950', border: 'border-purple-500/50', shadow: 'shadow-[0_0_20px_rgba(168,85,247,0.15)]' },
-            { bg: 'bg-gradient-to-r from-emerald-950 via-slate-900 to-slate-950', border: 'border-emerald-500/50', shadow: 'shadow-[0_0_20px_rgba(16,185,129,0.15)]' },
-            { bg: 'bg-gradient-to-r from-rose-950 via-slate-900 to-slate-950', border: 'border-rose-500/50', shadow: 'shadow-[0_0_20px_rgba(244,63,94,0.15)]' },
-            { bg: 'bg-gradient-to-r from-cyan-950 via-slate-900 to-slate-950', border: 'border-cyan-500/50', shadow: 'shadow-[0_0_20px_rgba(6,182,212,0.15)]' },
-            { bg: 'bg-gradient-to-r from-amber-950 via-slate-900 to-slate-950', border: 'border-amber-500/50', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.15)]' }
+            { bg: 'bg-gradient-to-r from-[#0f172a] via-[#1e1b4b] to-[#0f172a]', border: 'border-indigo-500/40', textHighlight: 'text-indigo-300', glow: 'shadow-[0_0_15px_rgba(99,102,241,0.1)]' },
+            { bg: 'bg-gradient-to-r from-[#0f172a] via-[#064e3b] to-[#0f172a]', border: 'border-emerald-500/40', textHighlight: 'text-emerald-300', glow: 'shadow-[0_0_15px_rgba(16,185,129,0.1)]' },
+            { bg: 'bg-gradient-to-r from-[#0f172a] via-[#4c1d95] to-[#0f172a]', border: 'border-purple-500/40', textHighlight: 'text-purple-300', glow: 'shadow-[0_0_15px_rgba(168,85,247,0.1)]' },
+            { bg: 'bg-gradient-to-r from-[#0f172a] via-[#881337] to-[#0f172a]', border: 'border-rose-500/40', textHighlight: 'text-rose-300', glow: 'shadow-[0_0_15px_rgba(244,63,94,0.1)]' },
+            { bg: 'bg-gradient-to-r from-[#0f172a] via-[#0c4a6e] to-[#0f172a]', border: 'border-sky-500/40', textHighlight: 'text-sky-300', glow: 'shadow-[0_0_15px_rgba(14,165,233,0.1)]' },
+            { bg: 'bg-gradient-to-r from-[#0f172a] via-[#701a75] to-[#0f172a]', border: 'border-fuchsia-500/40', textHighlight: 'text-fuchsia-300', glow: 'shadow-[0_0_15px_rgba(217,70,239,0.1)]' }
         ];
 
         container.innerHTML = studentsList.map((std, index) => {
@@ -3703,37 +3854,54 @@ window.checkExamDeadlineLock = function(examExpiryDate) {
             }
             const currentPalette = cardPalettes[paletteIdx];
 
-            let cardStyle = `${currentPalette.bg} border ${currentPalette.border} ${currentPalette.shadow} text-slate-100`;
-            let rankBadge = `<div class="w-10 h-10 rounded-2xl bg-slate-800/80 text-slate-300 font-mono font-black text-sm flex items-center justify-center border border-slate-700 shadow-inner">${rank}</div>`;
+            let cardStyle = `${currentPalette.bg} border ${currentPalette.border} ${currentPalette.glow} text-slate-100`;
+            let rankBadge = `<div class="w-10 h-10 rounded-2xl bg-slate-800/80 text-slate-400 font-mono font-black text-sm flex items-center justify-center border border-slate-700 shadow-inner">${rank}</div>`;
+            let starsBadgeStyle = `bg-slate-900/50 border border-slate-700/50 ${currentPalette.textHighlight}`;
 
+            // =========================================================
             // تخصيص المراكز الثلاثة الأولى بتصميم ملكي بارز
+            // =========================================================
             if (rank === 1) {
-                cardStyle = "bg-gradient-to-r from-amber-950/90 via-slate-900 to-slate-950 border-2 border-amber-400 text-amber-100 shadow-[0_0_30px_rgba(245,158,11,0.3)]";
-                rankBadge = `<div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-600 to-yellow-400 text-slate-950 font-black text-lg flex items-center justify-center shadow-lg shadow-amber-500/40">👑</div>`;
+                cardStyle = "bg-gradient-to-r from-amber-950/90 via-[#451a03] to-[#2e1065] border-2 border-amber-400 text-amber-100 shadow-[0_0_30px_rgba(245,158,11,0.3)] z-10 relative transform scale-[1.02]";
+                rankBadge = `<div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-600 to-yellow-400 text-slate-950 font-black text-xl flex items-center justify-center shadow-lg shadow-amber-500/40">👑</div>`;
+                starsBadgeStyle = "bg-amber-400 text-slate-900 border-amber-300 shadow-md";
             } else if (rank === 2) {
                 cardStyle = "bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 border-2 border-slate-400 text-slate-100 shadow-[0_0_25px_rgba(148,163,184,0.2)]";
                 rankBadge = `<div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-slate-400 to-slate-200 text-slate-950 font-black text-lg flex items-center justify-center shadow-lg">🥈</div>`;
+                starsBadgeStyle = "bg-slate-300 text-slate-900 border-slate-200 shadow-md";
             } else if (rank === 3) {
-                cardStyle = "bg-gradient-to-r from-amber-900/60 via-slate-900 to-slate-950 border-2 border-amber-700 text-amber-200 shadow-[0_0_25px_rgba(180,83,9,0.2)]";
+                cardStyle = "bg-gradient-to-r from-[#451a03] via-[#78350f] to-[#451a03] border-2 border-amber-700 text-amber-100 shadow-[0_0_25px_rgba(180,83,9,0.2)]";
                 rankBadge = `<div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-700 to-amber-500 text-slate-950 font-black text-lg flex items-center justify-center shadow-lg">🥉</div>`;
+                starsBadgeStyle = "bg-amber-700 text-white border-amber-600 shadow-md";
             }
 
-            // رابط الصورة الشخصية مع صورة افتراضية مبنية بالاسم في حال عدم توفرها
-            const avatarImg = std.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(std.name)}&background=1e293b&color=fff&size=120`;
+            // =========================================================
+            // الصورة الشخصية مع Fallback
+            // =========================================================
+            const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(std.name)}&background=1e293b&color=fff&size=120`;
+            const avatarImg = std.avatar_url || fallbackAvatar;
 
+            // =========================================================
+            // تم إزالة البلور تماماً ليكون العرض واضحاً للمعلم
+            // =========================================================
             return `
-                <div class="${cardStyle} p-4 sm:p-5 rounded-3xl flex items-center justify-between transition-all duration-300 hover:scale-[1.01] backdrop-blur-xl">
+                <div class="${cardStyle} p-4 sm:p-5 rounded-3xl flex items-center justify-between mb-3 backdrop-blur-xl group hover:scale-[1.01] transition-all duration-300">
                     <div class="flex items-center gap-4">
                         ${rankBadge}
-                        <img src="${avatarImg}" class="w-12 h-12 rounded-2xl object-cover border-2 border-white/20 shadow-md bg-slate-800">
-                        <div>
-                            <h4 class="font-black text-sm sm:text-base tracking-wide text-white">${fullName}</h4>
-                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${std.subject || (isAr ? 'القرآن الكريم' : 'Holy Quran')}</span>
+                        <div class="flex items-center gap-3">
+                            <img src="${avatarImg}" onerror="this.onerror=null; this.src='${fallbackAvatar}';" alt="${fullName}" class="w-12 h-12 rounded-2xl object-cover border-2 border-white/20 shadow-md bg-slate-800 shrink-0">
+                            <div class="flex flex-col items-start justify-center">
+                                <h4 class="font-black text-sm sm:text-base tracking-wide text-white">${fullName}</h4>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">${std.subject || (isAr ? 'القرآن الكريم' : 'Holy Quran')}</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="bg-amber-500/10 border border-amber-500/30 text-amber-400 px-4 py-2 rounded-2xl flex items-center gap-2 shadow-inner">
-                        <span class="text-base">⭐</span>
-                        <span class="font-mono font-black text-sm sm:text-base">${std.stars_balance || 0}</span>
+                    <div class="flex flex-col items-end sm:flex-row sm:items-center gap-2 shrink-0">
+                        <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest text-right sm:text-center">${isAr ? 'المركز الملكي ' : 'ROYAL RANK '}${rank}</div>
+                        <div class="${starsBadgeStyle} px-4 py-2 rounded-2xl flex items-center gap-2 transition-colors duration-300">
+                            <span class="text-base">⭐</span>
+                            <span class="font-mono font-black text-sm sm:text-base">${std.effective_score}</span>
+                        </div>
                     </div>
                 </div>`;
         }).join('');
@@ -3901,10 +4069,10 @@ if (!window.monthlyTimerIntervalSet) {
                             </td>
                             <td class="p-4 text-center align-middle">
                                 <div class="flex items-center justify-center gap-1.5 whitespace-nowrap">
-                                    <button onclick="switchTab('reports'); document.getElementById('form-student-select').value='${std.id}'; onStudentChange('${std.id}');" class="bg-blue-50 text-blue-700 hover:bg-blue-100 text-[10px] px-2.5 py-1.5 rounded-lg font-bold cursor-pointer transition shadow-sm border border-blue-100">${isAr?'تقرير 📝':'Report'}</button>
-                                    <button onclick="awardStudentStars('${std.id}', '${std.name}')" class="bg-amber-50 text-amber-700 hover:bg-amber-100 text-[10px] px-2.5 py-1.5 rounded-lg font-bold cursor-pointer transition shadow-sm border border-amber-100">${isAr?'⭐ مكافأة':'Award'}</button>
-                                    <button onclick="openQuranTrackerModal('${std.id}', '${std.name}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 text-[10px] px-2.5 py-1.5 rounded-lg font-bold cursor-pointer transition shadow-sm border border-emerald-100">🌳 ${isAr?'الشجرة':'Tree'}</button>
-                                    <!-- 🗑️ زر حذف ومسح مواعيد الطالب بجانبهم في نفس السطر -->
+                                   <button onclick="switchTab('reports'); document.getElementById('form-student-select').value='${std.id}'; onStudentChange('${std.id}');" class="bg-blue-50 text-blue-700 hover:bg-blue-100 text-[10px] px-2.5 py-1.5 rounded-lg font-bold cursor-pointer transition shadow-sm border border-blue-100">${isAr?'تقرير 📝':'Report'}</button>
+<button onclick="awardStudentStars('${std.id}', '${std.name}')" class="bg-amber-50 text-amber-700 hover:bg-amber-100 text-[10px] px-2.5 py-1.5 rounded-lg font-bold cursor-pointer transition shadow-sm border border-amber-100">${isAr?'⭐ مكافأة':'Award'}</button>
+<button type="button" onclick="openStudentPointsHistory('${std.id}', '${(std.name || 'طالب').replace(/'/g, "\\'")}', ${std.stars_balance || 0})" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 text-[10px] px-2.5 py-1.5 rounded-lg font-bold cursor-pointer transition shadow-sm border border-indigo-100" title="سجل النقاط والمكافآت">🏅 ${isAr ? 'السجل' : 'Log'}</button>
+<button onclick="openQuranTrackerModal('${std.id}', '${std.name}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 text-[10px] px-2.5 py-1.5 rounded-lg font-bold cursor-pointer transition shadow-sm border border-emerald-100">🌳 ${isAr?'الشجرة':'Tree'}</button>
                                     <button onclick="deleteStudentSchedule('${std.id}', '${std.name.replace(/'/g, "\\'")}')" class="bg-rose-50 text-rose-700 hover:bg-rose-100 text-[10px] px-2.5 py-1.5 rounded-lg font-bold cursor-pointer transition shadow-sm border border-rose-100" title="حذف جميع مواعيد هذا الطالب">🗑️ ${isAr?'حذف':'Del'}</button>
                                 </div>
                             </td>
@@ -5567,76 +5735,125 @@ window.loadMushafSurahWords = async function(surahId) {
     if (!canvas) return;
 
     const riwayahSelect = document.getElementById('mushaf-riwayah-select');
-    const edition = riwayahSelect ? riwayahSelect.value : 'hafs';
+    const editionId = riwayahSelect ? riwayahSelect.value : 'quran-uthmani';
     const riwayahName = riwayahSelect ? riwayahSelect.options[riwayahSelect.selectedIndex].text : 'حفص';
 
-    canvas.innerHTML = '<p class="text-sm font-sans text-slate-400 py-20 animate-pulse">⏳ جاري تحميل نص الرواية المعتمد...</p>';
+    canvas.innerHTML = `
+        <div class="flex flex-col items-center justify-center py-32 text-slate-400">
+            <span class="text-5xl animate-spin mb-4">⏳</span>
+            <p class="text-base font-sans font-bold">جاري فتح مصحف (${riwayahName}) برسمه الفعلي...</p>
+        </div>`;
 
     try {
-        let ayahsData = [];
+        const res = await fetch(`https://api.alquran.cloud/v1/surah/${currentAssessedSurah}/${editionId}`);
+        const json = await res.json();
+        if (json.code !== 200) throw new Error("تعذر جلب البيانات");
 
-        // 1. تحديد مصدر النص الفعلي للرواية
-        if (edition === 'ar.warsh') {
-            // جلب نص ورش من المستودع المفتوح للروايات
-            const res = await fetch(`https://cdn.jsdelivr.net/gh/semarketir/quranjson@master/source/surah/surah_${currentAssessedSurah}.json`);
-            const json = await res.json();
-            // تحويل البنية لمطابقة العرض
-            ayahsData = Object.keys(json.verse).map(k => ({
-                numberInSurah: parseInt(k.replace('verse_', '')),
-                text: json.verse[k]
-            }));
-        } else {
-            // جلب النص العثماني القياسي (حفص)
-            const res = await fetch(`https://api.alquran.cloud/v1/surah/${currentAssessedSurah}/quran-uthmani`);
-            const json = await res.json();
-            ayahsData = json.data.ayahs;
-        }
-
-        let html = '<div class="inline leading-[4.4rem]">';
-
-        if (currentAssessedSurah !== 1 && currentAssessedSurah !== 9) {
-            html += `<div class="text-3xl text-emerald-800 dark:text-emerald-400 my-4 font-bold block">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>`;
-        }
-
+        const ayahsData = json.data.ayahs;
+        
+        // 🌟 تجميع الآيات وتوزيعها على أرقام الصفحات الفعلية للمصحف المطبوع 🌟
+        const pagesMap = {};
         ayahsData.forEach(ayah => {
-            let ayahText = ayah.text;
-            
-            if (currentAssessedSurah !== 1 && ayah.numberInSurah === 1 && ayahText.startsWith("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ")) {
-                ayahText = ayahText.replace("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "").trim();
-            }
-
-            const words = ayahText.split(/\s+/).filter(w => w.trim().length > 0);
-
-            words.forEach((wordText, wordIdx) => {
-                const wordKey = `w_${currentAssessedSurah}_${ayah.numberInSurah}_${wordIdx + 1}`;
-                const isMistake = currentAssessedMistakes.some(m => m.domId === wordKey);
-
-                let badgeClass = isMistake 
-                    ? "bg-rose-600 text-white shadow-md rounded-xl font-bold px-2 py-0.5 scale-105" 
-                    : "hover:bg-amber-200 dark:hover:bg-amber-900/60 text-slate-900 dark:text-white";
-
-                html += `
-                    <span id="${wordKey}" 
-                          onclick="onWordClicked('${wordKey}', '${wordText.replace(/'/g, "\\'")}', ${ayah.numberInSurah}, ${wordIdx + 1})" 
-                          class="inline-block px-1.5 rounded-xl cursor-pointer transition-all duration-150 active:scale-90 select-none ${badgeClass}">
-                        ${wordText}
-                    </span> `;
-            });
-
-            html += `<span class="inline-block mx-2 text-emerald-700 dark:text-emerald-400 text-xl font-bold font-sans select-none">﴿${ayah.numberInSurah}﴾</span> `;
+            if (!pagesMap[ayah.page]) pagesMap[ayah.page] = [];
+            pagesMap[ayah.page].push(ayah);
         });
 
-        html += '</div>';
-        canvas.innerHTML = html;
+        const mistakeColors = {
+            'لحن جلي (تشكيل/حرف)': 'bg-rose-600 text-white',
+            'لحن خفي (تجويد/مد/غنة)': 'bg-orange-500 text-white',
+            'خطأ في الوصل / الوقف': 'bg-blue-500 text-white',
+            'تردد / نسيان': 'bg-yellow-400 text-slate-900',
+            'خلف في الرواية': 'bg-purple-600 text-white'
+        };
 
-        const ruleTextEl = document.getElementById('riwayah-rule-text');
-        if (ruleTextEl) {
-            ruleTextEl.innerHTML = `📖 الرواية المعروضة الآن: <b>${riwayahName}</b>.`;
+        let html = '';
+
+        // 🌟 بناء صفحات المصحف ورقة ورقة 🌟
+        for (const [pageNum, pageAyahs] of Object.entries(pagesMap)) {
+            const firstAyah = pageAyahs[0];
+            const juzNum = firstAyah.juz;
+
+            html += `
+            <div class="mushaf-paper transition-all duration-500">
+                <div class="mushaf-frame">
+                    <div class="mushaf-frame-inner">
+                        
+                        <!-- ترويسة الصفحة العلوية -->
+                        <div class="mushaf-header">
+                            <span>الجزء ${juzNum.toLocaleString('ar-EG')}</span>
+                            <span>سُورَةُ ${json.data.name.replace('سورة ', '')}</span>
+                            <span>صحيفة ${parseInt(pageNum).toLocaleString('ar-EG')}</span>
+                        </div>`;
+
+            // رسم خرطوشة السورة والبسملة إذا كانت بداية السورة
+            if (firstAyah.numberInSurah === 1) {
+                html += `<div class="surah-cartouche">سُورَةُ ${json.data.name.replace('سورة ', '')}</div>`;
+                
+                if (currentAssessedSurah !== 1 && currentAssessedSurah !== 9) {
+                    html += `<div class="text-2xl sm:text-3xl text-[#0d3b22] mb-6 font-black w-full text-center" style="font-family: 'Amiri Quran', serif;">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>`;
+                }
+            }
+
+            // حاوية نص الآيات مضبوطة المحاذاة (Justified)
+            html += `<div class="mushaf-text text-[1.4rem] sm:text-[1.8rem] md:text-3xl" dir="rtl">`;
+
+            pageAyahs.forEach(ayah => {
+                let ayahText = ayah.text;
+                
+                // تنظيف البسملة المدمجة بالآية الأولى (باستثناء الفاتحة)
+                if (currentAssessedSurah !== 1 && ayah.numberInSurah === 1) {
+                    const basmalahVariations = ["بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "بسم الله الرحمن الرحيم", "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ", "بِسمِ اللَّهِ الرَّحمٰنِ الرَّحيمِ", "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ "];
+                    for (let b of basmalahVariations) {
+                        if (ayahText.startsWith(b)) { ayahText = ayahText.substring(b.length).trim(); break; }
+                    }
+                }
+
+                const words = ayahText.split(/\s+/).filter(w => w.trim().length > 0);
+
+                words.forEach((wordText, wordIdx) => {
+                    const wordKey = `w_${currentAssessedSurah}_${ayah.numberInSurah}_${wordIdx + 1}`;
+                    const mistakeFound = currentAssessedMistakes.find(m => m.domId.includes(wordKey));
+                    
+                    // اللون الافتراضي للكلمة (أسود في الثيم الفاتح)، وتظليل خفيف عند التمرير
+                    let badgeClass = "text-slate-950 hover:bg-amber-500/20";
+                    
+                    if (mistakeFound) {
+                        const colorClass = mistakeColors[mistakeFound.type] || 'bg-rose-600 text-white';
+                        badgeClass = `${colorClass} shadow-md rounded-md px-1 scale-105`;
+                    }
+
+                    // تمرير الـ event لدعم الشريط العائم بدقة
+                    html += `
+                        <span id="${wordKey}" 
+                              onclick="onWordClicked(event, '${wordKey}', '${wordText.replace(/'/g, "\\'")}', ${ayah.numberInSurah}, ${wordIdx + 1})" 
+                              class="inline-block px-[2px] rounded cursor-pointer transition-all duration-150 active:scale-90 select-none ${badgeClass}">
+                            ${wordText}
+                        </span>`;
+                });
+
+                // علامة نهاية الآية بتصميم إسلامي ولون ذهبي
+                const arabicNumber = ayah.numberInSurah.toLocaleString('ar-EG');
+                html += `<span class="inline-block mx-1.5 text-[#b89047] text-2xl font-bold font-sans select-none drop-shadow-sm">﴿${arabicNumber}﴾</span> `;
+            });
+
+            html += `</div>`; // إغلاق نص الآيات
+            html += `
+                    </div>
+                </div>
+            </div>`; // إغلاق برواز الصفحة والورقة
         }
+
+        html += `<div class="h-10 w-full"></div>`; // مساحة للتمرير النهائي
+        canvas.innerHTML = html;
 
     } catch (err) {
         console.error(err);
-        canvas.innerHTML = '<p class="text-sm font-sans text-rose-500 py-10">❌ تعذر تحميل نص السورة، يرجى التحقق من الاتصال بالإنترنت.</p>';
+        canvas.innerHTML = `
+            <div class="flex flex-col items-center justify-center py-20 text-rose-600">
+                <span class="text-5xl mb-4">❌</span>
+                <p class="text-base font-bold font-sans">تعذر تحميل مصحف الرواية.</p>
+                <p class="text-xs text-slate-500 mt-2">تأكد من استقرار الإنترنت ثم أعد المحاولة.</p>
+            </div>`;
     }
 };
 // 3. إغلاق نافذة المصحف
@@ -5646,20 +5863,119 @@ window.closeMushafModal = function() {
 };
 let currentSelectedWords = []; // مصفوفة لحفظ الكلمات المتعددة
 
-// تحديث الدالة الحالية لتلائم المصفوفة
-window.onWordClicked = function(domId, wordText, ayahNum, wordPos) {
+window.onWordClicked = function(event, domId, wordText, ayahNum, wordPos) {
+    if(event) event.stopPropagation(); // منع إغلاق الشريط فوراً
+
     const riwayahSelect = document.getElementById('mushaf-riwayah-select');
     const riwayahName = riwayahSelect ? riwayahSelect.options[riwayahSelect.selectedIndex].text : 'مصحف حفص';
 
     currentSelectedWords = [{ domId, wordText, ayahNum, wordPos, surahNum: currentAssessedSurah, riwayah: riwayahName }];
-    updatePopoverWordDisplay();
     
+    // تظليل خفيف للكلمة ليعرف المعلم الموضع المحدد
+    const wordEl = document.getElementById(domId);
+    if(wordEl && !wordEl.classList.contains('text-white')) {
+        wordEl.classList.add('bg-emerald-100', 'dark:bg-emerald-900/40', 'text-emerald-800');
+    }
+
+    // عرض الشريط العائم فوق الكلمة المحددة
+    const toolbar = document.getElementById('quick-floating-toolbar');
+    const canvas = document.getElementById('mushaf-words-canvas');
+    const rect = wordEl.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+    
+    // حساب الإحداثيات لظهور الشريط العائم
+    let top = rect.top - 70; 
+    let left = rect.left + (rect.width / 2);
+
+    toolbar.classList.remove('hidden');
+    
+    setTimeout(() => {
+        const tbRect = toolbar.getBoundingClientRect();
+        left = left - (tbRect.width / 2); 
+        
+        // تعديل إذا كان خارج الشاشة
+        if (left < 10) left = 10;
+        if (left + tbRect.width > window.innerWidth - 10) left = window.innerWidth - tbRect.width - 10;
+        if (top < 10) top = rect.bottom + 10; 
+
+        toolbar.style.top = `${top}px`;
+        toolbar.style.left = `${left}px`;
+        
+        toolbar.classList.remove('opacity-0', 'scale-95');
+        toolbar.classList.add('opacity-100', 'scale-100');
+    }, 10);
+};
+
+window.closeFloatingToolbar = function() {
+    const toolbar = document.getElementById('quick-floating-toolbar');
+    if (toolbar) {
+        toolbar.classList.remove('opacity-100', 'scale-100');
+        toolbar.classList.add('opacity-0', 'scale-95');
+        setTimeout(() => { toolbar.classList.add('hidden'); }, 200);
+    }
+    // مسح التظليل المؤقت
+    if (currentSelectedWords.length === 1) {
+         const el = document.getElementById(currentSelectedWords[0].domId);
+         if (el && !el.classList.contains('text-white') && !el.classList.contains('text-slate-900')) {
+             el.classList.remove('bg-emerald-100', 'dark:bg-emerald-900/40', 'text-emerald-800');
+         }
+    }
+};
+
+// إغلاق الشريط العائم عند النقر بأي مكان في المصحف
+document.addEventListener('click', function(e) {
+    const toolbar = document.getElementById('quick-floating-toolbar');
+    if (toolbar && !toolbar.classList.contains('hidden') && !toolbar.contains(e.target)) {
+        closeFloatingToolbar();
+    }
+});
+
+window.quickLogMistake = function(mistakeType, bgClass, textClass) {
+    if (currentSelectedWords.length === 0 || !currentTeacherObj || !currentAssessmentStudent) return;
+
+    const mainWord = currentSelectedWords[0];
+    const combinedText = mainWord.wordText;
+
+    const mistakeObj = {
+        student_id: currentAssessmentStudent.id,
+        teacher_id: currentTeacherObj.id,
+        surah_number: mainWord.surahNum,
+        ayah_number: mainWord.ayahNum,
+        word_position: mainWord.wordPos,
+        correct_word: combinedText,
+        student_mistake: 'رصد سريع',
+        qiraa_context: mainWord.riwayah,
+        mistake_type: mistakeType,
+        notes: ''
+    };
+
+    // حفظ في القاعدة صامتاً
+    try { supabaseClient.from('recitation_mistakes').insert([mistakeObj]).then(); } catch(e){}
+
+    currentAssessedMistakes.push({ 
+        domId: mainWord.domId, wordText: combinedText, ayahNum: mainWord.ayahNum, 
+        surahNum: mainWord.surahNum, riwayah: mainWord.riwayah, studentMistake: 'رصد سريع', 
+        type: mistakeType, note: '' 
+    });
+
+    // تلوين الكلمة بلمح البصر
+    const el = document.getElementById(mainWord.domId);
+    if (el) {
+        el.className = `inline-block px-1.5 py-0.5 rounded-lg cursor-pointer ${bgClass} ${textClass} shadow-md font-black scale-105 transition-all select-none`;
+    }
+
+    const counterEl = document.getElementById('session-mistakes-counter');
+    if (counterEl) counterEl.innerText = `${currentLang === 'ar' ? 'الأخطاء المرصودة' : 'Mistakes'}: ${currentAssessedMistakes.length}`;
+    
+    closeFloatingToolbar();
+};
+
+window.openFullMistakeModal = function() {
+    closeFloatingToolbar();
+    updatePopoverWordDisplay(); 
     document.getElementById('popover-student-error').value = '';
     const noteInput = document.getElementById('popover-qiraa-note');
     if (noteInput) noteInput.value = '';
-    const typeSelect = document.getElementById('popover-mistake-type');
-    if (typeSelect) typeSelect.selectedIndex = 0;
-
     document.getElementById('word-mistake-popover').classList.remove('hidden');
 };
 
@@ -5746,10 +6062,20 @@ window.confirmSaveMistake = async function() {
         wordText: combinedText, ayahNum: mainWord.ayahNum, surahNum: mainWord.surahNum, riwayah: mainWord.riwayah, studentMistake: errorSpoken, type: mistakeType, note: qiraaNote 
     });
 
-    currentSelectedWords.forEach(w => {
-        const el = document.getElementById(w.domId);
-        if (el) el.className = "inline-block px-2 py-0.5 rounded-xl cursor-pointer bg-rose-600 text-white shadow-lg font-bold scale-105 transition-all select-none";
-    });
+   const mistakeColors = {
+    'لحن جلي (تشكيل/حرف)': 'bg-rose-600 text-white',
+    'لحن خفي (تجويد/مد/غنة)': 'bg-orange-500 text-white',
+    'خطأ في الوصل / الوقف': 'bg-blue-500 text-white',
+    'تردد / نسيان': 'bg-yellow-400 text-slate-900',
+    'خلف في الرواية': 'bg-purple-600 text-white'
+};
+const colorClass = mistakeColors[mistakeType] || 'bg-rose-600 text-white';
+
+currentSelectedWords.forEach(w => {
+    const el = document.getElementById(w.domId);
+    // استبدال اللون الأحمر الثابت باللون المخصص لنوع الخطأ
+    if (el) el.className = `inline-block px-1.5 py-0.5 rounded-lg cursor-pointer ${colorClass} shadow-md font-bold scale-105 transition-all select-none`;
+});
 
     const counterEl = document.getElementById('session-mistakes-counter');
     if (counterEl) counterEl.innerText = `الأخطاء المرصودة: ${currentAssessedMistakes.length}`;
@@ -7011,6 +7337,136 @@ window.editAcademicReport = async function(reportId, reportDate) {
 
     } catch(err) {
         showToast('❌ تعذر تحميل التقرير للتعديل', 'error');
+    }
+};
+window.openStudentPointsHistory = async function(studentId, studentName, currentBalance) {
+    const modal = document.getElementById('student-points-modal');
+    const content = document.getElementById('points-history-content');
+    
+    // حماية لو المودال مش موجود في الصفحة
+    if (!modal || !content) {
+        console.error("المودال الخاص بالسجل غير موجود في HTML!");
+        return;
+    }
+
+    document.getElementById('points-modal-student-name').innerText = currentLang === 'ar' ? `الطالب: ${studentName}` : `Student: ${studentName}`;
+    document.getElementById('points-modal-total').innerText = currentBalance || 0;
+    content.innerHTML = `<p class="text-center text-amber-500/50 font-bold py-10 animate-pulse">⏳ ${currentLang === 'ar' ? 'جاري الفحص واستدعاء السجل التفصيلي...' : 'Loading detailed history...'}</p>`;
+    
+    modal.classList.remove('hidden');
+
+    try {
+        // جلب البيانات من 3 مصادر مختلفة
+        const [ordersRes, questsRes, notifsRes] = await Promise.all([
+            supabaseClient.from('reward_orders').select('*').eq('student_id', studentId),
+            supabaseClient.from('daily_quests_log').select('*').eq('student_id', studentId),
+            supabaseClient.from('student_notifications').select('*').eq('target', studentName)
+        ]);
+
+        let history = [];
+
+        // 1. معالجة المشتريات وعجلة الحظ (reward_orders)
+        if (ordersRes.data) {
+            ordersRes.data.forEach(o => {
+                const isWheel = o.reward_id && o.reward_id.includes('wheel');
+                if (isWheel) {
+                    let ptsMatch = o.reward_name.match(/(\d+)\s*نجمة/);
+                    let pts = ptsMatch ? parseInt(ptsMatch[1]) : 0;
+                    if (pts > 0) {
+                        history.push({ type: 'plus', title: 'عجلة الحظ الملكية 🎡', desc: `فاز بـ: ${o.reward_name}`, points: pts, date: new Date(o.created_at), icon: '🎡' });
+                    } else {
+                        history.push({ type: 'plus', title: 'عجلة الحظ الملكية 🎡', desc: `فاز بـ: ${o.reward_name}`, points: 'هدية', date: new Date(o.created_at), icon: '🎁' });
+                    }
+                } else {
+                    history.push({ type: 'minus', title: 'شراء من المتجر 🛍️', desc: o.reward_name, points: o.cost, date: new Date(o.created_at), icon: '🛍️' });
+                }
+            });
+        }
+
+        // 2. معالجة المهام اليومية (daily_quests_log)
+        const questValues = {
+            'q_read': { title: 'قراءة الورد اليومي', points: 10, icon: '📖' },
+            'q_listen': { title: 'الاستماع للتلاوة', points: 5, icon: '🎧' },
+            'q_audio': { title: 'إرسال واجب صوتي', points: 15, icon: '🎙️' },
+            'q_attend': { title: 'حضور الحصة في الموعد', points: 5, icon: '⏰' },
+            'pray_fajr': { title: 'أداء صلاة الفجر', points: 2, icon: '🕌' },
+            'pray_dhuhr': { title: 'أداء صلاة الظهر', points: 2, icon: '🕌' },
+            'pray_asr': { title: 'أداء صلاة العصر', points: 2, icon: '🕌' },
+            'pray_maghrib': { title: 'أداء صلاة المغرب', points: 2, icon: '🕌' },
+            'pray_isha': { title: 'أداء صلاة العشاء', points: 2, icon: '🕌' }
+        };
+
+        if (questsRes.data) {
+            questsRes.data.forEach(q => {
+                const qData = questValues[q.quest_id];
+                if (qData) {
+                    const qDate = q.created_at ? new Date(q.created_at) : new Date(q.date + 'T12:00:00');
+                    history.push({ type: 'plus', title: 'إنجاز مهمة يومية 🎯', desc: qData.title, points: qData.points, date: qDate, icon: qData.icon });
+                }
+            });
+        }
+
+        // 3. معالجة الإشعارات (student_notifications) للمكافآت اليدوية والتقييمات
+        if (notifsRes.data) {
+            notifsRes.data.forEach(n => {
+                if (n.title && (n.title.includes('مكافأة') || n.title.includes('تقييم واجب') || n.title.includes('⭐') || n.title.includes('🌟'))) {
+                    let ptsMatch = n.title.match(/\((\d+)\)/) || n.body?.match(/\((\d+)\)/);
+                    let pts = ptsMatch ? parseInt(ptsMatch[1]) : 0;
+                    
+                    if (pts > 0) {
+                         let icon = n.title.includes('تقييم') ? '✅' : '🌟';
+                         let desc = n.body ? n.body.substring(0, 60) + '...' : 'مكافأة من المعلم';
+                         history.push({ type: 'plus', title: n.title, desc: desc, points: pts, date: new Date(n.created_at), icon: icon });
+                    }
+                }
+            });
+        }
+
+        // 4. ترتيب السجل من الأحدث للأقدم
+        history.sort((a, b) => b.date - a.date);
+
+        // 5. رسم السجل
+        if (history.length === 0) {
+            content.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-10 opacity-70">
+                    <span class="text-5xl mb-3 grayscale">🏆</span>
+                    <p class="text-sm font-bold text-slate-400">${currentLang === 'ar' ? 'لم يتم رصد نقاط أو مكافآت مسجلة بعد.' : 'No points recorded yet.'}</p>
+                </div>`;
+            return;
+        }
+
+        content.innerHTML = history.map(item => {
+            const dateStr = item.date.toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            let timeStr = '';
+            if (item.date.getHours() !== 12 && item.date.getMinutes() !== 0) {
+                timeStr = item.date.toLocaleTimeString(currentLang === 'ar' ? 'ar-EG' : 'en-US', { hour: '2-digit', minute: '2-digit' });
+            }
+            
+            const isMinus = item.type === 'minus';
+            const sign = isMinus ? '-' : '+';
+            const colorClass = isMinus ? 'text-rose-400 bg-rose-950/40 border-rose-500/30' : 'text-emerald-400 bg-emerald-950/40 border-emerald-500/30';
+            
+            return `
+            <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700/80 flex items-center justify-between hover:bg-slate-800 transition-colors shadow-sm">
+                <div class="flex items-center gap-4 w-3/4">
+                    <div class="w-10 h-10 rounded-full ${isMinus ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'} flex items-center justify-center text-lg shrink-0 shadow-inner">
+                        ${item.icon}
+                    </div>
+                    <div class="w-full">
+                        <h4 class="text-sm font-black text-slate-200 truncate">${item.title}</h4>
+                        <p class="text-[11px] font-bold text-slate-400 mt-1 truncate">${item.desc}</p>
+                        <p class="text-[9px] font-bold text-slate-500 mt-1 font-mono" dir="ltr">${dateStr} ${timeStr ? '• ' + timeStr : ''}</p>
+                    </div>
+                </div>
+                <div class="px-3 py-1.5 rounded-xl border ${colorClass} font-mono font-black text-sm flex items-center gap-1 shadow-inner shrink-0" dir="ltr">
+                    ${sign}${item.points} ⭐
+                </div>
+            </div>`;
+        }).join('');
+
+    } catch (e) {
+        console.error("Points History Error: ", e);
+        content.innerHTML = `<p class="text-center text-rose-500 font-bold py-10">❌ حدث خطأ في تحميل السجل. تأكد من اتصال قاعدة البيانات.</p>`;
     }
 };
     </script>
