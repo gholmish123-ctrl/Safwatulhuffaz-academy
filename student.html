@@ -5557,13 +5557,28 @@ function drawRoyalWheel(angle = 0) {
     ctx.restore();
 }
 window.spinTVShowWheel = async function() {
-    if (isWheelSpinning || !studentData) return;
-    const btn = document.getElementById('btn-tv-spin');
-    const resultBox = document.getElementById('tv-wheel-result');
+    if (!studentData) return;
+
+    const currentMonthStr = new Date().toISOString().slice(0, 7);
+    const alreadySpun = localStorage.getItem(`royal_wheel_spun_${studentData.id}`) === currentMonthStr;
     const isAr = (typeof currentLang !== 'undefined' && currentLang === 'ar');
 
+    // 1. 🔒 حماية صارمة: منع الدوران إذا كان يلف حالياً أو لعبها مسبقاً هذا الشهر
+    if (isWheelSpinning || alreadySpun) {
+        showToast(isAr ? 'عذراً، لقد استخدمت فرصتك الملكية لهذا الشهر!' : 'You already used your spin this month!', 'warning');
+        return;
+    }
+
+    const btn = document.getElementById('btn-tv-spin');
+    const resultBox = document.getElementById('tv-wheel-result');
+
     isWheelSpinning = true;
-    if (btn) btn.disabled = true;
+    
+    // 2. 🔒 تعطيل الزر تماماً وتخفيت لونه بمجرد الضغط عليه
+    if (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+    }
     if (resultBox) resultBox.classList.add('hidden');
 
     const numSegments = WHEEL_PRIZES.length;
@@ -5585,7 +5600,7 @@ window.spinTVShowWheel = async function() {
         currentWheelAngle = easeOut * finalAngle;
 
         if (Math.abs(currentWheelAngle - lastTickAngle) > arcSize) {
-            playTickSound();
+            if(typeof playTickSound === 'function') playTickSound();
             lastTickAngle = currentWheelAngle;
         }
 
@@ -5595,6 +5610,13 @@ window.spinTVShowWheel = async function() {
             requestAnimationFrame(animateSpin);
         } else {
             isWheelSpinning = false;
+            
+            // 3. 🔒 تسجيل أن الطالب لعب "فووووراً" قبل أي تأخير من الداتا بيز
+            localStorage.setItem(`royal_wheel_spun_${studentData.id}`, currentMonthStr);
+            
+            // 4. 🔒 إخفاء الزر نهائياً حتى لا يستطيع النقر عليه أثناء قراءة النتيجة
+            if (btn) btn.style.display = 'none';
+
             const wonPrize = WHEEL_PRIZES[winIndex];
 
             setTimeout(async () => {
@@ -5620,12 +5642,12 @@ window.spinTVShowWheel = async function() {
                 }
 
                 try {
-                    // 1. تحديث رصيد الطالب
+                    // تحديث رصيد الطالب
                     if (Object.keys(updatePayload).length > 0) {
                         await supabaseClient.from('students').update(updatePayload).eq('id', studentData.id);
                     }
 
-                    // 2. تسجيل الجائزة في جدول المشتريات
+                    // تسجيل الجائزة
                     await supabaseClient.from('reward_orders').insert([{
                         student_id: studentData.id,
                         student_name: studentData.name,
@@ -5635,7 +5657,7 @@ window.spinTVShowWheel = async function() {
                         status: 'approved'
                     }]);
 
-                    // 3. إرسال إشعار للإدارة والمعلم
+                    // إرسال الإشعارات
                     const teacherName = teacherData ? (teacherData.name_ar || teacherData.name) : 'المعلم';
                     await supabaseClient.from('notifications').insert([
                         {
@@ -5655,14 +5677,19 @@ window.spinTVShowWheel = async function() {
                     ]);
                 } catch(e) { console.error(e); }
 
-                const currentMonthStr = new Date().toISOString().slice(0, 7);
-                localStorage.setItem(`royal_wheel_spun_${studentData.id}`, currentMonthStr);
                 if (typeof shootStars === 'function') shootStars();
                 showToast(isAr ? `🎁 تم تسجيل جائزتك واعتمادها بنجاح!` : `🎁 Reward recorded successfully!`, 'success');
-            }, 500);
-        } // إغلاق كتلة else المفقودة
-    } // إغلاق دالة animateSpin المفقودة
 
+                // 5. 🔒 إغلاق العجلة تلقائياً وتحويلها لوضع القفل بعد 5 ثواني من رؤية الجائزة
+                setTimeout(() => {
+                    if (typeof checkWheelStateAndTimer === 'function') {
+                        checkWheelStateAndTimer();
+                    }
+                }, 5000);
+
+            }, 500);
+        }
+    }
     requestAnimationFrame(animateSpin);
 };
 // تحديث فحص العجلة دورياً
@@ -5672,6 +5699,7 @@ setInterval(() => {
         checkWheelStateAndTimer();
     }
 }, 1000);
+
 window.checkWheelStateAndTimer = async function() {
             const lockedBox = document.getElementById('wheel-locked-state');
             const unlockedBox = document.getElementById('wheel-unlocked-state');
@@ -5753,10 +5781,10 @@ window.checkWheelStateAndTimer = async function() {
                 }
             }
 
-            // فتح العجلة في أي يوم طالما الطالب مؤهل ولم يلعبها بعد في هذا الشهر
-            if (isRankEligible && !alreadySpun) {
-                lockedBox.classList.add('hidden');
-                unlockedBox.classList.remove('hidden');
+          // فتح العجلة في أي يوم طالما الطالب مؤهل ولم يلعبها بعد في هذا الشهر
+    if (isRankEligible && !alreadySpun) {
+        lockedBox.classList.add('hidden');
+        unlockedBox.classList.remove('hidden');
                 if (typeof drawRoyalWheel === 'function') drawRoyalWheel(currentWheelAngle);
             } else {
                 lockedBox.classList.remove('hidden');
