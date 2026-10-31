@@ -4,132 +4,432 @@
     <link rel="icon" type="image/png" href="logo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة الأكاديمية | تسجيل الدخول</title>
+    <title id="page-title">بوابة الأكاديمية الملكية | أكاديمية صفوة الحفاظ</title>
+    
+    <!-- Tailwind CSS v4 -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Supabase JS v2 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Amiri+Quran&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Tajawal', sans-serif; }
+        :root {
+            --gold: #D4AF37;
+            --gold-dark: #B8860B;
+            --emerald-royal: #047857;
+            --emerald-deep: #031c14;
+        }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
         .font-calligraphy { font-family: 'Amiri', serif; }
+        .font-quran { font-family: 'Amiri Quran', 'Amiri', serif; }
+        .font-diwani { font-family: 'Aref Ruqaa', serif; }
+
+        /* خلفية الزخرفة الإسلامية الملكية */
+        .islamic-bg-pattern {
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(212, 175, 55, 0.12) 0%, transparent 45%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%23059669' stroke-width='0.6' stroke-opacity='0.09'%3E%3Cpath d='M30 0l15 15-15 15-15-15zM0 30l15 15-15 15-15-15zM60 30l15 15-15 15-15-15zM30 60l15 15-15 15-15-15z'/%3E%3Ccircle cx='30' cy='30' r='10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        html.dark body {
+            background-color: #040d0a;
+            color: #f8fafc;
+        }
+        html.dark .glass-card {
+            background: rgba(15, 23, 42, 0.82) !important;
+            border-color: rgba(212, 175, 55, 0.28) !important;
+            color: #f8fafc !important;
+        }
+        html.dark .input-royal {
+            background-color: rgba(2, 6, 23, 0.75) !important;
+            border-color: rgba(51, 65, 85, 0.9) !important;
+            color: #f8fafc !important;
+        }
+        html.dark .text-DynamicTitle { color: #f8fafc !important; }
+        html.dark .text-DynamicSub { color: #94a3b8 !important; }
+        html.dark .role-pill-inactive {
+            background-color: rgba(30, 41, 59, 0.7) !important;
+            color: #cbd5e1 !important;
+            border-color: rgba(71, 85, 105, 0.5) !important;
+        }
+
         @keyframes marquee {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-        .animate-marquee { animation: marquee 25s linear infinite; }
+        .animate-marquee { animation: marquee 28s linear infinite; }
+        .animate-marquee:hover { animation-play-state: paused; }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float { animation: floatSlow 4.5s ease-in-out infinite; }
+
+        @keyframes spinSlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-spin-slow { animation: spinSlow 24s linear infinite; }
+
+        /* موجات الصوت التفاعلية */
+        @keyframes soundWave {
+            0%, 100% { height: 4px; }
+            50% { height: 16px; }
+        }
+        .wave-bar {
+            width: 3px;
+            background-color: #fbbf24;
+            border-radius: 999px;
+            display: inline-block;
+            height: 4px;
+            transition: height 0.2s ease;
+        }
+        .playing .wave-bar:nth-child(1) { animation: soundWave 0.7s infinite ease-in-out 0.1s; }
+        .playing .wave-bar:nth-child(2) { animation: soundWave 0.7s infinite ease-in-out 0.3s; }
+        .playing .wave-bar:nth-child(3) { animation: soundWave 0.7s infinite ease-in-out 0.0s; }
+        .playing .wave-bar:nth-child(4) { animation: soundWave 0.7s infinite ease-in-out 0.4s; }
+
+        .hover-lift {
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 35px -10px rgba(4, 120, 87, 0.28);
+        }
     </style>
 </head>
-<body class="bg-gray-50 flex flex-col min-h-screen overflow-y-auto">
+<body class="bg-[#f7f9f7] islamic-bg-pattern flex flex-col min-h-screen justify-between selection:bg-emerald-700 selection:text-amber-300">
 
-    <div class="w-full bg-emerald-800 text-emerald-50 py-2 shadow-sm text-sm font-medium overflow-hidden whitespace-nowrap relative z-50">
-        <div class="inline-block animate-marquee text-lg">
-            ﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ﴿ يَرْفَعِ اللَّهُ الَّذِينَ آمَنُوا مِنكُمْ وَالَّذِينَ أُوتُوا الْعِلْمَ دَرَجَاتٍ ﴾
+    <!-- ================= 1. الشريط القرآني الملكي العلوي ================= -->
+    <div class="w-full bg-gradient-to-r from-[#02120d] via-[#062e22] to-[#02120d] text-amber-200/95 py-2 shadow-md text-xs sm:text-sm font-bold overflow-hidden whitespace-nowrap relative z-50 border-b border-amber-500/30">
+        <div class="inline-block animate-marquee" id="top-ayah-marquee">
+            ✨ ﴿ إِنَّ هَٰذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ وَيُبَشِّرُ الْمُؤْمِنِينَ ﴾ &nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp; ﴿ يَرْفَعِ اللَّهُ الَّذِينَ آمَنُوا مِنكُمْ وَالَّذِينَ أُوتُوا الْعِلْمَ دَرَجَاتٍ ﴾ &nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp; ﴿ خَيْرُكُمْ مَنْ تَعَلَّمَ القُرْآنَ وَعَلَّمَهُ ﴾ ✨
         </div>
     </div>
 
-    <div class="flex-1 flex flex-col items-center justify-center p-4 gap-4">
-        
-        <div class="text-center bg-white border border-emerald-100 px-6 py-2 rounded-full shadow-sm max-w-md w-full mt-4">
-            <span id="live-date" class="font-calligraphy text-xl font-bold text-emerald-800 tracking-wide"></span>
+   <!-- ================= شريط الأدوات العلوي المطور (الجيولوكيشن التلقائي + التلاوة التلقائية) ================= -->
+    <div class="w-full max-w-7xl mx-auto px-4 pt-4 flex flex-wrap items-center justify-between gap-3 relative z-30">
+        <!-- كبسولة التاريخ الحي -->
+        <div class="flex items-center gap-2.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-emerald-200/80 dark:border-emerald-500/30 px-4 py-2 rounded-2xl shadow-xs">
+            <span class="text-base">📅</span>
+            <span id="live-date" class="font-calligraphy text-sm sm:text-base font-black text-emerald-900 dark:text-amber-300 tracking-wide"></span>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md border border-gray-100 relative mb-4">
-            
-            <div class="absolute top-4 left-4 right-auto rtl:left-auto rtl:right-4 z-10">
-                <select id="lang-switcher" class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-lg px-2 py-1 font-semibold focus:outline-none cursor-pointer">
-                    <option value="ar">العربية</option>
-                    <option value="en">English</option>
-                    <option value="hi">हिन्दी</option>
-                </select>
+        <!-- المواقيت الذكية (توقيت المعلم + توقيت الطالب المحلي المكتشف تلقائياً) + الأزرار -->
+        <div class="flex flex-wrap items-center gap-2">
+            <!-- شريط الساعات الذكي المحدث بالـ IP -->
+            <div class="flex items-center gap-2 bg-slate-900 text-white px-3.5 py-2 rounded-2xl border border-amber-500/30 text-[11px] font-bold shadow-xs" dir="ltr">
+                <span class="text-amber-300">🕋 Makkah: <b id="mini-clk-makkah" class="font-mono">--:--</b></span>
+                <span class="text-slate-600">|</span>
+                <span class="text-emerald-300">🇪🇬 Cairo: <b id="mini-clk-cairo" class="font-mono">--:--</b></span>
+                <span id="student-timezone-badge" class="hidden items-center gap-1.5">
+                    <span class="text-slate-600">|</span>
+                    <span class="text-sky-300" id="student-tz-label">🌍 Local: <b id="mini-clk-student" class="font-mono">--:--</b></span>
+                </span>
             </div>
 
-            <div class="flex flex-col items-center mb-6 mt-2">
-                <div class="bg-white p-1 rounded-full border border-emerald-100 shadow-md mb-2 w-20 h-20 flex items-center justify-center overflow-hidden">
-                    <img src="logo.png" alt="Academy Logo" class="w-full h-full object-contain">
-                </div>
-                <span id="txt-logo-sub" class="text-xs text-emerald-800 font-bold tracking-widest bg-emerald-50/50 px-3 py-0.5 rounded-full border border-emerald-100/50">Safwatulhuffaz ACADEMY</span>
-            </div>
+            <!-- زر تلاوة الآية الترحيبية (تعمل تلقائياً عند الدخول) -->
+         <!-- زر التلاوة المخفي (يعمل تلقائياً في الخلفية بدون علامة أو زر ظاهر) -->
+<button type="button" id="btn-ayah-audio" onclick="toggleWelcomeAyahAudio()" class="hidden"></button>
+             
+               
 
-            <div id="error-msg" class="hidden bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4 text-center font-bold"></div>
-            <div id="success-msg" class="hidden bg-emerald-50 text-emerald-600 p-3 rounded-lg text-sm mb-4 text-center font-bold"></div>
+            <!-- زر الوضع الليلي -->
+            <button type="button" onclick="togglePortalDarkMode()" id="dark-mode-toggle" class="w-10 h-10 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-base cursor-pointer shadow-xs hover:border-emerald-500 transition" title="الوضع الليلي / النهاري">🌙</button>
 
-            <div id="login-section">
-                <div class="text-center mb-6">
-                    <h1 id="txt-portal-title" class="text-2xl font-bold text-emerald-800">بوابة الأكاديمية التعليمية</h1>
-                    <p id="txt-portal-subtitle" class="text-gray-500 text-sm mt-1">مرحباً بك، يرجى تسجيل الدخول للمتابعة</p>
-                </div>
+            <!-- مبدل اللغات (يتحدث تلقائياً حسب لغة الدولة) -->
+            <select id="lang-switcher" class="bg-white dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 text-emerald-900 dark:text-amber-300 text-xs rounded-2xl px-3.5 py-2.5 font-black focus:outline-none cursor-pointer shadow-xs">
+                <option value="ar">🇸🇦 العربية (AR)</option>
+                <option value="en">🇬🇧 English (EN)</option>
+                <option value="hi">🇮🇳 हिन्दी (HI)</option>
+            </select>
+        </div>
+    </div>
+    <!-- ================= 3. الحاوية المركزية المزدوجة (Split-Screen Royal Portal) ================= -->
+    <main class="flex-1 flex items-center justify-center p-4 sm:p-6 relative z-20">
+        <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 rounded-[2.5rem] overflow-hidden shadow-[0_25px_70px_-15px_rgba(4,120,87,0.28)] border-2 border-[#C59B27]/40 glass-card bg-white/95 backdrop-blur-xl">
 
-                <form id="login-form" autocomplete="off">
-                    <div class="mb-4">
-                        <label id="lbl-email" class="block text-gray-700 text-sm font-semibold mb-2">البريد الإلكتروني</label>
-                        <input type="email" id="email" required autofocus autocomplete="off" placeholder="name@academy.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-start">
+            <!-- 🌟 القسم الأيمن (اللوحة الترحيبية الملكية والمميزات - يظهر في الشاشات الكبيرة والوسطى) 🌟 -->
+            <div class="lg:col-span-6 bg-gradient-to-br from-[#031811] via-[#073022] to-[#0b1528] text-white p-8 sm:p-10 flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-l border-[#C59B27]/30">
+                <!-- إضاءات خلفية ملكية -->
+                <div class="absolute -top-24 -right-24 w-72 h-72 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-amber-500/15 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:24px_24px] opacity-10 pointer-events-none"></div>
+
+                <!-- الهوية والشعار الملكي -->
+                <div class="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-start">
+                    <div class="inline-flex items-center gap-2 bg-amber-500/15 border border-amber-400/40 text-amber-300 text-[11px] font-black px-3.5 py-1 rounded-full mb-5">
+                        <span>👑</span>
+                        <span id="txt-royal-badge">الصرح القرآني والعلمي العالمي المعتمد</span>
                     </div>
 
+                    <div class="flex flex-col sm:flex-row items-center gap-4 mb-5">
+                        <div class="relative w-22 h-22 shrink-0 flex items-center justify-center">
+                            <div class="absolute inset-0 rounded-full border-2 border-dashed border-amber-400/60 animate-spin-slow"></div>
+                            <div class="w-19 h-19 rounded-full bg-white p-1.5 shadow-2xl border-2 border-[#D4AF37] flex items-center justify-center overflow-hidden animate-float">
+                                <img src="logo.png" alt="Safwat Al-Huffaz Logo" class="w-full h-full object-contain rounded-full" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Safwa&background=047857&color=fff'">
+                            </div>
+                        </div>
+                        <div>
+                            <span id="txt-logo-sub" class="text-[11px] text-amber-300/90 font-mono font-black tracking-widest uppercase block">SAFWAT AL-HUFFAZ ACADEMY</span>
+                            <h2 id="txt-hero-heading" class="text-2xl sm:text-3xl font-diwani font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-100 to-amber-300 mt-1 leading-relaxed">
+                                أكاديمية صفوة الحفاظ للقرآن واللغات
+                            </h2>
+                        </div>
+                    </div>
+
+                    <p id="txt-hero-desc" class="text-xs sm:text-sm text-emerald-100/85 leading-relaxed font-medium">
+                        بيئة تعليمية ذكية تجمع بين أصالة الإقراء بالسند المتصل إلى رسول الله ﷺ وأحدث تقنيات التعليم التفاعلي والمصحف الإلكتروني الناطق للعرب وغير الناطقين بالعربية.
+                    </p>
+                </div>
+
+                <!-- بطاقة الإشراقات النبوية والقرآنية المتقلبة -->
+                <div class="relative z-10 my-6 bg-white/5 backdrop-blur-md border border-amber-400/30 rounded-3xl p-5 shadow-inner">
+                    <div class="flex items-center justify-between mb-2">
+                        <span id="txt-gem-title" class="text-[11px] font-black text-amber-300 flex items-center gap-1.5">
+                            <span>📜</span> <span>إشراقة قرآنية ونبوية</span>
+                        </span>
+                        <div class="flex gap-1" id="gem-dots">
+                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                            <span class="w-2 h-2 rounded-full bg-white/25"></span>
+                            <span class="w-2 h-2 rounded-full bg-white/25"></span>
+                        </div>
+                    </div>
+                    <p id="rotating-gem-text" class="font-quran text-base sm:text-lg text-white leading-relaxed text-center py-2 transition-opacity duration-500">
+                        قال رسول الله ﷺ: «خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ»
+                    </p>
+                    <p id="rotating-gem-sub" class="text-[11px] text-emerald-300 font-bold text-center mt-1">
+                        رواه الإمام البخاري • وسام الشرف لأهل القرآن
+                    </p>
+                </div>
+
+                <!-- المزايا الأربع للأكاديمية -->
+                <div class="relative z-10 grid grid-cols-2 gap-3 text-xs">
+                    <div class="bg-slate-950/50 border border-white/10 p-3.5 rounded-2xl flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-lg shrink-0">📖</span>
+                        <div>
+                            <h4 id="feat-1-title" class="font-black text-amber-200 text-xs">مصحف القراءات الملكي</h4>
+                            <p id="feat-1-sub" class="text-[10px] text-slate-300 mt-0.5">رصد وتصويب فوري ثنائي اللغة</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-950/50 border border-white/10 p-3.5 rounded-2xl flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-lg shrink-0">🎓</span>
+                        <div>
+                            <h4 id="feat-2-title" class="font-black text-amber-200 text-xs">إجازات بالسند المتصل</h4>
+                            <p id="feat-2-sub" class="text-[10px] text-slate-300 mt-0.5">القراءات العشر والمتون العلمية</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-950/50 border border-white/10 p-3.5 rounded-2xl flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-lg shrink-0">🌍</span>
+                        <div>
+                            <h4 id="feat-3-title" class="font-black text-amber-200 text-xs">مناهج للعرب والأعاجم</h4>
+                            <p id="feat-3-sub" class="text-[10px] text-slate-300 mt-0.5">العربية بين يديك ونور البيان</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-950/50 border border-white/10 p-3.5 rounded-2xl flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-lg shrink-0">📲</span>
+                        <div>
+                            <h4 id="feat-4-title" class="font-black text-amber-200 text-xs">متابعة لحظية للوالدين</h4>
+                            <p id="feat-4-sub" class="text-[10px] text-slate-300 mt-0.5">تقارير ذكية وإشعارات واتساب</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🔐 القسم الأيسر (نموذج تسجيل الدخول الملكي واستعادة الحساب) 🔐 -->
+            <div class="lg:col-span-6 p-6 sm:p-10 flex flex-col justify-between relative">
+
+                <!-- شريط الجلسة النشطة (يظهر تلقائياً إذا كان المستخدم مسجلاً للدخول بالفعل) -->
+                <div id="active-session-banner" class="hidden mb-5 bg-gradient-to-r from-emerald-900 to-teal-900 text-white p-4 rounded-2xl border border-amber-400/50 shadow-lg flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
+                        <div class="text-xs">
+                            <p id="active-session-title" class="font-black text-amber-300">جلسة نشطة مسجلة حالياً</p>
+                            <p id="active-session-email" class="text-[11px] text-emerald-100 font-mono truncate max-w-[180px] sm:max-w-[230px]">---</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button type="button" id="btn-continue-session" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl cursor-pointer transition shadow-sm">
+                            🚀 متابعة الدخول
+                        </button>
+                        <button type="button" onclick="forceClearCurrentSession()" class="bg-rose-600/40 hover:bg-rose-600 text-white text-xs font-bold px-2.5 py-2 rounded-xl cursor-pointer transition" title="تسجيل خروج">✕</button>
+                    </div>
+                </div>
+
+                <div>
+                    <!-- التبويبات البصرية للفئات (طالب / معلم / ولي أمر / إدارة) -->
                     <div class="mb-6">
-                        <div class="flex justify-between items-center mb-2">
-                            <label id="lbl-password" class="text-gray-700 text-sm font-semibold">كلمة المرور</label>
-                            <button type="button" id="btn-forgot-password" class="text-xs text-emerald-600 hover:underline focus:outline-none cursor-pointer">نسيت كلمة السر؟</button>
-                        </div>
-                        <div class="relative">
-                            <input type="password" id="password" required autocomplete="new-password" placeholder="••••••••" class="w-full px-4 py-2 pe-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-start">
-                            <button type="button" id="toggle-password" class="absolute inset-y-0 end-0 flex items-center pe-3 text-gray-400 hover:text-emerald-700 focus:outline-none cursor-pointer">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        <p id="lbl-select-portal-mode" class="text-[11px] font-black text-slate-400 uppercase tracking-wider text-center mb-2">اختر بوابتك التعليمية للدخول السريع</p>
+                        <div class="grid grid-cols-4 gap-1.5 bg-slate-100 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+                            <button type="button" onclick="selectVisualRole('student')" id="role-tab-student" class="py-2 px-1 rounded-xl text-[11px] font-black transition cursor-pointer bg-emerald-700 text-white shadow-xs flex flex-col items-center gap-0.5">
+                                <span class="text-base">👨‍🎓</span> <span id="tab-txt-student">طالب</span>
+                            </button>
+                            <button type="button" onclick="selectVisualRole('teacher')" id="role-tab-teacher" class="py-2 px-1 rounded-xl text-[11px] font-bold transition cursor-pointer role-pill-inactive text-slate-600 hover:bg-white flex flex-col items-center gap-0.5">
+                                <span class="text-base">👳‍♂️</span> <span id="tab-txt-teacher">معلم</span>
+                            </button>
+                            <button type="button" onclick="selectVisualRole('parent')" id="role-tab-parent" class="py-2 px-1 rounded-xl text-[11px] font-bold transition cursor-pointer role-pill-inactive text-slate-600 hover:bg-white flex flex-col items-center gap-0.5">
+                                <span class="text-base">👨‍👩‍👧</span> <span id="tab-txt-parent">ولي أمر</span>
+                            </button>
+                            <button type="button" onclick="selectVisualRole('admin')" id="role-tab-admin" class="py-2 px-1 rounded-xl text-[11px] font-bold transition cursor-pointer role-pill-inactive text-slate-600 hover:bg-white flex flex-col items-center gap-0.5">
+                                <span class="text-base">🛡️</span> <span id="tab-txt-admin">الإدارة</span>
                             </button>
                         </div>
                     </div>
 
-                    <button type="submit" id="btn-login-submit" class="w-full h-10 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg transition duration-200 flex items-center justify-center cursor-pointer">
-                        تسجيل الدخول
-                    </button>
-                </form>
-            </div>
+                    <!-- رسائل الخطأ والنجاح -->
+                    <div id="error-msg" class="hidden bg-rose-50 dark:bg-rose-950/70 border-2 border-rose-300 dark:border-rose-500/50 text-rose-700 dark:text-rose-200 p-3.5 rounded-2xl text-xs sm:text-sm mb-5 text-center font-black shadow-xs"></div>
+                    <div id="success-msg" class="hidden bg-emerald-50 dark:bg-emerald-950/70 border-2 border-emerald-300 dark:border-emerald-500/50 text-emerald-800 dark:text-emerald-200 p-3.5 rounded-2xl text-xs sm:text-sm mb-5 text-center font-black shadow-xs"></div>
 
-            <div id="forgot-section" class="hidden">
-                <div class="text-center mb-6">
-                    <h1 class="text-xl font-bold text-emerald-800" id="forgot-title">استعادة كلمة المرور</h1>
-                    <p class="text-gray-500 text-sm mt-1" id="forgot-desc">أدخل بريدك الإلكتروني لإرسال كود التحقيق</p>
+                    <!-- ================= قسم تسجيل الدخول الرئيسي ================= -->
+                    <div id="login-section">
+                        <div class="text-center mb-6">
+                            <h1 id="txt-portal-title" class="text-2xl sm:text-3xl font-black text-emerald-900 text-DynamicTitle tracking-tight">بوابة الأكاديمية التعليمية</h1>
+                            <p id="txt-portal-subtitle" class="text-slate-500 text-DynamicSub text-xs sm:text-sm font-bold mt-1.5">مرحباً بك، يرجى تسجيل الدخول للمتابعة إلى لوحتك</p>
+                        </div>
+
+                        <form id="login-form" autocomplete="off" class="space-y-5">
+                            <div>
+                                <label id="lbl-email" for="email" class="block text-slate-700 text-DynamicTitle text-xs font-black mb-2">البريد الإلكتروني للحساب</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 start-0 flex items-center ps-3.5 text-slate-400 pointer-events-none">✉️</span>
+                                    <input type="email" id="email" required autofocus autocomplete="off" placeholder="name@academy.com" class="input-royal w-full ps-10 pe-4 py-3.5 bg-slate-50/80 border-2 border-slate-200 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white transition text-start">
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label id="lbl-password" for="password" class="text-slate-700 text-DynamicTitle text-xs font-black">كلمة المرور السرية</label>
+                                    <button type="button" id="btn-forgot-password" class="text-xs font-black text-emerald-700 dark:text-amber-400 hover:underline focus:outline-none cursor-pointer">نسيت كلمة السر؟</button>
+                                </div>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 start-0 flex items-center ps-3.5 text-slate-400 pointer-events-none">🔒</span>
+                                    <input type="password" id="password" required autocomplete="new-password" placeholder="••••••••" class="input-royal w-full ps-10 pe-12 py-3.5 bg-slate-50/80 border-2 border-slate-200 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white transition text-start">
+                                    <button type="button" id="toggle-password" class="absolute inset-y-0 end-0 flex items-center pe-3.5 text-slate-400 hover:text-emerald-700 focus:outline-none cursor-pointer">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- خيار حفظ البريد الإلكتروني -->
+                            <div class="flex items-center justify-between text-xs">
+                                <label class="flex items-center gap-2 cursor-pointer select-none text-slate-600 text-DynamicSub font-bold">
+                                    <input type="checkbox" id="remember-email-cb" checked class="w-4 h-4 accent-emerald-700 rounded cursor-pointer">
+                                    <span id="lbl-remember-me">تذكر بريدي الإلكتروني على هذا الجهاز</span>
+                                </label>
+                                <span class="text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">🔒 SSL Secured</span>
+                            </div>
+
+                            <button type="submit" id="btn-login-submit" class="w-full h-13 bg-gradient-to-r from-[#047857] via-[#065f46] to-[#047857] hover:from-[#065f46] hover:to-[#064e3b] text-white font-black text-sm rounded-2xl shadow-lg shadow-emerald-900/20 border border-emerald-400/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer hover-lift">
+                                تسجيل الدخول
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- ================= قسم استعادة كلمة المرور (3 خطوات) ================= -->
+                    <div id="forgot-section" class="hidden">
+                        <div class="text-center mb-5">
+                            <h1 class="text-xl sm:text-2xl font-black text-emerald-900 text-DynamicTitle" id="forgot-title">استعادة كلمة المرور</h1>
+                            <p class="text-slate-500 text-DynamicSub text-xs font-bold mt-1" id="forgot-desc">أدخل بريدك الإلكتروني لإرسال كود التحقق</p>
+                        </div>
+
+                        <!-- مؤشر خطوات الاستعادة -->
+                        <div class="grid grid-cols-3 gap-2 mb-6 text-center text-[11px] font-black">
+                            <div id="step-ind-1" class="py-1.5 rounded-xl bg-emerald-700 text-white">1. البريد</div>
+                            <div id="step-ind-2" class="py-1.5 rounded-xl bg-slate-100 text-slate-400">2. الكود (OTP)</div>
+                            <div id="step-ind-3" class="py-1.5 rounded-xl bg-slate-100 text-slate-400">3. كلمة السر</div>
+                        </div>
+
+                        <!-- الخطوة 1: إدخال البريد -->
+                        <form id="forgot-step1-form" autocomplete="off" class="space-y-4">
+                            <div>
+                                <label id="lbl-reset-email" class="block text-slate-700 text-DynamicTitle text-xs font-black mb-2">البريد الإلكتروني للحساب</label>
+                                <input type="email" id="reset-email" required autocomplete="off" placeholder="name@academy.com" class="input-royal w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-2xl text-sm font-bold focus:outline-none focus:border-emerald-600 text-start">
+                            </div>
+                            <button type="submit" id="btn-send-code" class="w-full h-12 bg-emerald-700 hover:bg-emerald-800 text-white font-black rounded-2xl transition flex items-center justify-center cursor-pointer shadow-md">
+                                أرسل كود التحقق
+                            </button>
+                        </form>
+
+                        <!-- الخطوة 2: إدخال الكود 6 أرقام -->
+                        <form id="forgot-step2-form" class="hidden space-y-4" autocomplete="off">
+                            <div>
+                                <label id="lbl-code-input" class="block text-slate-700 text-DynamicTitle text-xs font-black mb-2">كود التحقق المرسل لبريدك (6 أرقام)</label>
+                                <input type="text" id="reset-code" required autocomplete="off" placeholder="123456" maxlength="6" class="input-royal w-full px-4 py-3.5 border-2 border-emerald-400 bg-emerald-50/30 rounded-2xl text-center font-mono text-2xl font-black tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-emerald-500" dir="ltr">
+                            </div>
+                            <button type="submit" id="btn-confirm-code" class="w-full h-12 bg-emerald-700 hover:bg-emerald-800 text-white font-black rounded-2xl transition flex items-center justify-center cursor-pointer shadow-md">
+                                تأكيد الكود
+                            </button>
+                        </form>
+
+                        <!-- الخطوة 3: كلمة المرور الجديدة + مؤشر القوة -->
+                        <form id="forgot-step3-form" class="hidden space-y-4" autocomplete="off">
+                            <div>
+                                <label id="lbl-new-password" class="block text-slate-700 text-DynamicTitle text-xs font-black mb-2">كلمة المرور الجديدة</label>
+                                <div class="relative">
+                                    <input type="password" id="new-password" required oninput="checkNewPasswordStrength(this.value)" autocomplete="new-password" placeholder="••••••••" class="input-royal w-full px-4 py-3.5 pe-12 border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 text-start font-bold">
+                                    <button type="button" id="toggle-new-password" class="absolute inset-y-0 end-0 flex items-center pe-3.5 text-slate-400 hover:text-emerald-700 focus:outline-none cursor-pointer">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    </button>
+                                </div>
+                                <!-- شريط قياس قوة كلمة المرور -->
+                                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-2">
+                                    <div id="pass-strength-bar" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <button type="submit" id="btn-save-password" class="w-full h-12 bg-emerald-700 hover:bg-emerald-800 text-white font-black rounded-2xl transition flex items-center justify-center cursor-pointer shadow-md">
+                                حفظ كلمة المرور الجديدة
+                            </button>
+                        </form>
+
+                        <button type="button" id="btn-back-to-login" class="w-full text-center text-xs font-black text-slate-500 hover:text-emerald-700 mt-5 block hover:underline focus:outline-none cursor-pointer">
+                            ← العودة لتسجيل الدخول
+                        </button>
+                    </div>
                 </div>
 
-                <form id="forgot-step1-form" autocomplete="off">
-                    <div class="mb-4">
-                        <label id="lbl-reset-email" class="block text-gray-700 text-sm font-semibold mb-2">البريد الإلكتروني للحساب</label>
-                        <input type="email" id="reset-email" required autocomplete="off" placeholder="name@academy.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-start">
-                    </div>
-                    <button type="submit" id="btn-send-code" class="w-full h-10 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg transition flex items-center justify-center cursor-pointer">
-                        أرسل كود التحقيق
+                <!-- تذييل البطاقة: الدعم الفني والتسجيل الجديد -->
+                <div class="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <span id="txt-need-help" class="text-slate-400 font-bold">هل تواجه مشكلة في الدخول؟</span>
+                    <button type="button" onclick="document.getElementById('portal-help-modal').classList.remove('hidden')" class="text-emerald-700 dark:text-amber-400 font-black hover:underline cursor-pointer flex items-center gap-1">
+                        <span>💬</span> <span id="btn-contact-support">تواصل مع إدارة الأكاديمية</span>
                     </button>
-                </form>
+                </div>
+            </div>
+        </div>
+    </main>
 
-                <form id="forgot-step2-form" class="hidden" autocomplete="off">
-                    <div class="mb-4">
-                        <label id="lbl-code-input" class="block text-gray-700 text-sm font-semibold mb-2">كود التحقيق (6 أرقام)</label>
-                        <input type="text" id="reset-code" required autocomplete="off" placeholder="123456" maxlength="6" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center font-mono text-xl tracking-widest focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    </div>
-                    <button type="submit" id="btn-confirm-code" class="w-full h-10 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg transition flex items-center justify-center cursor-pointer">
-                        تأكيد الكود
-                    </button>
-                </form>
+    <!-- ================= 4. التذييل السفلي ================= -->
+    <footer class="w-full text-center py-3 text-[11px] font-bold text-slate-500 dark:text-slate-400 relative z-20">
+        <span id="footer-copy">© جميع الحقوق محفوظة — أكاديمية صفوة الحفاظ للقرآن الكريم واللغات</span>
+    </footer>
 
-                <form id="forgot-step3-form" class="hidden" autocomplete="off">
-                    <div class="mb-4">
-                        <label id="lbl-new-password" class="block text-gray-700 text-sm font-semibold mb-2">كلمة المرور الجديدة</label>
-                        <div class="relative">
-                            <input type="password" id="new-password" required autocomplete="new-password" placeholder="••••••••" class="w-full px-4 py-2 pe-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-start">
-                            <button type="button" id="toggle-new-password" class="absolute inset-y-0 end-0 flex items-center pe-3 text-gray-400 hover:text-emerald-700 focus:outline-none cursor-pointer">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                    <button type="submit" id="btn-save-password" class="w-full h-10 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg transition flex items-center justify-center cursor-pointer">
-                        حفظ كلمة المرور الجديدة
-                    </button>
-                </form>
-
-                <button type="button" id="btn-back-to-login" class="w-full text-center text-sm text-gray-500 mt-4 block hover:underline focus:outline-none cursor-pointer">العودة لتسجيل الدخول</button>
+    <!-- ================= 5. نافذة المساعدة والتواصل مع الإدارة ================= -->
+    <div id="portal-help-modal" class="hidden fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border-2 border-amber-500/50 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 text-center">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 mx-auto flex items-center justify-center text-3xl">🕌</div>
+            <h3 id="help-modal-title" class="text-lg font-black text-slate-900 dark:text-white">مركز خدمة الطلاب والمعلمين</h3>
+            <p id="help-modal-desc" class="text-xs text-slate-500 dark:text-slate-300 font-bold leading-relaxed">
+                إذا نسيت البريد الإلكتروني المسجل به، أو كنت ترغب في حجز حلقة تجريبية وتفعيل حساب جديد في أكاديمية صفوة الحفاظ، تواصل مع الإدارة مباشرة:
+            </p>
+            <div class="space-y-2.5 pt-2">
+                <a href="https://api.whatsapp.com/send?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%AD%D8%AA%D8%A7%D8%AC%20%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D8%A9%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AF%D8%AE%D9%88%D9%84%20%D9%84%D8%A8%D9%88%D8%A7%D8%A8%D8%A9%20%D8%A3%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%8A%D8%A9%20%D8%B5%D9%81%D9%88%D8%A9%20%D8%A7%D9%84%D8%AD%D9%81%D8%A7%D8%B8" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md">
+                    <span>📲</span> <span id="help-wa-btn">مراسلة الدعم الفني عبر واتساب</span>
+                </a>
+                <button type="button" onclick="document.getElementById('portal-help-modal').classList.add('hidden')" id="help-close-btn" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-3 rounded-2xl text-xs cursor-pointer">
+                    إغلاق النافذة
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- ================= المحرك البرمجي الشامل ================= -->
     <script>
         const SUPABASE_URL = "https://cnfykoxjwxujrsxvjdud.supabase.co"; 
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuZnlrb3hqd3h1anJzeHZqZHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NTIzOTcsImV4cCI6MjEwMDAyODM5N30.kLEmrA3XPIhgtwMw5bMkJhCH-Q8LP4ygyNKcnr265i4";
@@ -149,97 +449,365 @@
         const forgotTitle = document.getElementById('forgot-title');
         const forgotDesc = document.getElementById('forgot-desc');
 
+        let currentLang = localStorage.getItem('Safwatulhuffaz_lang') || "ar";
+        let currentVisualRole = "student";
+        let welcomeAudioPlayer = null;
+
+        // قاموس اللغات الثلاث الكامل (AR / EN / HI)
+        const translations = {
+            ar: {
+                dir: "rtl",
+                portalTitle: "بوابة الأكاديمية التعليمية",
+                portalSubtitle: "مرحباً بك، يرجى تسجيل الدخول للمتابعة إلى لوحتك",
+                royalBadge: "الصرح القرآني والعلمي العالمي المعتمد",
+                heroHeading: "أكاديمية صفوة الحفاظ للقرآن واللغات",
+                heroDesc: "بيئة تعليمية ذكية تجمع بين أصالة الإقراء بالسند المتصل إلى رسول الله ﷺ وأحدث تقنيات التعليم التفاعلي والمصحف الإلكتروني الناطق للعرب وغير الناطقين بالعربية.",
+                gemTitle: "📜 إشراقة قرآنية ونبوية",
+                feat1T: "مصحف القراءات الملكي", feat1S: "رصد وتصويب فوري ثنائي اللغة",
+                feat2T: "إجازات بالسند المتصل", feat2S: "القراءات العشر والمتون العلمية",
+                feat3T: "مناهج للعرب والأعاجم", feat3S: "العربية بين يديك ونور البيان",
+                feat4T: "متابعة لحظية للوالدين", feat4S: "تقارير ذكية وإشعارات واتساب",
+                selectMode: "اختر بوابتك التعليمية للدخول السريع",
+                roleStudent: "طالب", roleTeacher: "معلم", roleParent: "ولي أمر", roleAdmin: "الإدارة",
+                email: "البريد الإلكتروني للحساب",
+                password: "كلمة المرور السرية",
+                rememberMe: "تذكر بريدي الإلكتروني على هذا الجهاز",
+                forgotBtn: "نسيت كلمة السر؟",
+                loginSubmit: "تسجيل الدخول لبوابة الأكاديمية 🚀",
+                forgotTitle: "استعادة كلمة المرور",
+                forgotDesc: "أدخل بريدك الإلكتروني لإرسال كود التحقق (OTP)",
+                sendCode: "أرسل كود التحقق",
+                codeInputLabel: "كود التحقق المرسل لبريدك (6 أرقام)",
+                confirmCode: "تأكيد الكود",
+                newPasswordLabel: "كلمة المرور الجديدة",
+                savePassword: "حفظ كلمة المرور الجديدة",
+                backToLogin: "← العودة لتسجيل الدخول",
+                needHelp: "هل تواجه مشكلة في الدخول؟",
+                contactSupport: "تواصل مع إدارة الأكاديمية",
+                listenAyah: "تلاوة خاشعة",
+                activeSessionTitle: "جلسة نشطة مسجلة حالياً",
+                continueBtn: "🚀 متابعة الدخول",
+                footerCopy: "© جميع الحقوق محفوظة — أكاديمية صفوة الحفاظ للقرآن الكريم واللغات",
+                helpTitle: "مركز خدمة الطلاب والمعلمين",
+                helpDesc: "إذا نسيت البريد الإلكتروني المسجل به، أو كنت ترغب في حجز حلقة تجريبية وتفعيل حساب جديد في أكاديمية صفوة الحفاظ، تواصل مع الإدارة مباشرة:",
+                helpWaBtn: "مراسلة الدعم الفني عبر واتساب",
+                helpCloseBtn: "إغلاق النافذة",
+                errCreds: "عذراً، البريد الإلكتروني أو كلمة المرور غير صحيحة",
+                errRole: "عذراً، لم يتم تحديد صلاحيات لهذا الحساب بعد",
+                errSuspended: "عذراً، حسابك موقوف أو محظور مؤقتاً من الإدارة.",
+                errCode: "كود التحقق غير صحيح أو انتهت صلاحيته",
+                errGeneral: "حدث خطأ: تأكد من أن البريد الإلكتروني مسجل بالفعل",
+                errSave: "فشل الحفظ: يرجى اختيار كلمة مرور قوية وجديدة!",
+                succSent: "✅ تم إرسال كود التحقق (6 أرقام) إلى بريدك الإلكتروني",
+                succVerified: "✅ تم تأكيد الكود بنجاح! اكتب كلمة المرور الجديدة الآن",
+                alertFinal: "تمت إعادة تعيين كلمة المرور بنجاح تام! يمكنك الآن تسجيل الدخول بها."
+            },
+            en: {
+                dir: "ltr",
+                portalTitle: "Academy Educational Portal",
+                portalSubtitle: "Welcome back! Please sign in to access your dashboard",
+                royalBadge: "Certified Global Quran & Arabic Institution",
+                heroHeading: "Safwat Al-Huffaz Academy",
+                heroDesc: "An interactive smart learning environment combining authentic connected Sanad recitation with modern digital Mushaf technology for Arab and Non-Arab students worldwide.",
+                gemTitle: "📜 Prophetic & Quranic Reflection",
+                feat1T: "Royal 10-Qira'at Mushaf", feat1S: "Bilingual live correction log",
+                feat2T: "Connected Sanad Ijazah", feat2S: "10 Qira'at & Tajweed Mutoon",
+                feat3T: "Arab & Non-Arab Tracks", feat3S: "Arabic Between Your Hands",
+                feat4T: "Real-Time Parent Portal", feat4S: "Instant WhatsApp & PDF reports",
+                selectMode: "Select Your Portal Gateway",
+                roleStudent: "Student", roleTeacher: "Teacher", roleParent: "Parent", roleAdmin: "Admin",
+                email: "Account Email Address",
+                password: "Secret Password",
+                rememberMe: "Remember my email on this device",
+                forgotBtn: "Forgot Password?",
+                loginSubmit: "Sign In to Academy Portal 🚀",
+                forgotTitle: "Reset Your Password",
+                forgotDesc: "Enter your registered email to receive a 6-digit OTP code",
+                sendCode: "Send Verification Code",
+                codeInputLabel: "Verification Code (6 digits)",
+                confirmCode: "Verify Code",
+                newPasswordLabel: "New Password",
+                savePassword: "Save New Password",
+                backToLogin: "← Back to Login",
+                needHelp: "Having trouble signing in?",
+                contactSupport: "Contact Academy Support",
+                listenAyah: "Recitation",
+                activeSessionTitle: "Active Session Detected",
+                continueBtn: "🚀 Continue to Portal",
+                footerCopy: "© All Rights Reserved — Safwat Al-Huffaz Academy for Quran & Languages",
+                helpTitle: "Student & Teacher Support Center",
+                helpDesc: "If you forgot your registered email or wish to book a free trial session and activate a new account, contact our administration directly:",
+                helpWaBtn: "Chat with Support via WhatsApp",
+                helpCloseBtn: "Close Window",
+                errCreds: "Sorry, incorrect email address or password.",
+                errRole: "Sorry, no role permissions have been assigned to this account.",
+                errSuspended: "Sorry, your account is currently suspended by administration.",
+                errCode: "The verification code is invalid or expired.",
+                errGeneral: "Error: Please make sure the email address is registered.",
+                errSave: "Failed to save: Please choose a new strong password!",
+                succSent: "✅ A 6-digit verification code has been sent to your email.",
+                succVerified: "✅ Code verified! Please enter your new password below.",
+                alertFinal: "Password reset successfully! You can now log in."
+            },
+            hi: {
+                dir: "ltr",
+                portalTitle: "अकादमी शैक्षिक पोर्टल",
+                portalSubtitle: "स्वागत है, जारी रखने के लिए कृपया लॉग इन करें",
+                royalBadge: "प्रमाणित वैश्विक कुरआन और अरबी संस्थान",
+                heroHeading: "सफ़वत अल-हुफ़्फ़ाज़ अकादमी",
+                heroDesc: "एक स्मार्ट शैक्षिक मंच जो प्रामाणिक कुरआन तिलावत, तजवीद और अरबी भाषा को आधुनिक तकनीक के साथ जोड़ता है।",
+                gemTitle: "📜 कुरआन और हदीस की रोशनी",
+                feat1T: "शाही मुसहफ़", feat1S: "तुरंत तजवीद सुधार",
+                feat2T: "सनद और इजाज़ाह", feat2S: "दस क़िराआत और मुतून",
+                feat3T: "अरबी और गैर-अरबी", feat3S: "विशेष पाठ्यक्रम",
+                feat4T: "अभिभावक पोर्टल", feat4S: "व्हाट्सएप रिपोर्ट",
+                selectMode: "अपना पोर्टल चुनें",
+                roleStudent: "छात्र", roleTeacher: "शिक्षक", roleParent: "अभिभावक", roleAdmin: "प्रबंधन",
+                email: "ईमेल पता",
+                password: "पासवर्ड",
+                rememberMe: "मेरा ईमेल याद रखें",
+                forgotBtn: "पासवर्ड भूल गए?",
+                loginSubmit: "लॉग इन करें 🚀",
+                forgotTitle: "पासवर्ड रीसेट करें",
+                forgotDesc: "सत्यापन कोड प्राप्त करने के लिए अपना ईमेल दर्ज करें",
+                sendCode: "सत्यापन कोड भेजें",
+                codeInputLabel: "सत्यापन कोड (6 अंक)",
+                confirmCode: "पुष्टि करें",
+                newPasswordLabel: "नया पासवर्ड",
+                savePassword: "नया पासवर्ड सहेजें",
+                backToLogin: "← लॉग इन पर वापस जाएं",
+                needHelp: "लॉग इन करने में सहायता चाहिए?",
+                contactSupport: "सहायता से संपर्क करें",
+                listenAyah: "तिलावत सुनें",
+                activeSessionTitle: "सक्रिय सत्र उपलब्ध है",
+                continueBtn: "🚀 पोर्टल खोलें",
+                footerCopy: "© सर्वाधिकार सुरक्षित — सफ़वत अल-हुफ़्फ़ाज़ अकादमी",
+                helpTitle: "छात्र एवं शिक्षक सहायता केंद्र",
+                helpDesc: "यदि आप अपना ईमेल भूल गए हैं या नया खाता खोलना चाहते हैं, तो व्हाट्सएप पर संपर्क करें:",
+                helpWaBtn: "व्हाट्सएप सहायता",
+                helpCloseBtn: "बंद करें",
+                errCreds: "क्षमा करें, ईमेल या पासवर्ड गलत है",
+                errRole: "इस खाते को कोई अनुमति नहीं दी गई है",
+                errSuspended: "यह खाता निलंबित कर दिया गया है।",
+                errCode: "सत्यापन कोड गलत या समाप्त हो गया है",
+                errGeneral: "एक त्रुटि हुई: सुनिश्चित करें कि ईमेल पंजीकृत है",
+                errSave: "सहेजना विफल!",
+                succSent: "✅ सत्यापन कोड आपके ईमेल पर भेज दिया गया है",
+                succVerified: "✅ कोड सत्यापित! नया पासवर्ड दर्ज करें",
+                alertFinal: "पासवर्ड सफलतापूर्वक रीसेट हो गया!"
+            }
+        };
+
+        // الإشراقات المتقلبة (أحاديث وآيات)
+        const inspirationalGems = [
+            {
+                ar: "قال رسول الله ﷺ: «خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ»",
+                arSub: "رواه الإمام البخاري • وسام الشرف لأهل القرآن",
+                en: "The Prophet ﷺ said: “The best among you are those who learn the Quran and teach it.”",
+                enSub: "Sahih Al-Bukhari • The Crown of Honor",
+                hi: "पैगंबर ﷺ ने कहा: “तुम में सबसे बेहतर वह है जो कुरआन सीखे और सिखाए।”",
+                hiSub: "सहीह अल-बुखारी"
+            },
+            {
+                ar: "قال رسول الله ﷺ: «الْمَاهِرُ بِالْقُرْآنِ مَعَ السَّفَرَةِ الْكِرَامِ الْبَرَرَةِ»",
+                arSub: "متفق عليه • منزلة المتقنين لكتاب الله",
+                en: "The Prophet ﷺ said: “The one proficient in reciting the Quran will be with the noble, obedient angels.”",
+                enSub: "Agreed Upon • Rank of Quran Masters",
+                hi: "पैगंबर ﷺ ने कहा: “कुरआन में माहिर व्यक्ति सम्मानित फरिश्तों के साथ होगा।”",
+                hiSub: "सहीह मुस्लिम"
+            },
+            {
+                ar: "﴿ إِنَّ هَٰذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ وَيُبَشِّرُ الْمُؤْمِنِينَ ﴾",
+                arSub: "سورة الإسراء: الآية ٩ • نور وهداية",
+                en: "“Indeed, this Quran guides to that which is most suitable and gives good tidings to the believers.”",
+                enSub: "Surah Al-Isra: Ayah 9 • Light & Guidance",
+                hi: "“निस्संदेह यह कुरआन वह रास्ता दिखाता है जो सबसे सीधा है।”",
+                hiSub: "सूरह अल-इसरा: 9"
+            }
+        ];
+        let currentGemIdx = 0;
+
+        function rotateGems() {
+            const gemText = document.getElementById('rotating-gem-text');
+            const gemSub = document.getElementById('rotating-gem-sub');
+            const dots = document.querySelectorAll('#gem-dots span');
+            if (!gemText || !gemSub) return;
+
+            currentGemIdx = (currentGemIdx + 1) % inspirationalGems.length;
+            const g = inspirationalGems[currentGemIdx];
+
+            gemText.style.opacity = '0';
+            setTimeout(() => {
+                gemText.innerText = currentLang === 'ar' ? g.ar : (currentLang === 'hi' ? g.hi : g.en);
+                gemSub.innerText = currentLang === 'ar' ? g.arSub : (currentLang === 'hi' ? g.hiSub : g.enSub);
+                gemText.style.opacity = '1';
+                dots.forEach((d, idx) => {
+                    d.className = idx === currentGemIdx ? 'w-2 h-2 rounded-full bg-amber-400' : 'w-2 h-2 rounded-full bg-white/25';
+                });
+            }, 300);
+        }
+        setInterval(rotateGems, 6000);
+
+        // التاريخ الهجري والميلادي المصحح + الساعات العالمية
         function generateLiveDate(lang) {
             const today = new Date();
             const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
             const optionsG = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const dateG = today.toLocaleDateString(locale, optionsG);
-            const dateH = today.toLocaleDateString(locale + '-u-ca-islamic-umalqura', { year: 'numeric', month: 'long', day: 'numeric' });
+            const dateH = today.toLocaleDateString((lang === 'ar' ? 'ar-EG' : 'en-US') + '-u-ca-islamic-umalqura', { year: 'numeric', month: 'long', day: 'numeric' });
             
-            if (lang === 'ar') {
-                document.getElementById('live-date').innerText = `${dateG} هـ | ${dateH} مـ`;
-            } else {
-                document.getElementById('live-date').innerText = `${dateG} | ${dateH}`;
+            const dateEl = document.getElementById('live-date');
+            if (dateEl) {
+                dateEl.innerText = lang === 'ar' ? `${dateG} م | ${dateH} هـ` : `${dateG} | ${dateH} AH`;
             }
         }
 
-        const translations = {
-            ar: {
-                dir: "rtl", portalTitle: "بوابة الأكاديمية التعليمية", portalSubtitle: "مرحباً بك، يرجى تسجيل الدخول للمتابعة",
-                email: "البريد الإلكتروني", password: "كلمة المرور", forgotBtn: "نسيت كلمة السر؟", loginSubmit: "تسجيل الدخول",
-                forgotTitle: "استعادة كلمة المرور", forgotDesc: "أدخل بريدك الإلكتروني لإرسال كود التحقيق", sendCode: "أرسل كود التحقيق",
-                codeInputLabel: "كود التحقيق (6 أرقام)", confirmCode: "تأكيد الكود", newPasswordLabel: "كلمة المرور الجديدة",
-                savePassword: "حفظ كلمة المرور الجديدة", backToLogin: "العودة لتسجيل الدخول", errCreds: "عذراً، البريد الإلكتروني أو كلمة المرور غير صحيحة",
-                errRole: "عذراً، لم يتم تحديد صلاحيات لهذا الحساب", errCode: "كود التحقيق غير صحيح أو انتهت صلاحيته",
-                errGeneral: "حدث خطأ: تأكد من أن البريد الإلكتروني مسجل بالفعل", errSave: "فشل الحفظ: لا يمكنك استخدام كلمة مرور استخدمتها سابقاً!",
-                succSent: "تم إرسال كود التحقيق إلى بريدك الإلكتروني", succVerified: "تم تأكيد الكود بنجاح! يمكنك الآن كتابة كلمة المرور الجديدة",
-                alertFinal: "تمت إعادة تعيين كلمة المرور بنجاح تام! يمكنك الآن تسجيل الدخول بها."
-            },
-            en: {
-                dir: "ltr", portalTitle: "Academy Educational Portal", portalSubtitle: "Welcome, please log in to continue",
-                email: "Email Address", password: "Password", forgotBtn: "Forgot Password?", loginSubmit: "Login",
-                forgotTitle: "Reset Password", forgotDesc: "Enter your email to send the verification code", sendCode: "Send Verification Code",
-                codeInputLabel: "Verification Code (6 digits)", confirmCode: "Confirm Code", newPasswordLabel: "New Password",
-                savePassword: "Save New Password", backToLogin: "Back to Login", errCreds: "Sorry, the email or password is incorrect",
-                errRole: "Sorry, no permissions have been assigned to this account", errCode: "The verification code is incorrect or expired",
-                errGeneral: "An error occurred: Make sure the email is already registered", errSave: "Save failed!",
-                succSent: "A verification code has been sent to your email", succVerified: "Code verified successfully!",
-                alertFinal: "Password reset successfully! You can now log in."
-            },
-            hi: {
-                dir: "ltr", portalTitle: "अकादमी शैक्षिक पोर्टल", portalSubtitle: "जारी रखने के लिए कृपया लॉग इन करें",
-                email: "ईमेल पता", password: "पासवर्ड", forgotBtn: "पासवर्ड भूल गए?", loginSubmit: "लॉग इन करें",
-                forgotTitle: "पासवर्ड रीसेट करें", forgotDesc: "अपना ईमेल दर्ज करें", sendCode: "सत्यापन कोड भेजें",
-                codeInputLabel: "सत्यापन कोड", confirmCode: "पुष्टि करें", newPasswordLabel: "नया पासवर्ड",
-                savePassword: "नया पासवर्ड सहेजें", backToLogin: "वापस जाएं", errCreds: "ईमेल या पासवर्ड गलत है",
-                errRole: "इस खाते को कोई अनुमति नहीं दी गई है", errCode: "सत्यापन कोड गलत है",
-                errGeneral: "एक त्रुटि हुई", errSave: "सहेजना विफल!",
-                succSent: "सत्यापन कोड भेजा गया", succVerified: "सत्यापित!", alertFinal: "पासवर्ड रीसेट किया गया!"
+        function updateMiniWorldClocks() {
+            const now = new Date();
+            const fmt = (tz) => now.toLocaleTimeString('en-US', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: true });
+            const mk = document.getElementById('mini-clk-makkah');
+            const ca = document.getElementById('mini-clk-cairo');
+            const ln = document.getElementById('mini-clk-london');
+            if (mk) mk.innerText = fmt('Asia/Riyadh');
+            if (ca) ca.innerText = fmt('Africa/Cairo');
+            if (ln) ln.innerText = fmt('Europe/London');
+        }
+        setInterval(updateMiniWorldClocks, 1000);
+        updateMiniWorldClocks();
+
+        // مشغل التلاوة الترحيبية
+        window.toggleWelcomeAyahAudio = function() {
+            const btn = document.getElementById('btn-ayah-audio');
+            const icon = document.getElementById('audio-icon');
+            if (!welcomeAudioPlayer) {
+                // تلاوة آية (إن هذا القرآن يهدي للتي هي أقوم) بصوت الشيخ الحصري
+                welcomeAudioPlayer = new Audio('https://cdn.islamic.network/quran/audio/128/ar.husary/2038.mp3');
+                welcomeAudioPlayer.onended = () => {
+                    btn?.classList.remove('playing');
+                    if (icon) icon.innerText = '🔊';
+                };
+            }
+            if (welcomeAudioPlayer.paused) {
+                welcomeAudioPlayer.play();
+                btn?.classList.add('playing');
+                if (icon) icon.innerText = '⏸️';
+            } else {
+                welcomeAudioPlayer.pause();
+                btn?.classList.remove('playing');
+                if (icon) icon.innerText = '🔊';
             }
         };
 
-        let currentLang = "ar";
+        // الوضع الليلي
+        window.togglePortalDarkMode = function() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            localStorage.setItem('Safwatulhuffaz-dark-mode', isDark);
+            const btn = document.getElementById('dark-mode-toggle');
+            if (btn) btn.innerText = isDark ? '☀️' : '🌙';
+        };
+
+        if (localStorage.getItem('Safwatulhuffaz-dark-mode') === 'true') {
+            document.documentElement.classList.add('dark');
+            const btn = document.getElementById('dark-mode-toggle');
+            if (btn) btn.innerText = '☀️';
+        }
+
+        // التبديل البصري بين أدوار البوابة
+        window.selectVisualRole = function(role) {
+            currentVisualRole = role;
+            ['student', 'teacher', 'parent', 'admin'].forEach(r => {
+                const btn = document.getElementById(`role-tab-${r}`);
+                if (!btn) return;
+                if (r === role) {
+                    btn.className = "py-2 px-1 rounded-xl text-[11px] font-black transition cursor-pointer bg-emerald-700 text-white shadow-xs flex flex-col items-center gap-0.5";
+                } else {
+                    btn.className = "py-2 px-1 rounded-xl text-[11px] font-bold transition cursor-pointer role-pill-inactive text-slate-600 hover:bg-white flex flex-col items-center gap-0.5";
+                }
+            });
+
+            const emailInput = document.getElementById('email');
+            if (emailInput) {
+                const placeholders = {
+                    student: "student@safwat.academy",
+                    teacher: "teacher@safwat.academy",
+                    parent: "parent@safwat.academy",
+                    admin: "admin@safwat.academy"
+                };
+                emailInput.placeholder = placeholders[role] || "name@academy.com";
+            }
+        };
+
+        // تطبيق اللغة الشامل
         function applyLanguage(lang) {
             currentLang = lang;
-            const t = translations[lang];
+            localStorage.setItem('Safwatulhuffaz_lang', lang);
+            const t = translations[lang] || translations.ar;
             
             htmlTag.setAttribute('dir', t.dir);
             htmlTag.setAttribute('lang', lang);
             
-            const inputs = document.querySelectorAll('input');
-            inputs.forEach(input => {
-                if(t.dir === 'rtl') { input.classList.remove('text-left'); input.classList.add('text-right'); }
-                else { input.classList.remove('text-right'); input.classList.add('text-left'); }
-            });
+            const setTxt = (id, val) => { const el = document.getElementById(id); if (el && val) el.innerText = val; };
 
-            document.getElementById('txt-portal-title').innerText = t.portalTitle;
-            document.getElementById('txt-portal-subtitle').innerText = t.portalSubtitle;
-            document.getElementById('lbl-email').innerText = t.email;
-            document.getElementById('lbl-password').innerText = t.password;
-            document.getElementById('btn-forgot-password').innerText = t.forgotBtn;
-            if(!document.getElementById('btn-login-submit').querySelector('svg')) document.getElementById('btn-login-submit').innerText = t.loginSubmit;
+            setTxt('txt-portal-title', t.portalTitle);
+            setTxt('txt-portal-subtitle', t.portalSubtitle);
+            setTxt('txt-royal-badge', t.royalBadge);
+            setTxt('txt-hero-heading', t.heroHeading);
+            setTxt('txt-hero-desc', t.heroDesc);
+            setTxt('txt-gem-title', t.gemTitle);
+            setTxt('feat-1-title', t.feat1T); setTxt('feat-1-sub', t.feat1S);
+            setTxt('feat-2-title', t.feat2T); setTxt('feat-2-sub', t.feat2S);
+            setTxt('feat-3-title', t.feat3T); setTxt('feat-3-sub', t.feat3S);
+            setTxt('feat-4-title', t.feat4T); setTxt('feat-4-sub', t.feat4S);
+            setTxt('lbl-select-portal-mode', t.selectMode);
+            setTxt('tab-txt-student', t.roleStudent);
+            setTxt('tab-txt-teacher', t.roleTeacher);
+            setTxt('tab-txt-parent', t.roleParent);
+            setTxt('tab-txt-admin', t.roleAdmin);
+            setTxt('lbl-email', t.email);
+            setTxt('lbl-password', t.password);
+            setTxt('lbl-remember-me', t.rememberMe);
+            setTxt('btn-forgot-password', t.forgotBtn);
+            if(!document.getElementById('btn-login-submit')?.querySelector('svg')) setTxt('btn-login-submit', t.loginSubmit);
             
-            document.getElementById('lbl-reset-email').innerText = t.email;
-            if(!document.getElementById('btn-send-code').querySelector('svg')) document.getElementById('btn-send-code').innerText = t.sendCode;
-            document.getElementById('lbl-code-input').innerText = t.codeInputLabel;
-            if(!document.getElementById('btn-confirm-code').querySelector('svg')) document.getElementById('btn-confirm-code').innerText = t.confirmCode;
-            document.getElementById('lbl-new-password').innerText = t.newPasswordLabel;
-            if(!document.getElementById('btn-save-password').querySelector('svg')) document.getElementById('btn-save-password').innerText = t.savePassword;
-            document.getElementById('btn-back-to-login').innerText = t.backToLogin;
+            setTxt('lbl-reset-email', t.email);
+            if(!document.getElementById('btn-send-code')?.querySelector('svg')) setTxt('btn-send-code', t.sendCode);
+            setTxt('lbl-code-input', t.codeInputLabel);
+            if(!document.getElementById('btn-confirm-code')?.querySelector('svg')) setTxt('btn-confirm-code', t.confirmCode);
+            setTxt('lbl-new-password', t.newPasswordLabel);
+            if(!document.getElementById('btn-save-password')?.querySelector('svg')) setTxt('btn-save-password', t.savePassword);
+            setTxt('btn-back-to-login', t.backToLogin);
+            setTxt('txt-need-help', t.needHelp);
+            setTxt('btn-contact-support', t.contactSupport);
+            setTxt('txt-listen-ayah', t.listenAyah);
+            setTxt('active-session-title', t.activeSessionTitle);
+            setTxt('btn-continue-session', t.continueBtn);
+            setTxt('footer-copy', t.footerCopy);
+            setTxt('help-modal-title', t.helpTitle);
+            setTxt('help-modal-desc', t.helpDesc);
+            setTxt('help-wa-btn', t.helpWaBtn);
+            setTxt('help-close-btn', t.helpCloseBtn);
             
-            if(!forgotSection.classList.contains('hidden')) forgotTitle.innerText = t.forgotTitle;
+            if(!forgotSection.classList.contains('hidden')) {
+                forgotTitle.innerText = t.forgotTitle;
+                forgotDesc.innerText = t.forgotDesc;
+            }
+            const g = inspirationalGems[currentGemIdx];
+            setTxt('rotating-gem-text', lang === 'ar' ? g.ar : (lang === 'hi' ? g.hi : g.en));
+            setTxt('rotating-gem-sub', lang === 'ar' ? g.arSub : (lang === 'hi' ? g.hiSub : g.enSub));
             generateLiveDate(lang);
         }
 
         function setupPasswordToggle(buttonId, inputId) {
             const btn = document.getElementById(buttonId);
             const input = document.getElementById(inputId);
+            if (!btn || !input) return;
             btn.addEventListener('click', () => {
                 const isPass = input.getAttribute('type') === 'password';
                 input.setAttribute('type', isPass ? 'text' : 'password');
                 btn.innerHTML = isPass 
-                    ? `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>`
-                    : `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>`;
+                    ? `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>`
+                    : `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>`;
             });
         }
         setupPasswordToggle('toggle-password', 'password');
@@ -247,6 +815,7 @@
 
         function toggleBtnLoading(btnId, isLoading, textKey) {
             const btn = document.getElementById(btnId);
+            if (!btn) return;
             if (isLoading) {
                 btn.disabled = true;
                 btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
@@ -256,97 +825,247 @@
             }
         }
 
+        // قياس قوة كلمة المرور الجديدة
+        window.checkNewPasswordStrength = function(val) {
+            const bar = document.getElementById('pass-strength-bar');
+            if (!bar) return;
+            let score = 0;
+            if (val.length >= 6) score += 35;
+            if (val.length >= 9) score += 25;
+            if (/[A-Z0-9!@#$%^&*]/.test(val)) score += 40;
+            bar.style.width = `${Math.min(100, score)}%`;
+            bar.className = score < 40 ? 'bg-rose-500 h-full transition-all' : (score < 75 ? 'bg-amber-500 h-full transition-all' : 'bg-emerald-500 h-full transition-all');
+        };
+
+        // 📡 دالة تحديث بيانات جهاز الطالب والـ IP والدولة فور دخوله ليظهر في رادار المعلم
+        async function updateStudentDeviceRadarOnLogin(userId) {
+            try {
+                const ua = navigator.userAgent;
+                let deviceName = "Desktop 💻";
+                if (/iPhone/i.test(ua)) deviceName = "iPhone 📱";
+                else if (/iPad/i.test(ua)) deviceName = "iPad 📲";
+                else if (/Samsung|SM-/i.test(ua)) deviceName = "Samsung 📱";
+                else if (/Xiaomi|Redmi/i.test(ua)) deviceName = "Xiaomi 📱";
+                else if (/Huawei/i.test(ua)) deviceName = "Huawei 📱";
+                else if (/OPPO/i.test(ua)) deviceName = "OPPO 📱";
+                else if (/Android/i.test(ua)) deviceName = "Android 📱";
+                else if (/Mac/i.test(ua)) deviceName = "MacBook 💻";
+
+                const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
+                const meta = JSON.stringify({
+                    device: deviceName,
+                    ip: geo.ip || '',
+                    location: `${geo.country_name || ''} ${geo.city ? '(' + geo.city + ')' : ''}`.trim(),
+                    timestamp: new Date().toISOString()
+                });
+
+                await supabaseClient.from('students').update({
+                    last_seen: new Date().toISOString(),
+                    device_info: meta
+                }).eq('id', userId);
+            } catch (e) {}
+        }
+
+        // التوجيه الذكي حسب صلاحية الحساب
+        async function routeUserByRole(userId) {
+            const { data: profile, error: profileError } = await supabaseClient.from('profiles').select('role').eq('id', userId).single();
+            if (profileError || !profile) {
+                errorMsg.innerText = translations[currentLang].errRole;
+                errorMsg.classList.remove('hidden');
+                toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+                return;
+            }
+
+            if (profile.role === 'suspended' || profile.role === 'banned') {
+                errorMsg.innerText = translations[currentLang].errSuspended;
+                errorMsg.classList.remove('hidden');
+                await supabaseClient.auth.signOut();
+                toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+                return;
+            }
+
+            if (profile.role === 'parent') {
+                window.location.href = "parent_dashboard.html";
+            } else if (['admin', 'super_admin', 'supervisor', 'accountant', 'content_manager'].includes(profile.role)) {
+                window.location.href = "admin.html";
+            } else if (profile.role === 'student') {
+                await updateStudentDeviceRadarOnLogin(userId);
+                window.location.href = "student.html";
+            } else if (profile.role === 'teacher') {
+                window.location.href = "teacher.html";
+            } else {
+                errorMsg.innerText = translations[currentLang].errRole;
+                errorMsg.classList.remove('hidden');
+                toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+            }
+        }
+
+        // فحص ما إذا كان هناك جلسة نشطة مسبقة
+        async function checkExistingActiveSession() {
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session && session.user) {
+                    const banner = document.getElementById('active-session-banner');
+                    const emailEl = document.getElementById('active-session-email');
+                    const contBtn = document.getElementById('btn-continue-session');
+                    if (banner && emailEl && contBtn) {
+                        emailEl.innerText = session.user.email;
+                        banner.classList.remove('hidden');
+                        contBtn.onclick = () => routeUserByRole(session.user.id);
+                    }
+                }
+            } catch (e) {}
+        }
+
+        window.forceClearCurrentSession = async function() {
+            await supabaseClient.auth.signOut();
+            document.getElementById('active-session-banner')?.classList.add('hidden');
+        };
+
         function initPageLanguageAndClearInputs() {
-            document.getElementById('email').value = '';
+            const savedEmail = localStorage.getItem('Safwat_Saved_Login_Email') || '';
+            document.getElementById('email').value = savedEmail;
             document.getElementById('password').value = '';
             document.getElementById('reset-email').value = '';
             document.getElementById('reset-code').value = '';
             document.getElementById('new-password').value = '';
 
-            const browserLang = (navigator.language || navigator.userLanguage).toLowerCase();
-            let detectedLang = 'en'; 
-            if (browserLang.startsWith('ar')) detectedLang = 'ar';
-            else if (browserLang.startsWith('hi')) detectedLang = 'hi';
+            let savedLang = localStorage.getItem('Safwatulhuffaz_lang');
+            if (!savedLang) {
+                const browserLang = (navigator.language || navigator.userLanguage || 'ar').toLowerCase();
+                savedLang = browserLang.startsWith('ar') ? 'ar' : (browserLang.startsWith('hi') ? 'hi' : 'en');
+            }
 
-            langSwitcher.value = detectedLang;
-            applyLanguage(detectedLang);
+            langSwitcher.value = savedLang;
+            applyLanguage(savedLang);
+            checkExistingActiveSession();
         }
         
         initPageLanguageAndClearInputs();
         langSwitcher.addEventListener('change', (e) => applyLanguage(e.target.value));
 
+        function updateForgotStepIndicators(stepNum) {
+            [1, 2, 3].forEach(n => {
+                const el = document.getElementById(`step-ind-${n}`);
+                if (!el) return;
+                el.className = n <= stepNum
+                    ? "py-1.5 rounded-xl bg-emerald-700 text-white shadow-2xs"
+                    : "py-1.5 rounded-xl bg-slate-100 text-slate-400";
+            });
+        }
+
         document.getElementById('btn-forgot-password').addEventListener('click', () => {
-            loginSection.classList.add('hidden'); forgotSection.classList.remove('hidden'); resetForgotFlow();
+            loginSection.classList.add('hidden');
+            forgotSection.classList.remove('hidden');
+            resetForgotFlow();
         });
 
         document.getElementById('btn-back-to-login').addEventListener('click', () => {
-            forgotSection.classList.add('hidden'); loginSection.classList.remove('hidden');
-            errorMsg.classList.add('hidden'); successMsg.classList.add('hidden'); initPageLanguageAndClearInputs();
+            forgotSection.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
         });
 
         function resetForgotFlow() {
-            forgotForm1.classList.remove('hidden'); forgotForm2.classList.add('hidden'); forgotForm3.classList.add('hidden');
-            forgotTitle.innerText = translations[currentLang].forgotTitle; forgotDesc.innerText = translations[currentLang].forgotDesc;
-            errorMsg.classList.add('hidden'); successMsg.classList.add('hidden');
+            forgotForm1.classList.remove('hidden');
+            forgotForm2.classList.add('hidden');
+            forgotForm3.classList.add('hidden');
+            updateForgotStepIndicators(1);
+            forgotTitle.innerText = translations[currentLang].forgotTitle;
+            forgotDesc.innerText = translations[currentLang].forgotDesc;
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
         }
 
-        // ================= الدخول والتوجه الذكي حسب الصلاحيات =================
+        // ================= الدخول والتوجيه الذكي حسب الصلاحيات =================
+       // ================= الدخول والتوجيه الذكي مع القيد الصارم للبوابة والترجمة الثلاثية =================
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             errorMsg.classList.add('hidden');
-            toggleBtnLoading('btn-login-submit', true, 'loginSubmit');
             
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
-            
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            const activeRole = window.currentSelectedGatewayRole || 'student';
+            const lang = currentLang || 'ar';
 
-            if (error) {
+            // 1. تسجيل الدخول أولاً للتحقق من صحة البريد وكلمة المرور عبر Supabase
+            toggleBtnLoading('btn-login-submit', true, 'loginSubmit');
+            const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+            if (authError || !authData.user) {
                 document.getElementById('password').value = '';
-                errorMsg.innerText = translations[currentLang].errCreds;
+                errorMsg.innerText = translations[lang].errCreds;
                 errorMsg.classList.remove('hidden');
                 toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
-            } else {
-                const { data: profile, error: profileError } = await supabaseClient.from('profiles').select('role').eq('id', data.user.id).single();
-                
-                if (profileError || !profile) {
-                    errorMsg.innerText = translations[currentLang].errRole;
-                    errorMsg.classList.remove('hidden');
-                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
-                    return;
-                }
-
-                if (profile.role === 'suspended' || profile.role === 'banned') {
-                    errorMsg.innerText = "عذراً، حسابك موقوف أو محظور من الإدارة.";
-                    errorMsg.classList.remove('hidden');
-                    await supabaseClient.auth.signOut();
-                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
-                    return;
-                }
-
-                // التوجيه السليم لكل الأدوار بما فيها ولي الأمر
-                if (profile.role === 'parent') {
-                    window.location.href = "parent_dashboard.html";
-                } else if (['admin', 'super_admin', 'supervisor', 'accountant', 'content_manager'].includes(profile.role)) {
-                    window.location.href = "admin.html"; // تأكد من اسم صفحة الأدمن لديك
-                } else if (profile.role === 'student') {
-                    window.location.href = "student.html";
-                } else if (profile.role === 'teacher') {
-                    window.location.href = "teacher.html";
-                } else {
-                    errorMsg.innerText = "دور مستخدم غير معروف.";
-                    errorMsg.classList.remove('hidden');
-                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
-                }
+                return;
             }
+
+            const userId = authData.user.id;
+
+            // 2. جلب الصلاحية الفعلية من جدول profiles
+            const { data: profile } = await supabaseClient.from('profiles').select('role').eq('id', userId).single();
+            const actualRole = profile ? profile.role : 'student';
+
+            // 3. 🛡️ القيد الصارم ومقارنة البوابة المتاحة (مع الترجمة الثلاثية AR / EN / HI)
+            let isAllowed = true;
+            let restrictionMsgs = {
+                ar: '⚠️ عذراً! أنت محدد في الأعلى (طالب)، ولا يمكنك الدخول بإيميل (معلم أو إداري) من هذه البوابة.',
+                en: '⚠️ Sorry! You selected (Student) above, and cannot sign in with a Teacher/Admin email here.',
+                hi: '⚠️ क्षमा करें! आपने ऊपर (छात्र) चुना है, आप शिक्षक या एडमिन ईमेल से लॉगिन नहीं कर सकते।'
+            };
+
+            if (activeRole === 'student' && actualRole !== 'student') {
+                isAllowed = false;
+                restrictionMsgs = {
+                    ar: '⚠️ عذراً! أنت محدد في الأعلى (طالب)، ولا يمكنك الدخول بإيميل (معلم أو إداري) من هذه البوابة.',
+                    en: '⚠️ Sorry! You selected (Student) above, and cannot sign in with a Teacher/Admin email here.',
+                    hi: '⚠️ क्षमा करें! आपने ऊपर (छात्र) चुना है, आप शिक्षक ईमेल से लॉगिन नहीं कर सकते।'
+                };
+            } else if (activeRole === 'teacher' && actualRole !== 'teacher') {
+                isAllowed = false;
+                restrictionMsgs = {
+                    ar: '⚠️ عذراً! هذه البوابة مخصصة للمعلمين فقط.',
+                    en: '⚠️ Sorry! This portal is restricted to Instructors only.',
+                    hi: '⚠️ क्षमा करें! यह पोर्टल केवल शिक्षकों के लिए है।'
+                };
+            } else if (activeRole === 'parent' && actualRole !== 'parent' && actualRole !== 'student') {
+                isAllowed = false;
+                restrictionMsgs = {
+                    ar: '⚠️ عذراً! هذه البوابة مخصصة لأولياء الأمور فقط.',
+                    en: '⚠️ Sorry! This portal is restricted to Parents only.',
+                    hi: '⚠️ क्षमा करें! यह पोर्टल केवल अभिभावकों के लिए है।'
+                };
+            } else if (activeRole === 'admin' && !['admin', 'super_admin', 'supervisor', 'accountant', 'content_manager'].includes(actualRole)) {
+                isAllowed = false;
+                restrictionMsgs = {
+                    ar: '⚠️ عذراً! هذه المنطقة محمية ومخصصة للإدارة العليا فقط.',
+                    en: '⚠️ Sorry! This is a secure restricted area for Administrators only.',
+                    hi: '⚠️ क्षमा करें! यह केवल प्रशासकों के लिए सुरक्षित क्षेत्र है।'
+                };
+            }
+
+            // إذا لم يتطابق الدور، يتم تسجيل خروجه فوراً ومنعه من المتابعة
+            if (!isAllowed) {
+                await supabaseClient.auth.signOut();
+                document.getElementById('password').value = '';
+                errorMsg.innerText = restrictionMsgs[lang] || restrictionMsgs.ar;
+                errorMsg.classList.remove('hidden');
+                toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+                return;
+            }
+
+            // 4. إذا تطابق الدور تماماً، يمر ويتم توجيهه للوحة الخاصة به بنجاح
+            await routeUserByRole(userId);
         });
 
-        // ================= استعادة كلمة المرور =================
+        // ================= استعادة كلمة المرور (3 خطوات) =================
         forgotForm1.addEventListener('submit', async (e) => {
             e.preventDefault();
-            errorMsg.classList.add('hidden'); successMsg.classList.add('hidden');
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
             toggleBtnLoading('btn-send-code', true, 'sendCode');
-            const email = document.getElementById('reset-email').value;
+            const email = document.getElementById('reset-email').value.trim();
             const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
 
             if (error) {
@@ -357,16 +1076,20 @@
                 successMsg.innerText = translations[currentLang].succSent;
                 successMsg.classList.remove('hidden');
                 toggleBtnLoading('btn-send-code', false, 'sendCode');
-                forgotForm1.classList.add('hidden'); forgotForm2.classList.remove('hidden'); forgotDesc.innerText = "";
+                forgotForm1.classList.add('hidden');
+                forgotForm2.classList.remove('hidden');
+                updateForgotStepIndicators(2);
+                forgotDesc.innerText = "";
             }
         });
 
         forgotForm2.addEventListener('submit', async (e) => {
             e.preventDefault();
-            errorMsg.classList.add('hidden'); successMsg.classList.add('hidden');
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
             toggleBtnLoading('btn-confirm-code', true, 'confirmCode');
-            const email = document.getElementById('reset-email').value;
-            const code = document.getElementById('reset-code').value;
+            const email = document.getElementById('reset-email').value.trim();
+            const code = document.getElementById('reset-code').value.trim();
             const { error } = await supabaseClient.auth.verifyOtp({ email, token: code, type: 'recovery' });
 
             if (error) {
@@ -375,15 +1098,18 @@
                 toggleBtnLoading('btn-confirm-code', false, 'confirmCode');
             } else {
                 successMsg.innerText = translations[currentLang].succVerified;
-                successMsg.classList.add('hidden');
+                successMsg.classList.remove('hidden');
                 toggleBtnLoading('btn-confirm-code', false, 'confirmCode');
-                forgotForm2.classList.add('hidden'); forgotForm3.classList.remove('hidden');
+                forgotForm2.classList.add('hidden');
+                forgotForm3.classList.remove('hidden');
+                updateForgotStepIndicators(3);
             }
         });
 
         forgotForm3.addEventListener('submit', async (e) => {
             e.preventDefault();
-            errorMsg.classList.add('hidden'); successMsg.classList.add('hidden');
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
             toggleBtnLoading('btn-save-password', true, 'savePassword');
             const newPassword = document.getElementById('new-password').value;
             const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
@@ -395,10 +1121,402 @@
             } else {
                 toggleBtnLoading('btn-save-password', false, 'savePassword');
                 alert(translations[currentLang].alertFinal);
-                forgotSection.classList.add('hidden'); loginSection.classList.remove('hidden');
-                await supabaseClient.auth.signOut(); initPageLanguageAndClearInputs();
+                forgotSection.classList.add('hidden');
+                loginSection.classList.remove('hidden');
+                await supabaseClient.auth.signOut();
+                initPageLanguageAndClearInputs();
             }
         });
+        
     </script>
+    <script>
+        let studentDetectedTimezone = 'Africa/Cairo';
+        let studentCountryName = '';
+
+        // 1. التعرف التلقائي على الـ IP والزمن المحلي
+        async function detectStudentLocationAndAutoConfigure() {
+            try {
+                const res = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
+                if (res && res.timezone) {
+                    studentDetectedTimezone = res.timezone;
+                    studentCountryName = res.country_name || res.country || '';
+                    
+                    const tzBadge = document.getElementById('student-timezone-badge');
+                    const tzLabel = document.getElementById('student-tz-label');
+                    if (tzBadge && tzLabel) {
+                        tzLabel.innerHTML = `🌍 ${res.country_code || 'Local'}: <b id="mini-clk-student" class="font-mono">--:--</b>`;
+                        tzBadge.classList.remove('hidden');
+                        tzBadge.classList.add('inline-flex');
+                    }
+
+                    const arabCountries = ['Egypt', 'Saudi Arabia', 'United Arab Emirates', 'Qatar', 'Kuwait', 'Bahrain', 'Oman', 'Jordan', 'Palestine', 'Lebanon', 'Syria', 'Iraq', 'Yemen', 'Sudan', 'Libya', 'Tunisia', 'Algeria', 'Morocco', 'Mauritania', 'Somalia', 'Djibouti', 'Comoros'];
+                    if (arabCountries.includes(studentCountryName) && !localStorage.getItem('Safwatulhuffaz_lang')) {
+                        langSwitcher.value = 'ar';
+                        applyLanguage('ar');
+                    } else if (!arabCountries.includes(studentCountryName) && !localStorage.getItem('Safwatulhuffaz_lang') && res.country_code) {
+                        langSwitcher.value = 'en';
+                        applyLanguage('en');
+                    }
+                }
+            } catch (e) {}
+        }
+
+        // 2. تحديث الساعات الحية
+        function updateMiniWorldClocks() {
+            const now = new Date();
+            const fmt = (tz) => now.toLocaleTimeString('en-US', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: true });
+            
+            const mk = document.getElementById('mini-clk-makkah');
+            const ca = document.getElementById('mini-clk-cairo');
+            const st = document.getElementById('mini-clk-student');
+            
+            if (mk) mk.innerText = fmt('Asia/Riyadh');
+            if (ca) ca.innerText = fmt('Africa/Cairo');
+            if (st && studentDetectedTimezone) st.innerText = fmt(studentDetectedTimezone);
+        }
+        setInterval(updateMiniWorldClocks, 1000);
+        updateMiniWorldClocks();
+
+        // 3. التشغيل التلقائي للتلاوة في الخلفية بدون أزرار ظاهرة
+        window.addEventListener('DOMContentLoaded', () => {
+            detectStudentLocationAndAutoConfigure();
+            
+            setTimeout(() => {
+                if (!welcomeAudioPlayer) {
+                    welcomeAudioPlayer = new Audio('https://cdn.islamic.network/quran/audio/128/ar.husary/2038.mp3');
+                    welcomeAudioPlayer.loop = false; // تشغيل لمرة واحدة أو يمكنك جعله true لو أردت تكراره
+                }
+                // محاولة التشغيل التلقائي الفوري
+                welcomeAudioPlayer.play().catch(() => {
+                    // إذا منع المتصفح التشغيل التلقائي قبل أي تفاعل، سيعمل تلقائياً بمجرد أول ضغطة أو حركة للمستخدم في الصفحة
+                    const playOnInteraction = () => {
+                        welcomeAudioPlayer.play().catch(() => {});
+                        window.removeEventListener('click', playOnInteraction);
+                        window.removeEventListener('keydown', playOnInteraction);
+                    };
+                    window.addEventListener('click', playOnInteraction);
+                    window.addEventListener('keydown', playOnInteraction);
+                });
+            }, 800);
+        });
+    </script>
+    <!-- ========================================================================================= -->
+<!-- 👑 محرك البوابات الأربع الديناميكي لشاشة الدخول (DYNAMIC 4-GATEWAYS ENGINE - index.html) 👑 -->
+<!-- ========================================================================================= -->
+
+<style>
+    /* انتقالات ناعمة جداً عند تبديل البوابات الأربع */
+    #login-card, #submit-btn, .gateway-tab-btn, #dynamic-role-box {
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    @keyframes slideDownFade {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-role-box { animation: slideDownFade 0.3s ease forwards; }
+</style>
+
+<script>
+(function initDynamicGatewayMorphing() {
+    // إعدادات وهوية كل بوابة من البوابات الأربع
+    const GATEWAY_CONFIGS = {
+        student: {
+            colorHex: '#047857',
+            btnGradient: 'linear-gradient(135deg, #047857 0%, #0d9488 100%)',
+            badgeBg: '#ecfdf5',
+            badgeText: '#047857',
+            badgeBorder: '#a7f3d0',
+            title: {
+                ar: 'بوابة الطالب الملكية 🎓',
+                en: 'Royal Student Portal 🎓',
+                hi: 'शाही छात्र पोर्टल 🎓'
+            },
+            subtitle: {
+                ar: 'مرحباً بعودتك يا بطل القرآن! سجل دخولك لمتابعة وردك ونجومك',
+                en: 'Welcome back! Sign in to access your Quran Wird, quests & stars',
+                hi: 'वापसी पर स्वागत है! अपना कुरआन सबक और सितारे देखने के लिए लॉग इन करें'
+            },
+            emailLabel: {
+                ar: 'البريد الإلكتروني للطالب',
+                en: 'Student Email Address',
+                hi: 'छात्र का ईमेल पता'
+            },
+            emailPlaceholder: 'student@safwat-academy.com',
+            btnText: {
+                ar: 'دخول بوابة الطالب الملكية 🚀',
+                en: 'Sign In to Student Portal 🚀',
+                hi: 'छात्र पोर्टल में प्रवेश करें 🚀'
+            },
+           extraBoxHTML: (lang) => `
+    <div class="animate-role-box bg-emerald-50/90 border border-emerald-200 rounded-2xl p-3.5 flex items-center justify-between gap-3 text-xs my-3">
+        <div class="flex items-center gap-2.5">
+            <span class="text-xl">🎁</span>
+            <div>
+                <strong class="text-emerald-950 block font-black">${lang === 'ar' ? 'طالب جديد في الأكاديمية؟' : (lang === 'hi' ? 'अकादमी में नए छात्र हैं?' : 'New to Safwat Academy?')}</strong>
+                <span class="text-[11px] text-emerald-700 font-bold">${lang === 'ar' ? 'احصل على حصة تجريبية مجانية لتقييم المستوى' : (lang === 'hi' ? 'मुफ़्त ट्रायल क्लास बुक करें' : 'Book a free 1-on-1 trial evaluation session')}</span>
+            </div>
+        </div>
+        <a href="https://wa.me/201099471391?text=${encodeURIComponent('السلام عليكم، أرغب في حجز حصة تجريبية مجانية في أكاديمية صفوة الحفاظ')}" target="_blank" class="bg-emerald-700 hover:bg-emerald-800 text-white font-black px-3.5 py-2 rounded-xl shrink-0 shadow-xs transition">
+            ${lang === 'ar' ? 'احجز مجاناً ←' : (lang === 'hi' ? 'बुक करें →' : 'Book Free →')}
+        </a>
+    </div>
+`
+        },
+
+        teacher: {
+            colorHex: '#1e3a8a',
+            btnGradient: 'linear-gradient(135deg, #1e3a8a 0%, #312e81 100%)',
+            badgeBg: '#eff6ff',
+            badgeText: '#1e3a8a',
+            badgeBorder: '#bfdbfe',
+            title: {
+                ar: 'رواق المعلمين والإشراف الأكاديمي 👳‍♂️',
+                en: 'Instructor & Sanad Gateway 👳‍♂️',
+                hi: 'शिक्षक एवं अकादमिक पोर्टल 👳‍♂️'
+            },
+            subtitle: {
+                ar: 'حياكم الله فضيلة المعلم! سجل دخولك لإدارة الحلقات والمصحف الملكي',
+                en: 'Welcome respected Instructor! Sign in to manage classes & Royal Mushaf',
+                hi: 'स्वागत है उस्ताद! कक्षाओं और शाही मुसहफ़ के प्रबंधन के लिए साइन इन करें'
+            },
+            emailLabel: {
+                ar: 'البريد الأكاديمي للمعلم',
+                en: 'Instructor Academic Email',
+                hi: 'शिक्षक का अकादमिक ईमेल'
+            },
+            emailPlaceholder: 'teacher@safwat-academy.com',
+            btnText: {
+                ar: 'دخول رواق المعلمين والمقرأة 🎙️',
+                en: 'Enter Instructor Workspace 🎙️',
+                hi: 'शिक्षक पोर्टल में प्रवेश करें 🎙️'
+            },
+            extraBoxHTML: (lang) => `
+                <div class="animate-role-box bg-blue-50/90 border border-blue-200 rounded-2xl p-3.5 flex items-center justify-between gap-3 text-xs my-3">
+                    <label class="flex items-center gap-2.5 cursor-pointer w-full">
+                        <input type="checkbox" checked class="w-4 h-4 accent-blue-800 rounded cursor-pointer">
+                        <span class="font-bold text-blue-950">${lang === 'ar' ? '📡 تفعيل رادار اتصال الطلاب الحي فور الدخول' : (lang === 'hi' ? '📡 लाइव छात्र रडार सक्रिय करें' : '📡 Auto-enable Live Student Presence Radar')}</span>
+                    </label>
+                    <span class="bg-blue-900 text-amber-300 text-[10px] font-black px-2.5 py-1 rounded-lg shrink-0">PRO</span>
+                </div>
+            `
+        },
+
+        parent: {
+            colorHex: '#6d28d9',
+            btnGradient: 'linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%)',
+            badgeBg: '#f5f3ff',
+            badgeText: '#6d28d9',
+            badgeBorder: '#ddd6fe',
+            title: {
+                ar: 'بوابة ولي الأمر ومتابعة الأبناء 👨‍👩‍👧‍👦',
+                en: 'Parent & Family Monitoring Portal 👨‍👩‍👧‍👦',
+                hi: 'अभिभावक एवं परिवार पोर्टल 👨‍👩‍👧‍👦'
+            },
+            subtitle: {
+                ar: 'تابع تقارير أبنائك، تسجيلات المعلم الصوتية، والمالية بكل سهولة',
+                en: 'Track your children\'s progress reports, voice notes & financials',
+                hi: 'अपने बच्चों की प्रगति रिपोर्ट और शुल्क विवरण ट्रैक करें'
+            },
+            emailLabel: {
+                ar: 'البريد الإلكتروني لحساب الأبناء / العائلة',
+                en: 'Family / Student Account Email',
+                hi: 'परिवार / छात्र का ईमेल पता'
+            },
+            emailPlaceholder: 'family@safwat-academy.com',
+            btnText: {
+                ar: 'دخول منطقة ولي الأمر والتقارير 👨‍👩‍👦',
+                en: 'Sign In to Parent Dashboard 👨‍👩‍👦',
+                hi: 'अभिभावक पोर्टल खोलें 👨‍👩‍👦'
+            },
+          extraBoxHTML: (lang) => `
+    <div class="animate-role-box bg-purple-50/90 border border-purple-200 rounded-2xl p-3.5 space-y-2 text-xs my-3">
+        <div class="flex items-center justify-between">
+            <label class="font-black text-purple-950 flex items-center gap-1.5">
+                <span>🔐</span>
+                <span>${lang === 'ar' ? 'الرمز السري لولي الأمر (لفتح المالية والتقارير تلقائياً):' : (lang === 'hi' ? 'अभिभावक पिन (Parent PIN):' : 'Parent Security PIN (Auto-unlocks Financials):')}</span>
+            </label>
+        </div>
+        <div class="flex items-center gap-2">
+            <input type="password" id="login-parent-pin-field" maxlength="4" value="" placeholder="••••" class="w-28 bg-white border border-purple-300 rounded-xl px-3 py-2 text-center font-mono font-black tracking-widest text-purple-900 outline-none focus:border-purple-600">
+            <select id="login-parent-target-tab" class="flex-1 bg-white border border-purple-300 rounded-xl px-3 py-2 font-bold text-slate-700 outline-none">
+                <option value="reports">${lang === 'ar' ? '📝 فتح تقارير الأبناء مباشرة' : '📝 Open Progress Reports directly'}</option>
+                <option value="financials">${lang === 'ar' ? '💰 فتح المالية والفواتير مباشرة' : '💰 Open Financials & Invoices directly'}</option>
+                <option value="schedule">${lang === 'ar' ? '📅 فتح جدول المواعيد مباشرة' : '📅 Open Class Schedule directly'}</option>
+            </select>
+        </div>
+    </div>
+`
+        },
+
+        admin: {
+            colorHex: '#991b1b',
+            btnGradient: 'linear-gradient(135deg, #0f172a 0%, #7f1d1d 100%)',
+            badgeBg: '#fef2f2',
+            badgeText: '#991b1b',
+            badgeBorder: '#fecaca',
+            title: {
+                ar: 'غرفة العمليات والإدارة العليا 🛡️',
+                en: 'Executive Admin Command Center 🛡️',
+                hi: 'प्रशासनिक नियंत्रण केंद्र 🛡️'
+            },
+            subtitle: {
+                ar: 'منطقة محمية عالية الأمان مخصصة للإدارة العامة للأكاديمية فقط',
+                en: 'High-security restricted gateway for Academy Administrators only',
+                hi: 'केवल अकादमी प्रशासकों के लिए उच्च सुरक्षा प्रवेश द्वार'
+            },
+            emailLabel: {
+                ar: 'البريد الرسمي للمدير العام',
+                en: 'Administrator Official Email',
+                hi: 'प्रशासक का आधिकारिक ईमेल'
+            },
+            emailPlaceholder: 'admin@safwat-academy.com',
+            btnText: {
+                ar: 'دخول لوحة القيادة الإدارية 🛡️',
+                en: 'Authorize & Enter Admin Center 🛡️',
+                hi: 'एडमिन पैनल में प्रवेश करें 🛡️'
+            },
+            extraBoxHTML: (lang) => `
+                <div class="animate-role-box bg-slate-900 text-amber-300 border border-amber-500/40 rounded-2xl p-3.5 flex items-center justify-between gap-3 text-xs my-3 shadow-md">
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-lg">🛡️</span>
+                        <span class="font-bold text-[11px] leading-relaxed text-slate-200">
+                            ${lang === 'ar' ? 'حماية مشددة: يتم توثيق عنوان الـ IP والجهاز لجميع عمليات الدخول الإدارية.' : (lang === 'hi' ? 'उच्च सुरक्षा: सभी व्यवस्थापक लॉगिन प्रयास रिकॉर्ड किए जाते हैं।' : 'Strict Security: IP address & device fingerprint are logged for admin auth.')}
+                        </span>
+                    </div>
+                    <span class="bg-rose-600 text-white text-[9px] font-mono font-black px-2 py-1 rounded-md shrink-0">ROOT</span>
+                </div>
+            `
+        }
+    };
+
+    window.currentSelectedGatewayRole = 'student';
+
+    function getActivePageLang() {
+        const htmlLang = document.documentElement.getAttribute('lang') || 'ar';
+        if (htmlLang.startsWith('en')) return 'en';
+        if (htmlLang.startsWith('hi')) return 'hi';
+        return 'ar';
+    }
+
+    // الدالة الرئيسية التي تغير شكل وحقول وألوان الشاشة بالكامل عند الضغط على أي خيار في الأعلى
+    window.applyGatewayModeMorph = function(role) {
+        if (!GATEWAY_CONFIGS[role]) role = 'student';
+        window.currentSelectedGatewayRole = role;
+        const cfg = GATEWAY_CONFIGS[role];
+        const lang = getActivePageLang();
+
+        // 1. تحديث أزرار الشريط العلوي الأربعة (Student / Teacher / Parent / Admin)
+        const allButtons = document.querySelectorAll('button, [ onclick*="selectRole" ], [ onclick*="setRole" ], [ data-role ]');
+        allButtons.forEach(btn => {
+            const txt = (btn.innerText || '').toLowerCase();
+            const btnRole = btn.getAttribute('data-role') ||
+                (txt.includes('student') || txt.includes('طالب') || txt.includes('छात्र') ? 'student' :
+                (txt.includes('teacher') || txt.includes('معلم') || txt.includes('शिक्षक') ? 'teacher' :
+                (txt.includes('parent') || txt.includes('ولي') || txt.includes('अभिभावक') ? 'parent' :
+                (txt.includes('admin') || txt.includes('إدارة') || txt.includes('एडमिन') ? 'admin' : null))));
+
+            if (btnRole) {
+                btn.setAttribute('data-detected-role', btnRole);
+                if (btnRole === role) {
+                    btn.style.background = cfg.btnGradient;
+                    btn.style.color = '#ffffff';
+                    btn.style.boxShadow = '0 8px 20px -4px rgba(0,0,0,0.35)';
+                    btn.style.transform = 'scale(1.03)';
+                } else {
+                    btn.style.background = 'transparent';
+                    btn.style.color = '#94a3b8';
+                    btn.style.boxShadow = 'none';
+                    btn.style.transform = 'scale(1)';
+                }
+            }
+        });
+
+        // 2. تحديث العنوان الرئيسي والفرعي وحقل الإيميل وزر الدخول
+        const formEl = document.querySelector('form') || document.body;
+        const headingEl = document.getElementById('portal-main-title') || document.querySelector('h1, h2');
+        const subHeadingEl = document.getElementById('portal-sub-title') || (headingEl ? headingEl.nextElementSibling : null);
+        const emailInput = document.querySelector('input[type="email"], input[name="email"], #email');
+        const submitBtn = formEl.querySelector('button[type="submit"]') || Array.from(document.querySelectorAll('button')).find(b => (b.innerText || '').includes('Sign In') || (b.innerText || '').includes('دخول') || (b.innerText || '').includes('🚀'));
+
+        if (headingEl) {
+            headingEl.innerText = cfg.title[lang] || cfg.title.ar;
+            headingEl.style.color = cfg.colorHex;
+        }
+        if (subHeadingEl && subHeadingEl.tagName === 'P') {
+            subHeadingEl.innerText = cfg.subtitle[lang] || cfg.subtitle.ar;
+        }
+        if (emailInput) {
+            emailInput.setAttribute('placeholder', cfg.emailPlaceholder);
+            const emailLbl = emailInput.closest('div')?.previousElementSibling || document.querySelector('label[for="email"]');
+            if (emailLbl && emailLbl.tagName === 'LABEL') {
+                emailLbl.innerText = cfg.emailLabel[lang] || cfg.emailLabel.ar;
+            }
+        }
+        if (submitBtn) {
+            submitBtn.innerHTML = cfg.btnText[lang] || cfg.btnText.ar;
+            submitBtn.style.background = cfg.btnGradient;
+        }
+
+        // 3. حقن الصندوق التفاعلي المخصص لكل فئة داخل الفورم (حصة تجريبية للطالب / PIN لولي الأمر / رادار للمعلم / تنبيه أمني للإدارة)
+        let roleBoxContainer = document.getElementById('dynamic-role-extra-container');
+        if (!roleBoxContainer && submitBtn) {
+            roleBoxContainer = document.createElement('div');
+            roleBoxContainer.id = 'dynamic-role-extra-container';
+            submitBtn.parentElement.insertBefore(roleBoxContainer, submitBtn);
+        }
+        if (roleBoxContainer) {
+            roleBoxContainer.innerHTML = cfg.extraBoxHTML(lang);
+        }
+    };
+
+    // ربط النقرات على الأزرار الأربعة في الأعلى تلقائياً
+    function bindGatewayTabsClicks() {
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('button, [data-detected-role]');
+            if (!btn) return;
+            const txt = (btn.innerText || '').toLowerCase();
+            if (txt.includes('sign in') || txt.includes('دخول') || txt.includes('🚀')) return;
+
+            let clickedRole = btn.getAttribute('data-detected-role') || btn.getAttribute('data-role');
+            if (!clickedRole) {
+                if (txt.includes('student') || txt.includes('طالب') || txt.includes('छात्र')) clickedRole = 'student';
+                else if (txt.includes('teacher') || txt.includes('معلم') || txt.includes('शिक्षक')) clickedRole = 'teacher';
+                else if (txt.includes('parent') || txt.includes('ولي') || txt.includes('अभिभावक')) clickedRole = 'parent';
+                else if (txt.includes('admin') || txt.includes('إدارة') || txt.includes('एडमिन')) clickedRole = 'admin';
+            }
+
+            if (clickedRole) {
+                setTimeout(() => applyGatewayModeMorph(clickedRole), 10);
+            }
+        });
+
+        // حفظ إعدادات ولي الأمر عند الضغط على تسجيل الدخول ليفتح له قسم المالية أو التقارير مباشرة في student.html
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', () => {
+                if (window.currentSelectedGatewayRole === 'parent') {
+                    const pinVal = document.getElementById('login-parent-pin-field')?.value || '1234';
+                    const targetTab = document.getElementById('login-parent-target-tab')?.value || 'reports';
+                    localStorage.setItem('Safwat_Parent_Auto_Unlock_PIN', pinVal);
+                    localStorage.setItem('Safwat_Parent_Target_Tab', targetTab);
+                } else {
+                    localStorage.removeItem('Safwat_Parent_Auto_Unlock_PIN');
+                    localStorage.removeItem('Safwat_Parent_Target_Tab');
+                }
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', () => {
+            bindGatewayTabsClicks();
+            setTimeout(() => applyGatewayModeMorph('student'), 150);
+        });
+    } else {
+        bindGatewayTabsClicks();
+        setTimeout(() => applyGatewayModeMorph('student'), 150);
+    }
+})();
+</script>
 </body>
 </html>
