@@ -1741,5 +1741,250 @@
         }
         html.dark .role-tab-inactive { color: #94A3B8 !important; }
     </style>
+<!-- ==================== [Safwat LightRead] تقوية قراءة الوضع النهاري: ألوان غامقة فقط بدل الباهت — بلوك إضافي آمن الحذف ==================== -->
+<style id="safwat-light-read">
+/* كل ده للوضع النهاري بس — الليلي زي ما هو */
+html:not(.dark) #txt-portal-title { color: #0A1424 !important; }
+html:not(.dark) #txt-portal-subtitle { color: #2F4257 !important; }
+html:not(.dark) .form-label-royal,
+html:not(.dark) #lbl-email,
+html:not(.dark) #lbl-password { color: #0A1424 !important; }
+html:not(.dark) #btn-forgot-password { color: #6E4F10 !important; text-decoration: underline; text-underline-offset: 3px; }
+html:not(.dark) #lbl-remember-me { color: #0A1424 !important; }
+html:not(.dark) #lbl-select-portal-mode { color: #2F4257 !important; }
+html:not(.dark) #lbl-ssl-secured { color: #0A1424 !important; }
+html:not(.dark) #txt-role-routing-note { color: #2F4257 !important; }
+html:not(.dark) #trial-cta-title { color: #0A1424 !important; }
+html:not(.dark) #trial-cta-sub { color: #2F4257 !important; }
+html:not(.dark) .role-tab-inactive { color: #22344C !important; }
+html:not(.dark) .role-tab-inactive:hover { color: #0A1424 !important; background: rgba(212,175,55,.16) !important; }
+html:not(.dark) .input-manuscript { color: #0A1424 !important; }
+html:not(.dark) .input-manuscript::placeholder { color: rgba(10,20,36,.62) !important; }
+html:not(.dark) #toggle-password { color: #4A5B70 !important; }
+html:not(.dark) #toggle-password:hover { color: #0A1424 !important; }
+html:not(.dark) a[href*="wa.me"] { color: #0A1424 !important; }
+</style>
+
+<!-- ==================== [Safwat Lux] ترقية الخط والألوان الفاخرة — بلوك إضافي آمن الحذف ==================== -->
+<style id="safwat-lux">
+@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap');
+
+/* ✒️ الخط الأساسي لكل الواجهة (الوضعين) — Readex Pro أنظف وأفخم من Tajawal */
+body, button, input, select, textarea, label {
+    font-family: 'Readex Pro', 'Tajawal', sans-serif;
+}
+p, span, a, h1, h2, h3, h4, div {
+    font-family: 'Readex Pro', 'Tajawal', sans-serif;
+}
+/* بنرجع الخطوط المميزة لأماكنها */
+.font-calligraphy { font-family: 'Amiri', serif !important; }
+.font-quran { font-family: 'Amiri Quran', 'Amiri', serif !important; }
+.font-diwani { font-family: 'Aref Ruqaa', serif !important; }
+.font-mono, [class*="font-mono"] { font-family: ui-monospace, 'Courier New', monospace !important; }
+
+/* عنوان البوابة بخط الرقعة الفاخر */
+#txt-portal-title {
+    font-family: 'Aref Ruqaa', 'Readex Pro', serif !important;
+    font-size: 1.55rem !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0 !important;
+}
+
+/* 🎨 ألوان نهارية أغنى (الليلي زي ما هو) */
+html:not(.dark) body {
+    background:
+        radial-gradient(1150px 780px at 85% -12%, rgba(201, 162, 39, 0.22) 0%, transparent 62%),
+        radial-gradient(980px 720px at -8% 112%, rgba(18, 42, 74, 0.14) 0%, transparent 55%),
+        radial-gradient(760px 560px at 10% 30%, rgba(201, 162, 39, 0.14) 0%, transparent 60%),
+        linear-gradient(180deg, #FBF6E7 0%, #F4EBD2 55%, #ECE0BE 100%) !important;
+}
+html:not(.dark) .imperial-portal-frame {
+    background: linear-gradient(150deg, #FFFFFF 0%, #FDF9EE 100%) !important;
+    border: 2px solid rgba(154, 116, 40, 0.65) !important;
+    box-shadow:
+        0 40px 90px -26px rgba(18, 42, 74, 0.35),
+        0 0 0 6px rgba(255, 255, 255, 0.7),
+        0 0 0 8px rgba(201, 162, 39, 0.4),
+        0 0 70px -18px rgba(201, 162, 39, 0.35),
+        inset 0 1px 0 #FFFFFF !important;
+}
+html:not(.dark) .input-manuscript {
+    background: linear-gradient(165deg, #FFFFFF 0%, #FDFAF0 100%) !important;
+    border: 1.5px solid rgba(154, 116, 40, 0.7) !important;
+    box-shadow: inset 0 2px 6px rgba(18, 42, 74, 0.08) !important;
+}
+html:not(.dark) .input-manuscript:focus {
+    border-color: #A97F1C !important;
+    box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.25), 0 0 22px rgba(201, 162, 39, 0.18) !important;
+}
+html:not(.dark) .btn-imperial-emerald {
+    background: linear-gradient(140deg, #173A5E 0%, #0A1424 50%, #13304E 100%) !important;
+    border: 1.5px solid #C9A227 !important;
+    color: #F6D97B !important;
+    box-shadow: 0 14px 30px -10px rgba(10, 20, 36, 0.55), inset 0 1px 0 rgba(246, 217, 123, 0.35) !important;
+}
+html:not(.dark) .role-tab-active {
+    background: linear-gradient(140deg, #173A5E 0%, #0A1424 100%) !important;
+    color: #F6D97B !important;
+    border: 1.5px solid #C9A227 !important;
+}
+html:not(.dark) .role-tabs-wrap {
+    background: rgba(238, 230, 212, 0.95) !important;
+    border: 1.5px solid rgba(154, 116, 40, 0.55) !important;
+}
+html:not(.dark) .trial-banner-box {
+    background: linear-gradient(90deg, rgba(201, 162, 39, 0.18), rgba(255, 255, 255, 0.5)) !important;
+    border: 1.5px solid rgba(154, 116, 40, 0.55) !important;
+}
+</style>
+
+<!-- ==================== [Safwat 2FA] بوابة المصادقة الثنائية الحقيقية عند تسجيل الدخول — بلوك إضافي آمن الحذف ==================== -->
+<style id="safwat-2fa-login">
+#sf-2fa-overlay{position:fixed;inset:0;background:rgba(2,10,20,.88);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);}
+#sf-2fa-overlay .sf-2fa-card{background:linear-gradient(165deg,#0b1c30,#122740);border:1px solid rgba(212,175,55,.5);border-radius:1.6rem;padding:1.8rem 1.5rem;width:100%;max-width:380px;text-align:center;box-shadow:0 30px 80px -20px rgba(0,0,0,.7);}
+#sf-2fa-code{width:100%;max-width:220px;margin:0 auto;padding:.8rem;border-radius:1rem;border:2px solid rgba(212,175,55,.55);background:rgba(255,255,255,.06);color:#FFD76A;font-family:monospace;font-size:1.6rem;font-weight:900;text-align:center;letter-spacing:.5em;outline:none;direction:ltr;}
+#sf-2fa-code:focus{border-color:#D4AF37;box-shadow:0 0 0 4px rgba(212,175,55,.2);}
+</style>
+<script>
+(function(){
+    'use strict';
+    var pendingRoute = null;
+    var activeFactorId = null;
+    var activeChallengeId = null;
+
+    function isAr(){ try { return (typeof currentLang === 'undefined' || currentLang === 'ar'); } catch(e){ return true; } }
+
+    function show2faGate(userId){
+        pendingRoute = userId;
+        var ov = document.getElementById('sf-2fa-overlay');
+        if (ov) ov.remove();
+        ov = document.createElement('div');
+        ov.id = 'sf-2fa-overlay';
+        ov.innerHTML =
+            '<div class="sf-2fa-card">' +
+                '<div style="width:64px;height:64px;margin:0 auto .9rem;border-radius:1.2rem;background:rgba(212,175,55,.14);border:1px solid rgba(212,175,55,.5);display:flex;align-items:center;justify-content:center;font-size:1.8rem">🔐</div>' +
+                '<h3 style="color:#F3E5AB;font-weight:900;font-size:1.1rem;margin-bottom:.35rem">' + (isAr() ? 'المصادقة الثنائية (2FA)' : 'Two-Factor Authentication') + '</h3>' +
+                '<p style="color:#94a3b8;font-size:.72rem;font-weight:700;line-height:1.7;margin-bottom:1.1rem">' + (isAr() ? 'هذا الحساب محمي بالمصادقة الثنائية.<br>افتح تطبيق المصادقة وأدخل الكود المكوّن من 6 أرقام' : 'This account is protected with 2FA.<br>Open your authenticator app and enter the 6-digit code') + '</p>' +
+                '<input id="sf-2fa-code" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="••••••">' +
+                '<div id="sf-2fa-err" style="color:#fb7185;font-size:.72rem;font-weight:900;min-height:1.2rem;margin-top:.5rem"></div>' +
+                '<button type="button" id="sf-2fa-verify" style="width:100%;margin-top:.7rem;padding:.85rem;border-radius:1rem;background:linear-gradient(135deg,#047857,#065f46);color:#fff;font-weight:900;font-size:.85rem;border:1px solid rgba(212,175,55,.5);cursor:pointer">' + (isAr() ? 'تحقق وادخل ✅' : 'Verify & Sign In ✅') + '</button>' +
+                '<button type="button" id="sf-2fa-cancel" style="width:100%;margin-top:.55rem;padding:.6rem;border-radius:1rem;background:transparent;color:#94a3b8;font-weight:900;font-size:.72rem;border:1px solid rgba(148,163,184,.3);cursor:pointer">' + (isAr() ? 'إلغاء وتسجيل الخروج' : 'Cancel & Sign Out') + '</button>' +
+            '</div>';
+        document.body.appendChild(ov);
+        var inp = document.getElementById('sf-2fa-code');
+        setTimeout(function(){ inp.focus(); }, 80);
+        inp.addEventListener('input', function(){ this.value = this.value.replace(/\D/g, '').slice(0, 6); });
+        inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') document.getElementById('sf-2fa-verify').click(); });
+        document.getElementById('sf-2fa-verify').addEventListener('click', doVerify);
+        document.getElementById('sf-2fa-cancel').addEventListener('click', async function(){
+            try { await supabaseClient.auth.signOut(); } catch(e){}
+            ov.remove();
+            if (typeof toggleBtnLoading === 'function') toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+        });
+    }
+
+    async function doVerify(){
+        var code = document.getElementById('sf-2fa-code').value.trim();
+        var err = document.getElementById('sf-2fa-err');
+        var btn = document.getElementById('sf-2fa-verify');
+        if (code.length !== 6) { err.textContent = isAr() ? 'الكود 6 أرقام' : 'Code must be 6 digits'; return; }
+        btn.disabled = true; btn.textContent = isAr() ? '⏳ جاري التحقق...' : '⏳ Verifying...';
+        try {
+            if (!activeChallengeId) {
+                var ch = await supabaseClient.auth.mfa.challenge({ factorId: activeFactorId });
+                if (ch.error) throw ch.error;
+                activeChallengeId = ch.data.id;
+            }
+            var vr = await supabaseClient.auth.mfa.verify({ factorId: activeFactorId, challengeId: activeChallengeId, code: code });
+            if (vr.error) throw vr.error;
+            document.getElementById('sf-2fa-overlay').remove();
+            var uid = pendingRoute; pendingRoute = null; activeChallengeId = null;
+            await window.__sfOrigRoute(uid);
+        } catch (e) {
+            activeChallengeId = null; // كود غلط: جدّد التحدي للمحاولة الجاية
+            err.textContent = isAr() ? '❌ الكود غير صحيح — تأكد من التوقيت وجرب تاني' : '❌ Invalid code — check your clock and retry';
+            btn.disabled = false; btn.textContent = isAr() ? 'تحقق وادخل ✅' : 'Verify & Sign In ✅';
+        }
+    }
+
+    // قفل احتياطي: تعذر فحص حالة المصادقة لحساب إداري — مندخلوش لحد ما نتأكد
+    function show2faBlocker(){
+        var ov = document.getElementById('sf-2fa-overlay');
+        if (ov) ov.remove();
+        ov = document.createElement('div');
+        ov.id = 'sf-2fa-overlay';
+        ov.innerHTML =
+            '<div class="sf-2fa-card">' +
+                '<div style="width:64px;height:64px;margin:0 auto .9rem;border-radius:1.2rem;background:rgba(190,18,60,.14);border:1px solid rgba(251,113,133,.5);display:flex;align-items:center;justify-content:center;font-size:1.8rem">🛡️</div>' +
+                '<h3 style="color:#F3E5AB;font-weight:900;font-size:1.05rem;margin-bottom:.35rem">' + (isAr() ? 'تعذر التحقق الأمني' : 'Security Check Failed') + '</h3>' +
+                '<p style="color:#94a3b8;font-size:.72rem;font-weight:700;line-height:1.7;margin-bottom:1.1rem">' + (isAr() ? 'مش قادرين نتأكد من إعدادات المصادقة الثنائية للحساب ده.<br>تأكد من الإنترنت وحاول تاني.' : 'Could not verify this account\'s 2FA settings.<br>Check your connection and retry.') + '</p>' +
+                '<button type="button" id="sf-2fa-retry" style="width:100%;padding:.85rem;border-radius:1rem;background:linear-gradient(135deg,#047857,#065f46);color:#fff;font-weight:900;font-size:.85rem;border:1px solid rgba(212,175,55,.5);cursor:pointer">' + (isAr() ? 'حاول تاني 🔄' : 'Retry 🔄') + '</button>' +
+                '<button type="button" id="sf-2fa-bcancel" style="width:100%;margin-top:.55rem;padding:.6rem;border-radius:1rem;background:transparent;color:#94a3b8;font-weight:900;font-size:.72rem;border:1px solid rgba(148,163,184,.3);cursor:pointer">' + (isAr() ? 'تسجيل الخروج' : 'Sign Out') + '</button>' +
+            '</div>';
+        document.body.appendChild(ov);
+        document.getElementById('sf-2fa-retry').addEventListener('click', function(){
+            ov.remove();
+            if (typeof toggleBtnLoading === 'function') toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+        });
+        document.getElementById('sf-2fa-bcancel').addEventListener('click', async function(){
+            try { await supabaseClient.auth.signOut(); } catch(e){}
+            ov.remove();
+            if (typeof toggleBtnLoading === 'function') toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+        });
+    }
+
+    async function sfIsAdminFamily(userId){
+        try {
+            var r = await supabaseClient.from('profiles').select('role').eq('id', userId).single();
+            var role = r.data && r.data.role;
+            return ['super_admin','admin','branch_director','supervisor','deputy_admin','accountant'].indexOf(role) >= 0;
+        } catch(e){ return true; } // مش عارفين نحدد الرتبة → قفل احتياطي
+    }
+
+    // بوابة التوجيه (fail-closed): حساب مفعّل عليه 2FA ميدخلش أبدًا من غير الكود
+    function wrapRoute(){
+        if (typeof window.routeUserByRole !== 'function' || window.__sfOrigRoute) return;
+        window.__sfOrigRoute = window.routeUserByRole;
+        window.routeUserByRole = async function(userId){
+            var verified = null;   // null = فشل الفحص نفسه
+            var aalSaysEnrolled = false;
+            try {
+                var lf = await supabaseClient.auth.mfa.listFactors();
+                if (lf.error) throw lf.error;
+                verified = ((lf.data && lf.data.totp) || []).filter(function(f){ return f.status === 'verified'; });
+            } catch(e){ console.warn('[Safwat 2FA] listFactors', e); }
+            try {
+                var aal = await supabaseClient.auth.mfa.getAuthenticatorAssuranceLevel();
+                if (aal.error) throw aal.error;
+                var d = aal.data || {};
+                if (d.currentLevel === 'aal2') return window.__sfOrigRoute(userId); // متوثق بالكود فعلاً
+                aalSaysEnrolled = (d.nextLevel === 'aal2');
+            } catch(e){ console.warn('[Safwat 2FA] aal', e); }
+
+            if (verified && verified.length) {
+                // دليل إيجابي إن الحساب مفعّل → البوابة إجبارية، مفيش تخطي مهما حصل
+                activeFactorId = verified[0].id;
+                activeChallengeId = null;
+                show2faGate(userId);
+                return;
+            }
+            if (aalSaysEnrolled) {
+                // AAL بيقول مفعّل بس العامل مش واصل — حالة غير طبيعية: اقفل
+                show2faBlocker();
+                return;
+            }
+            if (verified === null) {
+                // فشل الفحص نفسه (شبكة/خدمة): اقفل على الحسابات الإدارية بس، وعدّي الطلاب والمعلمين
+                if (await sfIsAdminFamily(userId)) { show2faBlocker(); return; }
+            }
+            return window.__sfOrigRoute(userId);
+        };
+    }
+    var wt = setInterval(function(){ if (window.routeUserByRole) { wrapRoute(); clearInterval(wt); } }, 30);
+    setTimeout(function(){ clearInterval(wt); }, 10000);
+    console.log('[Safwat 2FA] login gate loaded');
+})();
+</script>
+
 </body>
 </html>
