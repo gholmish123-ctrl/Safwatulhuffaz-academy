@@ -1343,7 +1343,8 @@
                 }
 
                 const role = profile.role;
-                if (['super_admin', 'admin', 'branch_director', 'supervisor'].includes(role)) {
+                // [Safwat RolesFix] الرتب الإدارية كاملة — deputy_admin/accountant/content_manager كانوا بيرفضوا الدخول
+                if (['super_admin', 'admin', 'branch_director', 'supervisor', 'deputy_admin', 'accountant', 'content_manager'].includes(role)) {
                     window.location.href = "admin.html";
                 } else if (role === 'teacher') {
                     window.location.href = "teacher.html";

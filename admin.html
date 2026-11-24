@@ -8670,7 +8670,41 @@ window.simulateStaffPermissions = function() {
 </script>
 
 <!-- [Safwat Version] علامة إصدار اللوحة — تُستخدم في التشخيص للتأكد أن المتصفح يعرض أحدث نسخة — بلوك إضافي آمن الحذف -->
-<script>window.SAFWAT_ADMIN_BUILD = '2026-11-24j (paylock + real 2FA admin)';</script>
+<script>window.SAFWAT_ADMIN_BUILD = '2026-11-25a (paylock + real 2FA admin + profile guard)';</script>
+
+<!-- ==================== [Safwat ProfileGuard] التأكد إن صلاحية الحساب الجديد اتسجلت فعلًا — بلوك إضافي آمن الحذف ==================== -->
+<!-- المشكلة: registerUserInSupabaseAuth كان بيبتلع فشل تسجيل profiles (console.warn بس)، فيتسجل الحساب من غير صلاحية وصفحة الدخول ترفضه -->
+<script>
+(function () {
+    var LOG = '[Safwat ProfileGuard]';
+    var orig = window.registerUserInSupabaseAuth;
+    if (typeof orig !== 'function' || window.__sfProfileGuard) return;
+    window.__sfProfileGuard = true;
+
+    window.registerUserInSupabaseAuth = async function (email, password, role, fullName) {
+        var res = await orig(email, password, role, fullName);
+        var uid = res && res.userId;
+        if (!uid) return res;
+
+        // تأكد إن صف الـ profiles موجود فعلًا (المشغل أو اللوحة)، ولو لأ حاول تسجله بنفسك
+        for (var i = 0; i < 3; i++) {
+            try {
+                var chk = await supabaseClient.from('profiles').select('id').eq('id', uid).maybeSingle();
+                if (chk && chk.data && chk.data.id) return res;
+                await supabaseClient.from('profiles').upsert([{
+                    id: uid,
+                    full_name: String(fullName || '').trim() || String(email || '').split('@')[0],
+                    role: role
+                }], { onConflict: 'id' });
+            } catch (e) { console.warn(LOG, 'retry', i, e); }
+            await new Promise(function (r) { setTimeout(r, 700); });
+        }
+
+        throw new Error('اتسجل حساب الدخول بس صلاحيته (profiles) متسجلتش. شغّل ملف safwat-profiles-repair-V16.sql في المشروع الصح وبعدين جرّب تسجيل الدخول بالحساب ده: ' + email);
+    };
+    console.log(LOG, 'loaded — account creation now verifies the profile row');
+})();
+</script>
 
 </body>
 </html>
