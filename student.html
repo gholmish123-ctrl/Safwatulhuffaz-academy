@@ -10705,5 +10705,108 @@ html.dark #iz-bar { background: linear-gradient(120deg, rgba(217,183,92,.10), rg
 })();
 </script>
 
+<!-- [Safwat NavBadges + i18n Patch] علامات "جديد" حمراء على أقسام الاختبارات والمبارزات + ترقيع النصوص الثابتة الناقصة للإنجليزية — بلوك إضافي آمن الحذف -->
+<style>
+.safwat-new-dot{position:absolute;top:-5px;left:-5px;min-width:18px;height:18px;padding:0 4px;background:#f43f5e;color:#fff;font-size:10px;font-weight:900;border-radius:9999px;border:2px solid #fff;display:flex;align-items:center;justify-content:center;z-index:20;box-shadow:0 1px 4px rgba(0,0,0,.25);animation:safwatDotPulse 1.6s ease-in-out infinite;pointer-events:none}
+@keyframes safwatDotPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+</style>
+<script>
+(function () {
+    // ---------- 1) ترقيع النصوص الثابتة الناقصة للإنجليزية ----------
+    const I18N_PATCH = [
+        ['نظام المتابعة الأكاديمية الذكي', 'Smart Academic Tracking System'],
+        ['جاري التحميل...', 'Loading...'],
+        ['📚 مسار القرآن الكريم', '📚 Quran Track'],
+        ['المستوى: مبتدئ', 'Level: Beginner'],
+        ['رصيد المكافآت: 0 نجمة', 'Rewards: 0 Stars'],
+        ['0 نجمة', '0 Stars'],
+        ['اختر باباً من القائمة', 'Choose a chapter from the list'],
+        ['شهري (8 حصص)', 'Monthly (8 sessions)'],
+        ['تعليمات التحويل (TapTap Send / Instapay)', 'Transfer Instructions (TapTap Send / Instapay)'],
+        ['رقم الحوالة المرجعي', 'Transfer reference number'],
+        ['أوجه', 'pages'],
+        ['📖 معاينة المستند', '📖 Document Preview']
+    ];
+    function patchI18n() {
+        const map = new Map(I18N_PATCH);
+        document.querySelectorAll('body *').forEach(el => {
+            if (el.children.length) return;
+            if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                const ph = (el.getAttribute('placeholder') || '').trim();
+                if (map.has(ph) && !el.hasAttribute('data-ar')) {
+                    el.setAttribute('data-ar', ph); el.setAttribute('data-en', map.get(ph));
+                }
+                return;
+            }
+            const tx = (el.textContent || '').trim();
+            if (map.has(tx) && !el.hasAttribute('data-ar')) {
+                el.setAttribute('data-ar', tx); el.setAttribute('data-en', map.get(tx));
+            }
+        });
+    }
+    if (window.applyLanguage && !window.applyLanguage.__safwatI18n) {
+        const origApply = window.applyLanguage;
+        const wrappedApply = function (lang) { try { patchI18n(); } catch (e) {} return origApply.apply(this, arguments); };
+        wrappedApply.__safwatI18n = true;
+        window.applyLanguage = wrappedApply;
+    }
+    try { patchI18n(); } catch (e) {}
+    const curLangNow = window.currentLang || localStorage.getItem('Safwatulhuffaz-student-lang') || 'ar';
+    if (curLangNow !== 'ar' && window.applyLanguage) { try { window.applyLanguage(curLangNow); } catch (e) {} }
+
+    // ---------- 2) علامات "جديد" على عناصر القائمة الجانبية ----------
+    function badgeSid() { return String(window.currentStudentId || (window.studentData && window.studentData.id) || ''); }
+    function badgeStore(sid) { try { return JSON.parse(localStorage.getItem('Safwat_NavBadges_' + sid) || '{}'); } catch (e) { return {}; } }
+    function badgeSave(sid, o) { try { localStorage.setItem('Safwat_NavBadges_' + sid, JSON.stringify(o)); } catch (e) {} }
+    function setNavDot(navId, n) {
+        const btn = document.getElementById(navId); if (!btn) return;
+        let dot = btn.querySelector(':scope > .safwat-new-dot');
+        if (!n || n < 1) { if (dot) dot.remove(); return; }
+        btn.style.position = 'relative';
+        if (!dot) { dot = document.createElement('span'); dot.className = 'safwat-new-dot'; btn.appendChild(dot); }
+        const txt = n > 9 ? '9+' : String(n);
+        if (dot.textContent !== txt) dot.textContent = txt;
+    }
+    async function refreshNavBadges() {
+        const sid = badgeSid();
+        if (!sid || typeof supabaseClient === 'undefined') return;
+        const st = badgeStore(sid);
+        // 📝 اختبارات جديدة وصلت منذ آخر مرة فتح فيها قسم الاختبارات
+        try {
+            const r = await supabaseClient.from('exams').select('id').gt('created_at', st.examsSeen || '1970-01-01T00:00:00Z').limit(20);
+            if (!r.error) setNavDot('nav-exams', (r.data || []).length);
+        } catch (e) {}
+        // ⚔️ مبارزة نشطة مستنية الطالب يلعبها
+        try {
+            const r2 = await supabaseClient.from('quiz_duels_safe').select('id, challenger_id, opponent_id, challenger_done_at, opponent_done_at').eq('status', 'active').limit(10);
+            if (!r2.error) {
+                const pending = (r2.data || []).filter(d =>
+                    (String(d.challenger_id) === sid && !d.challenger_done_at) ||
+                    (String(d.opponent_id) === sid && !d.opponent_done_at));
+                setNavDot('nav-quizduel', pending.length);
+            }
+        } catch (e) {}
+    }
+    // فتح قسم الاختبارات (من القائمة أو أي زر) = اتشافت
+    document.addEventListener('click', function (ev) {
+        let el = ev.target;
+        while (el && el !== document.body) {
+            const oc = el.getAttribute && el.getAttribute('onclick');
+            if (oc && oc.indexOf("switchTab('exams')") >= 0) {
+                const sid = badgeSid();
+                if (sid) { const st = badgeStore(sid); st.examsSeen = new Date().toISOString(); badgeSave(sid, st); }
+                setNavDot('nav-exams', 0);
+                break;
+            }
+            el = el.parentElement;
+        }
+    }, true);
+    setInterval(refreshNavBadges, 20000);
+    setTimeout(refreshNavBadges, 3000);
+    setTimeout(refreshNavBadges, 9000);
+})();
+</script>
+
 </body>
 </html>
