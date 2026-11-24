@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="icon" type="image/png" href="logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلب الالتحاق | أكاديمية صفوة الحفاظ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background: radial-gradient(1200px 700px at 85% -10%, rgba(212,175,55,.14), transparent 60%), radial-gradient(900px 600px at -10% 110%, rgba(20,90,70,.35), transparent 55%), #060d14; min-height: 100vh; }
+        .font-royal { font-family: 'Baloo Bhaijaan 2', 'Tajawal', sans-serif; }
+        .font-amiri { font-family: 'Amiri', serif; }
+        .gold-foil-text { background: linear-gradient(100deg, #8a6a1f 0%, #d4af37 25%, #fff3c4 50%, #d4af37 75%, #8a6a1f 100%); background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: foilSweep 5s linear infinite; }
+        @keyframes foilSweep { to { background-position: 220% center; } }
+        .glass-card { background: rgba(13,25,38,.78); backdrop-filter: blur(18px); border: 1.5px solid rgba(212,175,55,.35); box-shadow: 0 30px 80px -30px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.06); }
+        .lux-input { background: rgba(4,10,18,.85); border: 1.5px solid rgba(212,175,55,.38); color: #f6f4ec; transition: border-color .3s, box-shadow .3s; }
+        .lux-input:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212,175,55,.22), 0 0 22px -4px rgba(212,175,55,.45); }
+        .lux-input::placeholder { color: rgba(203,213,225,.4); }
+        select.lux-input option { background: #0d1926; color: #f6f4ec; }
+        .btn-royal { background: linear-gradient(120deg, #8a6a1f, #d4af37 45%, #b8912f); color: #08131d; transition: transform .2s, box-shadow .3s, filter .3s; box-shadow: 0 14px 34px -10px rgba(212,175,55,.55); }
+        .btn-royal:hover { filter: brightness(1.08); transform: translateY(-1px); }
+        .btn-royal:disabled { opacity: .6; transform: none; }
+        .star { position: absolute; border-radius: 9999px; background: radial-gradient(circle, #fff6d6 0%, rgba(212,175,55,.9) 40%, transparent 70%); pointer-events: none; animation: twinkle 4s ease-in-out infinite; }
+        @keyframes twinkle { 0%,100% { opacity: .12; transform: scale(.7); } 50% { opacity: .9; transform: scale(1); } }
+        .reveal { opacity: 0; transform: translateY(18px); animation: rise .8s cubic-bezier(.2,.7,.3,1) forwards; }
+        @keyframes rise { to { opacity: 1; transform: none; } }
+        .spin { width: 20px; height: 20px; border: 3px solid rgba(8,19,29,.3); border-top-color: #08131d; border-radius: 50%; animation: rot .7s linear infinite; }
+        @keyframes rot { to { transform: rotate(360deg); } }
+        .royal-chip { background: rgba(13,25,38,.75); border: 1.5px solid rgba(212,175,55,.5); backdrop-filter: blur(10px); }
+        @media (prefers-reduced-motion: reduce) { .star, .gold-foil-text, .reveal { animation: none !important; opacity: 1 !important; transform: none !important; } }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4 sm:p-8">
+    <div id="stars-bg" class="fixed inset-0 overflow-hidden pointer-events-none"></div>
+
+    <div class="fixed top-4 z-20" id="lang-chip-wrap" style="inset-inline-end: 1rem;">
+        <select id="lang-switcher" aria-label="Language" class="royal-chip min-h-[38px] text-[#F3E5AB] text-xs rounded-2xl px-3.5 py-1.5 font-black focus:outline-none cursor-pointer">
+            <option value="ar">🌍 العربية</option>
+            <option value="en">🌍 English</option>
+        </select>
+    </div>
+
+    <main class="relative z-10 w-full max-w-lg">
+        <div class="text-center mb-7 reveal">
+            <img src="logo.png" alt="أكاديمية صفوة الحفاظ" class="w-20 h-20 mx-auto rounded-3xl shadow-2xl border border-amber-300/40 object-cover" onerror="this.style.display='none'">
+            <h1 class="font-royal text-3xl sm:text-4xl font-extrabold gold-foil-text mt-4" id="t-brand">أكاديمية صفوة الحفاظ</h1>
+            <p class="text-amber-200/80 text-xs font-bold mt-1 tracking-widest">ROYAL QUR'AN ACADEMY</p>
+            <p class="font-amiri text-emerald-100/90 text-sm mt-3">﴿ وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا ﴾</p>
+        </div>
+
+        <div class="glass-card rounded-[2rem] p-6 sm:p-8 reveal" style="animation-delay:.15s">
+            <h2 class="font-royal text-xl font-bold text-amber-100 text-center" id="t-heading">📝 طلب الالتحاق بالأكاديمية</h2>
+            <p class="text-slate-300/80 text-[11px] font-bold text-center mt-1 mb-6" id="t-sub">املأ البيانات وسيتواصل معك فريق الأكاديمية بعد مراجعة الطلب إن شاء الله</p>
+
+            <form id="enroll-form" class="space-y-4 text-sm">
+                <div>
+                    <label class="block font-black text-amber-200/90 text-xs mb-1.5" id="t-l-name">اسم الطالب الكامل *</label>
+                    <input type="text" id="f-student-name" required maxlength="120" placeholder="مثال: أحمد محمد علي" class="lux-input w-full rounded-2xl px-4 py-3.5 font-bold">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-black text-amber-200/90 text-xs mb-1.5" id="t-l-age">السن *</label>
+                        <input type="number" id="f-age" required min="4" max="99" placeholder="10" class="lux-input w-full rounded-2xl px-4 py-3.5 font-bold text-center">
+                    </div>
+                    <div>
+                        <label class="block font-black text-amber-200/90 text-xs mb-1.5" id="t-l-level">المستوى الحالي *</label>
+                        <select id="f-level" required class="lux-input w-full rounded-2xl px-3 py-3.5 font-bold cursor-pointer">
+                            <option value="" disabled selected id="o-level-none">اختر...</option>
+                            <option value="beginner" id="o-level-1">مبتدئ (تأسيس وتجويد)</option>
+                            <option value="intermediate" id="o-level-2">متوسط (حفظ أقل من 5 أجزاء)</option>
+                            <option value="advanced" id="o-level-3">متقدم (حفظ 5 أجزاء فأكثر)</option>
+                            <option value="ijazah" id="o-level-4">طالب إجازة بالسند</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-black text-amber-200/90 text-xs mb-1.5" id="t-l-parent">اسم ولي الأمر *</label>
+                    <input type="text" id="f-parent-name" required maxlength="120" placeholder="اسم الأب / الأم" class="lux-input w-full rounded-2xl px-4 py-3.5 font-bold">
+                </div>
+                <div>
+                    <label class="block font-black text-amber-200/90 text-xs mb-1.5" id="t-l-phone">رقم واتساب ولي الأمر (بكود الدولة) *</label>
+                    <input type="tel" id="f-parent-phone" required dir="ltr" placeholder="2010XXXXXXXX+" maxlength="20" class="lux-input w-full rounded-2xl px-4 py-3.5 font-bold text-left">
+                </div>
+                <div>
+                    <label class="block font-black text-amber-200/90 text-xs mb-1.5" id="t-l-note">ملاحظات إضافية (اختياري)</label>
+                    <textarea id="f-note" rows="2" maxlength="500" placeholder="أوقات مفضلة، خبرة سابقة، أي تفاصيل تهمنا..." class="lux-input w-full rounded-2xl px-4 py-3 font-bold resize-none"></textarea>
+                </div>
+                <p id="form-error" class="hidden text-rose-300 text-xs font-black text-center bg-rose-500/10 border border-rose-400/30 rounded-xl px-3 py-2.5"></p>
+                <button type="submit" id="btn-submit" class="btn-royal w-full rounded-2xl py-4 font-royal font-extrabold text-base cursor-pointer flex items-center justify-center gap-2">
+                    <span id="btn-submit-text">🚀 إرسال طلب الالتحاق</span>
+                </button>
+                <p class="text-center text-[10px] text-slate-400 font-bold" id="t-consent">بإرسالك الطلب أنت توافق على تواصل الأكاديمية معك عبر واتساب</p>
+            </form>
+
+            <div id="success-box" class="hidden text-center py-8 space-y-4">
+                <div class="w-20 h-20 mx-auto rounded-full bg-emerald-500/15 border-2 border-emerald-400/50 flex items-center justify-center text-4xl">✅</div>
+                <h3 class="font-royal text-xl font-bold text-emerald-300" id="t-s-title">تم استلام طلبك بنجاح!</h3>
+                <p class="text-slate-300 text-xs font-bold leading-relaxed" id="t-s-body">طلب الالتحاق وصل إدارة الأكاديمية.<br>سيتواصل معك فريقنا على رقم الواتساب في أقرب وقت إن شاء الله.</p>
+                <p class="font-amiri text-amber-200/80 text-sm">﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾</p>
+            </div>
+        </div>
+
+        <p class="text-center text-[10px] text-slate-500 font-bold mt-6 reveal" style="animation-delay:.3s" id="t-footer">أكاديمية صفوة الحفاظ الملكية © 2026</p>
+    </main>
+
+    <script>
+        const SUPABASE_URL = "https://cnfykoxjwxujrsxvjdud.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuZnlrb3hqd3h1anJzeHZqZHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NTIzOTcsImV4cCI6MjEwMDAyODM5N30.kLEmrA3XPIhgtwMw5bMkJhCH-Q8LP4ygyNKcnr265i4";
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        /* اللغة — نفس مفتاح صفحة الدخول عشان اختيار المستخدم يفضل محفوظ بين الصفحتين */
+        const translations = {
+            ar: {
+                dir: 'rtl',
+                title: 'طلب الالتحاق | أكاديمية صفوة الحفاظ',
+                brand: 'أكاديمية صفوة الحفاظ',
+                heading: '📝 طلب الالتحاق بالأكاديمية',
+                sub: 'املأ البيانات وسيتواصل معك فريق الأكاديمية بعد مراجعة الطلب إن شاء الله',
+                lName: 'اسم الطالب الكامل *', phName: 'مثال: أحمد محمد علي',
+                lAge: 'السن *',
+                lLevel: 'المستوى الحالي *',
+                oNone: 'اختر...', o1: 'مبتدئ (تأسيس وتجويد)', o2: 'متوسط (حفظ أقل من 5 أجزاء)', o3: 'متقدم (حفظ 5 أجزاء فأكثر)', o4: 'طالب إجازة بالسند',
+                lParent: 'اسم ولي الأمر *', phParent: 'اسم الأب / الأم',
+                lPhone: 'رقم واتساب ولي الأمر (بكود الدولة) *',
+                lNote: 'ملاحظات إضافية (اختياري)', phNote: 'أوقات مفضلة، خبرة سابقة، أي تفاصيل تهمنا...',
+                submit: '🚀 إرسال طلب الالتحاق',
+                consent: 'بإرسالك الطلب أنت توافق على تواصل الأكاديمية معك عبر واتساب',
+                errFill: 'برجاء استكمال كل الحقول المطلوبة (*)',
+                errNet: 'تعذر إرسال الطلب الآن — تأكد من الإنترنت وحاول مرة أخرى',
+                sTitle: 'تم استلام طلبك بنجاح!',
+                sBody: 'طلب الالتحاق وصل إدارة الأكاديمية.<br>سيتواصل معك فريقنا على رقم الواتساب في أقرب وقت إن شاء الله.',
+                footer: 'أكاديمية صفوة الحفاظ الملكية © 2026'
+            },
+            en: {
+                dir: 'ltr',
+                title: 'Enrollment Request | Safwat Al-Huffaz Academy',
+                brand: 'Safwat Al-Huffaz Academy',
+                heading: '📝 Academy Enrollment Request',
+                sub: 'Fill in the details and our team will contact you after reviewing your request, God willing',
+                lName: "Student's full name *", phName: 'e.g. Ahmad Mohamed Ali',
+                lAge: 'Age *',
+                lLevel: 'Current level *',
+                oNone: 'Choose...', o1: 'Beginner (foundation & tajweed)', o2: 'Intermediate (memorized less than 5 ajzaa)', o3: 'Advanced (memorized 5+ ajzaa)', o4: 'Ijazah student (sanad)',
+                lParent: "Parent's name *", phParent: "Father's / mother's name",
+                lPhone: "Parent's WhatsApp number (with country code) *",
+                lNote: 'Additional notes (optional)', phNote: 'Preferred times, previous experience, anything we should know...',
+                submit: '🚀 Send Enrollment Request',
+                consent: 'By submitting, you agree that the academy may contact you on WhatsApp',
+                errFill: 'Please complete all required fields (*)',
+                errNet: 'Could not send the request right now — check your connection and try again',
+                sTitle: 'Your request was received successfully!',
+                sBody: 'Your enrollment request has reached the academy administration.<br>Our team will contact you on WhatsApp as soon as possible, God willing.',
+                footer: 'Safwat Al-Huffaz Royal Academy © 2026'
+            }
+        };
+
+        let currentLang = localStorage.getItem('Safwatulhuffaz_lang') || 'ar';
+        function applyLanguage(lang) {
+            currentLang = (lang === 'en') ? 'en' : 'ar';
+            localStorage.setItem('Safwatulhuffaz_lang', currentLang);
+            const t = translations[currentLang];
+            document.documentElement.setAttribute('dir', t.dir);
+            document.documentElement.setAttribute('lang', currentLang);
+            document.title = t.title;
+            const setTxt = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.innerHTML = v; };
+            const setPh = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.placeholder = v; };
+            setTxt('t-brand', t.brand); setTxt('t-heading', t.heading); setTxt('t-sub', t.sub);
+            setTxt('t-l-name', t.lName); setPh('f-student-name', t.phName);
+            setTxt('t-l-age', t.lAge); setTxt('t-l-level', t.lLevel);
+            setTxt('o-level-none', t.oNone); setTxt('o-level-1', t.o1); setTxt('o-level-2', t.o2); setTxt('o-level-3', t.o3); setTxt('o-level-4', t.o4);
+            setTxt('t-l-parent', t.lParent); setPh('f-parent-name', t.phParent);
+            setTxt('t-l-phone', t.lPhone);
+            setTxt('t-l-note', t.lNote); setPh('f-note', t.phNote);
+            setTxt('btn-submit-text', t.submit);
+            setTxt('t-consent', t.consent);
+            setTxt('t-s-title', t.sTitle); setTxt('t-s-body', t.sBody);
+            setTxt('t-footer', t.footer);
+            document.getElementById('lang-switcher').value = currentLang;
+        }
+        document.getElementById('lang-switcher').addEventListener('change', function(){ applyLanguage(this.value); });
+        applyLanguage(currentLang);
+
+        /* نجوم الخلفية */
+        (function () {
+            const bg = document.getElementById('stars-bg');
+            for (let i = 0; i < 42; i++) {
+                const s = document.createElement('span');
+                s.className = 'star';
+                const size = 2 + Math.random() * 3.5;
+                s.style.cssText = 'width:' + size + 'px;height:' + size + 'px;top:' + (Math.random() * 100) + '%;left:' + (Math.random() * 100) + '%;animation-duration:' + (3 + Math.random() * 4) + 's;animation-delay:' + (Math.random() * 4) + 's;';
+                bg.appendChild(s);
+            }
+        })();
+
+        document.getElementById('enroll-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const t = translations[currentLang];
+            const err = document.getElementById('form-error');
+            const btn = document.getElementById('btn-submit');
+            const btnText = document.getElementById('btn-submit-text');
+            err.classList.add('hidden');
+
+            const row = {
+                student_name: document.getElementById('f-student-name').value.trim(),
+                student_age: parseInt(document.getElementById('f-age').value, 10) || null,
+                level: document.getElementById('f-level').value || null,
+                parent_name: document.getElementById('f-parent-name').value.trim(),
+                parent_phone: document.getElementById('f-parent-phone').value.trim(),
+                note: document.getElementById('f-note').value.trim() || null
+            };
+            if (!row.student_name || !row.parent_name || !row.parent_phone || !row.student_age || !row.level) {
+                err.innerText = t.errFill;
+                err.classList.remove('hidden');
+                return;
+            }
+
+            btn.disabled = true;
+            btnText.innerHTML = '<span class="spin"></span>';
+            try {
+                const { error } = await sb.from('enrollment_requests').insert(row);
+                if (error) throw error;
+                document.getElementById('enroll-form').classList.add('hidden');
+                document.getElementById('success-box').classList.remove('hidden');
+            } catch (ex) {
+                console.error(ex);
+                err.innerText = t.errNet;
+                err.classList.remove('hidden');
+                btn.disabled = false;
+                btnText.innerText = t.submit;
+            }
+        });
+    </script>
+</body>
+</html>

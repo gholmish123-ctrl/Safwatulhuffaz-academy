@@ -4,88 +4,299 @@
     <link rel="icon" type="image/png" href="logo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">بوابة الأكاديمية الملكية | أكاديمية صفوة الحفاظ</title>
+    <title id="page-title">بوابة الأكاديمية | أكاديمية صفوة الحفاظ</title>
     
     <!-- Tailwind CSS v4 -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Supabase JS v2 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Amiri+Quran&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Amiri+Quran&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --gold: #D4AF37;
-            --gold-dark: #B8860B;
-            --emerald-royal: #047857;
-            --emerald-deep: #031c14;
+:root {
+            --emerald-obsidian: #0A1424;
+            --emerald-royal: #122740;
+            --emerald-rich: #1D3A5F;
+            --gold-24k: #D4AF37;
+            --gold-champagne: #F3E5AB;
+            --gold-antique: #9A7428;
+            --ivory-silk: #FAF8F3;
+            --parchment-cream: #F1ECE1;
         }
+
+        html { scroll-behavior: smooth; }
+
+        /* شريط تمرير رفيع مذهّب */
+        ::-webkit-scrollbar { width: 9px; height: 9px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.35); border: 2px solid transparent; background-clip: padding-box; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.75); border: 2px solid transparent; background-clip: padding-box; }
+
+        /* ============ الوضع النهاري: مخطوطة العاج والذهب ============ */
         body {
-            font-family: 'Tajawal', sans-serif;
-            overflow-x: hidden;
-            transition: background-color 0.4s ease, color 0.4s ease;
+            background:
+                radial-gradient(1150px 780px at 85% -12%, rgba(23, 52, 92, 0.5) 0%, transparent 62%),
+                radial-gradient(980px 720px at -8% 112%, rgba(212, 175, 55, 0.11) 0%, transparent 55%),
+                radial-gradient(760px 560px at 10% 30%, rgba(18, 42, 74, 0.35) 0%, transparent 60%),
+                radial-gradient(140% 100% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.48) 100%),
+                radial-gradient(circle at top right, #0C2038 0%, #050D18 55%, #02060C 100%);
+            color: #F6F4EC;
         }
+
         .font-calligraphy { font-family: 'Amiri', serif; }
         .font-quran { font-family: 'Amiri Quran', 'Amiri', serif; }
         .font-diwani { font-family: 'Aref Ruqaa', serif; }
 
-        /* خلفية الزخرفة الإسلامية الملكية */
-        .islamic-bg-pattern {
-            background-image: 
-                radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
-                radial-gradient(circle at 85% 80%, rgba(212, 175, 55, 0.12) 0%, transparent 45%),
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%23059669' stroke-width='0.6' stroke-opacity='0.09'%3E%3Cpath d='M30 0l15 15-15 15-15-15zM0 30l15 15-15 15-15-15zM60 30l15 15-15 15-15-15zM30 60l15 15-15 15-15-15z'/%3E%3Ccircle cx='30' cy='30' r='10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        /* نقش هندسي أندلسي دقيق في الخلفية */
+        .islamic-arabesque-bg {
+            background-image: url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd' stroke='%23F3E5AB' stroke-opacity='0.075' stroke-width='0.85'%3E%3Crect x='56' y='56' width='48' height='48'/%3E%3Crect x='56' y='56' width='48' height='48' transform='rotate(45 80 80)'/%3E%3Ccircle cx='80' cy='80' r='30'/%3E%3Ccircle cx='0' cy='0' r='26'/%3E%3Ccircle cx='160' cy='0' r='26'/%3E%3Ccircle cx='0' cy='160' r='26'/%3E%3Ccircle cx='160' cy='160' r='26'/%3E%3Cpath d='M80 14v18M80 128v18M14 80h18M128 80h18' stroke-opacity='0.045'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        html.dark .islamic-arabesque-bg {
+            background-image: url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd' stroke='%23F3E5AB' stroke-opacity='0.075' stroke-width='0.85'%3E%3Crect x='56' y='56' width='48' height='48'/%3E%3Crect x='56' y='56' width='48' height='48' transform='rotate(45 80 80)'/%3E%3Ccircle cx='80' cy='80' r='30'/%3E%3Ccircle cx='0' cy='0' r='26'/%3E%3Ccircle cx='160' cy='0' r='26'/%3E%3Ccircle cx='0' cy='160' r='26'/%3E%3Ccircle cx='160' cy='160' r='26'/%3E%3Cpath d='M80 14v18M80 128v18M14 80h18M128 80h18' stroke-opacity='0.045'/%3E%3C/g%3E%3C/svg%3E");
         }
 
+        @keyframes slowMandalaSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .mandala-spin {
+            animation: slowMandalaSpin 90s linear infinite;
+        }
+
+        @keyframes goldFoilSheen {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .gold-foil-text {
+            background: linear-gradient(120deg, #C9A227 0%, #FFF6D6 38%, #B8912A 62%, #F3E5AB 100%);
+            background-size: 220% 220%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: goldFoilSheen 6s ease-in-out infinite;
+            filter: drop-shadow(0 2px 5px rgba(4, 10, 18, 0.45));
+        }
+
+        /* الصرح الزجاجي الرئيسي للبوابة */
+        .imperial-portal-frame {
+            background: linear-gradient(150deg, rgba(10, 20, 36, 0.92) 0%, rgba(4, 10, 18, 0.88) 100%);
+            border-color: rgba(212, 175, 55, 0.62);
+            box-shadow:
+                0 42px 100px -24px rgba(0, 0, 0, 0.9),
+                0 0 0 6px rgba(10, 20, 36, 0.55),
+                0 0 0 7px rgba(212, 175, 55, 0.3),
+                0 0 70px -16px rgba(212, 175, 55, 0.22),
+                inset 0 1px 0 rgba(243, 229, 171, 0.14);
+        }
+        /* خيط ذهبي مضيء أعلى الصرح */
+        .imperial-portal-frame::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 8%; right: 8%;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.9) 35%, rgba(255, 244, 200, 1) 50%, rgba(212, 175, 55, 0.9) 65%, transparent);
+            pointer-events: none;
+        }
+
+        /* جناح النموذج: دفء عاجي خفيف فوق الزجاج */
+        .imperial-portal-frame > section:last-of-type {
+            background: linear-gradient(165deg, rgba(212, 175, 55, 0.045) 0%, transparent 48%);
+        }
+        html.dark .imperial-portal-frame > section:last-of-type {
+            background: linear-gradient(165deg, rgba(212, 175, 55, 0.045) 0%, transparent 48%);
+        }
+
+        /* جناح المحراب الزمردي الملكي */
+        .emerald-sanctuary-wing {
+            background:
+                radial-gradient(620px 340px at 50% -4%, rgba(212, 175, 55, 0.13) 0%, transparent 62%),
+                radial-gradient(circle at 50% 20%, #1A3A5E 0%, #0F2340 55%, #040B16 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(243, 229, 171, 0.35),
+                inset 0 0 0 1px rgba(212, 175, 55, 0.12);
+        }
+
+        /* كبسولات زجاجية مذهّبة */
+        .royal-chip {
+            background: rgba(10, 20, 36, 0.85);
+            border-color: rgba(212, 175, 55, 0.42);
+            box-shadow: 0 5px 16px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(243, 229, 171, 0.1);
+        }
+
+        /* حقول الإدخال الملكية */
+        .input-manuscript {
+            background: linear-gradient(165deg, rgba(23, 40, 78, 0.95) 0%, rgba(8, 16, 34, 0.95) 100%);
+            border-color: rgba(232, 184, 75, 0.55);
+            color: #FFD76A;
+            caret-color: #FFD76A;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(243, 229, 171, 0.08);
+        }
+        .input-manuscript::placeholder { color: rgba(243, 229, 171, 0.38); }
+        @media (min-width: 640px) {
+            .input-manuscript {
+            background: linear-gradient(165deg, rgba(23, 40, 78, 0.95) 0%, rgba(8, 16, 34, 0.95) 100%);
+            border-color: rgba(232, 184, 75, 0.55);
+            color: #FFD76A;
+            caret-color: #FFD76A;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(243, 229, 171, 0.08);
+        }
+        }
+        .input-manuscript:focus {
+            background: linear-gradient(165deg, rgba(30, 50, 95, 0.97) 0%, rgba(10, 20, 42, 0.97) 100%);
+            border-color: #FFD76A;
+            box-shadow: 0 0 0 4px rgba(255, 215, 106, 0.18), 0 0 20px rgba(212, 175, 55, 0.16);
+        }
+        .input-manuscript:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 60px #101F3D inset;
+            -webkit-text-fill-color: #FFD76A;
+            caret-color: #FFD76A;
+        }
+
+        button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible {
+            outline: 2.5px solid var(--gold-24k) !important;
+            outline-offset: 2px;
+        }
+
+        /* أغلفة التبويبات ولافتة التجربة - نهاري */
+        .role-tabs-wrap {
+            background: rgba(4, 10, 18, 0.8);
+            border-color: rgba(212, 175, 55, 0.34);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+        .trial-banner-box {
+            background: rgba(212, 175, 55, 0.09);
+            border-color: rgba(212, 175, 55, 0.34);
+        }
+
+        /* ============ الوضع الليلي الملكي: أوبسيديان وذهب 24 قيراط ============ */
         html.dark body {
-            background-color: #040d0a;
-            color: #f8fafc;
+            background:
+                radial-gradient(1150px 780px at 85% -12%, rgba(23, 52, 92, 0.5) 0%, transparent 62%),
+                radial-gradient(980px 720px at -8% 112%, rgba(212, 175, 55, 0.11) 0%, transparent 55%),
+                radial-gradient(760px 560px at 10% 30%, rgba(18, 42, 74, 0.35) 0%, transparent 60%),
+                radial-gradient(140% 100% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.48) 100%),
+                radial-gradient(circle at top right, #0C2038 0%, #050D18 55%, #02060C 100%);
+            color: #F6F4EC;
         }
-        html.dark .glass-card {
-            background: rgba(15, 23, 42, 0.82) !important;
-            border-color: rgba(212, 175, 55, 0.28) !important;
-            color: #f8fafc !important;
+        html.dark .imperial-portal-frame {
+            background: linear-gradient(150deg, rgba(10, 20, 36, 0.92) 0%, rgba(4, 10, 18, 0.88) 100%) !important;
+            border-color: rgba(212, 175, 55, 0.62) !important;
+            box-shadow:
+                0 42px 100px -24px rgba(0, 0, 0, 0.9),
+                0 0 0 6px rgba(10, 20, 36, 0.55),
+                0 0 0 7px rgba(212, 175, 55, 0.3),
+                0 0 70px -16px rgba(212, 175, 55, 0.22),
+                inset 0 1px 0 rgba(243, 229, 171, 0.14) !important;
         }
-        html.dark .input-royal {
-            background-color: rgba(2, 6, 23, 0.75) !important;
-            border-color: rgba(51, 65, 85, 0.9) !important;
-            color: #f8fafc !important;
+        html.dark .royal-chip {
+            background: rgba(10, 20, 36, 0.85) !important;
+            border-color: rgba(212, 175, 55, 0.42) !important;
+            box-shadow: 0 5px 16px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(243, 229, 171, 0.1) !important;
         }
-        html.dark .text-DynamicTitle { color: #f8fafc !important; }
-        html.dark .text-DynamicSub { color: #94a3b8 !important; }
-        html.dark .role-pill-inactive {
-            background-color: rgba(30, 41, 59, 0.7) !important;
-            color: #cbd5e1 !important;
-            border-color: rgba(71, 85, 105, 0.5) !important;
+        html.dark .input-manuscript {
+            background: linear-gradient(165deg, rgba(23, 40, 78, 0.95) 0%, rgba(8, 16, 34, 0.95) 100%) !important;
+            border-color: rgba(232, 184, 75, 0.55) !important;
+            color: #FFD76A !important;
+            caret-color: #FFD76A !important;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(243, 229, 171, 0.08) !important;
+        }
+        html.dark .input-manuscript::placeholder { color: rgba(243, 229, 171, 0.38); }
+        html.dark .input-manuscript:focus {
+            background: linear-gradient(165deg, rgba(30, 50, 95, 0.97) 0%, rgba(10, 20, 42, 0.97) 100%) !important;
+            border-color: #FFD76A !important;
+            box-shadow: 0 0 0 4px rgba(255, 215, 106, 0.18), 0 0 20px rgba(212, 175, 55, 0.16) !important;
+        }
+        html.dark .input-manuscript:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 60px #101F3D inset;
+            -webkit-text-fill-color: #FFD76A;
+            caret-color: #FFD76A;
+        }
+        html.dark .text-DynamicTitle { color: #FAF8F3 !important; }
+        html.dark .text-DynamicSub { color: #CBD5E1 !important; }
+        .form-label-royal { color: #E8B84B !important; }
+        html.dark .role-tabs-wrap {
+            background: rgba(4, 10, 18, 0.8) !important;
+            border-color: rgba(212, 175, 55, 0.34) !important;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+        }
+        html.dark .trial-banner-box {
+            background: rgba(212, 175, 55, 0.09) !important;
+            border-color: rgba(212, 175, 55, 0.34) !important;
+        }
+        html.dark ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.35); border: 2px solid transparent; background-clip: padding-box; }
+
+        /* زر الدخول الإمبراطوري */
+        .btn-imperial-emerald {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(140deg, #143350 0%, #0A1424 48%, #122B47 100%);
+            border: 1.5px solid var(--gold-24k);
+            color: var(--gold-champagne);
+            box-shadow:
+                0 16px 34px -10px rgba(5, 12, 24, 0.55),
+                inset 0 1px 0 rgba(243, 229, 171, 0.38),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .btn-imperial-emerald::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(243, 229, 171, 0.32), transparent);
+            transition: left 0.65s ease;
+        }
+        .btn-imperial-emerald:hover::after { left: 130%; }
+        .btn-imperial-emerald:hover:not(:disabled) {
+            border-color: var(--gold-champagne);
+            color: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow:
+                0 22px 42px -10px rgba(5, 12, 24, 0.65),
+                0 0 26px rgba(212, 175, 55, 0.32),
+                inset 0 1px 0 rgba(243, 229, 171, 0.45);
+        }
+        .btn-imperial-emerald:active:not(:disabled) { transform: translateY(0px); }
+        .btn-imperial-emerald:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
         }
 
-        @keyframes marquee {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        /* تبويبات اختيار البوابة */
+        .role-tab-active {
+            background: linear-gradient(140deg, #143350 0%, #0A1424 100%);
+            color: var(--gold-champagne) !important;
+            border: 1px solid rgba(212, 175, 55, 0.7);
+            box-shadow: 0 7px 16px -4px rgba(5, 12, 24, 0.5), inset 0 1px 0 rgba(243, 229, 171, 0.3);
         }
-        .animate-marquee { animation: marquee 28s linear infinite; }
-        .animate-marquee:hover { animation-play-state: paused; }
+        .role-tab-inactive { color: #94A3B8; }
+        .role-tab-inactive:hover { color: var(--gold-champagne); background: rgba(255, 255, 255, 0.06); }
+        html.dark .role-tab-inactive { color: #94A3B8; }
+        html.dark .role-tab-inactive:hover { color: var(--gold-champagne); background: rgba(255, 255, 255, 0.06); }
 
-        @keyframes floatSlow {
+        /* قوس المحراب الأندلسي */
+        .andalusi-arch {
+            border-radius: 50% 50% 1.25rem 1.25rem / 45% 45% 1.25rem 1.25rem;
+        }
+
+        @keyframes floatRoyal {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
+            50% { transform: translateY(-5px); }
         }
-        .animate-float { animation: floatSlow 4.5s ease-in-out infinite; }
+        .animate-float-royal { animation: floatRoyal 5s ease-in-out infinite; }
 
-        @keyframes spinSlow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .animate-spin-slow { animation: spinSlow 24s linear infinite; }
-
-        /* موجات الصوت التفاعلية */
+        /* موجات تلاوة الشيخ الحصري */
         @keyframes soundWave {
             0%, 100% { height: 4px; }
-            50% { height: 16px; }
+            50% { height: 15px; }
         }
         .wave-bar {
-            width: 3px;
-            background-color: #fbbf24;
+            width: 2.5px;
+            background-color: var(--gold-champagne);
             border-radius: 999px;
             display: inline-block;
             height: 4px;
@@ -96,338 +307,498 @@
         .playing .wave-bar:nth-child(3) { animation: soundWave 0.7s infinite ease-in-out 0.0s; }
         .playing .wave-bar:nth-child(4) { animation: soundWave 0.7s infinite ease-in-out 0.4s; }
 
-        .hover-lift {
-            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+
+        /* ====== حركة اسم الأكاديمية الملكي: دخول فخم + حلقة مستمرة متنوعة الحركات ====== */
+        @keyframes royalTitleIn {
+            0%   { opacity: 0; transform: translateY(16px) scale(0.97); filter: blur(5px); }
+            60%  { filter: blur(0); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
         }
-        .hover-lift:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 18px 35px -10px rgba(4, 120, 87, 0.28);
+        @keyframes royalTitleLoop {
+            0%   { background-position: 0% 50%;   transform: translateY(0) scale(1) rotate(0deg);      filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.25)); }
+            15%  { background-position: 55% 50%;  transform: translateY(-4px) scale(1.015) rotate(0deg); filter: drop-shadow(0 0 15px rgba(255, 220, 120, 0.5)); }
+            30%  { background-position: 100% 50%; transform: translateY(0) scale(1) rotate(0deg);      filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.28)); }
+            45%  { background-position: 100% 50%; transform: translateY(3px) scale(0.99) rotate(0.5deg); filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.2)); }
+            60%  { background-position: 40% 50%;  transform: translateY(-2px) scale(1.008) rotate(-0.5deg); filter: drop-shadow(0 0 12px rgba(255, 220, 120, 0.42)); }
+            75%  { background-position: 0% 50%;   transform: translateY(0) scale(1) rotate(0deg);      filter: drop-shadow(0 0 16px rgba(255, 224, 130, 0.55)); }
+            88%  { background-position: 22% 50%;  transform: translateY(-1px) scale(1.004) rotate(0deg); filter: drop-shadow(0 0 7px rgba(212, 175, 55, 0.3)); }
+            100% { background-position: 0% 50%;   transform: translateY(0) scale(1) rotate(0deg);      filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.25)); }
+        }
+        @keyframes royalSubIn {
+            0%   { opacity: 0; letter-spacing: 0.55em; transform: translateY(7px); }
+            100% { opacity: 1; letter-spacing: 0.28em; transform: translateY(0); }
+        }
+        @keyframes royalSubLoop {
+            0%, 100% { letter-spacing: 0.28em; color: rgba(169, 198, 232, 0.75); text-shadow: none; transform: translateY(0); }
+            50%      { letter-spacing: 0.33em; color: #F3E5AB; text-shadow: 0 0 12px rgba(212, 175, 55, 0.45); transform: translateY(-1px); }
+        }
+        .royal-title-animated {
+            background: linear-gradient(110deg, #9A7428 0%, #D4AF37 24%, #FFF6D6 42%, #FFFFFF 50%, #FFF6D6 58%, #D4AF37 76%, #9A7428 100%) !important;
+            background-size: 260% 100% !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            color: transparent !important;
+            animation: royalTitleIn 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards,
+                       royalTitleLoop 14s ease-in-out 1.4s infinite;
+            will-change: background-position, transform, opacity;
+        }
+        .royal-sub-animated {
+            animation: royalSubIn 1.25s cubic-bezier(0.22, 1, 0.36, 1) 0.6s backwards,
+                       royalSubLoop 8s ease-in-out 2.1s infinite;
+        }
+
+
+        /* ====== نجوم ذهبية متلألئة في الخلفية ====== */
+        .royal-star {
+            position: absolute;
+            border-radius: 9999px;
+            background: radial-gradient(circle, #FFF6D6 0%, rgba(212, 175, 55, 0.9) 45%, transparent 72%);
+            pointer-events: none;
+            animation: starTwinkle var(--tw-dur, 4s) ease-in-out var(--tw-delay, 0s) infinite;
+        }
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.12; transform: scale(0.65); }
+            50%      { opacity: 0.9;  transform: scale(1); }
+        }
+
+        /* ====== شريط الأخبار المتحرك ====== */
+        .ticker-track { animation: royalTicker 28s linear infinite; will-change: transform; }
+        .ticker-track:hover { animation-play-state: paused; }
+        @keyframes royalTicker {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        /* ====== دخول متدرج ناعم ====== */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(18px);
+            animation: royalReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation-delay: var(--reveal-delay, 0s);
+            will-change: opacity, transform;
+        }
+        @keyframes royalReveal {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .mandala-spin, .animate-float-royal, .gold-foil-text, .royal-title-animated, .royal-sub-animated, .royal-star, .ticker-track {
+                /* (reveal handled below) */
+                animation: none !important;
+            }
+            .btn-imperial-emerald::after { display: none !important; }
+            .reveal-item { opacity: 1 !important; transform: none !important; animation: none !important; }
         }
     </style>
 </head>
-<body class="bg-[#f7f9f7] islamic-bg-pattern flex flex-col min-h-screen justify-between selection:bg-emerald-700 selection:text-amber-300">
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-[#D4AF37] selection:text-[#0A1424]">
 
-    <!-- ================= 1. الشريط القرآني الملكي العلوي ================= -->
-    <div class="w-full bg-gradient-to-r from-[#02120d] via-[#062e22] to-[#02120d] text-amber-200/95 py-2 shadow-md text-xs sm:text-sm font-bold overflow-hidden whitespace-nowrap relative z-50 border-b border-amber-500/30">
-        <div class="inline-block animate-marquee" id="top-ayah-marquee">
-            ✨ ﴿ إِنَّ هَٰذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ وَيُبَشِّرُ الْمُؤْمِنِينَ ﴾ &nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp; ﴿ يَرْفَعِ اللَّهُ الَّذِينَ آمَنُوا مِنكُمْ وَالَّذِينَ أُوتُوا الْعِلْمَ دَرَجَاتٍ ﴾ &nbsp;&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;&nbsp; ﴿ خَيْرُكُمْ مَنْ تَعَلَّمَ القُرْآنَ وَعَلَّمَهُ ﴾ ✨
-        </div>
+    <!-- خلفية النقش الهندسي الإسلامي -->
+    <div class="fixed inset-0 islamic-arabesque-bg pointer-events-none z-0" aria-hidden="true"></div>
+    <!-- طبقة النجوم الذهبية المتلألئة -->
+    <div id="royal-star-field" class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true"></div>
+    <div class="fixed -top-32 -right-24 w-[28rem] h-[28rem] rounded-full bg-[#D4AF37]/18 blur-[100px] pointer-events-none z-0" aria-hidden="true"></div>
+    <div class="fixed -bottom-32 -left-24 w-[30rem] h-[30rem] rounded-full bg-[#1D3A5F]/35 dark:bg-[#1D3A5F]/35 blur-[110px] pointer-events-none z-0" aria-hidden="true"></div>
+
+    <!-- شريط تنبيه انقطاع الإنترنت -->
+    <div id="network-status-banner" role="alert" aria-live="assertive" class="hidden w-full bg-rose-800 text-white py-2 px-4 text-xs font-black text-center relative z-50 shadow-md">
+        <span id="txt-offline-warning">⚠️ لا يوجد اتصال بالإنترنت حالياً. يرجى التحقق من الشبكة للمتابعة.</span>
     </div>
 
-   <!-- ================= شريط الأدوات العلوي المطور (الجيولوكيشن التلقائي + التلاوة التلقائية) ================= -->
-    <div class="w-full max-w-7xl mx-auto px-4 pt-4 flex flex-wrap items-center justify-between gap-3 relative z-30">
-        <!-- كبسولة التاريخ الحي -->
-        <div class="flex items-center gap-2.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-emerald-200/80 dark:border-emerald-500/30 px-4 py-2 rounded-2xl shadow-xs">
-            <span class="text-base">📅</span>
-            <span id="live-date" class="font-calligraphy text-sm sm:text-base font-black text-emerald-900 dark:text-amber-300 tracking-wide"></span>
+    <!-- ================= 1. الشريط الملكي العلوي ================= -->
+    <header class="w-full relative z-30">
+        <!-- شريط الآية القرآنية بخط المصحف -->
+        <div class="w-full bg-[#0A1424] text-[#F3E5AB] py-2 px-4 text-center border-b border-[#D4AF37]/50 shadow-sm">
+            <div class="max-w-6xl mx-auto flex items-center justify-center gap-3 text-xs sm:text-sm font-quran tracking-wide">
+                <span class="text-[#D4AF37] hidden sm:inline" aria-hidden="true">۞</span>
+                <span>﴿ إِنَّ هَٰذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ وَيُبَشِّرُ الْمُؤْمِنِينَ ﴾ &nbsp;۝&nbsp; ﴿ خَيْرُكُمْ مَنْ تَعَلَّمَ القُرْآنَ وَعَلَّمَهُ ﴾</span>
+                <span class="text-[#D4AF37] hidden sm:inline" aria-hidden="true">۞</span>
+            </div>
         </div>
 
-        <!-- المواقيت الذكية (توقيت المعلم + توقيت الطالب المحلي المكتشف تلقائياً) + الأزرار -->
-        <div class="flex flex-wrap items-center gap-2">
-            <!-- شريط الساعات الذكي المحدث بالـ IP -->
-            <div class="flex items-center gap-2 bg-slate-900 text-white px-3.5 py-2 rounded-2xl border border-amber-500/30 text-[11px] font-bold shadow-xs" dir="ltr">
-                <span class="text-amber-300">🕋 Makkah: <b id="mini-clk-makkah" class="font-mono">--:--</b></span>
-                <span class="text-slate-600">|</span>
-                <span class="text-emerald-300">🇪🇬 Cairo: <b id="mini-clk-cairo" class="font-mono">--:--</b></span>
-                <span id="student-timezone-badge" class="hidden items-center gap-1.5">
-                    <span class="text-slate-600">|</span>
-                    <span class="text-sky-300" id="student-tz-label">🌍 Local: <b id="mini-clk-student" class="font-mono">--:--</b></span>
-                </span>
+        <!-- شريط الأدوات والتوقيت -->
+        <nav aria-label="أدوات البوابة" class="w-full max-w-6xl mx-auto px-4 pt-3.5 flex flex-wrap items-center justify-between gap-2">
+            <!-- كبسولة التاريخ الهجري والميلادي -->
+            <div class="royal-chip flex items-center gap-2.5 px-4 py-1.5 rounded-2xl">
+                <span class="w-6 h-6 rounded-lg bg-[#122740] text-[#F3E5AB] border border-[#D4AF37]/50 flex items-center justify-center text-xs" aria-hidden="true">📅</span>
+                <span id="live-date" class="font-calligraphy text-xs sm:text-sm font-bold text-[#F3E5AB] dark:text-[#F3E5AB]"></span>
             </div>
 
-            <!-- زر تلاوة الآية الترحيبية (تعمل تلقائياً عند الدخول) -->
-         <!-- زر التلاوة المخفي (يعمل تلقائياً في الخلفية بدون علامة أو زر ظاهر) -->
-<button type="button" id="btn-ayah-audio" onclick="toggleWelcomeAyahAudio()" class="hidden"></button>
-             
-               
+            <!-- مجموعة الساعات والتحكم -->
+            <div class="flex flex-wrap items-center gap-2">
+                <!-- توقيت مكة والقاهرة -->
+                <div class="hidden md:flex items-center gap-2.5 bg-[#0A1424]/95 text-white px-4 py-1.5 rounded-2xl border border-[#D4AF37]/45 text-[11px] font-bold shadow-xs" dir="ltr">
+                    <span class="text-[#F3E5AB]">🕋 Makkah: <b id="mini-clk-makkah" class="font-mono">--:--</b></span>
+                    <span class="text-[#D4AF37]/40">|</span>
+                    <span class="text-[#A9C6E8]">🇪🇬 Cairo: <b id="mini-clk-cairo" class="font-mono">--:--</b></span>
+                </div>
 
-            <!-- زر الوضع الليلي -->
-            <button type="button" onclick="togglePortalDarkMode()" id="dark-mode-toggle" class="w-10 h-10 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-base cursor-pointer shadow-xs hover:border-emerald-500 transition" title="الوضع الليلي / النهاري">🌙</button>
 
-            <!-- مبدل اللغات (يتحدث تلقائياً حسب لغة الدولة) -->
-            <select id="lang-switcher" class="bg-white dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 text-emerald-900 dark:text-amber-300 text-xs rounded-2xl px-3.5 py-2.5 font-black focus:outline-none cursor-pointer shadow-xs">
-                <option value="ar">🇸🇦 العربية (AR)</option>
-                <option value="en">🇬🇧 English (EN)</option>
-                <option value="hi">🇮🇳 हिन्दी (HI)</option>
-            </select>
+
+                <!-- الوضع الليلي -->
+                <button type="button" onclick="togglePortalDarkMode()" id="dark-mode-toggle" aria-pressed="false" aria-label="تبديل الوضع الليلي والنهاري" class="royal-chip min-w-[38px] min-h-[38px] rounded-2xl flex items-center justify-center text-sm cursor-pointer hover:border-[#D4AF37] transition">🌙</button>
+
+                <!-- مبدل اللغة -->
+                <select id="lang-switcher" aria-label="اختر لغة الواجهة" class="royal-chip min-h-[38px] text-[#F3E5AB] dark:text-[#F3E5AB] text-xs rounded-2xl px-3.5 py-1.5 font-black focus:outline-none cursor-pointer">
+                    <option value="ar">🇸🇦 العربية</option>
+                    <option value="en">🇬🇧 English</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <!-- شريط الأخبار المتحرك — عدّل نصوص الأخبار من الأسطر التالية -->
+    <div id="royal-ticker" class="relative z-30 overflow-hidden border-y border-[#D4AF37]/30 bg-[#0A1424]/85 backdrop-blur-md py-1.5" dir="ltr">
+        <div class="ticker-track flex items-center gap-10 whitespace-nowrap w-max">
+            <div class="ticker-group flex items-center gap-10" dir="rtl">
+                <span id="ticker-item-1" class="text-[11px] font-bold text-[#F3E5AB]">✨ التسجيل مفتوح الآن للدفعة الجديدة — احجز مقعدك قبل اكتمال العدد</span>
+                <span id="ticker-item-2" class="text-[11px] font-bold text-[#C4D8EE]">🌙 مجلس إجازة جديد بالسند المتصل يبدأ مطلع الشهر القادم</span>
+                <span id="ticker-item-3" class="text-[11px] font-bold text-[#F3E5AB]">📿 تكريم حفظة كتاب الله كاملًا في الحفل السنوي — قريبًا</span>
+            </div>
         </div>
     </div>
-    <!-- ================= 3. الحاوية المركزية المزدوجة (Split-Screen Royal Portal) ================= -->
-    <main class="flex-1 flex items-center justify-center p-4 sm:p-6 relative z-20">
-        <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 rounded-[2.5rem] overflow-hidden shadow-[0_25px_70px_-15px_rgba(4,120,87,0.28)] border-2 border-[#C59B27]/40 glass-card bg-white/95 backdrop-blur-xl">
 
-            <!-- 🌟 القسم الأيمن (اللوحة الترحيبية الملكية والمميزات - يظهر في الشاشات الكبيرة والوسطى) 🌟 -->
-            <div class="lg:col-span-6 bg-gradient-to-br from-[#031811] via-[#073022] to-[#0b1528] text-white p-8 sm:p-10 flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-l border-[#C59B27]/30">
-                <!-- إضاءات خلفية ملكية -->
-                <div class="absolute -top-24 -right-24 w-72 h-72 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-amber-500/15 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute inset-0 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:24px_24px] opacity-10 pointer-events-none"></div>
+    <!-- ================= 2. الصرح الرئيسي للبوابة (Imperial Portal) ================= -->
+    <main class="flex-1 flex items-center justify-center p-3.5 sm:p-6 relative z-20">
+        <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 rounded-[2.2rem] sm:rounded-[2.6rem] overflow-hidden imperial-portal-frame relative">
 
-                <!-- الهوية والشعار الملكي -->
-                <div class="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-start">
-                    <div class="inline-flex items-center gap-2 bg-amber-500/15 border border-amber-400/40 text-amber-300 text-[11px] font-black px-3.5 py-1 rounded-full mb-5">
-                        <span>👑</span>
-                        <span id="txt-royal-badge">الصرح القرآني والعلمي العالمي المعتمد</span>
+            <!-- 🌟 الجناح التعريفي الزمردي المُذهّب (5 أعمدة) 🌟 -->
+            <section aria-label="عن الأكاديمية" class="order-2 lg:order-1 lg:col-span-5 emerald-sanctuary-wing text-white p-7 sm:p-9 flex flex-col justify-between relative overflow-hidden border-t lg:border-t-0 lg:border-l border-[#D4AF37]/45">
+                
+                <!-- نجمة إسلامية هندسية دوّارة في الخلفية -->
+                <svg class="absolute -bottom-28 -right-28 w-96 h-96 text-[#D4AF37]/[0.07] mandala-spin pointer-events-none" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+                    <rect x="35" y="35" width="130" height="130" stroke="currentColor" stroke-width="1.5"/>
+                    <rect x="35" y="35" width="130" height="130" transform="rotate(45 100 100)" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="100" cy="100" r="88" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4"/>
+                    <circle cx="100" cy="100" r="45" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+
+                <!-- زخارف الزوايا المخطوطية -->
+                <svg class="absolute top-3.5 left-3.5 w-12 h-12 text-[#D4AF37]/45 pointer-events-none" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                    <path d="M2 2H36C17.2223 2 2 17.2223 2 36V2Z" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="13" cy="13" r="2.5" fill="currentColor"/>
+                </svg>
+                <svg class="absolute top-3.5 right-3.5 w-12 h-12 text-[#D4AF37]/45 pointer-events-none rotate-90" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                    <path d="M2 2H36C17.2223 2 2 17.2223 2 36V2Z" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="13" cy="13" r="2.5" fill="currentColor"/>
+                </svg>
+
+                <!-- الهوية والشعار داخل المحراب -->
+                <div class="relative z-10 flex flex-col items-center text-center">
+                    <div class="inline-flex items-center gap-2 bg-[#D4AF37]/15 border border-[#D4AF37]/55 text-[#F3E5AB] text-[11px] font-black px-4 py-1 rounded-full mb-5 shadow-xs">
+                        <span aria-hidden="true">👑</span>
+                        <span id="txt-royal-badge">إقراء بالسند المتصل • متون علمية • تقارير ذكية</span>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row items-center gap-4 mb-5">
-                        <div class="relative w-22 h-22 shrink-0 flex items-center justify-center">
-                            <div class="absolute inset-0 rounded-full border-2 border-dashed border-amber-400/60 animate-spin-slow"></div>
-                            <div class="w-19 h-19 rounded-full bg-white p-1.5 shadow-2xl border-2 border-[#D4AF37] flex items-center justify-center overflow-hidden animate-float">
-                                <img src="logo.png" alt="Safwat Al-Huffaz Logo" class="w-full h-full object-contain rounded-full" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Safwa&background=047857&color=fff'">
+                    <!-- محراب الشعار للديسكتوب -->
+                    <div class="hidden lg:flex flex-col items-center mb-3">
+                        <div class="relative w-26 h-28 flex items-center justify-center mb-3">
+                            <div class="absolute inset-0 andalusi-arch border-2 border-dashed border-[#F3E5AB]/70"></div>
+                            <div class="absolute -inset-1.5 andalusi-arch border border-[#D4AF37]/30"></div>
+                            <div class="w-22 h-24 andalusi-arch bg-[#FAF8F3] p-2 shadow-2xl border-2 border-[#D4AF37] flex items-center justify-center overflow-hidden animate-float-royal">
+                                <img src="logo.png" alt="شعار أكاديمية صفوة الحفاظ" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=SA&background=04241A&color=F3E5AB'">
                             </div>
                         </div>
-                        <div>
-                            <span id="txt-logo-sub" class="text-[11px] text-amber-300/90 font-mono font-black tracking-widest uppercase block">SAFWAT AL-HUFFAZ ACADEMY</span>
-                            <h2 id="txt-hero-heading" class="text-2xl sm:text-3xl font-diwani font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-100 to-amber-300 mt-1 leading-relaxed">
-                                أكاديمية صفوة الحفاظ للقرآن واللغات
-                            </h2>
+
+                        <span class="text-[10px] text-[#F3E5AB] font-mono font-black tracking-[0.28em] uppercase">SAFWAT AL-HUFFAZ</span>
+                        <h2 id="txt-hero-heading" class="text-3xl sm:text-4xl font-diwani font-bold gold-foil-text royal-title-animated mt-1 leading-snug">
+                            أكاديمية صفوة الحفاظ
+                        </h2>
+                        <span id="txt-logo-sub" class="text-[10px] text-[#A9C6E8]/75 font-bold tracking-[0.28em] mt-0.5 royal-sub-animated">— ROYAL QUR'AN ACADEMY —</span>
+
+                        <!-- عداد الأكاديمية الحي — عدّل الأرقام الحقيقية من data-target هنا -->
+                        <div id="royal-stats" class="flex items-center justify-center gap-5 mt-4" dir="rtl">
+                            <div class="text-center">
+                                <div class="stat-num text-xl font-black text-[#FFD76A] font-mono" data-target="1250">0</div>
+                                <div id="stat-lbl-students" class="text-[9px] text-[#C4D8EE]/80 font-bold mt-0.5">طالب وطالبة</div>
+                            </div>
+                            <span class="w-px h-7 bg-[#D4AF37]/35" aria-hidden="true"></span>
+                            <div class="text-center">
+                                <div class="stat-num text-xl font-black text-[#FFD76A] font-mono" data-target="86">0</div>
+                                <div id="stat-lbl-circles" class="text-[9px] text-[#C4D8EE]/80 font-bold mt-0.5">حلقة قرآنية</div>
+                            </div>
+                            <span class="w-px h-7 bg-[#D4AF37]/35" aria-hidden="true"></span>
+                            <div class="text-center">
+                                <div class="stat-num text-xl font-black text-[#FFD76A] font-mono" data-target="342">0</div>
+                                <div id="stat-lbl-ijazat" class="text-[9px] text-[#C4D8EE]/80 font-bold mt-0.5">إجازة بالسند</div>
+                            </div>
                         </div>
                     </div>
 
-                    <p id="txt-hero-desc" class="text-xs sm:text-sm text-emerald-100/85 leading-relaxed font-medium">
-                        بيئة تعليمية ذكية تجمع بين أصالة الإقراء بالسند المتصل إلى رسول الله ﷺ وأحدث تقنيات التعليم التفاعلي والمصحف الإلكتروني الناطق للعرب وغير الناطقين بالعربية.
+                    <!-- فاصل ذهبي منقوش -->
+                    <div class="flex items-center justify-center gap-2 my-3 w-full" aria-hidden="true">
+                        <span class="h-px flex-1 max-w-[70px] bg-gradient-to-r from-transparent to-[#D4AF37]"></span>
+                        <span class="text-[#D4AF37] text-xs">❖</span>
+                        <span class="h-px flex-1 max-w-[70px] bg-gradient-to-l from-transparent to-[#D4AF37]"></span>
+                    </div>
+
+                    <p id="txt-hero-desc" class="text-xs sm:text-[13px] text-[#E4EEF8]/90 leading-relaxed font-medium">
+                        صرحٌ تعليمي يجمع بين أصالة الإقراء بالسند المتصل إلى رسول الله ﷺ وأحدث تقنيات المتابعة الرقمية لتحفيظ القرآن الكريم والمتون العلمية والأحاديث النبوية.
                     </p>
                 </div>
 
-                <!-- بطاقة الإشراقات النبوية والقرآنية المتقلبة -->
-                <div class="relative z-10 my-6 bg-white/5 backdrop-blur-md border border-amber-400/30 rounded-3xl p-5 shadow-inner">
-                    <div class="flex items-center justify-between mb-2">
-                        <span id="txt-gem-title" class="text-[11px] font-black text-amber-300 flex items-center gap-1.5">
-                            <span>📜</span> <span>إشراقة قرآنية ونبوية</span>
+                <!-- بطاقة الإشراقة القرآنية المُذهّبة -->
+                <div class="relative z-10 my-5 bg-black/30 backdrop-blur-md border border-[#D4AF37]/50 rounded-2xl p-4 shadow-[inset_0_1px_1px_rgba(243,229,171,0.18)]">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span id="txt-gem-title" class="text-[11px] font-black text-[#F3E5AB] flex items-center gap-1.5">
+                            <span aria-hidden="true">📜</span> <span>إشراقة قرآنية ونبوية</span>
                         </span>
-                        <div class="flex gap-1" id="gem-dots">
-                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                            <span class="w-2 h-2 rounded-full bg-white/25"></span>
-                            <span class="w-2 h-2 rounded-full bg-white/25"></span>
+                        <div class="flex gap-1.5" id="gem-dots" role="group" aria-label="التنقل بين الإشراقات">
+                            <button type="button" onclick="setGemSlide(0)" aria-label="الإشراقة الأولى" class="w-2.5 h-2.5 rounded-full bg-[#F3E5AB] cursor-pointer transition"></button>
+                            <button type="button" onclick="setGemSlide(1)" aria-label="الإشراقة الثانية" class="w-2.5 h-2.5 rounded-full bg-white/30 hover:bg-white/60 cursor-pointer transition"></button>
+                            <button type="button" onclick="setGemSlide(2)" aria-label="الإشراقة الثالثة" class="w-2.5 h-2.5 rounded-full bg-white/30 hover:bg-white/60 cursor-pointer transition"></button>
                         </div>
                     </div>
-                    <p id="rotating-gem-text" class="font-quran text-base sm:text-lg text-white leading-relaxed text-center py-2 transition-opacity duration-500">
+                    <p id="rotating-gem-text" aria-live="polite" class="font-quran text-base text-white leading-relaxed text-center py-1 transition-opacity duration-300">
                         قال رسول الله ﷺ: «خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ»
                     </p>
-                    <p id="rotating-gem-sub" class="text-[11px] text-emerald-300 font-bold text-center mt-1">
+                    <p id="rotating-gem-sub" class="text-[10px] text-[#F3E5AB]/90 font-bold text-center mt-1 transition-opacity duration-300">
                         رواه الإمام البخاري • وسام الشرف لأهل القرآن
                     </p>
                 </div>
 
-                <!-- المزايا الأربع للأكاديمية -->
-                <div class="relative z-10 grid grid-cols-2 gap-3 text-xs">
-                    <div class="bg-slate-950/50 border border-white/10 p-3.5 rounded-2xl flex items-center gap-3">
-                        <span class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-lg shrink-0">📖</span>
-                        <div>
-                            <h4 id="feat-1-title" class="font-black text-amber-200 text-xs">مصحف القراءات الملكي</h4>
-                            <p id="feat-1-sub" class="text-[10px] text-slate-300 mt-0.5">رصد وتصويب فوري ثنائي اللغة</p>
+                <!-- المسارات الأربعة بتصميم الجواهر -->
+                <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                    <div class="bg-white/[0.05] hover:bg-white/[0.11] border border-[#D4AF37]/35 hover:border-[#F3E5AB] p-3 rounded-xl flex items-center gap-2.5 transition">
+                        <span class="w-9 h-9 rounded-lg bg-[#D4AF37]/20 border border-[#D4AF37]/50 flex items-center justify-center text-base shrink-0" aria-hidden="true">📖</span>
+                        <div class="min-w-0">
+                            <h3 id="feat-1-title" class="font-black text-[#F3E5AB] text-xs truncate">الحفظ والمراجعة</h3>
+                            <p id="feat-1-sub" class="text-[10px] text-[#C4D8EE]/75 truncate">الدرس والمراجعة الصغرى والكبرى</p>
                         </div>
                     </div>
-                    <div class="bg-slate-950/50 border border-white/10 p-3.5 rounded-2xl flex items-center gap-3">
-                        <span class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-lg shrink-0">🎓</span>
-                        <div>
-                            <h4 id="feat-2-title" class="font-black text-amber-200 text-xs">إجازات بالسند المتصل</h4>
-                            <p id="feat-2-sub" class="text-[10px] text-slate-300 mt-0.5">القراءات العشر والمتون العلمية</p>
+                    <div class="bg-white/[0.05] hover:bg-white/[0.11] border border-[#D4AF37]/35 hover:border-[#F3E5AB] p-3 rounded-xl flex items-center gap-2.5 transition">
+                        <span class="w-9 h-9 rounded-lg bg-[#D4AF37]/20 border border-[#D4AF37]/50 flex items-center justify-center text-base shrink-0" aria-hidden="true">🎓</span>
+                        <div class="min-w-0">
+                            <h3 id="feat-2-title" class="font-black text-[#F3E5AB] text-xs truncate">ختمات الإجازة بالسند</h3>
+                            <p id="feat-2-sub" class="text-[10px] text-[#C4D8EE]/75 truncate">الروايات والأوجه والتحريرات</p>
                         </div>
                     </div>
-                    <div class="bg-slate-950/50 border border-white/10 p-3.5 rounded-2xl flex items-center gap-3">
-                        <span class="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-lg shrink-0">🌍</span>
-                        <div>
-                            <h4 id="feat-3-title" class="font-black text-amber-200 text-xs">مناهج للعرب والأعاجم</h4>
-                            <p id="feat-3-sub" class="text-[10px] text-slate-300 mt-0.5">العربية بين يديك ونور البيان</p>
+                    <div class="bg-white/[0.05] hover:bg-white/[0.11] border border-[#D4AF37]/35 hover:border-[#F3E5AB] p-3 rounded-xl flex items-center gap-2.5 transition">
+                        <span class="w-9 h-9 rounded-lg bg-[#D4AF37]/20 border border-[#D4AF37]/50 flex items-center justify-center text-base shrink-0" aria-hidden="true">📚</span>
+                        <div class="min-w-0">
+                            <h3 id="feat-3-title" class="font-black text-[#F3E5AB] text-xs truncate">المتون والأحاديث</h3>
+                            <p id="feat-3-sub" class="text-[10px] text-[#C4D8EE]/75 truncate">متابعة بالأبيات وأرقام الأحاديث</p>
                         </div>
                     </div>
-                    <div class="bg-slate-950/50 border border-white/10 p-3.5 rounded-2xl flex items-center gap-3">
-                        <span class="w-9 h-9 rounded-xl bg-purple-500/20 border border-purple-400/30 flex items-center justify-center text-lg shrink-0">📲</span>
-                        <div>
-                            <h4 id="feat-4-title" class="font-black text-amber-200 text-xs">متابعة لحظية للوالدين</h4>
-                            <p id="feat-4-sub" class="text-[10px] text-slate-300 mt-0.5">تقارير ذكية وإشعارات واتساب</p>
+                    <div class="bg-white/[0.05] hover:bg-white/[0.11] border border-[#D4AF37]/35 hover:border-[#F3E5AB] p-3 rounded-xl flex items-center gap-2.5 transition">
+                        <span class="w-9 h-9 rounded-lg bg-[#D4AF37]/20 border border-[#D4AF37]/50 flex items-center justify-center text-base shrink-0" aria-hidden="true">📊</span>
+                        <div class="min-w-0">
+                            <h3 id="feat-4-title" class="font-black text-[#F3E5AB] text-xs truncate">تقارير وواجبات ذكية</h3>
+                            <p id="feat-4-sub" class="text-[10px] text-[#C4D8EE]/75 truncate">بطاقات إنجاز فورية لولي الأمر</p>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- 🔐 القسم الأيسر (نموذج تسجيل الدخول الملكي واستعادة الحساب) 🔐 -->
-            <div class="lg:col-span-6 p-6 sm:p-10 flex flex-col justify-between relative">
+            <!-- 🔐 جناح الدخول الرئيسي (7 أعمدة) 🔐 -->
+            <section aria-label="نموذج تسجيل الدخول" class="order-1 lg:order-2 lg:col-span-7 p-5 sm:p-9 lg:px-12 lg:py-10 flex flex-col justify-between relative">
 
-                <!-- شريط الجلسة النشطة (يظهر تلقائياً إذا كان المستخدم مسجلاً للدخول بالفعل) -->
-                <div id="active-session-banner" class="hidden mb-5 bg-gradient-to-r from-emerald-900 to-teal-900 text-white p-4 rounded-2xl border border-amber-400/50 shadow-lg flex items-center justify-between gap-3">
-                    <div class="flex items-center gap-3">
-                        <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
-                        <div class="text-xs">
-                            <p id="active-session-title" class="font-black text-amber-300">جلسة نشطة مسجلة حالياً</p>
-                            <p id="active-session-email" class="text-[11px] text-emerald-100 font-mono truncate max-w-[180px] sm:max-w-[230px]">---</p>
+                <!-- زخرفة زاوية علوية للجناح الأيسر -->
+                <svg class="hidden lg:block absolute top-3.5 left-3.5 w-11 h-11 text-[#D4AF37]/35 pointer-events-none" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                    <path d="M2 2H36C17.2223 2 2 17.2223 2 36V2Z" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+
+                <!-- رأس مدمج للموبايل فقط -->
+                <div class="lg:hidden flex items-center justify-center gap-3 pb-4 mb-4 border-b border-[#D4AF37]/30">
+                    <div class="w-12 h-13 andalusi-arch bg-[#FAF8F3] p-1 shadow-md border-2 border-[#D4AF37] flex items-center justify-center overflow-hidden shrink-0">
+                        <img src="logo.png" alt="شعار أكاديمية صفوة الحفاظ" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=SA&background=04241A&color=F3E5AB'">
+                    </div>
+                    <div class="text-start">
+                        <span class="text-[9px] text-[#F3E5AB] dark:text-[#F3E5AB] font-mono font-black tracking-[0.22em] uppercase block">SAFWAT AL-HUFFAZ</span>
+                        <h2 id="txt-mobile-hero-heading" class="text-xl font-diwani font-bold text-[#F3E5AB] text-DynamicTitle leading-tight">أكاديمية صفوة الحفاظ</h2>
+                    </div>
+                </div>
+
+                <!-- شريط الجلسة النشطة -->
+                <div id="active-session-banner" role="region" aria-label="الجلسة النشطة" class="hidden mb-5 bg-[#0A1424] text-white p-3.5 rounded-2xl border border-[#D4AF37] shadow-lg flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#F3E5AB] animate-ping shrink-0" aria-hidden="true"></span>
+                        <div class="text-xs min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <p id="active-session-title" class="font-black text-[#F3E5AB]">جلسة نشطة مسجلة حالياً</p>
+                                <span id="active-session-role-badge" class="bg-[#D4AF37]/20 border border-[#D4AF37]/50 text-[#F3E5AB] text-[10px] font-black px-2 py-0.5 rounded-md">---</span>
+                            </div>
+                            <p id="active-session-user" class="text-[11px] text-slate-200 font-bold truncate mt-0.5">---</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 shrink-0">
-                        <button type="button" id="btn-continue-session" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl cursor-pointer transition shadow-sm">
-                            🚀 متابعة الدخول
+                        <button type="button" id="btn-continue-session" class="min-h-[38px] bg-gradient-to-r from-[#D4AF37] to-[#F3E5AB] hover:brightness-105 text-[#0A1424] font-black text-xs px-3.5 py-2 rounded-xl cursor-pointer transition shadow-xs">
+                            متابعة الدخول ←
                         </button>
-                        <button type="button" onclick="forceClearCurrentSession()" class="bg-rose-600/40 hover:bg-rose-600 text-white text-xs font-bold px-2.5 py-2 rounded-xl cursor-pointer transition" title="تسجيل خروج">✕</button>
+                        <button type="button" onclick="forceClearCurrentSession()" aria-label="تسجيل الخروج من الجلسة الحالية" class="min-w-[38px] min-h-[38px] bg-rose-600/35 hover:bg-rose-600 text-white text-xs font-bold px-2.5 py-2 rounded-xl cursor-pointer transition" title="تسجيل خروج">✕</button>
                     </div>
                 </div>
 
-                <div>
-                    <!-- التبويبات البصرية للفئات (طالب / معلم / ولي أمر / إدارة) -->
-                    <div class="mb-6">
-                        <p id="lbl-select-portal-mode" class="text-[11px] font-black text-slate-400 uppercase tracking-wider text-center mb-2">اختر بوابتك التعليمية للدخول السريع</p>
-                        <div class="grid grid-cols-4 gap-1.5 bg-slate-100 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-800">
-                            <button type="button" onclick="selectVisualRole('student')" id="role-tab-student" class="py-2 px-1 rounded-xl text-[11px] font-black transition cursor-pointer bg-emerald-700 text-white shadow-xs flex flex-col items-center gap-0.5">
-                                <span class="text-base">👨‍🎓</span> <span id="tab-txt-student">طالب</span>
+                <div class="my-auto">
+                    <!-- محدد مظهر البوابة -->
+                    <div class="mb-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <p id="lbl-select-portal-mode" class="text-[11px] font-black text-[#C4D8EE]/70 text-DynamicSub uppercase tracking-wider">اختر مظهر بوابتك التعليمية</p>
+                            <span id="lbl-ssl-secured" class="text-[11px] font-mono text-[#F3E5AB] dark:text-[#F3E5AB] font-bold">🔒 اتصال آمن</span>
+                        </div>
+                        <div role="tablist" aria-label="اختيار مظهر البوابة" id="portal-role-tablist" class="grid grid-cols-3 gap-1.5 bg-[#0D1B2E]/80 role-tabs-wrap p-1.5 rounded-2xl border border-[#D4AF37]/45 shadow-inner">
+                            <button type="button" role="tab" aria-selected="true" tabindex="0" onclick="selectPortalRole('student')" id="role-tab-student" class="min-h-[42px] py-2 px-2 rounded-xl text-xs font-black transition cursor-pointer role-tab-active flex items-center justify-center gap-1.5">
+                                <span aria-hidden="true">🎓</span> <span id="tab-txt-student">طالب / ولي أمر</span>
                             </button>
-                            <button type="button" onclick="selectVisualRole('teacher')" id="role-tab-teacher" class="py-2 px-1 rounded-xl text-[11px] font-bold transition cursor-pointer role-pill-inactive text-slate-600 hover:bg-white flex flex-col items-center gap-0.5">
-                                <span class="text-base">👳‍♂️</span> <span id="tab-txt-teacher">معلم</span>
+                            <button type="button" role="tab" aria-selected="false" tabindex="-1" onclick="selectPortalRole('teacher')" id="role-tab-teacher" class="min-h-[42px] py-2 px-2 rounded-xl text-xs font-bold transition cursor-pointer role-tab-inactive flex items-center justify-center gap-1.5">
+                                <span aria-hidden="true">👳‍♂️</span> <span id="tab-txt-teacher">المعلم</span>
                             </button>
-                            <button type="button" onclick="selectVisualRole('parent')" id="role-tab-parent" class="py-2 px-1 rounded-xl text-[11px] font-bold transition cursor-pointer role-pill-inactive text-slate-600 hover:bg-white flex flex-col items-center gap-0.5">
-                                <span class="text-base">👨‍👩‍👧</span> <span id="tab-txt-parent">ولي أمر</span>
-                            </button>
-                            <button type="button" onclick="selectVisualRole('admin')" id="role-tab-admin" class="py-2 px-1 rounded-xl text-[11px] font-bold transition cursor-pointer role-pill-inactive text-slate-600 hover:bg-white flex flex-col items-center gap-0.5">
-                                <span class="text-base">🛡️</span> <span id="tab-txt-admin">الإدارة</span>
+                            <button type="button" role="tab" aria-selected="false" tabindex="-1" onclick="selectPortalRole('admin')" id="role-tab-admin" class="min-h-[42px] py-2 px-2 rounded-xl text-xs font-bold transition cursor-pointer role-tab-inactive flex items-center justify-center gap-1.5">
+                                <span aria-hidden="true">🛡️</span> <span id="tab-txt-admin">الإدارة والإشراف</span>
                             </button>
                         </div>
+                        <p id="txt-role-routing-note" class="text-[10px] sm:text-[11px] text-center text-[#C4D8EE]/70 text-DynamicSub font-bold mt-2">
+                            ℹ️ التبويب يخصّص واجهة الترحيب فقط، ويتم توجيهك تلقائياً حسب صلاحية حسابك الفعلية.
+                        </p>
                     </div>
 
-                    <!-- رسائل الخطأ والنجاح -->
-                    <div id="error-msg" class="hidden bg-rose-50 dark:bg-rose-950/70 border-2 border-rose-300 dark:border-rose-500/50 text-rose-700 dark:text-rose-200 p-3.5 rounded-2xl text-xs sm:text-sm mb-5 text-center font-black shadow-xs"></div>
-                    <div id="success-msg" class="hidden bg-emerald-50 dark:bg-emerald-950/70 border-2 border-emerald-300 dark:border-emerald-500/50 text-emerald-800 dark:text-emerald-200 p-3.5 rounded-2xl text-xs sm:text-sm mb-5 text-center font-black shadow-xs"></div>
+                    <!-- رسائل التنبيه والنجاح -->
+                    <div id="error-msg" role="alert" aria-live="assertive" class="hidden bg-rose-500/15 border border-rose-400/60 text-rose-800 dark:text-rose-200 p-3.5 rounded-2xl text-xs mb-4 text-center font-black"></div>
+                    <div id="success-msg" role="status" aria-live="polite" class="hidden bg-[#D4AF37]/15 border border-[#D4AF37] text-[#F3E5AB] dark:text-[#F3E5AB] p-3.5 rounded-2xl text-xs mb-4 text-center font-black"></div>
 
-                    <!-- ================= قسم تسجيل الدخول الرئيسي ================= -->
+                    <!-- ================= نموذج تسجيل الدخول ================= -->
                     <div id="login-section">
-                        <div class="text-center mb-6">
-                            <h1 id="txt-portal-title" class="text-2xl sm:text-3xl font-black text-emerald-900 text-DynamicTitle tracking-tight">بوابة الأكاديمية التعليمية</h1>
-                            <p id="txt-portal-subtitle" class="text-slate-500 text-DynamicSub text-xs sm:text-sm font-bold mt-1.5">مرحباً بك، يرجى تسجيل الدخول للمتابعة إلى لوحتك</p>
+                        <div class="text-center mb-5">
+                            <h1 id="txt-portal-title" class="text-xl sm:text-2xl font-black text-[#F3E5AB] text-DynamicTitle tracking-tight">بوابة الطالب وولي الأمر</h1>
+                            <p id="txt-portal-subtitle" class="text-slate-400 text-DynamicSub text-xs sm:text-sm font-bold mt-1">سجل دخولك لمتابعة الحلقات، التقارير اليومية، والواجبات</p>
                         </div>
 
-                        <form id="login-form" autocomplete="off" class="space-y-5">
+                        <form id="login-form" autocomplete="on" class="space-y-4">
                             <div>
-                                <label id="lbl-email" for="email" class="block text-slate-700 text-DynamicTitle text-xs font-black mb-2">البريد الإلكتروني للحساب</label>
+                                <label id="lbl-email" for="email" class="block text-[#F3E5AB] text-DynamicTitle form-label-royal text-xs font-black mb-1.5">البريد الإلكتروني</label>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 start-0 flex items-center ps-3.5 text-slate-400 pointer-events-none">✉️</span>
-                                    <input type="email" id="email" required autofocus autocomplete="off" placeholder="name@academy.com" class="input-royal w-full ps-10 pe-4 py-3.5 bg-slate-50/80 border-2 border-slate-200 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white transition text-start">
+                                    <span class="absolute inset-y-0 start-0 flex items-center ps-3.5 text-[#D4AF37] pointer-events-none" aria-hidden="true">✉️</span>
+                                    <input type="email" id="email" required autofocus autocomplete="email" placeholder="student@safwat.academy" class="input-manuscript w-full min-h-[48px] ps-10 pe-4 py-3 rounded-2xl font-bold text-[#FFD76A] focus:outline-none text-start">
                                 </div>
                             </div>
 
                             <div>
-                                <div class="flex justify-between items-center mb-2">
-                                    <label id="lbl-password" for="password" class="text-slate-700 text-DynamicTitle text-xs font-black">كلمة المرور السرية</label>
-                                    <button type="button" id="btn-forgot-password" class="text-xs font-black text-emerald-700 dark:text-amber-400 hover:underline focus:outline-none cursor-pointer">نسيت كلمة السر؟</button>
+                                <div class="flex justify-between items-center mb-1.5">
+                                    <label id="lbl-password" for="password" class="text-[#F3E5AB] text-DynamicTitle form-label-royal text-xs font-black">كلمة المرور</label>
+                                    <button type="button" id="btn-forgot-password" class="text-xs font-black text-[#F3E5AB] dark:text-[#F3E5AB] hover:underline focus:outline-none cursor-pointer">نسيت كلمة المرور؟</button>
                                 </div>
                                 <div class="relative">
-                                    <span class="absolute inset-y-0 start-0 flex items-center ps-3.5 text-slate-400 pointer-events-none">🔒</span>
-                                    <input type="password" id="password" required autocomplete="new-password" placeholder="••••••••" class="input-royal w-full ps-10 pe-12 py-3.5 bg-slate-50/80 border-2 border-slate-200 rounded-2xl text-sm font-bold text-slate-900 focus:outline-none focus:border-emerald-600 focus:bg-white transition text-start">
-                                    <button type="button" id="toggle-password" class="absolute inset-y-0 end-0 flex items-center pe-3.5 text-slate-400 hover:text-emerald-700 focus:outline-none cursor-pointer">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    <span class="absolute inset-y-0 start-0 flex items-center ps-3.5 text-[#D4AF37] pointer-events-none" aria-hidden="true">🔒</span>
+                                    <input type="password" id="password" required autocomplete="current-password" placeholder="••••••••" class="input-manuscript w-full min-h-[48px] ps-10 pe-12 py-3 rounded-2xl font-bold text-[#FFD76A] focus:outline-none text-start">
+                                    <button type="button" id="toggle-password" aria-pressed="false" aria-label="إظهار أو إخفاء كلمة المرور" class="absolute inset-y-0 end-0 flex items-center pe-3.5 text-[#C4D8EE]/70 hover:text-[#F3E5AB] dark:hover:text-[#F3E5AB] focus:outline-none cursor-pointer min-w-[44px] justify-center">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                     </button>
                                 </div>
                             </div>
 
-                            <!-- خيار حفظ البريد الإلكتروني -->
-                            <div class="flex items-center justify-between text-xs">
-                                <label class="flex items-center gap-2 cursor-pointer select-none text-slate-600 text-DynamicSub font-bold">
-                                    <input type="checkbox" id="remember-email-cb" checked class="w-4 h-4 accent-emerald-700 rounded cursor-pointer">
+                            <div class="flex items-center justify-between text-xs pt-0.5">
+                                <label class="flex items-center gap-2 cursor-pointer select-none text-[#E4EEF8] text-DynamicSub font-bold min-h-[32px]">
+                                    <input type="checkbox" id="remember-email-cb" checked class="w-4 h-4 accent-[#D4AF37] rounded cursor-pointer">
                                     <span id="lbl-remember-me">تذكر بريدي الإلكتروني على هذا الجهاز</span>
                                 </label>
-                                <span class="text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-bold">🔒 SSL Secured</span>
                             </div>
 
-                            <button type="submit" id="btn-login-submit" class="w-full h-13 bg-gradient-to-r from-[#047857] via-[#065f46] to-[#047857] hover:from-[#065f46] hover:to-[#064e3b] text-white font-black text-sm rounded-2xl shadow-lg shadow-emerald-900/20 border border-emerald-400/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer hover-lift">
-                                تسجيل الدخول
+                            <button type="submit" id="btn-login-submit" class="btn-imperial-emerald w-full min-h-[52px] font-black text-sm rounded-2xl flex items-center justify-center gap-2 cursor-pointer mt-1">
+                                تسجيل الدخول إلى البوابة
                             </button>
                         </form>
+
+                        <!-- دعوة الحلقة التجريبية بختم ذهبي -->
+                        <div class="trial-banner-box mt-5 p-3.5 rounded-2xl bg-gradient-to-r from-[#D4AF37]/12 to-white/[0.03] border border-[#D4AF37]/50 flex items-center justify-between gap-3 text-xs shadow-2xs">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <span class="w-9 h-9 rounded-xl bg-[#122740] text-[#F3E5AB] border border-[#D4AF37]/50 flex items-center justify-center text-sm shrink-0" aria-hidden="true">🎁</span>
+                                <div class="min-w-0">
+                                    <strong id="trial-cta-title" class="text-[#F3E5AB] text-DynamicTitle font-black block truncate">طالب جديد في الأكاديمية؟</strong>
+                                    <span id="trial-cta-sub" class="text-[11px] text-slate-400 text-DynamicSub font-bold block truncate">احجز حلقة تقييم تجريبية مجانية الآن</span>
+                                </div>
+                            </div>
+                            <a href="safwat-enroll.html" id="trial-cta-btn" class="min-h-[38px] flex items-center bg-gradient-to-r from-[#C59B27] via-[#E5C158] to-[#C59B27] hover:brightness-105 text-[#0A1424] font-black px-4 py-2 rounded-xl shrink-0 transition shadow-xs border border-[#9A7428]/30">
+                                احجز مجاناً ←
+                            </a>
+                        </div>
                     </div>
 
                     <!-- ================= قسم استعادة كلمة المرور (3 خطوات) ================= -->
                     <div id="forgot-section" class="hidden">
-                        <div class="text-center mb-5">
-                            <h1 class="text-xl sm:text-2xl font-black text-emerald-900 text-DynamicTitle" id="forgot-title">استعادة كلمة المرور</h1>
-                            <p class="text-slate-500 text-DynamicSub text-xs font-bold mt-1" id="forgot-desc">أدخل بريدك الإلكتروني لإرسال كود التحقق</p>
+                        <div class="text-center mb-4">
+                            <h2 class="text-xl sm:text-2xl font-black text-[#F3E5AB] text-DynamicTitle" id="forgot-title">استعادة كلمة المرور</h2>
+                            <p class="text-slate-400 text-DynamicSub text-xs font-bold mt-1" id="forgot-desc">أدخل بريدك الإلكتروني لإرسال كود التحقق</p>
                         </div>
 
                         <!-- مؤشر خطوات الاستعادة -->
-                        <div class="grid grid-cols-3 gap-2 mb-6 text-center text-[11px] font-black">
-                            <div id="step-ind-1" class="py-1.5 rounded-xl bg-emerald-700 text-white">1. البريد</div>
-                            <div id="step-ind-2" class="py-1.5 rounded-xl bg-slate-100 text-slate-400">2. الكود (OTP)</div>
-                            <div id="step-ind-3" class="py-1.5 rounded-xl bg-slate-100 text-slate-400">3. كلمة السر</div>
+                        <div class="grid grid-cols-3 gap-2 mb-5 text-center text-[11px] font-black">
+                            <div id="step-ind-1" class="py-2 rounded-xl bg-[#122740] text-[#F3E5AB] border border-[#D4AF37]/60">1. البريد</div>
+                            <div id="step-ind-2" class="py-2 rounded-xl bg-[#0D1B2E]/80 text-[#C4D8EE]/70 border border-[#D4AF37]/30">2. الكود (OTP)</div>
+                            <div id="step-ind-3" class="py-2 rounded-xl bg-[#0D1B2E]/80 text-[#C4D8EE]/70 border border-[#D4AF37]/30">3. كلمة السر</div>
                         </div>
 
-                        <!-- الخطوة 1: إدخال البريد -->
-                        <form id="forgot-step1-form" autocomplete="off" class="space-y-4">
+                        <!-- الخطوة 1: البريد -->
+                        <form id="forgot-step1-form" class="space-y-4">
                             <div>
-                                <label id="lbl-reset-email" class="block text-slate-700 text-DynamicTitle text-xs font-black mb-2">البريد الإلكتروني للحساب</label>
-                                <input type="email" id="reset-email" required autocomplete="off" placeholder="name@academy.com" class="input-royal w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-2xl text-sm font-bold focus:outline-none focus:border-emerald-600 text-start">
+                                <label id="lbl-reset-email" for="reset-email" class="block text-[#F3E5AB] text-DynamicTitle text-xs font-black mb-1.5">البريد الإلكتروني للحساب</label>
+                                <input type="email" id="reset-email" required autocomplete="email" placeholder="name@safwat.academy" class="input-manuscript w-full min-h-[48px] px-4 py-3 rounded-2xl font-bold focus:outline-none text-start">
                             </div>
-                            <button type="submit" id="btn-send-code" class="w-full h-12 bg-emerald-700 hover:bg-emerald-800 text-white font-black rounded-2xl transition flex items-center justify-center cursor-pointer shadow-md">
-                                أرسل كود التحقق
+                            <button type="submit" id="btn-send-code" class="btn-imperial-emerald w-full min-h-[48px] font-black rounded-2xl transition flex items-center justify-center cursor-pointer text-sm">
+                                إرسال كود التحقق
                             </button>
                         </form>
 
-                        <!-- الخطوة 2: إدخال الكود 6 أرقام -->
-                        <form id="forgot-step2-form" class="hidden space-y-4" autocomplete="off">
+                        <!-- الخطوة 2: الكود -->
+                        <form id="forgot-step2-form" class="hidden space-y-4">
                             <div>
-                                <label id="lbl-code-input" class="block text-slate-700 text-DynamicTitle text-xs font-black mb-2">كود التحقق المرسل لبريدك (6 أرقام)</label>
-                                <input type="text" id="reset-code" required autocomplete="off" placeholder="123456" maxlength="6" class="input-royal w-full px-4 py-3.5 border-2 border-emerald-400 bg-emerald-50/30 rounded-2xl text-center font-mono text-2xl font-black tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-emerald-500" dir="ltr">
+                                <label id="lbl-code-input" for="reset-code" class="block text-[#F3E5AB] text-DynamicTitle text-xs font-black mb-1.5">كود التحقق المرسل لبريدك (6 أرقام)</label>
+                                <input type="text" id="reset-code" required inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" placeholder="123456" maxlength="6" class="input-manuscript w-full min-h-[52px] px-4 py-3 border-2 border-[#D4AF37] rounded-2xl text-center font-mono text-2xl font-black tracking-[0.5em] focus:outline-none" dir="ltr">
                             </div>
-                            <button type="submit" id="btn-confirm-code" class="w-full h-12 bg-emerald-700 hover:bg-emerald-800 text-white font-black rounded-2xl transition flex items-center justify-center cursor-pointer shadow-md">
+                            <button type="submit" id="btn-confirm-code" class="btn-imperial-emerald w-full min-h-[48px] font-black rounded-2xl transition flex items-center justify-center cursor-pointer text-sm">
                                 تأكيد الكود
                             </button>
+                            <div class="text-center">
+                                <button type="button" id="btn-resend-otp" disabled class="text-xs font-bold text-slate-400 cursor-not-allowed">
+                                    إعادة إرسال الكود خلال 60 ثانية
+                                </button>
+                            </div>
                         </form>
 
-                        <!-- الخطوة 3: كلمة المرور الجديدة + مؤشر القوة -->
-                        <form id="forgot-step3-form" class="hidden space-y-4" autocomplete="off">
+                        <!-- الخطوة 3: كلمة السر الجديدة -->
+                        <form id="forgot-step3-form" class="hidden space-y-4">
                             <div>
-                                <label id="lbl-new-password" class="block text-slate-700 text-DynamicTitle text-xs font-black mb-2">كلمة المرور الجديدة</label>
+                                <label id="lbl-new-password" for="new-password" class="block text-[#F3E5AB] text-DynamicTitle text-xs font-black mb-1.5">كلمة المرور الجديدة (6 أحرف على الأقل)</label>
                                 <div class="relative">
-                                    <input type="password" id="new-password" required oninput="checkNewPasswordStrength(this.value)" autocomplete="new-password" placeholder="••••••••" class="input-royal w-full px-4 py-3.5 pe-12 border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 text-start font-bold">
-                                    <button type="button" id="toggle-new-password" class="absolute inset-y-0 end-0 flex items-center pe-3.5 text-slate-400 hover:text-emerald-700 focus:outline-none cursor-pointer">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    <input type="password" id="new-password" required minlength="6" autocomplete="new-password" oninput="evaluatePasswordStrength(this.value)" placeholder="••••••••" class="input-manuscript w-full min-h-[48px] px-4 py-3 pe-12 rounded-2xl focus:outline-none text-start font-bold">
+                                    <button type="button" id="toggle-new-password" aria-pressed="false" aria-label="إظهار أو إخفاء كلمة المرور الجديدة" class="absolute inset-y-0 end-0 flex items-center pe-3.5 text-[#C4D8EE]/70 hover:text-[#F3E5AB] focus:outline-none cursor-pointer min-w-[44px] justify-center">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                     </button>
                                 </div>
-                                <!-- شريط قياس قوة كلمة المرور -->
-                                <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-2">
-                                    <div id="pass-strength-bar" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>
+                                <div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mt-2" aria-hidden="true">
+                                    <div id="pwd-strength-meter" class="h-full bg-[#D4AF37] transition-all duration-300" style="width: 0%"></div>
                                 </div>
                             </div>
-                            <button type="submit" id="btn-save-password" class="w-full h-12 bg-emerald-700 hover:bg-emerald-800 text-white font-black rounded-2xl transition flex items-center justify-center cursor-pointer shadow-md">
+                            <button type="submit" id="btn-save-password" class="btn-imperial-emerald w-full min-h-[48px] font-black rounded-2xl transition flex items-center justify-center cursor-pointer text-sm">
                                 حفظ كلمة المرور الجديدة
                             </button>
                         </form>
 
-                        <button type="button" id="btn-back-to-login" class="w-full text-center text-xs font-black text-slate-500 hover:text-emerald-700 mt-5 block hover:underline focus:outline-none cursor-pointer">
+                        <button type="button" id="btn-back-to-login" class="w-full min-h-[38px] text-center text-xs font-black text-slate-400 text-DynamicSub hover:text-[#F3E5AB] dark:hover:text-[#F3E5AB] mt-3 block hover:underline focus:outline-none cursor-pointer">
                             ← العودة لتسجيل الدخول
                         </button>
                     </div>
                 </div>
 
-                <!-- تذييل البطاقة: الدعم الفني والتسجيل الجديد -->
-                <div class="mt-8 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
-                    <span id="txt-need-help" class="text-slate-400 font-bold">هل تواجه مشكلة في الدخول؟</span>
-                    <button type="button" onclick="document.getElementById('portal-help-modal').classList.remove('hidden')" class="text-emerald-700 dark:text-amber-400 font-black hover:underline cursor-pointer flex items-center gap-1">
-                        <span>💬</span> <span id="btn-contact-support">تواصل مع إدارة الأكاديمية</span>
-                    </button>
+                <!-- تذييل الدعم الفني -->
+                <div class="mt-5 pt-3.5 border-t border-[#D4AF37]/30 flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <span id="txt-need-help" class="text-slate-400 text-DynamicSub font-bold">هل تواجه مشكلة في الدخول؟</span>
+                    <a href="https://wa.me/201099471391?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%AD%D8%AA%D8%A7%D8%AC%20%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D8%A9%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AF%D8%AE%D9%88%D9%84%20%D9%84%D8%A8%D9%88%D8%A7%D8%A8%D8%A9%20%D8%A3%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%8A%D8%A9%20%D8%B5%D9%81%D9%88%D8%A9%20%D8%A7%D9%84%D8%AD%D9%81%D8%A7%D8%B8" target="_blank" rel="noopener noreferrer" class="text-[#F3E5AB] dark:text-[#F3E5AB] font-black hover:underline flex items-center gap-1.5">
+                        <span aria-hidden="true">💬</span> <span id="btn-contact-support">تواصل مع الإدارة عبر واتساب</span>
+                    </a>
                 </div>
-            </div>
+            </section>
         </div>
     </main>
 
-    <!-- ================= 4. التذييل السفلي ================= -->
-    <footer class="w-full text-center py-3 text-[11px] font-bold text-slate-500 dark:text-slate-400 relative z-20">
-        <span id="footer-copy">© جميع الحقوق محفوظة — أكاديمية صفوة الحفاظ للقرآن الكريم واللغات</span>
+    <!-- ================= 3. التذييل السفلي ================= -->
+    <footer class="w-full text-center py-2.5 text-[11px] font-bold text-slate-400 dark:text-slate-400 relative z-20">
+        <span id="footer-copy">© جميع الحقوق محفوظة — أكاديمية صفوة الحفاظ للقرآن الكريم</span>
     </footer>
-
-    <!-- ================= 5. نافذة المساعدة والتواصل مع الإدارة ================= -->
-    <div id="portal-help-modal" class="hidden fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 border-2 border-amber-500/50 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 text-center">
-            <div class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 mx-auto flex items-center justify-center text-3xl">🕌</div>
-            <h3 id="help-modal-title" class="text-lg font-black text-slate-900 dark:text-white">مركز خدمة الطلاب والمعلمين</h3>
-            <p id="help-modal-desc" class="text-xs text-slate-500 dark:text-slate-300 font-bold leading-relaxed">
-                إذا نسيت البريد الإلكتروني المسجل به، أو كنت ترغب في حجز حلقة تجريبية وتفعيل حساب جديد في أكاديمية صفوة الحفاظ، تواصل مع الإدارة مباشرة:
-            </p>
-            <div class="space-y-2.5 pt-2">
-                <a href="https://api.whatsapp.com/send?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%AD%D8%AA%D8%A7%D8%AC%20%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D8%A9%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AF%D8%AE%D9%88%D9%84%20%D9%84%D8%A8%D9%88%D8%A7%D8%A8%D8%A9%20%D8%A3%D9%83%D8%A7%D8%AF%D9%8A%D9%85%D9%8A%D8%A9%20%D8%B5%D9%81%D9%88%D8%A9%20%D8%A7%D9%84%D8%AD%D9%81%D8%A7%D8%B8" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-md">
-                    <span>📲</span> <span id="help-wa-btn">مراسلة الدعم الفني عبر واتساب</span>
-                </a>
-                <button type="button" onclick="document.getElementById('portal-help-modal').classList.add('hidden')" id="help-close-btn" class="w-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-3 rounded-2xl text-xs cursor-pointer">
-                    إغلاق النافذة
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- ================= المحرك البرمجي الشامل ================= -->
     <script>
@@ -446,257 +817,352 @@
         const forgotForm1 = document.getElementById('forgot-step1-form');
         const forgotForm2 = document.getElementById('forgot-step2-form');
         const forgotForm3 = document.getElementById('forgot-step3-form');
-        const forgotTitle = document.getElementById('forgot-title');
-        const forgotDesc = document.getElementById('forgot-desc');
 
         let currentLang = localStorage.getItem('Safwatulhuffaz_lang') || "ar";
-        let currentVisualRole = "student";
+        let currentSelectedRole = "student";
         let welcomeAudioPlayer = null;
+        let otpCooldownInterval = null;
+        let isOtpVerifiedSession = false;
 
-        // قاموس اللغات الثلاث الكامل (AR / EN / HI)
+        // قاموس اللغات
         const translations = {
             ar: {
                 dir: "rtl",
-                portalTitle: "بوابة الأكاديمية التعليمية",
-                portalSubtitle: "مرحباً بك، يرجى تسجيل الدخول للمتابعة إلى لوحتك",
-                royalBadge: "الصرح القرآني والعلمي العالمي المعتمد",
-                heroHeading: "أكاديمية صفوة الحفاظ للقرآن واللغات",
-                heroDesc: "بيئة تعليمية ذكية تجمع بين أصالة الإقراء بالسند المتصل إلى رسول الله ﷺ وأحدث تقنيات التعليم التفاعلي والمصحف الإلكتروني الناطق للعرب وغير الناطقين بالعربية.",
+                royalBadge: "إقراء بالسند المتصل • متون علمية • تقارير ذكية",
+                heroHeading: "أكاديمية صفوة الحفاظ",
+                heroDesc: "صرحٌ تعليمي يجمع بين أصالة الإقراء بالسند المتصل إلى رسول الله ﷺ وأحدث تقنيات المتابعة الرقمية لتحفيظ القرآن الكريم والمتون العلمية والأحاديث النبوية.",
                 gemTitle: "📜 إشراقة قرآنية ونبوية",
-                feat1T: "مصحف القراءات الملكي", feat1S: "رصد وتصويب فوري ثنائي اللغة",
-                feat2T: "إجازات بالسند المتصل", feat2S: "القراءات العشر والمتون العلمية",
-                feat3T: "مناهج للعرب والأعاجم", feat3S: "العربية بين يديك ونور البيان",
-                feat4T: "متابعة لحظية للوالدين", feat4S: "تقارير ذكية وإشعارات واتساب",
-                selectMode: "اختر بوابتك التعليمية للدخول السريع",
-                roleStudent: "طالب", roleTeacher: "معلم", roleParent: "ولي أمر", roleAdmin: "الإدارة",
-                email: "البريد الإلكتروني للحساب",
-                password: "كلمة المرور السرية",
+                statStudents: "طالب وطالبة", statCircles: "حلقة قرآنية", statIjazat: "إجازة بالسند",
+                ticker1: "✨ التسجيل مفتوح الآن للدفعة الجديدة — احجز مقعدك قبل اكتمال العدد",
+                ticker2: "🌙 مجلس إجازة جديد بالسند المتصل يبدأ مطلع الشهر القادم",
+                ticker3: "📿 تكريم حفظة كتاب الله كاملًا في الحفل السنوي — قريبًا",
+                feat1T: "الحفظ والمراجعة", feat1S: "الدرس والمراجعة الصغرى والكبرى",
+                feat2T: "ختمات الإجازة بالسند", feat2S: "الروايات والأوجه والتحريرات",
+                feat3T: "المتون والأحاديث", feat3S: "متابعة بالأبيات وأرقام الأحاديث",
+                feat4T: "تقارير وواجبات ذكية", feat4S: "بطاقات إنجاز فورية لولي الأمر",
+                selectMode: "اختر مظهر بوابتك التعليمية",
+                roleStudent: "طالب / ولي أمر", roleTeacher: "المعلم", roleAdmin: "الإدارة والإشراف",
+                roleRoutingNote: "ℹ️ التبويب يخصّص واجهة الترحيب فقط، ويتم توجيهك تلقائياً حسب صلاحية حسابك الفعلية.",
+                email: "البريد الإلكتروني",
+                password: "كلمة المرور",
                 rememberMe: "تذكر بريدي الإلكتروني على هذا الجهاز",
-                forgotBtn: "نسيت كلمة السر؟",
-                loginSubmit: "تسجيل الدخول لبوابة الأكاديمية 🚀",
+                sslSecured: "🔒 اتصال آمن",
+                forgotBtn: "نسيت كلمة المرور؟",
+                loginSubmit: "تسجيل الدخول إلى البوابة",
+                trialTitle: "طالب جديد في الأكاديمية؟",
+                trialSub: "احجز حلقة تقييم تجريبية مجانية الآن",
+                trialBtn: "احجز مجاناً ←",
                 forgotTitle: "استعادة كلمة المرور",
                 forgotDesc: "أدخل بريدك الإلكتروني لإرسال كود التحقق (OTP)",
-                sendCode: "أرسل كود التحقق",
+                step1: "1. البريد", step2: "2. الكود (OTP)", step3: "3. كلمة السر",
+                sendCode: "إرسال كود التحقق",
                 codeInputLabel: "كود التحقق المرسل لبريدك (6 أرقام)",
                 confirmCode: "تأكيد الكود",
-                newPasswordLabel: "كلمة المرور الجديدة",
+                newPasswordLabel: "كلمة المرور الجديدة (6 أحرف على الأقل)",
                 savePassword: "حفظ كلمة المرور الجديدة",
                 backToLogin: "← العودة لتسجيل الدخول",
                 needHelp: "هل تواجه مشكلة في الدخول؟",
-                contactSupport: "تواصل مع إدارة الأكاديمية",
-                listenAyah: "تلاوة خاشعة",
+                contactSupport: "تواصل مع الإدارة عبر واتساب",
+                listenAyah: "تلاوة الحصري",
                 activeSessionTitle: "جلسة نشطة مسجلة حالياً",
-                continueBtn: "🚀 متابعة الدخول",
-                footerCopy: "© جميع الحقوق محفوظة — أكاديمية صفوة الحفاظ للقرآن الكريم واللغات",
-                helpTitle: "مركز خدمة الطلاب والمعلمين",
-                helpDesc: "إذا نسيت البريد الإلكتروني المسجل به، أو كنت ترغب في حجز حلقة تجريبية وتفعيل حساب جديد في أكاديمية صفوة الحفاظ، تواصل مع الإدارة مباشرة:",
-                helpWaBtn: "مراسلة الدعم الفني عبر واتساب",
-                helpCloseBtn: "إغلاق النافذة",
-                errCreds: "عذراً، البريد الإلكتروني أو كلمة المرور غير صحيحة",
-                errRole: "عذراً، لم يتم تحديد صلاحيات لهذا الحساب بعد",
-                errSuspended: "عذراً، حسابك موقوف أو محظور مؤقتاً من الإدارة.",
-                errCode: "كود التحقق غير صحيح أو انتهت صلاحيته",
-                errGeneral: "حدث خطأ: تأكد من أن البريد الإلكتروني مسجل بالفعل",
-                errSave: "فشل الحفظ: يرجى اختيار كلمة مرور قوية وجديدة!",
-                succSent: "✅ تم إرسال كود التحقق (6 أرقام) إلى بريدك الإلكتروني",
-                succVerified: "✅ تم تأكيد الكود بنجاح! اكتب كلمة المرور الجديدة الآن",
-                alertFinal: "تمت إعادة تعيين كلمة المرور بنجاح تام! يمكنك الآن تسجيل الدخول بها."
+                continueBtn: "متابعة الدخول ←",
+                footerCopy: "© جميع الحقوق محفوظة — أكاديمية صفوة الحفاظ للقرآن الكريم",
+                offlineWarning: "⚠️ لا يوجد اتصال بالإنترنت حالياً. يرجى التحقق من الشبكة للمتابعة.",
+                errNetwork: "⚠️ تعذّر الاتصال بالخادم! تأكد من اتصالك بالإنترنت ثم حاول مرة أخرى.",
+                errCreds: "عذراً، البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+                errRole: "عذراً، لم يتم إعداد صلاحية لهذا الحساب في جدول profiles بعد.",
+                errSuspended: "عذراً، هذا الحساب غير نشط حالياً. يرجى مراجعة إدارة الأكاديمية.",
+                errCode: "كود التحقق غير صحيح أو انتهت صلاحيته.",
+                errGeneral: "حدث خطأ: تأكد من صحة البريد الإلكتروني وأنه مسجل بالفعل.",
+                errShortPass: "⚠️ يجب أن تتكون كلمة المرور الجديدة من 6 أحرف أو أرقام على الأقل.",
+                errSave: "فشل الحفظ: يرجى إعادة التحقق من الكود واختيار كلمة مرور جديدة.",
+                succSent: "✅ تم إرسال كود التحقق (6 أرقام) إلى بريدك الإلكتروني.",
+                succVerified: "✅ تم تأكيد الكود بنجاح! أدخل كلمة المرور الجديدة الآن.",
+                alertFinal: "تم تحديث كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول.",
+                roleBadges: {
+                    super_admin: "المدير العام 👑", admin: "الإدارة 🛡️", branch_director: "مدير فرع 🏛️",
+                    supervisor: "مشرف أكاديمي 👁️", teacher: "معلم 👳‍♂️", student: "طالب 🎓", parent: "ولي أمر 👨‍👩‍👧"
+                },
+                roleTitles: {
+                    student: { title: "بوابة الطالب وولي الأمر", sub: "سجل دخولك لمتابعة الحلقات، التقارير اليومية، والواجبات", placeholder: "student@safwat.academy" },
+                    teacher: { title: "رواق المعلمين والمقرئين", sub: "سجل دخولك لإدارة الحلقات وإصدار تقارير القرآن والإجازات والمتون", placeholder: "teacher@safwat.academy" },
+                    admin: { title: "لوحة الإدارة والإشراف الأكاديمي", sub: "منطقة مخصصة لمديري الفروع والمشرفين والإدارة العامة", placeholder: "admin@safwat.academy" }
+                }
             },
             en: {
                 dir: "ltr",
-                portalTitle: "Academy Educational Portal",
-                portalSubtitle: "Welcome back! Please sign in to access your dashboard",
-                royalBadge: "Certified Global Quran & Arabic Institution",
+                royalBadge: "Connected Sanad • Islamic Mutun • Smart Reports",
                 heroHeading: "Safwat Al-Huffaz Academy",
-                heroDesc: "An interactive smart learning environment combining authentic connected Sanad recitation with modern digital Mushaf technology for Arab and Non-Arab students worldwide.",
-                gemTitle: "📜 Prophetic & Quranic Reflection",
-                feat1T: "Royal 10-Qira'at Mushaf", feat1S: "Bilingual live correction log",
-                feat2T: "Connected Sanad Ijazah", feat2S: "10 Qira'at & Tajweed Mutoon",
-                feat3T: "Arab & Non-Arab Tracks", feat3S: "Arabic Between Your Hands",
-                feat4T: "Real-Time Parent Portal", feat4S: "Instant WhatsApp & PDF reports",
-                selectMode: "Select Your Portal Gateway",
-                roleStudent: "Student", roleTeacher: "Teacher", roleParent: "Parent", roleAdmin: "Admin",
-                email: "Account Email Address",
-                password: "Secret Password",
+                heroDesc: "An authentic educational sanctuary combining connected Sanad Qur'an recitation with modern digital tracking for Hifz, Ijazah, Islamic Mutun, and Hadith.",
+                gemTitle: "📜 Quranic & Prophetic Reflection",
+                statStudents: "Students", statCircles: "Qur'an Circles", statIjazat: "Sanad Ijazat",
+                ticker1: "✨ Enrollment is now open for the new batch — reserve your seat",
+                ticker2: "🌙 A new Sanad Ijazah circle starts early next month",
+                ticker3: "📿 Honoring full Qur'an Huffaz at the annual ceremony — soon",
+                feat1T: "Hifz & Revision", feat1S: "Daily lesson, recent & old revision",
+                feat2T: "Sanad Ijazah Tracks", feat2S: "Riwayat, Qira'at & Tahreerat",
+                feat3T: "Mutun & Hadith", feat3S: "Line-by-line & Hadith tracking",
+                feat4T: "Smart Reports", feat4S: "Instant progress cards for parents",
+                selectMode: "Select Your Portal Theme",
+                roleStudent: "Student / Parent", roleTeacher: "Teacher", roleAdmin: "Administration",
+                roleRoutingNote: "ℹ️ Tabs customize the welcome theme only; you are automatically routed by your verified account role.",
+                email: "Email Address",
+                password: "Password",
                 rememberMe: "Remember my email on this device",
+                sslSecured: "🔒 SSL Secured",
                 forgotBtn: "Forgot Password?",
-                loginSubmit: "Sign In to Academy Portal 🚀",
-                forgotTitle: "Reset Your Password",
+                loginSubmit: "Sign In to Portal",
+                trialTitle: "New to Safwat Academy?",
+                trialSub: "Book a free 1-on-1 evaluation session now",
+                trialBtn: "Book Free →",
+                forgotTitle: "Reset Password",
                 forgotDesc: "Enter your registered email to receive a 6-digit OTP code",
+                step1: "1. Email", step2: "2. OTP Code", step3: "3. Password",
                 sendCode: "Send Verification Code",
                 codeInputLabel: "Verification Code (6 digits)",
                 confirmCode: "Verify Code",
-                newPasswordLabel: "New Password",
+                newPasswordLabel: "New Password (min 6 characters)",
                 savePassword: "Save New Password",
                 backToLogin: "← Back to Login",
                 needHelp: "Having trouble signing in?",
-                contactSupport: "Contact Academy Support",
-                listenAyah: "Recitation",
+                contactSupport: "Contact Support via WhatsApp",
+                listenAyah: "Al-Husary Recitation",
                 activeSessionTitle: "Active Session Detected",
-                continueBtn: "🚀 Continue to Portal",
-                footerCopy: "© All Rights Reserved — Safwat Al-Huffaz Academy for Quran & Languages",
-                helpTitle: "Student & Teacher Support Center",
-                helpDesc: "If you forgot your registered email or wish to book a free trial session and activate a new account, contact our administration directly:",
-                helpWaBtn: "Chat with Support via WhatsApp",
-                helpCloseBtn: "Close Window",
-                errCreds: "Sorry, incorrect email address or password.",
-                errRole: "Sorry, no role permissions have been assigned to this account.",
-                errSuspended: "Sorry, your account is currently suspended by administration.",
-                errCode: "The verification code is invalid or expired.",
-                errGeneral: "Error: Please make sure the email address is registered.",
-                errSave: "Failed to save: Please choose a new strong password!",
-                succSent: "✅ A 6-digit verification code has been sent to your email.",
-                succVerified: "✅ Code verified! Please enter your new password below.",
-                alertFinal: "Password reset successfully! You can now log in."
-            },
-            hi: {
-                dir: "ltr",
-                portalTitle: "अकादमी शैक्षिक पोर्टल",
-                portalSubtitle: "स्वागत है, जारी रखने के लिए कृपया लॉग इन करें",
-                royalBadge: "प्रमाणित वैश्विक कुरआन और अरबी संस्थान",
-                heroHeading: "सफ़वत अल-हुफ़्फ़ाज़ अकादमी",
-                heroDesc: "एक स्मार्ट शैक्षिक मंच जो प्रामाणिक कुरआन तिलावत, तजवीद और अरबी भाषा को आधुनिक तकनीक के साथ जोड़ता है।",
-                gemTitle: "📜 कुरआन और हदीस की रोशनी",
-                feat1T: "शाही मुसहफ़", feat1S: "तुरंत तजवीद सुधार",
-                feat2T: "सनद और इजाज़ाह", feat2S: "दस क़िराआत और मुतून",
-                feat3T: "अरबी और गैर-अरबी", feat3S: "विशेष पाठ्यक्रम",
-                feat4T: "अभिभावक पोर्टल", feat4S: "व्हाट्सएप रिपोर्ट",
-                selectMode: "अपना पोर्टल चुनें",
-                roleStudent: "छात्र", roleTeacher: "शिक्षक", roleParent: "अभिभावक", roleAdmin: "प्रबंधन",
-                email: "ईमेल पता",
-                password: "पासवर्ड",
-                rememberMe: "मेरा ईमेल याद रखें",
-                forgotBtn: "पासवर्ड भूल गए?",
-                loginSubmit: "लॉग इन करें 🚀",
-                forgotTitle: "पासवर्ड रीसेट करें",
-                forgotDesc: "सत्यापन कोड प्राप्त करने के लिए अपना ईमेल दर्ज करें",
-                sendCode: "सत्यापन कोड भेजें",
-                codeInputLabel: "सत्यापन कोड (6 अंक)",
-                confirmCode: "पुष्टि करें",
-                newPasswordLabel: "नया पासवर्ड",
-                savePassword: "नया पासवर्ड सहेजें",
-                backToLogin: "← लॉग इन पर वापस जाएं",
-                needHelp: "लॉग इन करने में सहायता चाहिए?",
-                contactSupport: "सहायता से संपर्क करें",
-                listenAyah: "तिलावत सुनें",
-                activeSessionTitle: "सक्रिय सत्र उपलब्ध है",
-                continueBtn: "🚀 पोर्टल खोलें",
-                footerCopy: "© सर्वाधिकार सुरक्षित — सफ़वत अल-हुफ़्फ़ाज़ अकादमी",
-                helpTitle: "छात्र एवं शिक्षक सहायता केंद्र",
-                helpDesc: "यदि आप अपना ईमेल भूल गए हैं या नया खाता खोलना चाहते हैं, तो व्हाट्सएप पर संपर्क करें:",
-                helpWaBtn: "व्हाट्सएप सहायता",
-                helpCloseBtn: "बंद करें",
-                errCreds: "क्षमा करें, ईमेल या पासवर्ड गलत है",
-                errRole: "इस खाते को कोई अनुमति नहीं दी गई है",
-                errSuspended: "यह खाता निलंबित कर दिया गया है।",
-                errCode: "सत्यापन कोड गलत या समाप्त हो गया है",
-                errGeneral: "एक त्रुटि हुई: सुनिश्चित करें कि ईमेल पंजीकृत है",
-                errSave: "सहेजना विफल!",
-                succSent: "✅ सत्यापन कोड आपके ईमेल पर भेज दिया गया है",
-                succVerified: "✅ कोड सत्यापित! नया पासवर्ड दर्ज करें",
-                alertFinal: "पासवर्ड सफलतापूर्वक रीसेट हो गया!"
+                continueBtn: "Continue →",
+                footerCopy: "© All Rights Reserved — Safwat Al-Huffaz Qur'an Academy",
+                offlineWarning: "⚠️ You are currently offline. Please check your internet connection.",
+                errNetwork: "⚠️ Network error! Please check your internet connection and try again.",
+                errCreds: "Incorrect email address or password.",
+                errRole: "No role profile found for this account yet.",
+                errSuspended: "This account is currently inactive. Please contact administration.",
+                errCode: "Invalid or expired verification code.",
+                errGeneral: "Error: Please verify that your email is registered.",
+                errShortPass: "⚠️ New password must be at least 6 characters long.",
+                errSave: "Failed to save: Please re-verify OTP and choose a new password.",
+                succSent: "✅ Verification code sent to your email.",
+                succVerified: "✅ Code verified! Enter your new password below.",
+                alertFinal: "Password updated successfully! You can now sign in.",
+                roleBadges: {
+                    super_admin: "Super Admin 👑", admin: "Admin 🛡️", branch_director: "Branch Director 🏛️",
+                    supervisor: "Supervisor 👁️", teacher: "Teacher 👳‍♂️", student: "Student 🎓", parent: "Parent 👨‍👩‍👧"
+                },
+                roleTitles: {
+                    student: { title: "Student & Parent Portal", sub: "Sign in to view your circles, daily reports, and assignments", placeholder: "student@safwat.academy" },
+                    teacher: { title: "Teachers & Reciters Gateway", sub: "Sign in to manage circles and submit Quran, Ijazah & Matn reports", placeholder: "teacher@safwat.academy" },
+                    admin: { title: "Administration & Supervision", sub: "Restricted portal for Branch Directors, Supervisors & Admins", placeholder: "admin@safwat.academy" }
+                }
             }
         };
 
-        // الإشراقات المتقلبة (أحاديث وآيات)
+        // مراقب حالة الاتصال
+        function updateNetworkBanner() {
+            const banner = document.getElementById('network-status-banner');
+            if (!banner) return;
+            banner.classList.toggle('hidden', navigator.onLine);
+        }
+        window.addEventListener('online', updateNetworkBanner);
+        window.addEventListener('offline', updateNetworkBanner);
+
+        function isConnectionError(err) {
+            if (!navigator.onLine) return true;
+            const msg = String(err?.message || err || '').toLowerCase();
+            return msg.includes('failed to fetch') || msg.includes('networkerror') || msg.includes('timeout') || msg.includes('load failed');
+        }
+
+        function showErrorMessage(msg) {
+            successMsg.classList.add('hidden');
+            errorMsg.innerText = msg;
+            errorMsg.classList.remove('hidden');
+        }
+
+        function showSuccessMessage(msg) {
+            errorMsg.classList.add('hidden');
+            successMsg.innerText = msg;
+            successMsg.classList.remove('hidden');
+        }
+
+        // مشغل تلاوة الشيخ الحصري — تشغيل تلقائي بدون زر
+        function initWelcomeAudio() {
+            if (!welcomeAudioPlayer) {
+                welcomeAudioPlayer = new Audio('https://cdn.islamic.network/quran/audio/128/ar.husary/2038.mp3');
+                welcomeAudioPlayer.loop = false;
+                welcomeAudioPlayer.preload = 'auto';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateNetworkBanner();
+            initWelcomeAudio();
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                setTimeout(() => {
+                    welcomeAudioPlayer.play().catch(() => {
+                        const startOnFirstInteract = () => {
+                            welcomeAudioPlayer.play().catch(() => {});
+                            window.removeEventListener('click', startOnFirstInteract);
+                            window.removeEventListener('keydown', startOnFirstInteract);
+                            window.removeEventListener('touchstart', startOnFirstInteract);
+                        };
+                        window.addEventListener('click', startOnFirstInteract, { once: true });
+                        window.addEventListener('keydown', startOnFirstInteract, { once: true });
+                        window.addEventListener('touchstart', startOnFirstInteract, { once: true });
+                    });
+                }, 500);
+            }
+        });
+
+        // ====== لمسات الفخامة: نجوم + دخول متدرج + عداد حي + بارالاكس + تكرار شريط الأخبار ======
+        // شريط الأخبار: مزامنة النسخة المكررة والاتجاه مع اللغة الحالية
+        window.refreshTickerClone = function() {
+            const track = document.querySelector('#royal-ticker .ticker-track');
+            if (!track) return;
+            const group = track.querySelector('.ticker-group');
+            if (!group) return;
+            group.setAttribute('dir', currentLang === 'en' ? 'ltr' : 'rtl');
+            while (track.children.length > 1) track.removeChild(track.lastChild);
+            const clone = group.cloneNode(true);
+            clone.setAttribute('aria-hidden', 'true');
+            track.appendChild(clone);
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // شريط الأخبار: تكرار المحتوى لحركة مستمرة بلا انقطاع
+            window.refreshTickerClone();
+
+            // نجوم ذهبية متلألئة في الخلفية
+            const starField = document.getElementById('royal-star-field');
+            if (starField && !reduceMotion) {
+                for (let i = 0; i < 26; i++) {
+                    const s = document.createElement('span');
+                    s.className = 'royal-star';
+                    const size = 2.5 + Math.random() * 3.5;
+                    s.style.width = s.style.height = size.toFixed(1) + 'px';
+                    s.style.left = (Math.random() * 100).toFixed(2) + '%';
+                    s.style.top = (Math.random() * 100).toFixed(2) + '%';
+                    s.style.setProperty('--tw-dur', (3 + Math.random() * 4).toFixed(2) + 's');
+                    s.style.setProperty('--tw-delay', (Math.random() * 6).toFixed(2) + 's');
+                    starField.appendChild(s);
+                }
+            }
+
+            // دخول متدرج ناعم لعناصر الصفحة
+            if (!reduceMotion) {
+                const revealTargets = [
+                    document.querySelector('header'),
+                    document.getElementById('royal-ticker'),
+                    ...document.querySelectorAll('.imperial-portal-frame > section'),
+                    document.querySelector('footer')
+                ].filter(Boolean);
+                revealTargets.forEach((el, i) => {
+                    el.classList.add('reveal-item');
+                    el.style.setProperty('--reveal-delay', (i * 0.16).toFixed(2) + 's');
+                });
+            }
+
+            // عداد الأكاديمية الحي — الأرقام الحقيقية بتتعدل من data-target في الـ HTML
+            document.querySelectorAll('#royal-stats .stat-num').forEach((el) => {
+                const target = parseInt(el.dataset.target || '0', 10);
+                if (reduceMotion) { el.innerText = target.toLocaleString('en-US'); return; }
+                const dur = 1900; const t0 = performance.now();
+                const step = (t) => {
+                    const p = Math.min(1, (t - t0) / dur);
+                    const eased = 1 - Math.pow(1 - p, 3);
+                    el.innerText = Math.round(target * eased).toLocaleString('en-US');
+                    if (p < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            });
+
+            // بارالاكس خفيف جدًا للبطاقة مع حركة الماوس (ديسكتوب فقط)
+            const frame = document.querySelector('.imperial-portal-frame');
+            if (frame && !reduceMotion && window.matchMedia('(pointer: fine)').matches) {
+                frame.style.transition = 'transform 0.35s ease-out';
+                window.addEventListener('mousemove', (e) => {
+                    const x = e.clientX / window.innerWidth - 0.5;
+                    const y = e.clientY / window.innerHeight - 0.5;
+                    frame.style.transform = 'perspective(1500px) rotateX(' + (-y * 1.6).toFixed(2) + 'deg) rotateY(' + (x * 1.6).toFixed(2) + 'deg)';
+                });
+                document.addEventListener('mouseleave', () => {
+                    frame.style.transform = 'perspective(1500px) rotateX(0deg) rotateY(0deg)';
+                });
+            }
+        });
+
+        // الإشراقات القرآنية والنبوية
         const inspirationalGems = [
             {
                 ar: "قال رسول الله ﷺ: «خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ»",
                 arSub: "رواه الإمام البخاري • وسام الشرف لأهل القرآن",
-                en: "The Prophet ﷺ said: “The best among you are those who learn the Quran and teach it.”",
-                enSub: "Sahih Al-Bukhari • The Crown of Honor",
-                hi: "पैगंबर ﷺ ने कहा: “तुम में सबसे बेहतर वह है जो कुरआन सीखे और सिखाए।”",
-                hiSub: "सहीह अल-बुखारी"
+                en: "The Prophet ﷺ said: “The best among you are those who learn the Qur'an and teach it.”",
+                enSub: "Sahih Al-Bukhari • The Crown of Honor"
             },
             {
                 ar: "قال رسول الله ﷺ: «الْمَاهِرُ بِالْقُرْآنِ مَعَ السَّفَرَةِ الْكِرَامِ الْبَرَرَةِ»",
                 arSub: "متفق عليه • منزلة المتقنين لكتاب الله",
-                en: "The Prophet ﷺ said: “The one proficient in reciting the Quran will be with the noble, obedient angels.”",
-                enSub: "Agreed Upon • Rank of Quran Masters",
-                hi: "पैगंबर ﷺ ने कहा: “कुरआन में माहिर व्यक्ति सम्मानित फरिश्तों के साथ होगा।”",
-                hiSub: "सहीह मुस्लिम"
+                en: "The Prophet ﷺ said: “The one proficient in reciting the Qur'an will be with the noble angels.”",
+                enSub: "Agreed Upon • Rank of Qur'an Masters"
             },
             {
                 ar: "﴿ إِنَّ هَٰذَا الْقُرْآنَ يَهْدِي لِلَّتِي هِيَ أَقْوَمُ وَيُبَشِّرُ الْمُؤْمِنِينَ ﴾",
                 arSub: "سورة الإسراء: الآية ٩ • نور وهداية",
-                en: "“Indeed, this Quran guides to that which is most suitable and gives good tidings to the believers.”",
-                enSub: "Surah Al-Isra: Ayah 9 • Light & Guidance",
-                hi: "“निस्संदेह यह कुरआन वह रास्ता दिखाता है जो सबसे सीधा है।”",
-                hiSub: "सूरह अल-इसरा: 9"
+                en: "“Indeed, this Qur'an guides to that which is most suitable and gives good tidings.”",
+                enSub: "Surah Al-Isra: Ayah 9"
             }
         ];
         let currentGemIdx = 0;
 
-        function rotateGems() {
+        window.setGemSlide = function(idx) {
             const gemText = document.getElementById('rotating-gem-text');
             const gemSub = document.getElementById('rotating-gem-sub');
-            const dots = document.querySelectorAll('#gem-dots span');
+            const dots = document.querySelectorAll('#gem-dots button');
             if (!gemText || !gemSub) return;
 
-            currentGemIdx = (currentGemIdx + 1) % inspirationalGems.length;
+            currentGemIdx = idx % inspirationalGems.length;
             const g = inspirationalGems[currentGemIdx];
 
             gemText.style.opacity = '0';
+            gemSub.style.opacity = '0';
             setTimeout(() => {
-                gemText.innerText = currentLang === 'ar' ? g.ar : (currentLang === 'hi' ? g.hi : g.en);
-                gemSub.innerText = currentLang === 'ar' ? g.arSub : (currentLang === 'hi' ? g.hiSub : g.enSub);
+                gemText.innerText = currentLang === 'ar' ? g.ar : g.en;
+                gemSub.innerText = currentLang === 'ar' ? g.arSub : g.enSub;
                 gemText.style.opacity = '1';
-                dots.forEach((d, idx) => {
-                    d.className = idx === currentGemIdx ? 'w-2 h-2 rounded-full bg-amber-400' : 'w-2 h-2 rounded-full bg-white/25';
+                gemSub.style.opacity = '1';
+                dots.forEach((d, i) => {
+                    d.className = i === currentGemIdx
+                        ? 'w-2.5 h-2.5 rounded-full bg-[#F3E5AB] cursor-pointer transition'
+                        : 'w-2.5 h-2.5 rounded-full bg-white/30 hover:bg-white/60 cursor-pointer transition';
                 });
-            }, 300);
-        }
-        setInterval(rotateGems, 6000);
+            }, 220);
+        };
 
-        // التاريخ الهجري والميلادي المصحح + الساعات العالمية
-        function generateLiveDate(lang) {
-            const today = new Date();
-            const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
-            const optionsG = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const dateG = today.toLocaleDateString(locale, optionsG);
-            const dateH = today.toLocaleDateString((lang === 'ar' ? 'ar-EG' : 'en-US') + '-u-ca-islamic-umalqura', { year: 'numeric', month: 'long', day: 'numeric' });
-            
-            const dateEl = document.getElementById('live-date');
-            if (dateEl) {
-                dateEl.innerText = lang === 'ar' ? `${dateG} م | ${dateH} هـ` : `${dateG} | ${dateH} AH`;
+        setInterval(() => {
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                setGemSlide((currentGemIdx + 1) % inspirationalGems.length);
             }
-        }
+        }, 6500);
 
-        function updateMiniWorldClocks() {
+        // التاريخ الحي والساعات
+        function updateDateAndClocks() {
             const now = new Date();
             const fmt = (tz) => now.toLocaleTimeString('en-US', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: true });
             const mk = document.getElementById('mini-clk-makkah');
             const ca = document.getElementById('mini-clk-cairo');
-            const ln = document.getElementById('mini-clk-london');
             if (mk) mk.innerText = fmt('Asia/Riyadh');
             if (ca) ca.innerText = fmt('Africa/Cairo');
-            if (ln) ln.innerText = fmt('Europe/London');
         }
-        setInterval(updateMiniWorldClocks, 1000);
-        updateMiniWorldClocks();
 
-        // مشغل التلاوة الترحيبية
-        window.toggleWelcomeAyahAudio = function() {
-            const btn = document.getElementById('btn-ayah-audio');
-            const icon = document.getElementById('audio-icon');
-            if (!welcomeAudioPlayer) {
-                // تلاوة آية (إن هذا القرآن يهدي للتي هي أقوم) بصوت الشيخ الحصري
-                welcomeAudioPlayer = new Audio('https://cdn.islamic.network/quran/audio/128/ar.husary/2038.mp3');
-                welcomeAudioPlayer.onended = () => {
-                    btn?.classList.remove('playing');
-                    if (icon) icon.innerText = '🔊';
-                };
-            }
-            if (welcomeAudioPlayer.paused) {
-                welcomeAudioPlayer.play();
-                btn?.classList.add('playing');
-                if (icon) icon.innerText = '⏸️';
-            } else {
-                welcomeAudioPlayer.pause();
-                btn?.classList.remove('playing');
-                if (icon) icon.innerText = '🔊';
-            }
-        };
+        function renderLiveDate(lang) {
+            const today = new Date();
+            const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
+            const dateG = today.toLocaleDateString(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const dateH = today.toLocaleDateString(locale + '-u-ca-islamic-umalqura', { year: 'numeric', month: 'long', day: 'numeric' });
+            const dateEl = document.getElementById('live-date');
+            if (dateEl) dateEl.innerText = `${dateG} | ${dateH}`;
+        }
+
+        setInterval(updateDateAndClocks, 1000);
+        updateDateAndClocks();
 
         // الوضع الليلي
         window.togglePortalDarkMode = function() {
@@ -704,57 +1170,80 @@
             const isDark = document.documentElement.classList.contains('dark');
             localStorage.setItem('Safwatulhuffaz-dark-mode', isDark);
             const btn = document.getElementById('dark-mode-toggle');
-            if (btn) btn.innerText = isDark ? '☀️' : '🌙';
+            if (btn) {
+                btn.innerText = isDark ? '☀️' : '🌙';
+                btn.setAttribute('aria-pressed', String(isDark));
+            }
         };
 
         if (localStorage.getItem('Safwatulhuffaz-dark-mode') === 'true') {
             document.documentElement.classList.add('dark');
             const btn = document.getElementById('dark-mode-toggle');
-            if (btn) btn.innerText = '☀️';
+            if (btn) {
+                btn.innerText = '☀️';
+                btn.setAttribute('aria-pressed', 'true');
+            }
         }
 
-        // التبديل البصري بين أدوار البوابة
-        window.selectVisualRole = function(role) {
-            currentVisualRole = role;
-            ['student', 'teacher', 'parent', 'admin'].forEach(r => {
+        // تبديل تبويب البوابة والتنقل بلوحة المفاتيح
+        const roleOrder = ['student', 'teacher', 'admin'];
+        window.selectPortalRole = function(role) {
+            currentSelectedRole = role;
+            roleOrder.forEach(r => {
                 const btn = document.getElementById(`role-tab-${r}`);
                 if (!btn) return;
-                if (r === role) {
-                    btn.className = "py-2 px-1 rounded-xl text-[11px] font-black transition cursor-pointer bg-emerald-700 text-white shadow-xs flex flex-col items-center gap-0.5";
-                } else {
-                    btn.className = "py-2 px-1 rounded-xl text-[11px] font-bold transition cursor-pointer role-pill-inactive text-slate-600 hover:bg-white flex flex-col items-center gap-0.5";
-                }
+                const isSelected = (r === role);
+                btn.setAttribute('aria-selected', String(isSelected));
+                btn.setAttribute('tabindex', isSelected ? '0' : '-1');
+                btn.className = isSelected
+                    ? "min-h-[42px] py-2 px-2 rounded-xl text-xs font-black transition cursor-pointer role-tab-active flex items-center justify-center gap-1.5"
+                    : "min-h-[42px] py-2 px-2 rounded-xl text-xs font-bold transition cursor-pointer role-tab-inactive flex items-center justify-center gap-1.5";
             });
 
-            const emailInput = document.getElementById('email');
-            if (emailInput) {
-                const placeholders = {
-                    student: "student@safwat.academy",
-                    teacher: "teacher@safwat.academy",
-                    parent: "parent@safwat.academy",
-                    admin: "admin@safwat.academy"
-                };
-                emailInput.placeholder = placeholders[role] || "name@academy.com";
-            }
+            const t = translations[currentLang] || translations.ar;
+            const roleCfg = t.roleTitles[role] || t.roleTitles.student;
+            document.getElementById('txt-portal-title').innerText = roleCfg.title;
+            document.getElementById('txt-portal-subtitle').innerText = roleCfg.sub;
+            document.getElementById('email').placeholder = roleCfg.placeholder;
+            errorMsg.classList.add('hidden');
         };
 
-        // تطبيق اللغة الشامل
+        document.getElementById('portal-role-tablist')?.addEventListener('keydown', (e) => {
+            const idx = roleOrder.indexOf(currentSelectedRole);
+            if (idx === -1) return;
+            const isRtl = htmlTag.getAttribute('dir') === 'rtl';
+            let nextIdx = null;
+            if (e.key === 'ArrowRight') nextIdx = isRtl ? (idx - 1 + 3) % 3 : (idx + 1) % 3;
+            if (e.key === 'ArrowLeft') nextIdx = isRtl ? (idx + 1) % 3 : (idx - 1 + 3) % 3;
+
+            if (nextIdx !== null) {
+                e.preventDefault();
+                const nextRole = roleOrder[nextIdx];
+                selectPortalRole(nextRole);
+                document.getElementById(`role-tab-${nextRole}`)?.focus();
+            }
+        });
+
+        // تطبيق اللغة
         function applyLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('Safwatulhuffaz_lang', lang);
-            const t = translations[lang] || translations.ar;
-            
+            currentLang = (lang === 'en') ? 'en' : 'ar';
+            localStorage.setItem('Safwatulhuffaz_lang', currentLang);
+            const t = translations[currentLang];
+
             htmlTag.setAttribute('dir', t.dir);
-            htmlTag.setAttribute('lang', lang);
-            
+            htmlTag.setAttribute('lang', currentLang);
+
             const setTxt = (id, val) => { const el = document.getElementById(id); if (el && val) el.innerText = val; };
 
-            setTxt('txt-portal-title', t.portalTitle);
-            setTxt('txt-portal-subtitle', t.portalSubtitle);
+            setTxt('txt-offline-warning', t.offlineWarning);
             setTxt('txt-royal-badge', t.royalBadge);
             setTxt('txt-hero-heading', t.heroHeading);
+            setTxt('txt-mobile-hero-heading', t.heroHeading);
             setTxt('txt-hero-desc', t.heroDesc);
             setTxt('txt-gem-title', t.gemTitle);
+            setTxt('stat-lbl-students', t.statStudents); setTxt('stat-lbl-circles', t.statCircles); setTxt('stat-lbl-ijazat', t.statIjazat);
+            setTxt('ticker-item-1', t.ticker1); setTxt('ticker-item-2', t.ticker2); setTxt('ticker-item-3', t.ticker3);
+            if (window.refreshTickerClone) window.refreshTickerClone();
             setTxt('feat-1-title', t.feat1T); setTxt('feat-1-sub', t.feat1S);
             setTxt('feat-2-title', t.feat2T); setTxt('feat-2-sub', t.feat2S);
             setTxt('feat-3-title', t.feat3T); setTxt('feat-3-sub', t.feat3S);
@@ -762,20 +1251,28 @@
             setTxt('lbl-select-portal-mode', t.selectMode);
             setTxt('tab-txt-student', t.roleStudent);
             setTxt('tab-txt-teacher', t.roleTeacher);
-            setTxt('tab-txt-parent', t.roleParent);
             setTxt('tab-txt-admin', t.roleAdmin);
+            setTxt('txt-role-routing-note', t.roleRoutingNote);
             setTxt('lbl-email', t.email);
             setTxt('lbl-password', t.password);
             setTxt('lbl-remember-me', t.rememberMe);
+            setTxt('lbl-ssl-secured', t.sslSecured);
             setTxt('btn-forgot-password', t.forgotBtn);
-            if(!document.getElementById('btn-login-submit')?.querySelector('svg')) setTxt('btn-login-submit', t.loginSubmit);
-            
+            setTxt('btn-login-submit', t.loginSubmit);
+            setTxt('trial-cta-title', t.trialTitle);
+            setTxt('trial-cta-sub', t.trialSub);
+            setTxt('trial-cta-btn', t.trialBtn);
+            setTxt('forgot-title', t.forgotTitle);
+            setTxt('forgot-desc', t.forgotDesc);
+            setTxt('step-ind-1', t.step1);
+            setTxt('step-ind-2', t.step2);
+            setTxt('step-ind-3', t.step3);
             setTxt('lbl-reset-email', t.email);
-            if(!document.getElementById('btn-send-code')?.querySelector('svg')) setTxt('btn-send-code', t.sendCode);
+            setTxt('btn-send-code', t.sendCode);
             setTxt('lbl-code-input', t.codeInputLabel);
-            if(!document.getElementById('btn-confirm-code')?.querySelector('svg')) setTxt('btn-confirm-code', t.confirmCode);
+            setTxt('btn-confirm-code', t.confirmCode);
             setTxt('lbl-new-password', t.newPasswordLabel);
-            if(!document.getElementById('btn-save-password')?.querySelector('svg')) setTxt('btn-save-password', t.savePassword);
+            setTxt('btn-save-password', t.savePassword);
             setTxt('btn-back-to-login', t.backToLogin);
             setTxt('txt-need-help', t.needHelp);
             setTxt('btn-contact-support', t.contactSupport);
@@ -783,21 +1280,13 @@
             setTxt('active-session-title', t.activeSessionTitle);
             setTxt('btn-continue-session', t.continueBtn);
             setTxt('footer-copy', t.footerCopy);
-            setTxt('help-modal-title', t.helpTitle);
-            setTxt('help-modal-desc', t.helpDesc);
-            setTxt('help-wa-btn', t.helpWaBtn);
-            setTxt('help-close-btn', t.helpCloseBtn);
-            
-            if(!forgotSection.classList.contains('hidden')) {
-                forgotTitle.innerText = t.forgotTitle;
-                forgotDesc.innerText = t.forgotDesc;
-            }
-            const g = inspirationalGems[currentGemIdx];
-            setTxt('rotating-gem-text', lang === 'ar' ? g.ar : (lang === 'hi' ? g.hi : g.en));
-            setTxt('rotating-gem-sub', lang === 'ar' ? g.arSub : (lang === 'hi' ? g.hiSub : g.enSub));
-            generateLiveDate(lang);
+
+            selectPortalRole(currentSelectedRole);
+            setGemSlide(currentGemIdx);
+            renderLiveDate(currentLang);
         }
 
+        // إظهار/إخفاء كلمة المرور
         function setupPasswordToggle(buttonId, inputId) {
             const btn = document.getElementById(buttonId);
             const input = document.getElementById(inputId);
@@ -805,9 +1294,7 @@
             btn.addEventListener('click', () => {
                 const isPass = input.getAttribute('type') === 'password';
                 input.setAttribute('type', isPass ? 'text' : 'password');
-                btn.innerHTML = isPass 
-                    ? `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path></svg>`
-                    : `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>`;
+                btn.setAttribute('aria-pressed', String(isPass));
             });
         }
         setupPasswordToggle('toggle-password', 'password');
@@ -818,705 +1305,441 @@
             if (!btn) return;
             if (isLoading) {
                 btn.disabled = true;
-                btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+                btn.setAttribute('aria-busy', 'true');
+                btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-[#F3E5AB]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
             } else {
                 btn.disabled = false;
+                btn.removeAttribute('aria-busy');
                 btn.innerHTML = translations[currentLang][textKey];
             }
         }
 
-        // قياس قوة كلمة المرور الجديدة
-        window.checkNewPasswordStrength = function(val) {
-            const bar = document.getElementById('pass-strength-bar');
-            if (!bar) return;
-            let score = 0;
-            if (val.length >= 6) score += 35;
-            if (val.length >= 9) score += 25;
-            if (/[A-Z0-9!@#$%^&*]/.test(val)) score += 40;
-            bar.style.width = `${Math.min(100, score)}%`;
-            bar.className = score < 40 ? 'bg-rose-500 h-full transition-all' : (score < 75 ? 'bg-amber-500 h-full transition-all' : 'bg-emerald-500 h-full transition-all');
-        };
-
-        // 📡 دالة تحديث بيانات جهاز الطالب والـ IP والدولة فور دخوله ليظهر في رادار المعلم
-        async function updateStudentDeviceRadarOnLogin(userId) {
-            try {
-                const ua = navigator.userAgent;
-                let deviceName = "Desktop 💻";
-                if (/iPhone/i.test(ua)) deviceName = "iPhone 📱";
-                else if (/iPad/i.test(ua)) deviceName = "iPad 📲";
-                else if (/Samsung|SM-/i.test(ua)) deviceName = "Samsung 📱";
-                else if (/Xiaomi|Redmi/i.test(ua)) deviceName = "Xiaomi 📱";
-                else if (/Huawei/i.test(ua)) deviceName = "Huawei 📱";
-                else if (/OPPO/i.test(ua)) deviceName = "OPPO 📱";
-                else if (/Android/i.test(ua)) deviceName = "Android 📱";
-                else if (/Mac/i.test(ua)) deviceName = "MacBook 💻";
-
-                const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
-                const meta = JSON.stringify({
-                    device: deviceName,
-                    ip: geo.ip || '',
-                    location: `${geo.country_name || ''} ${geo.city ? '(' + geo.city + ')' : ''}`.trim(),
-                    timestamp: new Date().toISOString()
-                });
-
-                await supabaseClient.from('students').update({
-                    last_seen: new Date().toISOString(),
-                    device_info: meta
-                }).eq('id', userId);
-            } catch (e) {}
-        }
-
-        // التوجيه الذكي حسب صلاحية الحساب
+        // التوجيه الذكي حسب الصلاحية
         async function routeUserByRole(userId) {
-            const { data: profile, error: profileError } = await supabaseClient.from('profiles').select('role').eq('id', userId).single();
-            if (profileError || !profile) {
-                errorMsg.innerText = translations[currentLang].errRole;
-                errorMsg.classList.remove('hidden');
-                toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
-                return;
-            }
-
-            if (profile.role === 'suspended' || profile.role === 'banned') {
-                errorMsg.innerText = translations[currentLang].errSuspended;
-                errorMsg.classList.remove('hidden');
-                await supabaseClient.auth.signOut();
-                toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
-                return;
-            }
-
-            if (profile.role === 'parent') {
-                window.location.href = "parent_dashboard.html";
-            } else if (['admin', 'super_admin', 'supervisor', 'accountant', 'content_manager'].includes(profile.role)) {
-                window.location.href = "admin.html";
-            } else if (profile.role === 'student') {
-                await updateStudentDeviceRadarOnLogin(userId);
-                window.location.href = "student.html";
-            } else if (profile.role === 'teacher') {
-                window.location.href = "teacher.html";
-            } else {
-                errorMsg.innerText = translations[currentLang].errRole;
-                errorMsg.classList.remove('hidden');
-                toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
-            }
-        }
-
-        // فحص ما إذا كان هناك جلسة نشطة مسبقة
-        async function checkExistingActiveSession() {
             try {
-                const { data: { session } } = await supabaseClient.auth.getSession();
-                if (session && session.user) {
-                    const banner = document.getElementById('active-session-banner');
-                    const emailEl = document.getElementById('active-session-email');
-                    const contBtn = document.getElementById('btn-continue-session');
-                    if (banner && emailEl && contBtn) {
-                        emailEl.innerText = session.user.email;
-                        banner.classList.remove('hidden');
-                        contBtn.onclick = () => routeUserByRole(session.user.id);
-                    }
+                const { data: profile, error: profileError } = await supabaseClient
+                    .from('profiles')
+                    .select('role, is_active')
+                    .eq('id', userId)
+                    .single();
+
+                if (profileError) {
+                    showErrorMessage(isConnectionError(profileError) ? translations[currentLang].errNetwork : translations[currentLang].errRole);
+                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+                    return;
                 }
-            } catch (e) {}
+
+                if (!profile) {
+                    showErrorMessage(translations[currentLang].errRole);
+                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+                    return;
+                }
+
+                if (profile.is_active === false) {
+                    showErrorMessage(translations[currentLang].errSuspended);
+                    await supabaseClient.auth.signOut().catch(() => {});
+                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+                    return;
+                }
+
+                const role = profile.role;
+                if (['super_admin', 'admin', 'branch_director', 'supervisor'].includes(role)) {
+                    window.location.href = "admin.html";
+                } else if (role === 'teacher') {
+                    window.location.href = "teacher.html";
+                } else if (['student', 'parent'].includes(role)) {
+                    window.location.href = "student.html";
+                } else {
+                    showErrorMessage(translations[currentLang].errRole);
+                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+                }
+            } catch (err) {
+                showErrorMessage(isConnectionError(err) ? translations[currentLang].errNetwork : translations[currentLang].errRole);
+                toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+            }
         }
+
+        // فحص الجلسة النشطة
+        async function checkExistingActiveSession() {
+            const banner = document.getElementById('active-session-banner');
+            try {
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
+                if (error || !session || !session.user) {
+                    banner?.classList.add('hidden');
+                    return;
+                }
+
+                const { data: prof } = await supabaseClient
+                    .from('profiles')
+                    .select('full_name, role, is_active')
+                    .eq('id', session.user.id)
+                    .maybeSingle();
+
+                if (prof && prof.is_active === false) {
+                    await supabaseClient.auth.signOut().catch(() => {});
+                    banner?.classList.add('hidden');
+                    return;
+                }
+
+                const userEl = document.getElementById('active-session-user');
+                const badgeEl = document.getElementById('active-session-role-badge');
+                const contBtn = document.getElementById('btn-continue-session');
+
+                if (banner && userEl && contBtn) {
+                    const displayName = prof?.full_name ? `${prof.full_name} (${session.user.email})` : session.user.email;
+                    const roleText = (translations[currentLang].roleBadges?.[prof?.role]) || prof?.role || 'حساب مفعل';
+                    userEl.innerText = displayName;
+                    if (badgeEl) badgeEl.innerText = roleText;
+                    banner.classList.remove('hidden');
+                    contBtn.onclick = () => routeUserByRole(session.user.id);
+                }
+            } catch (e) {
+                banner?.classList.add('hidden');
+            }
+        }
+
+        supabaseClient.auth.onAuthStateChange((event) => {
+            if (event === 'SIGNED_OUT') {
+                document.getElementById('active-session-banner')?.classList.add('hidden');
+            } else if (event === 'SIGNED_IN') {
+                checkExistingActiveSession();
+            }
+        });
 
         window.forceClearCurrentSession = async function() {
-            await supabaseClient.auth.signOut();
+            try {
+                await supabaseClient.auth.signOut({ scope: 'local' });
+            } catch (e) {}
             document.getElementById('active-session-banner')?.classList.add('hidden');
+            document.getElementById('password').value = '';
+            showSuccessMessage(currentLang === 'ar' ? '✅ تم تسجيل الخروج بأمان.' : '✅ Signed out safely.');
         };
 
-        function initPageLanguageAndClearInputs() {
-            const savedEmail = localStorage.getItem('Safwat_Saved_Login_Email') || '';
-            document.getElementById('email').value = savedEmail;
-            document.getElementById('password').value = '';
-            document.getElementById('reset-email').value = '';
-            document.getElementById('reset-code').value = '';
-            document.getElementById('new-password').value = '';
+        // معالجة تسجيل الدخول
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
 
-            let savedLang = localStorage.getItem('Safwatulhuffaz_lang');
-            if (!savedLang) {
-                const browserLang = (navigator.language || navigator.userLanguage || 'ar').toLowerCase();
-                savedLang = browserLang.startsWith('ar') ? 'ar' : (browserLang.startsWith('hi') ? 'hi' : 'en');
+            if (!navigator.onLine) {
+                showErrorMessage(translations[currentLang].errNetwork);
+                return;
             }
 
-            langSwitcher.value = savedLang;
-            applyLanguage(savedLang);
-            checkExistingActiveSession();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (document.getElementById('remember-email-cb')?.checked) {
+                localStorage.setItem('Safwat_Saved_Login_Email', email);
+            } else {
+                localStorage.removeItem('Safwat_Saved_Login_Email');
+            }
+
+            toggleBtnLoading('btn-login-submit', true, 'loginSubmit');
+            try {
+                const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+                if (authError || !authData?.user) {
+                    document.getElementById('password').value = '';
+                    showErrorMessage(isConnectionError(authError) ? translations[currentLang].errNetwork : translations[currentLang].errCreds);
+                    toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+                    return;
+                }
+
+                await routeUserByRole(authData.user.id);
+            } catch (err) {
+                showErrorMessage(translations[currentLang].errNetwork);
+                toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
+            }
+        });
+
+        // استعادة كلمة المرور (OTP)
+        window.evaluatePasswordStrength = function(val) {
+            const bar = document.getElementById('pwd-strength-meter');
+            if (!bar) return;
+            let score = 0;
+            if (val.length >= 6) score += 40;
+            if (val.length >= 9) score += 25;
+            if (/[A-Z0-9!@#$%^&*]/.test(val)) score += 35;
+            bar.style.width = `${Math.min(100, score)}%`;
+            bar.className = score < 40 ? 'h-full bg-rose-500 transition-all duration-300' : (score < 75 ? 'h-full bg-[#D4AF37] transition-all duration-300' : 'h-full bg-[#4A7AB5] transition-all duration-300');
+        };
+
+        function startOtpCooldown(seconds = 60) {
+            const resendBtn = document.getElementById('btn-resend-otp');
+            if (!resendBtn) return;
+            if (otpCooldownInterval) clearInterval(otpCooldownInterval);
+
+            let remaining = seconds;
+            resendBtn.disabled = true;
+            resendBtn.className = 'text-xs font-bold text-slate-400 cursor-not-allowed';
+
+            const updateText = () => {
+                resendBtn.innerText = currentLang === 'ar'
+                    ? `إعادة إرسال الكود خلال ${remaining} ثانية`
+                    : `Resend code in ${remaining}s`;
+            };
+            updateText();
+
+            otpCooldownInterval = setInterval(() => {
+                remaining--;
+                if (remaining <= 0) {
+                    clearInterval(otpCooldownInterval);
+                    resendBtn.disabled = false;
+                    resendBtn.className = 'text-xs font-black text-[#9A7428] dark:text-[#F3E5AB] hover:underline cursor-pointer';
+                    resendBtn.innerText = currentLang === 'ar' ? '🔄 إعادة إرسال كود التحقق الآن' : '🔄 Resend Verification Code';
+                } else {
+                    updateText();
+                }
+            }, 1000);
         }
-        
-        initPageLanguageAndClearInputs();
-        langSwitcher.addEventListener('change', (e) => applyLanguage(e.target.value));
+
+        document.getElementById('btn-resend-otp')?.addEventListener('click', () => {
+            forgotForm1.dispatchEvent(new Event('submit'));
+        });
 
         function updateForgotStepIndicators(stepNum) {
             [1, 2, 3].forEach(n => {
                 const el = document.getElementById(`step-ind-${n}`);
                 if (!el) return;
-                el.className = n <= stepNum
-                    ? "py-1.5 rounded-xl bg-emerald-700 text-white shadow-2xs"
-                    : "py-1.5 rounded-xl bg-slate-100 text-slate-400";
+                el.className = (n <= stepNum)
+                    ? "py-2 rounded-xl bg-[#122740] text-[#F3E5AB] border border-[#D4AF37]/60"
+                    : "py-2 rounded-xl bg-white/70 text-slate-500 border border-slate-200/70";
             });
         }
 
         document.getElementById('btn-forgot-password').addEventListener('click', () => {
+            isOtpVerifiedSession = false;
             loginSection.classList.add('hidden');
             forgotSection.classList.remove('hidden');
-            resetForgotFlow();
+            forgotForm1.classList.remove('hidden');
+            forgotForm2.classList.add('hidden');
+            forgotForm3.classList.add('hidden');
+            document.getElementById('reset-email').value = document.getElementById('email').value.trim();
+            document.getElementById('reset-code').value = '';
+            document.getElementById('new-password').value = '';
+            updateForgotStepIndicators(1);
+            errorMsg.classList.add('hidden');
+            successMsg.classList.add('hidden');
         });
 
         document.getElementById('btn-back-to-login').addEventListener('click', () => {
+            if (otpCooldownInterval) clearInterval(otpCooldownInterval);
+            isOtpVerifiedSession = false;
             forgotSection.classList.add('hidden');
             loginSection.classList.remove('hidden');
             errorMsg.classList.add('hidden');
             successMsg.classList.add('hidden');
         });
 
-        function resetForgotFlow() {
-            forgotForm1.classList.remove('hidden');
-            forgotForm2.classList.add('hidden');
-            forgotForm3.classList.add('hidden');
-            updateForgotStepIndicators(1);
-            forgotTitle.innerText = translations[currentLang].forgotTitle;
-            forgotDesc.innerText = translations[currentLang].forgotDesc;
-            errorMsg.classList.add('hidden');
-            successMsg.classList.add('hidden');
-        }
-
-        // ================= الدخول والتوجيه الذكي حسب الصلاحيات =================
-       // ================= الدخول والتوجيه الذكي مع القيد الصارم للبوابة والترجمة الثلاثية =================
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            errorMsg.classList.add('hidden');
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const activeRole = window.currentSelectedGatewayRole || 'student';
-            const lang = currentLang || 'ar';
-
-            // 1. تسجيل الدخول أولاً للتحقق من صحة البريد وكلمة المرور عبر Supabase
-            toggleBtnLoading('btn-login-submit', true, 'loginSubmit');
-            const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-            if (authError || !authData.user) {
-                document.getElementById('password').value = '';
-                errorMsg.innerText = translations[lang].errCreds;
-                errorMsg.classList.remove('hidden');
-                toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
-                return;
-            }
-
-            const userId = authData.user.id;
-
-            // 2. جلب الصلاحية الفعلية من جدول profiles
-            const { data: profile } = await supabaseClient.from('profiles').select('role').eq('id', userId).single();
-            const actualRole = profile ? profile.role : 'student';
-
-            // 3. 🛡️ القيد الصارم ومقارنة البوابة المتاحة (مع الترجمة الثلاثية AR / EN / HI)
-            let isAllowed = true;
-            let restrictionMsgs = {
-                ar: '⚠️ عذراً! أنت محدد في الأعلى (طالب)، ولا يمكنك الدخول بإيميل (معلم أو إداري) من هذه البوابة.',
-                en: '⚠️ Sorry! You selected (Student) above, and cannot sign in with a Teacher/Admin email here.',
-                hi: '⚠️ क्षमा करें! आपने ऊपर (छात्र) चुना है, आप शिक्षक या एडमिन ईमेल से लॉगिन नहीं कर सकते।'
-            };
-
-            if (activeRole === 'student' && actualRole !== 'student') {
-                isAllowed = false;
-                restrictionMsgs = {
-                    ar: '⚠️ عذراً! أنت محدد في الأعلى (طالب)، ولا يمكنك الدخول بإيميل (معلم أو إداري) من هذه البوابة.',
-                    en: '⚠️ Sorry! You selected (Student) above, and cannot sign in with a Teacher/Admin email here.',
-                    hi: '⚠️ क्षमा करें! आपने ऊपर (छात्र) चुना है, आप शिक्षक ईमेल से लॉगिन नहीं कर सकते।'
-                };
-            } else if (activeRole === 'teacher' && actualRole !== 'teacher') {
-                isAllowed = false;
-                restrictionMsgs = {
-                    ar: '⚠️ عذراً! هذه البوابة مخصصة للمعلمين فقط.',
-                    en: '⚠️ Sorry! This portal is restricted to Instructors only.',
-                    hi: '⚠️ क्षमा करें! यह पोर्टल केवल शिक्षकों के लिए है।'
-                };
-            } else if (activeRole === 'parent' && actualRole !== 'parent' && actualRole !== 'student') {
-                isAllowed = false;
-                restrictionMsgs = {
-                    ar: '⚠️ عذراً! هذه البوابة مخصصة لأولياء الأمور فقط.',
-                    en: '⚠️ Sorry! This portal is restricted to Parents only.',
-                    hi: '⚠️ क्षमा करें! यह पोर्टल केवल अभिभावकों के लिए है।'
-                };
-            } else if (activeRole === 'admin' && !['admin', 'super_admin', 'supervisor', 'accountant', 'content_manager'].includes(actualRole)) {
-                isAllowed = false;
-                restrictionMsgs = {
-                    ar: '⚠️ عذراً! هذه المنطقة محمية ومخصصة للإدارة العليا فقط.',
-                    en: '⚠️ Sorry! This is a secure restricted area for Administrators only.',
-                    hi: '⚠️ क्षमा करें! यह केवल प्रशासकों के लिए सुरक्षित क्षेत्र है।'
-                };
-            }
-
-            // إذا لم يتطابق الدور، يتم تسجيل خروجه فوراً ومنعه من المتابعة
-            if (!isAllowed) {
-                await supabaseClient.auth.signOut();
-                document.getElementById('password').value = '';
-                errorMsg.innerText = restrictionMsgs[lang] || restrictionMsgs.ar;
-                errorMsg.classList.remove('hidden');
-                toggleBtnLoading('btn-login-submit', false, 'loginSubmit');
-                return;
-            }
-
-            // 4. إذا تطابق الدور تماماً، يمر ويتم توجيهه للوحة الخاصة به بنجاح
-            await routeUserByRole(userId);
-        });
-
-        // ================= استعادة كلمة المرور (3 خطوات) =================
         forgotForm1.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!navigator.onLine) return showErrorMessage(translations[currentLang].errNetwork);
+
             errorMsg.classList.add('hidden');
             successMsg.classList.add('hidden');
             toggleBtnLoading('btn-send-code', true, 'sendCode');
-            const email = document.getElementById('reset-email').value.trim();
-            const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
 
-            if (error) {
-                errorMsg.innerText = translations[currentLang].errGeneral;
-                errorMsg.classList.remove('hidden');
+            try {
+                const email = document.getElementById('reset-email').value.trim();
+                const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+
                 toggleBtnLoading('btn-send-code', false, 'sendCode');
-            } else {
-                successMsg.innerText = translations[currentLang].succSent;
-                successMsg.classList.remove('hidden');
+                if (error) {
+                    showErrorMessage(isConnectionError(error) ? translations[currentLang].errNetwork : translations[currentLang].errGeneral);
+                } else {
+                    showSuccessMessage(translations[currentLang].succSent);
+                    forgotForm1.classList.add('hidden');
+                    forgotForm2.classList.remove('hidden');
+                    updateForgotStepIndicators(2);
+                    startOtpCooldown(60);
+                    document.getElementById('reset-code')?.focus();
+                }
+            } catch (err) {
                 toggleBtnLoading('btn-send-code', false, 'sendCode');
-                forgotForm1.classList.add('hidden');
-                forgotForm2.classList.remove('hidden');
-                updateForgotStepIndicators(2);
-                forgotDesc.innerText = "";
+                showErrorMessage(translations[currentLang].errNetwork);
             }
         });
 
         forgotForm2.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!navigator.onLine) return showErrorMessage(translations[currentLang].errNetwork);
+
             errorMsg.classList.add('hidden');
             successMsg.classList.add('hidden');
             toggleBtnLoading('btn-confirm-code', true, 'confirmCode');
-            const email = document.getElementById('reset-email').value.trim();
-            const code = document.getElementById('reset-code').value.trim();
-            const { error } = await supabaseClient.auth.verifyOtp({ email, token: code, type: 'recovery' });
 
-            if (error) {
-                errorMsg.innerText = translations[currentLang].errCode;
-                errorMsg.classList.remove('hidden');
+            try {
+                const email = document.getElementById('reset-email').value.trim();
+                const code = document.getElementById('reset-code').value.trim();
+                const { data, error } = await supabaseClient.auth.verifyOtp({ email, token: code, type: 'recovery' });
+
                 toggleBtnLoading('btn-confirm-code', false, 'confirmCode');
-            } else {
-                successMsg.innerText = translations[currentLang].succVerified;
-                successMsg.classList.remove('hidden');
+                if (error || !data?.session) {
+                    showErrorMessage(isConnectionError(error) ? translations[currentLang].errNetwork : translations[currentLang].errCode);
+                } else {
+                    isOtpVerifiedSession = true;
+                    if (otpCooldownInterval) clearInterval(otpCooldownInterval);
+                    showSuccessMessage(translations[currentLang].succVerified);
+                    forgotForm2.classList.add('hidden');
+                    forgotForm3.classList.remove('hidden');
+                    updateForgotStepIndicators(3);
+                    document.getElementById('new-password')?.focus();
+                }
+            } catch (err) {
                 toggleBtnLoading('btn-confirm-code', false, 'confirmCode');
-                forgotForm2.classList.add('hidden');
-                forgotForm3.classList.remove('hidden');
-                updateForgotStepIndicators(3);
+                showErrorMessage(translations[currentLang].errNetwork);
             }
         });
 
         forgotForm3.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!navigator.onLine) return showErrorMessage(translations[currentLang].errNetwork);
+
+            const newPassword = document.getElementById('new-password').value;
+            if (!isOtpVerifiedSession) {
+                return showErrorMessage(translations[currentLang].errSave);
+            }
+            if (newPassword.length < 6) {
+                return showErrorMessage(translations[currentLang].errShortPass);
+            }
+
             errorMsg.classList.add('hidden');
             successMsg.classList.add('hidden');
             toggleBtnLoading('btn-save-password', true, 'savePassword');
-            const newPassword = document.getElementById('new-password').value;
-            const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
 
-            if (error) {
-                errorMsg.innerText = translations[currentLang].errSave;
-                errorMsg.classList.remove('hidden');
-                toggleBtnLoading('btn-save-password', false, 'savePassword');
-            } else {
-                toggleBtnLoading('btn-save-password', false, 'savePassword');
-                alert(translations[currentLang].alertFinal);
-                forgotSection.classList.add('hidden');
-                loginSection.classList.remove('hidden');
-                await supabaseClient.auth.signOut();
-                initPageLanguageAndClearInputs();
-            }
-        });
-        
-    </script>
-    <script>
-        let studentDetectedTimezone = 'Africa/Cairo';
-        let studentCountryName = '';
-
-        // 1. التعرف التلقائي على الـ IP والزمن المحلي
-        async function detectStudentLocationAndAutoConfigure() {
             try {
-                const res = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
-                if (res && res.timezone) {
-                    studentDetectedTimezone = res.timezone;
-                    studentCountryName = res.country_name || res.country || '';
-                    
-                    const tzBadge = document.getElementById('student-timezone-badge');
-                    const tzLabel = document.getElementById('student-tz-label');
-                    if (tzBadge && tzLabel) {
-                        tzLabel.innerHTML = `🌍 ${res.country_code || 'Local'}: <b id="mini-clk-student" class="font-mono">--:--</b>`;
-                        tzBadge.classList.remove('hidden');
-                        tzBadge.classList.add('inline-flex');
-                    }
+                const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
 
-                    const arabCountries = ['Egypt', 'Saudi Arabia', 'United Arab Emirates', 'Qatar', 'Kuwait', 'Bahrain', 'Oman', 'Jordan', 'Palestine', 'Lebanon', 'Syria', 'Iraq', 'Yemen', 'Sudan', 'Libya', 'Tunisia', 'Algeria', 'Morocco', 'Mauritania', 'Somalia', 'Djibouti', 'Comoros'];
-                    if (arabCountries.includes(studentCountryName) && !localStorage.getItem('Safwatulhuffaz_lang')) {
-                        langSwitcher.value = 'ar';
-                        applyLanguage('ar');
-                    } else if (!arabCountries.includes(studentCountryName) && !localStorage.getItem('Safwatulhuffaz_lang') && res.country_code) {
-                        langSwitcher.value = 'en';
-                        applyLanguage('en');
-                    }
+                toggleBtnLoading('btn-save-password', false, 'savePassword');
+                if (error) {
+                    showErrorMessage(isConnectionError(error) ? translations[currentLang].errNetwork : translations[currentLang].errSave);
+                } else {
+                    isOtpVerifiedSession = false;
+                    await supabaseClient.auth.signOut({ scope: 'local' }).catch(() => {});
+                    forgotSection.classList.add('hidden');
+                    loginSection.classList.remove('hidden');
+                    showSuccessMessage(translations[currentLang].alertFinal);
                 }
-            } catch (e) {}
-        }
-
-        // 2. تحديث الساعات الحية
-        function updateMiniWorldClocks() {
-            const now = new Date();
-            const fmt = (tz) => now.toLocaleTimeString('en-US', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: true });
-            
-            const mk = document.getElementById('mini-clk-makkah');
-            const ca = document.getElementById('mini-clk-cairo');
-            const st = document.getElementById('mini-clk-student');
-            
-            if (mk) mk.innerText = fmt('Asia/Riyadh');
-            if (ca) ca.innerText = fmt('Africa/Cairo');
-            if (st && studentDetectedTimezone) st.innerText = fmt(studentDetectedTimezone);
-        }
-        setInterval(updateMiniWorldClocks, 1000);
-        updateMiniWorldClocks();
-
-        // 3. التشغيل التلقائي للتلاوة في الخلفية بدون أزرار ظاهرة
-        window.addEventListener('DOMContentLoaded', () => {
-            detectStudentLocationAndAutoConfigure();
-            
-            setTimeout(() => {
-                if (!welcomeAudioPlayer) {
-                    welcomeAudioPlayer = new Audio('https://cdn.islamic.network/quran/audio/128/ar.husary/2038.mp3');
-                    welcomeAudioPlayer.loop = false; // تشغيل لمرة واحدة أو يمكنك جعله true لو أردت تكراره
-                }
-                // محاولة التشغيل التلقائي الفوري
-                welcomeAudioPlayer.play().catch(() => {
-                    // إذا منع المتصفح التشغيل التلقائي قبل أي تفاعل، سيعمل تلقائياً بمجرد أول ضغطة أو حركة للمستخدم في الصفحة
-                    const playOnInteraction = () => {
-                        welcomeAudioPlayer.play().catch(() => {});
-                        window.removeEventListener('click', playOnInteraction);
-                        window.removeEventListener('keydown', playOnInteraction);
-                    };
-                    window.addEventListener('click', playOnInteraction);
-                    window.addEventListener('keydown', playOnInteraction);
-                });
-            }, 800);
+            } catch (err) {
+                toggleBtnLoading('btn-save-password', false, 'savePassword');
+                showErrorMessage(translations[currentLang].errNetwork);
+            }
         });
+
+        // التهيئة الأولية
+        (function initPortal() {
+            const savedEmail = localStorage.getItem('Safwat_Saved_Login_Email') || '';
+            document.getElementById('email').value = savedEmail;
+            langSwitcher.value = (currentLang === 'en') ? 'en' : 'ar';
+            applyLanguage(currentLang);
+            checkExistingActiveSession();
+            langSwitcher.addEventListener('change', (e) => applyLanguage(e.target.value));
+        })();
     </script>
-    <!-- ========================================================================================= -->
-<!-- 👑 محرك البوابات الأربع الديناميكي لشاشة الدخول (DYNAMIC 4-GATEWAYS ENGINE - index.html) 👑 -->
-<!-- ========================================================================================= -->
 
-<style>
-    /* انتقالات ناعمة جداً عند تبديل البوابات الأربع */
-    #login-card, #submit-btn, .gateway-tab-btn, #dynamic-role-box {
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    }
-    @keyframes slideDownFade {
-        from { opacity: 0; transform: translateY(-8px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-role-box { animation: slideDownFade 0.3s ease forwards; }
-</style>
-
-<script>
-(function initDynamicGatewayMorphing() {
-    // إعدادات وهوية كل بوابة من البوابات الأربع
-    const GATEWAY_CONFIGS = {
-        student: {
-            colorHex: '#047857',
-            btnGradient: 'linear-gradient(135deg, #047857 0%, #0d9488 100%)',
-            badgeBg: '#ecfdf5',
-            badgeText: '#047857',
-            badgeBorder: '#a7f3d0',
-            title: {
-                ar: 'بوابة الطالب الملكية 🎓',
-                en: 'Royal Student Portal 🎓',
-                hi: 'शाही छात्र पोर्टल 🎓'
-            },
-            subtitle: {
-                ar: 'مرحباً بعودتك يا بطل القرآن! سجل دخولك لمتابعة وردك ونجومك',
-                en: 'Welcome back! Sign in to access your Quran Wird, quests & stars',
-                hi: 'वापसी पर स्वागत है! अपना कुरआन सबक और सितारे देखने के लिए लॉग इन करें'
-            },
-            emailLabel: {
-                ar: 'البريد الإلكتروني للطالب',
-                en: 'Student Email Address',
-                hi: 'छात्र का ईमेल पता'
-            },
-            emailPlaceholder: 'student@safwat-academy.com',
-            btnText: {
-                ar: 'دخول بوابة الطالب الملكية 🚀',
-                en: 'Sign In to Student Portal 🚀',
-                hi: 'छात्र पोर्टल में प्रवेश करें 🚀'
-            },
-           extraBoxHTML: (lang) => `
-    <div class="animate-role-box bg-emerald-50/90 border border-emerald-200 rounded-2xl p-3.5 flex items-center justify-between gap-3 text-xs my-3">
-        <div class="flex items-center gap-2.5">
-            <span class="text-xl">🎁</span>
-            <div>
-                <strong class="text-emerald-950 block font-black">${lang === 'ar' ? 'طالب جديد في الأكاديمية؟' : (lang === 'hi' ? 'अकादमी में नए छात्र हैं?' : 'New to Safwat Academy?')}</strong>
-                <span class="text-[11px] text-emerald-700 font-bold">${lang === 'ar' ? 'احصل على حصة تجريبية مجانية لتقييم المستوى' : (lang === 'hi' ? 'मुफ़्त ट्रायल क्लास बुक करें' : 'Book a free 1-on-1 trial evaluation session')}</span>
-            </div>
-        </div>
-        <a href="https://wa.me/201099471391?text=${encodeURIComponent('السلام عليكم، أرغب في حجز حصة تجريبية مجانية في أكاديمية صفوة الحفاظ')}" target="_blank" class="bg-emerald-700 hover:bg-emerald-800 text-white font-black px-3.5 py-2 rounded-xl shrink-0 shadow-xs transition">
-            ${lang === 'ar' ? 'احجز مجاناً ←' : (lang === 'hi' ? 'बुक करें →' : 'Book Free →')}
-        </a>
-    </div>
-`
-        },
-
-        teacher: {
-            colorHex: '#1e3a8a',
-            btnGradient: 'linear-gradient(135deg, #1e3a8a 0%, #312e81 100%)',
-            badgeBg: '#eff6ff',
-            badgeText: '#1e3a8a',
-            badgeBorder: '#bfdbfe',
-            title: {
-                ar: 'رواق المعلمين والإشراف الأكاديمي 👳‍♂️',
-                en: 'Instructor & Sanad Gateway 👳‍♂️',
-                hi: 'शिक्षक एवं अकादमिक पोर्टल 👳‍♂️'
-            },
-            subtitle: {
-                ar: 'حياكم الله فضيلة المعلم! سجل دخولك لإدارة الحلقات والمصحف الملكي',
-                en: 'Welcome respected Instructor! Sign in to manage classes & Royal Mushaf',
-                hi: 'स्वागत है उस्ताद! कक्षाओं और शाही मुसहफ़ के प्रबंधन के लिए साइन इन करें'
-            },
-            emailLabel: {
-                ar: 'البريد الأكاديمي للمعلم',
-                en: 'Instructor Academic Email',
-                hi: 'शिक्षक का अकादमिक ईमेल'
-            },
-            emailPlaceholder: 'teacher@safwat-academy.com',
-            btnText: {
-                ar: 'دخول رواق المعلمين والمقرأة 🎙️',
-                en: 'Enter Instructor Workspace 🎙️',
-                hi: 'शिक्षक पोर्टल में प्रवेश करें 🎙️'
-            },
-            extraBoxHTML: (lang) => `
-                <div class="animate-role-box bg-blue-50/90 border border-blue-200 rounded-2xl p-3.5 flex items-center justify-between gap-3 text-xs my-3">
-                    <label class="flex items-center gap-2.5 cursor-pointer w-full">
-                        <input type="checkbox" checked class="w-4 h-4 accent-blue-800 rounded cursor-pointer">
-                        <span class="font-bold text-blue-950">${lang === 'ar' ? '📡 تفعيل رادار اتصال الطلاب الحي فور الدخول' : (lang === 'hi' ? '📡 लाइव छात्र रडार सक्रिय करें' : '📡 Auto-enable Live Student Presence Radar')}</span>
-                    </label>
-                    <span class="bg-blue-900 text-amber-300 text-[10px] font-black px-2.5 py-1 rounded-lg shrink-0">PRO</span>
-                </div>
-            `
-        },
-
-        parent: {
-            colorHex: '#6d28d9',
-            btnGradient: 'linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%)',
-            badgeBg: '#f5f3ff',
-            badgeText: '#6d28d9',
-            badgeBorder: '#ddd6fe',
-            title: {
-                ar: 'بوابة ولي الأمر ومتابعة الأبناء 👨‍👩‍👧‍👦',
-                en: 'Parent & Family Monitoring Portal 👨‍👩‍👧‍👦',
-                hi: 'अभिभावक एवं परिवार पोर्टल 👨‍👩‍👧‍👦'
-            },
-            subtitle: {
-                ar: 'تابع تقارير أبنائك، تسجيلات المعلم الصوتية، والمالية بكل سهولة',
-                en: 'Track your children\'s progress reports, voice notes & financials',
-                hi: 'अपने बच्चों की प्रगति रिपोर्ट और शुल्क विवरण ट्रैक करें'
-            },
-            emailLabel: {
-                ar: 'البريد الإلكتروني لحساب الأبناء / العائلة',
-                en: 'Family / Student Account Email',
-                hi: 'परिवार / छात्र का ईमेल पता'
-            },
-            emailPlaceholder: 'family@safwat-academy.com',
-            btnText: {
-                ar: 'دخول منطقة ولي الأمر والتقارير 👨‍👩‍👦',
-                en: 'Sign In to Parent Dashboard 👨‍👩‍👦',
-                hi: 'अभिभावक पोर्टल खोलें 👨‍👩‍👦'
-            },
-          extraBoxHTML: (lang) => `
-    <div class="animate-role-box bg-purple-50/90 border border-purple-200 rounded-2xl p-3.5 space-y-2 text-xs my-3">
-        <div class="flex items-center justify-between">
-            <label class="font-black text-purple-950 flex items-center gap-1.5">
-                <span>🔐</span>
-                <span>${lang === 'ar' ? 'الرمز السري لولي الأمر (لفتح المالية والتقارير تلقائياً):' : (lang === 'hi' ? 'अभिभावक पिन (Parent PIN):' : 'Parent Security PIN (Auto-unlocks Financials):')}</span>
-            </label>
-        </div>
-        <div class="flex items-center gap-2">
-            <input type="password" id="login-parent-pin-field" maxlength="4" value="" placeholder="••••" class="w-28 bg-white border border-purple-300 rounded-xl px-3 py-2 text-center font-mono font-black tracking-widest text-purple-900 outline-none focus:border-purple-600">
-            <select id="login-parent-target-tab" class="flex-1 bg-white border border-purple-300 rounded-xl px-3 py-2 font-bold text-slate-700 outline-none">
-                <option value="reports">${lang === 'ar' ? '📝 فتح تقارير الأبناء مباشرة' : '📝 Open Progress Reports directly'}</option>
-                <option value="financials">${lang === 'ar' ? '💰 فتح المالية والفواتير مباشرة' : '💰 Open Financials & Invoices directly'}</option>
-                <option value="schedule">${lang === 'ar' ? '📅 فتح جدول المواعيد مباشرة' : '📅 Open Class Schedule directly'}</option>
-            </select>
-        </div>
-    </div>
-`
-        },
-
-        admin: {
-            colorHex: '#991b1b',
-            btnGradient: 'linear-gradient(135deg, #0f172a 0%, #7f1d1d 100%)',
-            badgeBg: '#fef2f2',
-            badgeText: '#991b1b',
-            badgeBorder: '#fecaca',
-            title: {
-                ar: 'غرفة العمليات والإدارة العليا 🛡️',
-                en: 'Executive Admin Command Center 🛡️',
-                hi: 'प्रशासनिक नियंत्रण केंद्र 🛡️'
-            },
-            subtitle: {
-                ar: 'منطقة محمية عالية الأمان مخصصة للإدارة العامة للأكاديمية فقط',
-                en: 'High-security restricted gateway for Academy Administrators only',
-                hi: 'केवल अकादमी प्रशासकों के लिए उच्च सुरक्षा प्रवेश द्वार'
-            },
-            emailLabel: {
-                ar: 'البريد الرسمي للمدير العام',
-                en: 'Administrator Official Email',
-                hi: 'प्रशासक का आधिकारिक ईमेल'
-            },
-            emailPlaceholder: 'admin@safwat-academy.com',
-            btnText: {
-                ar: 'دخول لوحة القيادة الإدارية 🛡️',
-                en: 'Authorize & Enter Admin Center 🛡️',
-                hi: 'एडमिन पैनल में प्रवेश करें 🛡️'
-            },
-            extraBoxHTML: (lang) => `
-                <div class="animate-role-box bg-slate-900 text-amber-300 border border-amber-500/40 rounded-2xl p-3.5 flex items-center justify-between gap-3 text-xs my-3 shadow-md">
-                    <div class="flex items-center gap-2.5">
-                        <span class="text-lg">🛡️</span>
-                        <span class="font-bold text-[11px] leading-relaxed text-slate-200">
-                            ${lang === 'ar' ? 'حماية مشددة: يتم توثيق عنوان الـ IP والجهاز لجميع عمليات الدخول الإدارية.' : (lang === 'hi' ? 'उच्च सुरक्षा: सभी व्यवस्थापक लॉगिन प्रयास रिकॉर्ड किए जाते हैं।' : 'Strict Security: IP address & device fingerprint are logged for admin auth.')}
-                        </span>
-                    </div>
-                    <span class="bg-rose-600 text-white text-[9px] font-mono font-black px-2 py-1 rounded-md shrink-0">ROOT</span>
-                </div>
-            `
+    <!-- ================= [Safwat Light] ثيم نهاري فاتح: مخطوطة العاج والذهب (الوضع الافتراضي) ================= -->
+    <style>
+        /* ☀️ الوضع النهاري الفاتح — نفس الهوية الملكية (كحلي + ذهبي) على أرضية عاجية */
+        body {
+            background:
+                radial-gradient(1150px 780px at 85% -12%, rgba(212, 175, 55, 0.16) 0%, transparent 62%),
+                radial-gradient(980px 720px at -8% 112%, rgba(18, 42, 74, 0.10) 0%, transparent 55%),
+                radial-gradient(760px 560px at 10% 30%, rgba(212, 175, 55, 0.10) 0%, transparent 60%),
+                linear-gradient(180deg, #FBF7EC 0%, #F6EFDD 55%, #F0E7D2 100%) !important;
+            color: #0A1424 !important;
         }
-    };
-
-    window.currentSelectedGatewayRole = 'student';
-
-    function getActivePageLang() {
-        const htmlLang = document.documentElement.getAttribute('lang') || 'ar';
-        if (htmlLang.startsWith('en')) return 'en';
-        if (htmlLang.startsWith('hi')) return 'hi';
-        return 'ar';
-    }
-
-    // الدالة الرئيسية التي تغير شكل وحقول وألوان الشاشة بالكامل عند الضغط على أي خيار في الأعلى
-    window.applyGatewayModeMorph = function(role) {
-        if (!GATEWAY_CONFIGS[role]) role = 'student';
-        window.currentSelectedGatewayRole = role;
-        const cfg = GATEWAY_CONFIGS[role];
-        const lang = getActivePageLang();
-
-        // 1. تحديث أزرار الشريط العلوي الأربعة (Student / Teacher / Parent / Admin)
-        const allButtons = document.querySelectorAll('button, [ onclick*="selectRole" ], [ onclick*="setRole" ], [ data-role ]');
-        allButtons.forEach(btn => {
-            const txt = (btn.innerText || '').toLowerCase();
-            const btnRole = btn.getAttribute('data-role') ||
-                (txt.includes('student') || txt.includes('طالب') || txt.includes('छात्र') ? 'student' :
-                (txt.includes('teacher') || txt.includes('معلم') || txt.includes('शिक्षक') ? 'teacher' :
-                (txt.includes('parent') || txt.includes('ولي') || txt.includes('अभिभावक') ? 'parent' :
-                (txt.includes('admin') || txt.includes('إدارة') || txt.includes('एडमिन') ? 'admin' : null))));
-
-            if (btnRole) {
-                btn.setAttribute('data-detected-role', btnRole);
-                if (btnRole === role) {
-                    btn.style.background = cfg.btnGradient;
-                    btn.style.color = '#ffffff';
-                    btn.style.boxShadow = '0 8px 20px -4px rgba(0,0,0,0.35)';
-                    btn.style.transform = 'scale(1.03)';
-                } else {
-                    btn.style.background = 'transparent';
-                    btn.style.color = '#94a3b8';
-                    btn.style.boxShadow = 'none';
-                    btn.style.transform = 'scale(1)';
-                }
-            }
-        });
-
-        // 2. تحديث العنوان الرئيسي والفرعي وحقل الإيميل وزر الدخول
-        const formEl = document.querySelector('form') || document.body;
-        const headingEl = document.getElementById('portal-main-title') || document.querySelector('h1, h2');
-        const subHeadingEl = document.getElementById('portal-sub-title') || (headingEl ? headingEl.nextElementSibling : null);
-        const emailInput = document.querySelector('input[type="email"], input[name="email"], #email');
-        const submitBtn = formEl.querySelector('button[type="submit"]') || Array.from(document.querySelectorAll('button')).find(b => (b.innerText || '').includes('Sign In') || (b.innerText || '').includes('دخول') || (b.innerText || '').includes('🚀'));
-
-        if (headingEl) {
-            headingEl.innerText = cfg.title[lang] || cfg.title.ar;
-            headingEl.style.color = cfg.colorHex;
+        .islamic-arabesque-bg {
+            background-image: url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd' stroke='%23122740' stroke-opacity='0.07' stroke-width='0.85'%3E%3Crect x='56' y='56' width='48' height='48'/%3E%3Crect x='56' y='56' width='48' height='48' transform='rotate(45 80 80)'/%3E%3Ccircle cx='80' cy='80' r='30'/%3E%3Ccircle cx='0' cy='0' r='26'/%3E%3Ccircle cx='160' cy='0' r='26'/%3E%3Ccircle cx='0' cy='160' r='26'/%3E%3Ccircle cx='160' cy='160' r='26'/%3E%3Cpath d='M80 14v18M80 128v18M14 80h18M128 80h18' stroke-opacity='0.045'/%3E%3C/g%3E%3C/svg%3E");
         }
-        if (subHeadingEl && subHeadingEl.tagName === 'P') {
-            subHeadingEl.innerText = cfg.subtitle[lang] || cfg.subtitle.ar;
+        .gold-foil-text {
+            background: linear-gradient(120deg, #8A6D1F 0%, #C9A227 38%, #7A5A18 62%, #B8912A 100%);
+            background-size: 220% 220%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            filter: drop-shadow(0 1px 2px rgba(122, 90, 24, 0.25));
         }
-        if (emailInput) {
-            emailInput.setAttribute('placeholder', cfg.emailPlaceholder);
-            const emailLbl = emailInput.closest('div')?.previousElementSibling || document.querySelector('label[for="email"]');
-            if (emailLbl && emailLbl.tagName === 'LABEL') {
-                emailLbl.innerText = cfg.emailLabel[lang] || cfg.emailLabel.ar;
-            }
+        .imperial-portal-frame {
+            background: linear-gradient(150deg, rgba(255, 255, 255, 0.96) 0%, rgba(250, 246, 236, 0.94) 100%) !important;
+            border-color: rgba(154, 116, 40, 0.55) !important;
+            box-shadow:
+                0 34px 80px -26px rgba(18, 42, 74, 0.28),
+                0 0 0 6px rgba(255, 255, 255, 0.65),
+                0 0 0 7px rgba(212, 175, 55, 0.35),
+                0 0 60px -18px rgba(212, 175, 55, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
         }
-        if (submitBtn) {
-            submitBtn.innerHTML = cfg.btnText[lang] || cfg.btnText.ar;
-            submitBtn.style.background = cfg.btnGradient;
+        .imperial-portal-frame > section:last-of-type {
+            background: linear-gradient(165deg, rgba(212, 175, 55, 0.07) 0%, transparent 48%) !important;
         }
-
-        // 3. حقن الصندوق التفاعلي المخصص لكل فئة داخل الفورم (حصة تجريبية للطالب / PIN لولي الأمر / رادار للمعلم / تنبيه أمني للإدارة)
-        let roleBoxContainer = document.getElementById('dynamic-role-extra-container');
-        if (!roleBoxContainer && submitBtn) {
-            roleBoxContainer = document.createElement('div');
-            roleBoxContainer.id = 'dynamic-role-extra-container';
-            submitBtn.parentElement.insertBefore(roleBoxContainer, submitBtn);
+        .royal-chip {
+            background: rgba(255, 255, 255, 0.92) !important;
+            border-color: rgba(154, 116, 40, 0.45) !important;
+            box-shadow: 0 5px 14px -6px rgba(18, 42, 74, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
         }
-        if (roleBoxContainer) {
-            roleBoxContainer.innerHTML = cfg.extraBoxHTML(lang);
+        #live-date, #lang-switcher { color: #0A1424 !important; }
+        .input-manuscript {
+            background: linear-gradient(165deg, #FFFFFF 0%, #FDFAF2 100%) !important;
+            border-color: rgba(154, 116, 40, 0.55) !important;
+            color: #0A1424 !important;
+            caret-color: #9A7428 !important;
+            box-shadow: inset 0 2px 5px rgba(18, 42, 74, 0.07) !important;
         }
-    };
-
-    // ربط النقرات على الأزرار الأربعة في الأعلى تلقائياً
-    function bindGatewayTabsClicks() {
-        document.addEventListener('click', (e) => {
-            const btn = e.target.closest('button, [data-detected-role]');
-            if (!btn) return;
-            const txt = (btn.innerText || '').toLowerCase();
-            if (txt.includes('sign in') || txt.includes('دخول') || txt.includes('🚀')) return;
-
-            let clickedRole = btn.getAttribute('data-detected-role') || btn.getAttribute('data-role');
-            if (!clickedRole) {
-                if (txt.includes('student') || txt.includes('طالب') || txt.includes('छात्र')) clickedRole = 'student';
-                else if (txt.includes('teacher') || txt.includes('معلم') || txt.includes('शिक्षक')) clickedRole = 'teacher';
-                else if (txt.includes('parent') || txt.includes('ولي') || txt.includes('अभिभावक')) clickedRole = 'parent';
-                else if (txt.includes('admin') || txt.includes('إدارة') || txt.includes('एडमिन')) clickedRole = 'admin';
-            }
-
-            if (clickedRole) {
-                setTimeout(() => applyGatewayModeMorph(clickedRole), 10);
-            }
-        });
-
-        // حفظ إعدادات ولي الأمر عند الضغط على تسجيل الدخول ليفتح له قسم المالية أو التقارير مباشرة في student.html
-        const form = document.querySelector('form');
-        if (form) {
-            form.addEventListener('submit', () => {
-                if (window.currentSelectedGatewayRole === 'parent') {
-                    const pinVal = document.getElementById('login-parent-pin-field')?.value || '1234';
-                    const targetTab = document.getElementById('login-parent-target-tab')?.value || 'reports';
-                    localStorage.setItem('Safwat_Parent_Auto_Unlock_PIN', pinVal);
-                    localStorage.setItem('Safwat_Parent_Target_Tab', targetTab);
-                } else {
-                    localStorage.removeItem('Safwat_Parent_Auto_Unlock_PIN');
-                    localStorage.removeItem('Safwat_Parent_Target_Tab');
-                }
-            });
+        .input-manuscript::placeholder { color: rgba(10, 20, 36, 0.35) !important; }
+        .input-manuscript:focus {
+            background: #FFFDF6 !important;
+            border-color: #C9A227 !important;
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.18), 0 0 18px rgba(212, 175, 55, 0.15) !important;
         }
-    }
+        .input-manuscript:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 60px #FFFDF6 inset !important;
+            -webkit-text-fill-color: #0A1424 !important;
+            caret-color: #9A7428 !important;
+        }
+        .text-DynamicTitle { color: #0A1424 !important; }
+        .text-DynamicSub { color: #52606F !important; }
+        .form-label-royal { color: #9A7428 !important; }
+        .role-tabs-wrap {
+            background: rgba(241, 236, 225, 0.95) !important;
+            border-color: rgba(154, 116, 40, 0.4) !important;
+            box-shadow: inset 0 1px 3px rgba(18, 42, 74, 0.08) !important;
+        }
+        .role-tab-inactive { color: #5B6B7F !important; }
+        .role-tab-inactive:hover { color: #0A1424 !important; background: rgba(212, 175, 55, 0.12) !important; }
+        .trial-banner-box {
+            background: rgba(212, 175, 55, 0.12) !important;
+            border-color: rgba(154, 116, 40, 0.4) !important;
+        }
+        #btn-back-to-login:hover { color: #0A1424 !important; }
 
-    if (document.readyState === 'loading') {
-        window.addEventListener('DOMContentLoaded', () => {
-            bindGatewayTabsClicks();
-            setTimeout(() => applyGatewayModeMorph('student'), 150);
-        });
-    } else {
-        bindGatewayTabsClicks();
-        setTimeout(() => applyGatewayModeMorph('student'), 150);
-    }
-})();
-</script>
+        /* 🌙 الوضع الليلي يفضل زي ما هو بالظبط */
+        html.dark #live-date, html.dark #lang-switcher { color: #F3E5AB !important; }
+        html.dark .form-label-royal { color: #E8B84B !important; }
+        html.dark .gold-foil-text {
+            background: linear-gradient(120deg, #C9A227 0%, #FFF6D6 38%, #B8912A 62%, #F3E5AB 100%);
+            background-size: 220% 220%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            filter: drop-shadow(0 2px 5px rgba(4, 10, 18, 0.45));
+        }
+        html.dark .role-tab-inactive:hover { color: #F3E5AB !important; background: rgba(255, 255, 255, 0.06) !important; }
+        html.dark #btn-back-to-login:hover { color: #F3E5AB !important; }
+        html.dark body {
+            background:
+                radial-gradient(1150px 780px at 85% -12%, rgba(23, 52, 92, 0.5) 0%, transparent 62%),
+                radial-gradient(980px 720px at -8% 112%, rgba(212, 175, 55, 0.11) 0%, transparent 55%),
+                radial-gradient(760px 560px at 10% 30%, rgba(18, 42, 74, 0.35) 0%, transparent 60%),
+                radial-gradient(140% 100% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.48) 100%),
+                radial-gradient(circle at top right, #0C2038 0%, #050D18 55%, #02060C 100%) !important;
+            color: #F6F4EC !important;
+        }
+        html.dark .islamic-arabesque-bg {
+            background-image: url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd' stroke='%23F3E5AB' stroke-opacity='0.075' stroke-width='0.85'%3E%3Crect x='56' y='56' width='48' height='48'/%3E%3Crect x='56' y='56' width='48' height='48' transform='rotate(45 80 80)'/%3E%3Ccircle cx='80' cy='80' r='30'/%3E%3Ccircle cx='0' cy='0' r='26'/%3E%3Ccircle cx='160' cy='0' r='26'/%3E%3Ccircle cx='0' cy='160' r='26'/%3E%3Ccircle cx='160' cy='160' r='26'/%3E%3Cpath d='M80 14v18M80 128v18M14 80h18M128 80h18' stroke-opacity='0.045'/%3E%3C/g%3E%3C/svg%3E") !important;
+        }
+        html.dark .imperial-portal-frame > section:last-of-type {
+            background: linear-gradient(165deg, rgba(212, 175, 55, 0.045) 0%, transparent 48%) !important;
+        }
+        html.dark .role-tab-inactive { color: #94A3B8 !important; }
+    </style>
 </body>
 </html>
