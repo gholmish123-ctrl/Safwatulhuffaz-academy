@@ -5,134 +5,773 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>طلب الالتحاق | أكاديمية صفوة الحفاظ</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind CSS v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Supabase JS v2 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&family=Baloo+Bhaijaan+2:wght@500;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: 'Tajawal', sans-serif; background: radial-gradient(1200px 700px at 85% -10%, rgba(212,175,55,.14), transparent 60%), radial-gradient(900px 600px at -10% 110%, rgba(20,90,70,.35), transparent 55%), #060d14; min-height: 100vh; }
+        :root {
+            --cream-bg: #f6efe1;
+            --card-bg: rgba(255, 253, 248, 0.97);
+            --gold-main: #c99b3f;
+            --gold-deep: #8a6a1f;
+            --navy-ink: #1e2a52;
+            --emerald-ink: #0e6b57;
+            --input-bg: #ffffff;
+            --input-border: rgba(184, 134, 11, 0.38);
+            --input-text: #0f172a;
+            --input-placeholder: #94a3b8;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            min-height: 100vh;
+            color: var(--navy-ink);
+            background:
+                radial-gradient(125% 95% at 50% 45%, transparent 55%, rgba(150, 110, 25, 0.11) 100%),
+                radial-gradient(1100px 650px at 85% -10%, rgba(201, 155, 63, 0.2), transparent 60%),
+                radial-gradient(850px 550px at -10% 110%, rgba(14, 107, 87, 0.12), transparent 55%),
+                url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='96'%20height='96'%20viewBox='0%200%2096%2096'%3E%3Cg%20fill='none'%20stroke='%23a8842c'%20stroke-opacity='.09'%3E%3Crect%20x='25'%20y='25'%20width='46'%20height='46'/%3E%3Crect%20x='25'%20y='25'%20width='46'%20height='46'%20transform='rotate(45%2048%2048)'/%3E%3C/g%3E%3Ccircle%20cx='0'%20cy='0'%20r='3'%20fill='%23a8842c'%20fill-opacity='.07'/%3E%3Ccircle%20cx='96'%20cy='0'%20r='3'%20fill='%23a8842c'%20fill-opacity='.07'/%3E%3Ccircle%20cx='0'%20cy='96'%20r='3'%20fill='%23a8842c'%20fill-opacity='.07'/%3E%3Ccircle%20cx='96'%20cy='96'%20r='3'%20fill='%23a8842c'%20fill-opacity='.07'/%3E%3C/svg%3E"),
+                var(--cream-bg);
+            background-size: auto, auto, auto, 96px 96px, auto;
+        }
+
+        /* مداليات زخرفية خفيفة في الأركان */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            width: 320px;
+            height: 320px;
+            z-index: -1;
+            pointer-events: none;
+            background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20200%20200'%3E%3Cg%20fill='none'%20stroke='%23b8860b'%3E%3Ccircle%20cx='100'%20cy='100'%20r='96'%20stroke-opacity='.14'/%3E%3Ccircle%20cx='100'%20cy='100'%20r='80'%20stroke-opacity='.08'/%3E%3Cg%20stroke-opacity='.12'%3E%3Crect%20x='54'%20y='54'%20width='92'%20height='92'/%3E%3Crect%20x='54'%20y='54'%20width='92'%20height='92'%20transform='rotate(45%20100%20100)'/%3E%3C/g%3E%3Ccircle%20cx='100'%20cy='100'%20r='30'%20stroke-opacity='.15'/%3E%3Cpath%20d='M100%2086l4.5%209.5%209.5%204.5-9.5%204.5-4.5%209.5-4.5-9.5-9.5-4.5%209.5-4.5z'%20fill='%23b8860b'%20fill-opacity='.18'%20stroke='none'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+            opacity: 0.35;
+        }
+        body::before { top: -115px; left: -115px; }
+        body::after { bottom: -115px; right: -115px; transform: rotate(180deg); }
+        @media (max-width: 640px) {
+            body::before, body::after { width: 200px; height: 200px; }
+            body::before { top: -75px; left: -75px; }
+            body::after { bottom: -75px; right: -75px; }
+        }
+
         .font-royal { font-family: 'Baloo Bhaijaan 2', 'Tajawal', sans-serif; }
         .font-amiri { font-family: 'Amiri', serif; }
-        .gold-foil-text { background: linear-gradient(100deg, #8a6a1f 0%, #d4af37 25%, #fff3c4 50%, #d4af37 75%, #8a6a1f 100%); background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: foilSweep 5s linear infinite; }
+        html[lang="ar"] #t-brand {
+            font-family: 'Aref Ruqaa', 'Amiri', serif;
+            font-size: 2.35rem;
+            line-height: 1.5;
+        }
+        @media (min-width: 640px) {
+            html[lang="ar"] #t-brand { font-size: 2.85rem; }
+        }
+
+        .gold-foil-text {
+            background: linear-gradient(100deg, #7c5a10 0%, #b8860b 25%, #e4c158 50%, #b8860b 75%, #7c5a10 100%);
+            background-size: 220% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: foilSweep 5s linear infinite;
+        }
         @keyframes foilSweep { to { background-position: 220% center; } }
-        .glass-card { background: rgba(13,25,38,.78); backdrop-filter: blur(18px); border: 1.5px solid rgba(212,175,55,.35); box-shadow: 0 30px 80px -30px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.06); }
-        .lux-input { background: rgba(4,10,18,.85); border: 1.5px solid rgba(212,175,55,.38); color: #f6f4ec; transition: border-color .3s, box-shadow .3s; }
-        .lux-input:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212,175,55,.22), 0 0 22px -4px rgba(212,175,55,.45); }
-        .lux-input::placeholder { color: rgba(203,213,225,.4); }
-        select.lux-input option { background: #0d1926; color: #f6f4ec; }
-        .btn-royal { background: linear-gradient(120deg, #8a6a1f, #d4af37 45%, #b8912f); color: #08131d; transition: transform .2s, box-shadow .3s, filter .3s; box-shadow: 0 14px 34px -10px rgba(212,175,55,.55); }
-        .btn-royal:hover { filter: brightness(1.08); transform: translateY(-1px); }
-        .btn-royal:disabled { opacity: .6; transform: none; }
-        .star { position: absolute; border-radius: 9999px; background: radial-gradient(circle, #fff6d6 0%, rgba(212,175,55,.9) 40%, transparent 70%); pointer-events: none; animation: twinkle 4s ease-in-out infinite; }
-        @keyframes twinkle { 0%,100% { opacity: .12; transform: scale(.7); } 50% { opacity: .9; transform: scale(1); } }
-        .reveal { opacity: 0; transform: translateY(18px); animation: rise .8s cubic-bezier(.2,.7,.3,1) forwards; }
-        @keyframes rise { to { opacity: 1; transform: none; } }
-        .spin { width: 20px; height: 20px; border: 3px solid rgba(8,19,29,.3); border-top-color: #08131d; border-radius: 50%; animation: rot .7s linear infinite; }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(18px);
+            border: 1.5px solid rgba(201, 155, 63, 0.5);
+            border-top: 3px solid var(--gold-main);
+            box-shadow: 0 24px 60px -28px rgba(120, 90, 20, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        }
+
+        .royal-chip {
+            background: rgba(255, 253, 248, 0.96);
+            border: 1.5px solid rgba(201, 155, 63, 0.55);
+            backdrop-filter: blur(10px);
+            color: #065f46;
+            box-shadow: 0 6px 16px -8px rgba(120, 90, 20, 0.25);
+        }
+
+        /* عناوين الحقول */
+        #enroll-form label:not(.enroll-chip) {
+            color: var(--navy-ink);
+            font-size: 0.82rem;
+            margin-bottom: 0.35rem;
+            line-height: 1.35;
+        }
+        #enroll-form label:not(.enroll-chip)::before {
+            content: '✦ ';
+            color: var(--gold-main);
+        }
+
+        #t-heading {
+            color: var(--navy-ink);
+            position: relative;
+            padding-bottom: 0.65rem;
+        }
+        #t-heading::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 2px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, transparent, #b8860b 30%, #e8cc6d 50%, #b8860b 70%, transparent);
+        }
+
+        /* حقول الإدخال الموحدة: خلفية بيضاء صافية + كتابة واضحة جداً + تباين ممتاز */
+        .lux-input {
+            background-color: var(--input-bg);
+            border: 1.5px solid var(--input-border);
+            color: var(--input-text);
+            font-size: 0.92rem;
+            font-weight: 700;
+            min-height: 46px;
+            padding: 0.6rem 0.9rem;
+            box-shadow: 0 2px 6px -2px rgba(30, 42, 82, 0.06), inset 0 1px 2px rgba(15, 23, 42, 0.03);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+        .lux-input::placeholder {
+            color: var(--input-placeholder);
+            font-weight: 500;
+        }
+        .lux-input:hover {
+            border-color: rgba(184, 134, 11, 0.72);
+        }
+        .lux-input:focus {
+            outline: none;
+            background-color: #ffffff;
+            border-color: var(--gold-main);
+            box-shadow: 0 0 0 3.5px rgba(201, 155, 63, 0.22), 0 4px 12px -4px rgba(184, 134, 11, 0.2);
+        }
+        select.lux-input {
+            color-scheme: light;
+            padding-inline-end: 2rem;
+        }
+        select.lux-input option {
+            background: #ffffff;
+            color: #0f172a;
+        }
+        select.lux-input:invalid {
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .lux-input.enroll-invalid {
+            border-color: #e11d48 !important;
+            background-color: #fff5f6 !important;
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.14) !important;
+        }
+        .enroll-field-err {
+            color: #be123c;
+            font-size: 11px;
+            font-weight: 800;
+            margin-top: 4px;
+            line-height: 1.5;
+        }
+
+        /* شارة كود الدولة المتناسقة مع الحقول الفاتحة */
+        #f-phone-code {
+            background: linear-gradient(135deg, #fbf4e2 0%, #f3e4bd 100%);
+            color: #6b4e0d;
+            border: 1.5px solid var(--input-border);
+            min-width: 62px;
+            min-height: 46px;
+            padding-inline: 0.6rem;
+            font-size: 0.9rem;
+            transition: opacity 0.2s, border-color 0.2s;
+        }
+
+        /* شرائح أيام الأسبوع */
+        #f-days .enroll-chip {
+            background: #ffffff;
+            border: 1.5px solid rgba(201, 155, 63, 0.45);
+            color: var(--navy-ink);
+            padding: 5px 12px;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+        #f-days .enroll-chip:hover {
+            border-color: var(--gold-main);
+            background: #fdf9ee;
+        }
+        #f-days .enroll-chip:has(input:checked) {
+            background: var(--navy-ink);
+            border-color: var(--navy-ink);
+            color: #fef9e7;
+            box-shadow: 0 6px 14px -6px rgba(30, 42, 82, 0.5);
+        }
+        #f-days input { accent-color: var(--gold-main); }
+
+        /* الأزرار الرئيسية */
+        .btn-royal {
+            background: linear-gradient(120deg, #8a6a1f, #d4af37 48%, #b8912f);
+            color: #0f172a;
+            letter-spacing: 0.2px;
+            transition: transform 0.2s, box-shadow 0.25s, filter 0.25s;
+            box-shadow: 0 14px 32px -12px rgba(184, 134, 11, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+        .btn-royal:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+        .btn-royal:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .spin {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(15, 23, 42, 0.25);
+            border-top-color: #0f172a;
+            border-radius: 50%;
+            animation: rot 0.7s linear infinite;
+        }
         @keyframes rot { to { transform: rotate(360deg); } }
-        .royal-chip { background: rgba(13,25,38,.75); border: 1.5px solid rgba(212,175,55,.5); backdrop-filter: blur(10px); }
-        @media (prefers-reduced-motion: reduce) { .star, .gold-foil-text, .reveal { animation: none !important; opacity: 1 !important; transform: none !important; } }
+
+        /* النجوم المتلألئة */
+        #stars-bg { z-index: -1; }
+        .star {
+            position: absolute;
+            border-radius: 9999px;
+            background: radial-gradient(circle, #f0d78a 0%, rgba(201, 155, 63, 0.85) 40%, transparent 70%);
+            pointer-events: none;
+            animation: twinkle 4s ease-in-out infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.12; transform: scale(0.7); }
+            50% { opacity: 0.85; transform: scale(1); }
+        }
+
+        .reveal { opacity: 0; transform: translateY(16px); animation: rise 0.75s cubic-bezier(0.2, 0.7, 0.3, 1) forwards; }
+        @keyframes rise { to { opacity: 1; transform: none; } }
+
+        /* شريط التقدم والخطوات */
+        .step-progress { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 auto 20px; }
+        .step-seg { display: flex; align-items: center; gap: 6px; }
+        .step-dot {
+            width: 28px; height: 28px; border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 900;
+            background: #ffffff; border: 1.5px solid rgba(201, 155, 63, 0.6); color: var(--gold-deep);
+            transition: all 0.25s;
+        }
+        .step-lab { font-size: 11.5px; font-weight: 800; color: var(--gold-deep); white-space: nowrap; }
+        .step-link { flex: 0 0 28px; height: 2px; border-radius: 2px; background: rgba(201, 155, 63, 0.38); }
+        .step-seg.is-active .step-dot {
+            background: linear-gradient(135deg, #1e2a52, #2f437d);
+            border-color: #1e2a52; color: #f6f0e2;
+            box-shadow: 0 6px 14px -5px rgba(30, 42, 82, 0.45);
+        }
+        .step-seg.is-active .step-lab { color: var(--navy-ink); }
+        .step-seg.is-done .step-dot { background: rgba(4, 120, 87, 0.12); border-color: #047857; color: #047857; }
+        .step-seg.is-done .step-lab { color: #047857; }
+
+        /* شبكة الحقول المتوازنة (1 عمود موبايل، 2 تابلت، 3 ديسكتوب = 3×3 متماثل تماماً) */
+        #enroll-form.hidden { display: none !important; }
+        #enroll-form .step-field,
+        #enroll-form .step-3-only { display: none; }
+        #enroll-form[data-step="1"] .step-1:not(.hidden),
+        #enroll-form[data-step="2"] .step-2:not(.hidden),
+        #enroll-form[data-step="3"] .step-3-only:not(.hidden) { display: block; }
+
+        #enroll-form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px 16px;
+        }
+        @media (min-width: 640px) {
+            #enroll-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (min-width: 1024px) {
+            #enroll-form { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+        #enroll-form .span-full { grid-column: 1 / -1; }
+        #f-note { min-height: 76px; }
+
+        /* لوحة المراجعة */
+        .review-box { background: #ffffff; border: 1.5px solid rgba(201, 155, 63, 0.45); border-radius: 1.25rem; padding: 16px; }
+        .review-grid { display: grid; grid-template-columns: 1fr; gap: 8px 14px; }
+        @media (min-width: 640px) { .review-grid { grid-template-columns: 1fr 1fr; } }
+        .review-row {
+            display: flex; justify-content: space-between; gap: 10px;
+            font-size: 12px; font-weight: 700; padding: 8px 12px;
+            background: #faf5ea; border: 1px solid rgba(201, 155, 63, 0.22); border-radius: 0.75rem;
+        }
+        .review-row .k { color: var(--gold-deep); white-space: nowrap; }
+        .review-row .v { color: #0f172a; text-align: end; word-break: break-word; }
+        .review-row.wide { grid-column: 1 / -1; }
+
+        /* شارة المسودة وزر الواتساب العائم */
+        .draft-pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(201, 155, 63, 0.14); border: 1.5px solid rgba(201, 155, 63, 0.5);
+            color: var(--gold-deep); border-radius: 9999px; padding: 6px 14px;
+            font-size: 11.5px; font-weight: 800; margin: 0 auto 14px;
+        }
+        .draft-pill.hidden { display: none; }
+
+        .wa-float-btn {
+            position: fixed; bottom: 18px; right: 18px; z-index: 60;
+            width: 54px; height: 54px; border-radius: 50%;
+            background: linear-gradient(135deg, #2bde6e, #128C7E);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 12px 28px -8px rgba(18, 140, 126, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            transition: transform 0.2s;
+        }
+        .wa-float-btn:hover { transform: scale(1.07); }
+        .wa-float-btn::after {
+            content: ''; position: absolute; inset: -5px; border-radius: 50%;
+            border: 2px solid rgba(37, 211, 102, 0.45);
+            animation: waPulse 2.4s ease-out infinite;
+        }
+        @keyframes waPulse { 0% { transform: scale(0.85); opacity: 0.9; } 100% { transform: scale(1.35); opacity: 0; } }
+
+        .wa-confirm-card { background: rgba(16, 185, 129, 0.08); border: 1.5px solid rgba(16, 185, 129, 0.45); border-radius: 1.25rem; padding: 14px; }
+        .wa-confirm-link {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: linear-gradient(135deg, #25D366, #128C7E); color: #fff;
+            font-weight: 900; border-radius: 1rem; padding: 13px 18px;
+            box-shadow: 0 14px 30px -10px rgba(18, 140, 126, 0.55);
+            transition: transform 0.2s, filter 0.2s;
+        }
+        .wa-confirm-link:hover { transform: translateY(-1px); filter: brightness(1.06); }
+
+        @media (prefers-reduced-motion: reduce) {
+            .star, .gold-foil-text, .reveal, .wa-float-btn::after { animation: none !important; opacity: 1 !important; transform: none !important; }
+        }
     </style>
 </head>
 <body class="flex items-center justify-center p-4 sm:p-8">
-    <div id="stars-bg" class="fixed inset-0 overflow-hidden pointer-events-none"></div>
+    <div id="stars-bg" class="fixed inset-0 overflow-hidden pointer-events-none" aria-hidden="true"></div>
 
-    <div class="fixed top-4 z-20" id="lang-chip-wrap" style="inset-inline-end: 1rem;">
-        <select id="lang-switcher" aria-label="Language" class="royal-chip min-h-[38px] text-[#F3E5AB] text-xs rounded-2xl px-3.5 py-1.5 font-black focus:outline-none cursor-pointer">
+    <!-- زر واتساب الاستفسار العائم -->
+    <a id="safwat-wa-float" href="https://wa.me/201099471391" target="_blank" rel="noopener noreferrer" class="wa-float-btn" aria-label="تواصل واتساب مع الأكاديمية">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.1-.198.05-.371-.025-.52-.074-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+    </a>
+
+    <!-- مبدل اللغة -->
+    <div class="fixed top-4 z-20" style="inset-inline-end: 1rem;">
+        <select id="lang-switcher" aria-label="اختر اللغة" class="royal-chip min-h-[38px] text-xs rounded-2xl px-3.5 py-1.5 font-black focus:outline-none cursor-pointer">
             <option value="ar">🌍 العربية</option>
             <option value="en">🌍 English</option>
         </select>
     </div>
 
-    <main class="relative z-10 w-full max-w-lg">
-        <div class="text-center mb-7 reveal">
-            <img src="logo.png" alt="أكاديمية صفوة الحفاظ" class="w-20 h-20 mx-auto rounded-3xl shadow-2xl border border-amber-300/40 object-cover" onerror="this.style.display='none'">
-            <h1 class="font-royal text-3xl sm:text-4xl font-extrabold gold-foil-text mt-4" id="t-brand">أكاديمية صفوة الحفاظ</h1>
-            <p class="text-amber-200/80 text-xs font-bold mt-1 tracking-widest">ROYAL QUR'AN ACADEMY</p>
-            <p class="font-amiri text-emerald-100/90 text-sm mt-3">﴿ وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا ﴾</p>
+    <main class="relative z-10 w-full max-w-4xl">
+        <!-- شعار وهوية الأكاديمية -->
+        <div class="text-center mb-6 reveal">
+            <img src="logo.png" alt="أكاديمية صفوة الحفاظ" class="w-16 h-16 mx-auto rounded-3xl shadow-xl border border-amber-500/45 object-cover bg-white p-0.5" onerror="this.style.display='none'">
+            <h1 class="font-royal text-3xl sm:text-4xl font-extrabold gold-foil-text mt-3" id="t-brand">أكاديمية صفوة الحفاظ</h1>
+            <p class="text-[#8a6a1f] text-xs font-bold mt-1 tracking-widest">ROYAL QUR'AN ACADEMY</p>
+            <p class="font-amiri text-[#0e6b57] text-sm mt-2">﴿ وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا ﴾</p>
         </div>
 
-        <div class="glass-card rounded-[2rem] p-6 sm:p-8 reveal" style="animation-delay:.15s">
-            <h2 class="font-royal text-xl font-bold text-amber-100 text-center" id="t-heading">📝 طلب الالتحاق بالأكاديمية</h2>
-            <p class="text-slate-300/80 text-[11px] font-bold text-center mt-1 mb-6" id="t-sub">املأ البيانات وسيتواصل معك فريق الأكاديمية بعد مراجعة الطلب إن شاء الله</p>
+        <div class="glass-card rounded-[2rem] p-5 sm:p-8 reveal" style="animation-delay:.12s">
+            <h2 class="font-royal text-xl font-bold text-center" id="t-heading">📝 طلب الالتحاق بالأكاديمية</h2>
+            <p class="text-slate-500 text-xs font-bold text-center mt-1.5 mb-5" id="t-sub">املأ البيانات وسيتواصل معك فريق الأكاديمية بعد مراجعة الطلب إن شاء الله</p>
 
-            <form id="enroll-form" class="space-y-4 text-sm">
-                <div>
-                    <label class="block font-black text-amber-200/90 text-xs mb-1.5" id="t-l-name">اسم الطالب الكامل *</label>
-                    <input type="text" id="f-student-name" required maxlength="120" placeholder="مثال: أحمد محمد علي" class="lux-input w-full rounded-2xl px-4 py-3.5 font-bold">
+            <!-- إشعار استعادة المسودة -->
+            <div class="text-center">
+                <div id="draft-note" class="draft-pill hidden">
+                    <span id="draft-note-text">✨ استعدنا مسودتك المحفوظة تلقائيًا — أكمّل من حيث توقفت</span>
                 </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-black text-amber-200/90 text-xs mb-1.5" id="t-l-age">السن *</label>
-                        <input type="number" id="f-age" required min="4" max="99" placeholder="10" class="lux-input w-full rounded-2xl px-4 py-3.5 font-bold text-center">
+            </div>
+
+            <!-- شريط التقدم (3 خطوات) -->
+            <div id="step-progress" class="step-progress" role="progressbar" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1">
+                <div class="step-seg is-active" data-s="1"><span class="step-dot">1</span><span class="step-lab" id="sp-1">بياناتك</span></div>
+                <div class="step-link"></div>
+                <div class="step-seg" data-s="2"><span class="step-dot">2</span><span class="step-lab" id="sp-2">التفضيلات</span></div>
+                <div class="step-link"></div>
+                <div class="step-seg" data-s="3"><span class="step-dot">3</span><span class="step-lab" id="sp-3">مراجعة وتأكيد</span></div>
+            </div>
+
+            <!-- النموذج الموحد -->
+            <form id="enroll-form" data-step="1" novalidate>
+                <!-- ========== الخطوة 1: البيانات الأساسية (9 حقول = 3×3 متوازنة تماماً) ========== -->
+                <div class="step-field step-1">
+                    <label for="f-student-name" class="block font-black" id="t-l-name">اسم الطالب الكامل *</label>
+                    <input type="text" id="f-student-name" required maxlength="120" placeholder="مثال: أحمد محمد علي" class="lux-input w-full rounded-2xl">
+                    <p class="enroll-field-err hidden" id="err-name"></p>
+                </div>
+
+                <div class="step-field step-1">
+                    <label for="f-age" class="block font-black" id="t-l-age">السن *</label>
+                    <input type="number" id="f-age" required min="4" max="99" placeholder="10" class="lux-input w-full rounded-2xl text-center">
+                    <p class="enroll-field-err hidden" id="err-age"></p>
+                </div>
+
+                <div class="step-field step-1">
+                    <label for="f-gender" class="block font-black" id="t-l-gender">الجنس *</label>
+                    <select id="f-gender" required class="lux-input w-full rounded-2xl cursor-pointer">
+                        <option value="" disabled selected id="o-gender-none">اختر...</option>
+                        <option value="male" id="o-gender-1">ذكر</option>
+                        <option value="female" id="o-gender-2">أنثى</option>
+                    </select>
+                    <p class="enroll-field-err hidden" id="err-gender"></p>
+                </div>
+
+                <div class="step-field step-1">
+                    <label for="f-level" class="block font-black" id="t-l-level">المستوى الحالي *</label>
+                    <select id="f-level" required class="lux-input w-full rounded-2xl cursor-pointer">
+                        <option value="" disabled selected id="o-level-none">اختر...</option>
+                        <option value="beginner" id="o-level-1">مبتدئ (تأسيس وتجويد)</option>
+                        <option value="intermediate" id="o-level-2">متوسط (حفظ أقل من 5 أجزاء)</option>
+                        <option value="advanced" id="o-level-3">متقدم (حفظ 5 أجزاء فأكثر)</option>
+                        <option value="ijazah" id="o-level-4">طالب إجازة بالسند</option>
+                    </select>
+                    <p class="enroll-field-err hidden" id="err-level"></p>
+                </div>
+
+                <div class="step-field step-1">
+                    <label for="f-country" class="block font-black" id="t-l-country">الدولة *</label>
+                    <select id="f-country" required class="lux-input w-full rounded-2xl cursor-pointer"></select>
+                    <p class="enroll-field-err hidden" id="err-country"></p>
+                </div>
+
+                <div class="step-field step-1">
+                    <label for="f-city" class="block font-black" id="t-l-city">المحافظة / المدينة (اختياري)</label>
+                    <input type="text" id="f-city" maxlength="60" placeholder="مثال: الجيزة" class="lux-input w-full rounded-2xl">
+                </div>
+
+                <div class="step-field step-1" id="parent-name-box">
+                    <label for="f-parent-name" class="block font-black" id="t-l-parent">اسم ولي الأمر *</label>
+                    <input type="text" id="f-parent-name" required maxlength="120" placeholder="اسم الأب / الأم" class="lux-input w-full rounded-2xl">
+                    <p class="enroll-field-err hidden" id="err-parent"></p>
+                </div>
+
+                <div class="step-field step-1">
+                    <label for="f-parent-phone" class="block font-black" id="t-l-phone">رقم واتساب ولي الأمر *</label>
+                    <div class="flex items-stretch gap-2" dir="ltr">
+                        <span id="f-phone-code" class="rounded-2xl font-black flex items-center justify-center select-none opacity-60">+</span>
+                        <input type="tel" id="f-parent-phone" required dir="ltr" placeholder="10XXXXXXXX" maxlength="15" class="lux-input w-full rounded-2xl text-left flex-1">
                     </div>
-                    <div>
-                        <label class="block font-black text-amber-200/90 text-xs mb-1.5" id="t-l-level">المستوى الحالي *</label>
-                        <select id="f-level" required class="lux-input w-full rounded-2xl px-3 py-3.5 font-bold cursor-pointer">
-                            <option value="" disabled selected id="o-level-none">اختر...</option>
-                            <option value="beginner" id="o-level-1">مبتدئ (تأسيس وتجويد)</option>
-                            <option value="intermediate" id="o-level-2">متوسط (حفظ أقل من 5 أجزاء)</option>
-                            <option value="advanced" id="o-level-3">متقدم (حفظ 5 أجزاء فأكثر)</option>
-                            <option value="ijazah" id="o-level-4">طالب إجازة بالسند</option>
-                        </select>
+                    <p id="f-phone-adult-note" class="hidden text-[11px] font-bold text-[#047857] mt-1"></p>
+                    <p class="enroll-field-err hidden" id="err-phone"></p>
+                </div>
+
+                <div class="step-field step-1">
+                    <label for="f-phone2" class="block font-black" id="t-l-phone2">رقم إضافي (اختياري)</label>
+                    <input type="tel" id="f-phone2" dir="ltr" placeholder="+2010XXXXXXXX" maxlength="20" class="lux-input w-full rounded-2xl text-left">
+                    <p class="enroll-field-err hidden" id="err-phone2"></p>
+                </div>
+
+                <!-- ========== الخطوة 2: التفضيلات والمسار ========== -->
+                <div class="step-field step-2">
+                    <label for="f-goal" class="block font-black" id="t-l-goal">الهدف من الالتحاق *</label>
+                    <select id="f-goal" required class="lux-input w-full rounded-2xl cursor-pointer">
+                        <option value="" disabled selected id="o-goal-none">اختر...</option>
+                        <option value="full_hifz" id="o-goal-1">حفظ القرآن الكريم كاملاً</option>
+                        <option value="tajweed" id="o-goal-2">تثبيت الحفظ وإتقان التجويد</option>
+                        <option value="foundation" id="o-goal-3">تأسيس النطق والتلاوة الصحيحة</option>
+                        <option value="revision" id="o-goal-4">مراجعة دورية فقط</option>
+                        <option value="ijazah" id="o-goal-5">الحصول على إجازة بالسند</option>
+                    </select>
+                    <p class="enroll-field-err hidden" id="err-goal"></p>
+                </div>
+
+                <div class="step-field step-2">
+                    <label for="f-course" class="block font-black" id="t-l-course">الكورس المطلوب (اختياري)</label>
+                    <select id="f-course" class="lux-input w-full rounded-2xl cursor-pointer"></select>
+                </div>
+
+                <div class="step-field step-2">
+                    <label for="f-teacher" class="block font-black" id="t-l-teacher">المعلم المفضل (اختياري)</label>
+                    <select id="f-teacher" class="lux-input w-full rounded-2xl cursor-pointer"></select>
+                </div>
+
+                <div class="step-field step-2">
+                    <label for="f-time" class="block font-black" id="t-l-time">الوقت المفضل للحصص *</label>
+                    <select id="f-time" required class="lux-input w-full rounded-2xl cursor-pointer">
+                        <option value="" disabled selected id="o-time-none">اختر...</option>
+                        <option value="morning" id="o-time-1">الصباح</option>
+                        <option value="afternoon" id="o-time-2">بعد الظهر</option>
+                        <option value="evening" id="o-time-3">المساء</option>
+                        <option value="after_maghrib" id="o-time-4">بعد صلاة المغرب</option>
+                        <option value="any" id="o-time-5">متاح في أي وقت</option>
+                    </select>
+                    <p class="enroll-field-err hidden" id="err-time"></p>
+                </div>
+
+                <div class="step-field step-2">
+                    <label for="f-sessions" class="block font-black" id="t-l-sessions">الحصص أسبوعيًا (اختياري)</label>
+                    <select id="f-sessions" class="lux-input w-full rounded-2xl cursor-pointer">
+                        <option value="" disabled selected id="o-sw-none">اختر...</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5+" id="o-sw-5">5 أو أكثر</option>
+                    </select>
+                </div>
+
+                <div class="step-field step-2">
+                    <label for="f-stype" class="block font-black" id="t-l-stype">نوع الحصة (اختياري)</label>
+                    <select id="f-stype" class="lux-input w-full rounded-2xl cursor-pointer">
+                        <option value="" disabled selected id="o-st-none">اختر...</option>
+                        <option value="individual" id="o-st-1">فردي</option>
+                        <option value="group" id="o-st-2">مجموعة</option>
+                        <option value="either" id="o-st-3">لا يفرق</option>
+                    </select>
+                </div>
+
+                <div class="step-field step-2">
+                    <label for="f-exp" class="block font-black" id="t-l-exp">خبرة سابقة؟ (اختياري)</label>
+                    <select id="f-exp" class="lux-input w-full rounded-2xl cursor-pointer">
+                        <option value="" disabled selected id="o-exp-none">اختر...</option>
+                        <option value="none" id="o-exp-1">لا، أول مرة</option>
+                        <option value="online" id="o-exp-2">نعم، أونلاين</option>
+                        <option value="offline" id="o-exp-3">نعم، حضوري</option>
+                    </select>
+                </div>
+
+                <div class="step-field step-2">
+                    <label for="f-ref" class="block font-black" id="t-l-ref">كيف تعرفت علينا؟ (اختياري)</label>
+                    <select id="f-ref" class="lux-input w-full rounded-2xl cursor-pointer">
+                        <option value="" disabled selected id="o-ref-none">اختر...</option>
+                        <option value="whatsapp" id="o-ref-1">واتساب</option>
+                        <option value="facebook" id="o-ref-2">فيسبوك</option>
+                        <option value="friend" id="o-ref-3">صديق أو قريب</option>
+                        <option value="other" id="o-ref-4">أخرى</option>
+                    </select>
+                </div>
+
+                <div class="step-field step-2 span-full">
+                    <label class="block font-black" id="t-l-days">أيام الحصص المفضلة (اختياري)</label>
+                    <div class="flex flex-wrap gap-2" id="f-days">
+                        <label class="enroll-chip flex items-center gap-1.5 rounded-full font-bold cursor-pointer"><input type="checkbox" value="السبت" data-en="Sat" class="w-3.5 h-3.5"><span>السبت</span></label>
+                        <label class="enroll-chip flex items-center gap-1.5 rounded-full font-bold cursor-pointer"><input type="checkbox" value="الأحد" data-en="Sun" class="w-3.5 h-3.5"><span>الأحد</span></label>
+                        <label class="enroll-chip flex items-center gap-1.5 rounded-full font-bold cursor-pointer"><input type="checkbox" value="الاثنين" data-en="Mon" class="w-3.5 h-3.5"><span>الاثنين</span></label>
+                        <label class="enroll-chip flex items-center gap-1.5 rounded-full font-bold cursor-pointer"><input type="checkbox" value="الثلاثاء" data-en="Tue" class="w-3.5 h-3.5"><span>الثلاثاء</span></label>
+                        <label class="enroll-chip flex items-center gap-1.5 rounded-full font-bold cursor-pointer"><input type="checkbox" value="الأربعاء" data-en="Wed" class="w-3.5 h-3.5"><span>الأربعاء</span></label>
+                        <label class="enroll-chip flex items-center gap-1.5 rounded-full font-bold cursor-pointer"><input type="checkbox" value="الخميس" data-en="Thu" class="w-3.5 h-3.5"><span>الخميس</span></label>
+                        <label class="enroll-chip flex items-center gap-1.5 rounded-full font-bold cursor-pointer"><input type="checkbox" value="الجمعة" data-en="Fri" class="w-3.5 h-3.5"><span>الجمعة</span></label>
                     </div>
                 </div>
-                <div>
-                    <label class="block font-black text-amber-200/90 text-xs mb-1.5" id="t-l-parent">اسم ولي الأمر *</label>
-                    <input type="text" id="f-parent-name" required maxlength="120" placeholder="اسم الأب / الأم" class="lux-input w-full rounded-2xl px-4 py-3.5 font-bold">
+
+                <div class="step-field step-2 span-full">
+                    <label for="f-note" class="block font-black" id="t-l-note">ملاحظات إضافية (اختياري)</label>
+                    <textarea id="f-note" rows="2" maxlength="500" placeholder="أوقات مفضلة، خبرة سابقة، أي تفاصيل تهمنا..." class="lux-input w-full rounded-2xl resize-none"></textarea>
                 </div>
-                <div>
-                    <label class="block font-black text-amber-200/90 text-xs mb-1.5" id="t-l-phone">رقم واتساب ولي الأمر (بكود الدولة) *</label>
-                    <input type="tel" id="f-parent-phone" required dir="ltr" placeholder="2010XXXXXXXX+" maxlength="20" class="lux-input w-full rounded-2xl px-4 py-3.5 font-bold text-left">
+
+                <!-- ========== الخطوة 3: المراجعة والإرسال ========== -->
+                <div id="review-panel" class="step-3-only span-full review-box">
+                    <h4 id="review-title" class="text-sm font-black text-[#1e2a52] mb-3 text-center">راجع بياناتك قبل الإرسال ✨</h4>
+                    <div id="review-grid" class="review-grid"></div>
                 </div>
-                <div>
-                    <label class="block font-black text-amber-200/90 text-xs mb-1.5" id="t-l-note">ملاحظات إضافية (اختياري)</label>
-                    <textarea id="f-note" rows="2" maxlength="500" placeholder="أوقات مفضلة، خبرة سابقة، أي تفاصيل تهمنا..." class="lux-input w-full rounded-2xl px-4 py-3 font-bold resize-none"></textarea>
-                </div>
-                <p id="form-error" class="hidden text-rose-300 text-xs font-black text-center bg-rose-500/10 border border-rose-400/30 rounded-xl px-3 py-2.5"></p>
-                <button type="submit" id="btn-submit" class="btn-royal w-full rounded-2xl py-4 font-royal font-extrabold text-base cursor-pointer flex items-center justify-center gap-2">
+
+                <p id="form-error" role="alert" class="hidden step-3-only span-full text-[#a01c1c] text-xs font-black text-center bg-[#fdeeee] border border-[#e5a3a3] rounded-xl px-3 py-2.5"></p>
+
+                <button type="submit" id="btn-submit" class="step-3-only span-full btn-royal w-full rounded-2xl py-3.5 font-royal font-extrabold text-base cursor-pointer flex items-center justify-center gap-2">
                     <span id="btn-submit-text">🚀 إرسال طلب الالتحاق</span>
                 </button>
-                <p class="text-center text-[10px] text-slate-400 font-bold" id="t-consent">بإرسالك الطلب أنت توافق على تواصل الأكاديمية معك عبر واتساب</p>
+
+                <div class="step-3-only span-full text-center space-y-1.5">
+                    <p class="text-[11px] text-slate-500 font-bold" id="t-consent">بإرسالك الطلب أنت توافق على تواصل الأكاديمية معك عبر واتساب</p>
+                    <p class="text-[11px] font-black">
+                        <a id="safwat-wa-inq" href="https://wa.me/201099471391" target="_blank" rel="noopener noreferrer" class="text-[#0e6b57] underline underline-offset-4">💬 عندك استفسار قبل الإرسال؟ كلمنا واتساب</a>
+                    </p>
+                </div>
+
+                <!-- أزرار التنقل بين الخطوات -->
+                <div class="span-full flex items-center justify-between gap-3 pt-2 border-t border-amber-500/20 mt-1">
+                    <button type="button" id="btn-prev" disabled class="bg-white hover:bg-[#f6efe1] border border-[#c99b3f]/60 text-[#8a6a1f] rounded-2xl px-6 py-2.5 text-xs font-black cursor-pointer disabled:opacity-35 disabled:cursor-default transition">
+                        السابق
+                    </button>
+                    <span id="step-counter" class="text-xs font-black text-[#8a6a1f]" dir="ltr">1 / 3</span>
+                    <button type="button" id="btn-next" class="btn-royal rounded-2xl px-8 py-2.5 text-xs font-black cursor-pointer">
+                        التالي
+                    </button>
+                </div>
             </form>
 
-            <div id="success-box" class="hidden text-center py-8 space-y-4">
-                <div class="w-20 h-20 mx-auto rounded-full bg-emerald-500/15 border-2 border-emerald-400/50 flex items-center justify-center text-4xl">✅</div>
-                <h3 class="font-royal text-xl font-bold text-emerald-300" id="t-s-title">تم استلام طلبك بنجاح!</h3>
-                <p class="text-slate-300 text-xs font-bold leading-relaxed" id="t-s-body">طلب الالتحاق وصل إدارة الأكاديمية.<br>سيتواصل معك فريقنا على رقم الواتساب في أقرب وقت إن شاء الله.</p>
-                <p class="font-amiri text-amber-200/80 text-sm">﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾</p>
+            <!-- ========== شاشة النجاح + تأكيد واتساب + تسجيل طالب آخر ========== -->
+            <div id="success-box" class="hidden text-center py-6 space-y-4">
+                <div class="w-18 h-18 mx-auto rounded-full bg-emerald-500/15 border-2 border-emerald-500/50 flex items-center justify-center text-4xl">✅</div>
+                <h3 class="font-royal text-xl font-bold text-[#047857]" id="t-s-title">تم استلام طلبك بنجاح!</h3>
+                <p class="text-slate-600 text-xs font-bold leading-relaxed" id="t-s-body">طلب الالتحاق وصل إدارة الأكاديمية.<br>سيتواصل معك فريقنا على رقم الواتساب في أقرب وقت إن شاء الله.</p>
+
+                <div class="wa-confirm-card max-w-md mx-auto">
+                    <a id="wa-confirm-btn" href="https://wa.me/201099471391" target="_blank" rel="noopener noreferrer" class="wa-confirm-link text-sm">
+                        📲 تأكيد الطلب على واتساب
+                    </a>
+                    <p id="wa-confirm-cap" class="text-slate-600 text-[11px] font-bold leading-relaxed mt-2">
+                        اضغط الزرار وواتساب هيفتح برسالة جاهزة فيها كل بيانات الطلب — اضغط إرسال ويوصلنا فورًا وهنرد عليك في نفس الشات إن شاء الله
+                    </p>
+                </div>
+
+                <div class="pt-2">
+                    <button type="button" onclick="resetFormForAnotherStudent()" id="btn-another-student" class="bg-[#1e2a52] hover:bg-[#2a3b70] text-[#f6f0e2] font-black text-xs px-6 py-3 rounded-2xl cursor-pointer shadow-md transition">
+                        ➕ تسجيل طالب آخر
+                    </button>
+                </div>
+
+                <p class="font-amiri text-[#0e6b57] text-sm pt-1">﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾</p>
             </div>
         </div>
 
-        <p class="text-center text-[10px] text-slate-500 font-bold mt-6 reveal" style="animation-delay:.3s" id="t-footer">أكاديمية صفوة الحفاظ الملكية © 2026</p>
+        <p class="text-center text-[11px] text-[#8b8578] font-bold mt-5 reveal" style="animation-delay:.22s" id="t-footer">أكاديمية صفوة الحفاظ الملكية © 2026</p>
     </main>
 
+    <!-- ========================================================================================= -->
+    <!-- 🚀 المحرك البرمجي الموحد والنظيف لصفحة الالتحاق 🚀 -->
+    <!-- ========================================================================================= -->
     <script>
+    (() => {
+        'use strict';
+
         const SUPABASE_URL = "https://cnfykoxjwxujrsxvjdud.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuZnlrb3hqd3h1anJzeHZqZHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NTIzOTcsImV4cCI6MjEwMDAyODM5N30.kLEmrA3XPIhgtwMw5bMkJhCH-Q8LP4ygyNKcnr265i4";
         const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        /* اللغة — نفس مفتاح صفحة الدخول عشان اختيار المستخدم يفضل محفوظ بين الصفحتين */
-        const translations = {
+        const ACADEMY_WA = "201099471391";
+        const DRAFT_KEY = "safwat_enroll_draft_v2";
+        const DRAFT_FIELDS = [
+            "f-student-name", "f-age", "f-gender", "f-level", "f-goal",
+            "f-country", "f-time", "f-city", "f-phone2", "f-ref",
+            "f-exp", "f-parent-name", "f-parent-phone", "f-note",
+            "f-sessions", "f-stype", "f-course", "f-teacher"
+        ];
+
+        const COUNTRIES = [
+            { ar: 'مصر', en: 'Egypt', code: '20', ex: '10XXXXXXXX' },
+            { ar: 'السعودية', en: 'Saudi Arabia', code: '966', ex: '5XXXXXXXX' },
+            { ar: 'الإمارات', en: 'UAE', code: '971', ex: '5XXXXXXXX' },
+            { ar: 'الكويت', en: 'Kuwait', code: '965', ex: '5XXXXXXX' },
+            { ar: 'قطر', en: 'Qatar', code: '974', ex: '3XXXXXXX' },
+            { ar: 'البحرين', en: 'Bahrain', code: '973', ex: '3XXXXXXX' },
+            { ar: 'عُمان', en: 'Oman', code: '968', ex: '9XXXXXXX' },
+            { ar: 'الأردن', en: 'Jordan', code: '962', ex: '7XXXXXXXX' },
+            { ar: 'فلسطين', en: 'Palestine', code: '970', ex: '59XXXXXXX' },
+            { ar: 'العراق', en: 'Iraq', code: '964', ex: '7XXXXXXXXX' },
+            { ar: 'سوريا', en: 'Syria', code: '963', ex: '9XXXXXXXX' },
+            { ar: 'لبنان', en: 'Lebanon', code: '961', ex: '3XXXXXX' },
+            { ar: 'اليمن', en: 'Yemen', code: '967', ex: '7XXXXXXXX' },
+            { ar: 'ليبيا', en: 'Libya', code: '218', ex: '9XXXXXXXX' },
+            { ar: 'السودان', en: 'Sudan', code: '249', ex: '9XXXXXXXX' },
+            { ar: 'الجزائر', en: 'Algeria', code: '213', ex: '5XXXXXXXX' },
+            { ar: 'المغرب', en: 'Morocco', code: '212', ex: '6XXXXXXXX' },
+            { ar: 'تونس', en: 'Tunisia', code: '216', ex: '2XXXXXXX' },
+            { ar: 'موريتانيا', en: 'Mauritania', code: '222', ex: '2XXXXXXX' },
+            { ar: 'الصومال', en: 'Somalia', code: '252', ex: '61XXXXXXX' },
+            { ar: 'جيبوتي', en: 'Djibouti', code: '253', ex: '77XXXXXX' },
+            { ar: 'جزر القمر', en: 'Comoros', code: '269', ex: '3XXXXXX' },
+            { ar: 'تركيا', en: 'Turkey', code: '90', ex: '5XXXXXXXXX' },
+            { ar: 'ألمانيا', en: 'Germany', code: '49', ex: '15XXXXXXXX' },
+            { ar: 'فرنسا', en: 'France', code: '33', ex: '6XXXXXXXX' },
+            { ar: 'بريطانيا', en: 'United Kingdom', code: '44', ex: '7XXXXXXXXX' },
+            { ar: 'هولندا', en: 'Netherlands', code: '31', ex: '6XXXXXXXX' },
+            { ar: 'بلجيكا', en: 'Belgium', code: '32', ex: '4XXXXXXXX' },
+            { ar: 'السويد', en: 'Sweden', code: '46', ex: '7XXXXXXXX' },
+            { ar: 'النرويج', en: 'Norway', code: '47', ex: '4XXXXXXX' },
+            { ar: 'الدنمارك', en: 'Denmark', code: '45', ex: '2XXXXXXX' },
+            { ar: 'فنلندا', en: 'Finland', code: '358', ex: '4XXXXXXXX' },
+            { ar: 'إيطاليا', en: 'Italy', code: '39', ex: '3XXXXXXXXX' },
+            { ar: 'إسبانيا', en: 'Spain', code: '34', ex: '6XXXXXXXX' },
+            { ar: 'البرتغال', en: 'Portugal', code: '351', ex: '9XXXXXXXX' },
+            { ar: 'النمسا', en: 'Austria', code: '43', ex: '6XXXXXXXXX' },
+            { ar: 'سويسرا', en: 'Switzerland', code: '41', ex: '7XXXXXXXX' },
+            { ar: 'إيرلندا', en: 'Ireland', code: '353', ex: '8XXXXXXXX' },
+            { ar: 'اليونان', en: 'Greece', code: '30', ex: '69XXXXXXXX' },
+            { ar: 'بولندا', en: 'Poland', code: '48', ex: '5XXXXXXXX' },
+            { ar: 'أوكرانيا', en: 'Ukraine', code: '380', ex: '50XXXXXXX' },
+            { ar: 'روسيا', en: 'Russia', code: '7', ex: '9XXXXXXXXX' },
+            { ar: 'قبرص', en: 'Cyprus', code: '357', ex: '99XXXXXX' },
+            { ar: 'أمريكا', en: 'United States', code: '1', ex: '202XXXXXXX' },
+            { ar: 'كندا', en: 'Canada', code: '1', ex: '416XXXXXXX' },
+            { ar: 'المكسيك', en: 'Mexico', code: '52', ex: '55XXXXXXXX' },
+            { ar: 'البرازيل', en: 'Brazil', code: '55', ex: '119XXXXXXXX' },
+            { ar: 'الأرجنتين', en: 'Argentina', code: '54', ex: '11XXXXXXXX' },
+            { ar: 'أستراليا', en: 'Australia', code: '61', ex: '4XXXXXXXX' },
+            { ar: 'نيوزيلندا', en: 'New Zealand', code: '64', ex: '21XXXXXXX' },
+            { ar: 'ماليزيا', en: 'Malaysia', code: '60', ex: '12XXXXXXX' },
+            { ar: 'إندونيسيا', en: 'Indonesia', code: '62', ex: '812XXXXXXX' },
+            { ar: 'سنغافورة', en: 'Singapore', code: '65', ex: '8XXXXXXX' },
+            { ar: 'تايلاند', en: 'Thailand', code: '66', ex: '8XXXXXXXX' },
+            { ar: 'الفلبين', en: 'Philippines', code: '63', ex: '9XXXXXXXXX' },
+            { ar: 'الهند', en: 'India', code: '91', ex: '9XXXXXXXXX' },
+            { ar: 'باكستان', en: 'Pakistan', code: '92', ex: '3XXXXXXXXX' },
+            { ar: 'بنجلاديش', en: 'Bangladesh', code: '880', ex: '1XXXXXXXXX' },
+            { ar: 'أفغانستان', en: 'Afghanistan', code: '93', ex: '7XXXXXXXX' },
+            { ar: 'سيريلانكا', en: 'Sri Lanka', code: '94', ex: '7XXXXXXXX' },
+            { ar: 'نيبال', en: 'Nepal', code: '977', ex: '98XXXXXXXX' },
+            { ar: 'الصين', en: 'China', code: '86', ex: '13XXXXXXXXX' },
+            { ar: 'اليابان', en: 'Japan', code: '81', ex: '90XXXXXXXX' },
+            { ar: 'كوريا الجنوبية', en: 'South Korea', code: '82', ex: '10XXXXXXXX' },
+            { ar: 'نيجيريا', en: 'Nigeria', code: '234', ex: '80XXXXXXXX' },
+            { ar: 'غانا', en: 'Ghana', code: '233', ex: '24XXXXXXX' },
+            { ar: 'السنغال', en: 'Senegal', code: '221', ex: '77XXXXXXX' },
+            { ar: 'ساحل العاج', en: 'Ivory Coast', code: '225', ex: '01XXXXXXXX' },
+            { ar: 'الكاميرون', en: 'Cameroon', code: '237', ex: '6XXXXXXXX' },
+            { ar: 'إثيوبيا', en: 'Ethiopia', code: '251', ex: '9XXXXXXXX' },
+            { ar: 'كينيا', en: 'Kenya', code: '254', ex: '7XXXXXXXX' },
+            { ar: 'تنزانيا', en: 'Tanzania', code: '255', ex: '7XXXXXXXX' },
+            { ar: 'أوغندا', en: 'Uganda', code: '256', ex: '7XXXXXXXX' },
+            { ar: 'جنوب أفريقيا', en: 'South Africa', code: '27', ex: '7XXXXXXXX' }
+        ];
+
+        const I18N = {
             ar: {
                 dir: 'rtl',
                 title: 'طلب الالتحاق | أكاديمية صفوة الحفاظ',
                 brand: 'أكاديمية صفوة الحفاظ',
                 heading: '📝 طلب الالتحاق بالأكاديمية',
                 sub: 'املأ البيانات وسيتواصل معك فريق الأكاديمية بعد مراجعة الطلب إن شاء الله',
+                draftNote: '✨ استعدنا مسودتك المحفوظة تلقائيًا — أكمّل من حيث توقفت',
+                s1: 'بياناتك', s2: 'التفضيلات', s3: 'مراجعة وتأكيد',
+                next: 'التالي', prev: 'السابق',
                 lName: 'اسم الطالب الكامل *', phName: 'مثال: أحمد محمد علي',
                 lAge: 'السن *',
+                lGender: 'الجنس *', oG1: 'ذكر', oG2: 'أنثى',
                 lLevel: 'المستوى الحالي *',
                 oNone: 'اختر...', o1: 'مبتدئ (تأسيس وتجويد)', o2: 'متوسط (حفظ أقل من 5 أجزاء)', o3: 'متقدم (حفظ 5 أجزاء فأكثر)', o4: 'طالب إجازة بالسند',
+                lCountry: 'الدولة *', oCountryNone: 'اختر الدولة...',
+                lCity: 'المحافظة / المدينة (اختياري)', phCity: 'مثال: الجيزة',
                 lParent: 'اسم ولي الأمر *', phParent: 'اسم الأب / الأم',
-                lPhone: 'رقم واتساب ولي الأمر (بكود الدولة) *',
+                lPhone: 'رقم واتساب ولي الأمر *',
+                lPhoneStudent: 'رقم واتساب الطالب *',
+                adultNote: '💬 بما إنك أكبر من 18 سنة — هنتواصل معاك مباشرة على رقمك',
+                lPhone2: 'رقم إضافي (اختياري)',
+                lGoal: 'الهدف من الالتحاق *',
+                oGoal1: 'حفظ القرآن الكريم كاملاً', oGoal2: 'تثبيت الحفظ وإتقان التجويد', oGoal3: 'تأسيس النطق والتلاوة الصحيحة', oGoal4: 'مراجعة دورية فقط', oGoal5: 'الحصول على إجازة بالسند',
+                lCourse: 'الكورس المطلوب (اختياري)', courseNone: 'اختياري — تحدده الإدارة معك', noCourses: 'لا توجد كورسات منشورة حاليًا',
+                lTeacher: 'المعلم المفضل (اختياري)', teacherNone: 'اختياري — تحدده الإدارة معك',
+                loading: 'جاري التحميل...',
+                lTime: 'الوقت المفضل للحصص *',
+                oT1: 'الصباح', oT2: 'بعد الظهر', oT3: 'المساء', oT4: 'بعد صلاة المغرب', oT5: 'متاح في أي وقت',
+                lSessions: 'الحصص أسبوعيًا (اختياري)', sw5: '5 أو أكثر',
+                lStype: 'نوع الحصة (اختياري)', st1: 'فردي', st2: 'مجموعة', st3: 'لا يفرق',
+                lExp: 'خبرة سابقة؟ (اختياري)', oE1: 'لا، أول مرة', oE2: 'نعم، أونلاين', oE3: 'نعم، حضوري',
+                lRef: 'كيف تعرفت علينا؟ (اختياري)', oR1: 'واتساب', oR2: 'فيسبوك', oR3: 'صديق أو قريب', oR4: 'أخرى',
+                lDays: 'أيام الحصص المفضلة (اختياري)',
                 lNote: 'ملاحظات إضافية (اختياري)', phNote: 'أوقات مفضلة، خبرة سابقة، أي تفاصيل تهمنا...',
+                reviewTitle: 'راجع بياناتك قبل الإرسال ✨',
                 submit: '🚀 إرسال طلب الالتحاق',
                 consent: 'بإرسالك الطلب أنت توافق على تواصل الأكاديمية معك عبر واتساب',
+                inqLink: '💬 عندك استفسار قبل الإرسال؟ كلمنا واتساب',
+                inqMsg: 'السلام عليكم، عندي استفسار عن الالتحاق بأكاديمية صفوة الحفاظ 🌙',
+                inqAria: 'تواصل واتساب مع الأكاديمية',
                 errFill: 'برجاء استكمال كل الحقول المطلوبة (*)',
                 errNet: 'تعذر إرسال الطلب الآن — تأكد من الإنترنت وحاول مرة أخرى',
+                errName: 'اكتب الاسم الكامل (اسمين على الأقل، حروف فقط بدون أرقام أو رموز)',
+                errAge: 'السن لازم يكون بين 4 و 99 سنة',
+                errGender: 'اختر الجنس', errLevel: 'اختر المستوى الحالي',
+                errCountry: 'اختر الدولة', errGoal: 'اختر الهدف من الالتحاق', errTime: 'اختر الوقت المفضل للحصص',
+                errPhone: 'رقم غير صحيح — اكتب رقم الواتساب بدون كود الدولة (الكود بيتضاف تلقائي)',
+                errPhone2: 'رقم إضافي غير صحيح (من 8 إلى 15 رقماً)',
                 sTitle: 'تم استلام طلبك بنجاح!',
                 sBody: 'طلب الالتحاق وصل إدارة الأكاديمية.<br>سيتواصل معك فريقنا على رقم الواتساب في أقرب وقت إن شاء الله.',
+                confirmBtn: '📲 تأكيد الطلب على واتساب',
+                confirmCap: 'اضغط الزرار وواتساب هيفتح برسالة جاهزة فيها كل بيانات الطلب — اضغط إرسال ويوصلنا فورًا وهنرد عليك في نفس الشات إن شاء الله',
+                anotherBtn: '➕ تسجيل طالب آخر',
+                sumHead: '📝 طلب التحاق جديد من الموقع — أكاديمية صفوة الحفاظ',
                 footer: 'أكاديمية صفوة الحفاظ الملكية © 2026'
             },
             en: {
@@ -141,98 +780,612 @@
                 brand: 'Safwat Al-Huffaz Academy',
                 heading: '📝 Academy Enrollment Request',
                 sub: 'Fill in the details and our team will contact you after reviewing your request, God willing',
+                draftNote: '✨ We restored your auto-saved draft — pick up where you left off',
+                s1: 'Your details', s2: 'Preferences', s3: 'Review & confirm',
+                next: 'Next', prev: 'Back',
                 lName: "Student's full name *", phName: 'e.g. Ahmad Mohamed Ali',
                 lAge: 'Age *',
+                lGender: 'Gender *', oG1: 'Male', oG2: 'Female',
                 lLevel: 'Current level *',
-                oNone: 'Choose...', o1: 'Beginner (foundation & tajweed)', o2: 'Intermediate (memorized less than 5 ajzaa)', o3: 'Advanced (memorized 5+ ajzaa)', o4: 'Ijazah student (sanad)',
+                oNone: 'Choose...', o1: 'Beginner (foundation & tajweed)', o2: 'Intermediate (less than 5 ajzaa)', o3: 'Advanced (5+ ajzaa)', o4: 'Ijazah student (sanad)',
+                lCountry: 'Country *', oCountryNone: 'Choose country...',
+                lCity: 'City / Governorate (optional)', phCity: 'e.g. Giza',
                 lParent: "Parent's name *", phParent: "Father's / mother's name",
-                lPhone: "Parent's WhatsApp number (with country code) *",
+                lPhone: "Parent's WhatsApp number *",
+                lPhoneStudent: "Student's WhatsApp number *",
+                adultNote: '💬 Since you are 18 or older, we will contact you directly on your number',
+                lPhone2: 'Extra phone (optional)',
+                lGoal: 'Enrollment goal *',
+                oGoal1: 'Memorize the entire Quran', oGoal2: 'Strengthen hifz & master tajweed', oGoal3: 'Foundation: correct reading & recitation', oGoal4: 'Regular revision only', oGoal5: 'Ijazah with sanad',
+                lCourse: 'Requested course (optional)', courseNone: 'Optional — academy will help choose', noCourses: 'No published courses right now',
+                lTeacher: 'Preferred teacher (optional)', teacherNone: 'Optional — academy will help choose',
+                loading: 'Loading...',
+                lTime: 'Preferred session time *',
+                oT1: 'Morning', oT2: 'Afternoon', oT3: 'Evening', oT4: 'After Maghrib prayer', oT5: 'Any time works',
+                lSessions: 'Sessions / week (optional)', sw5: '5 or more',
+                lStype: 'Session type (optional)', st1: 'Individual', st2: 'Group', st3: 'Either is fine',
+                lExp: 'Prior experience? (optional)', oE1: 'No, first time', oE2: 'Yes, online', oE3: 'Yes, in person',
+                lRef: 'How did you hear of us?', oR1: 'WhatsApp', oR2: 'Facebook', oR3: 'Friend or family', oR4: 'Other',
+                lDays: 'Preferred session days (optional)',
                 lNote: 'Additional notes (optional)', phNote: 'Preferred times, previous experience, anything we should know...',
+                reviewTitle: 'Review your details before sending ✨',
                 submit: '🚀 Send Enrollment Request',
                 consent: 'By submitting, you agree that the academy may contact you on WhatsApp',
+                inqLink: '💬 Have a question before submitting? Chat on WhatsApp',
+                inqMsg: 'Assalamu alaikum, I have a question about enrolling at Safwat Al-Huffaz Academy 🌙',
+                inqAria: 'Chat with the academy on WhatsApp',
                 errFill: 'Please complete all required fields (*)',
                 errNet: 'Could not send the request right now — check your connection and try again',
+                errName: 'Enter the full name (at least two words, letters only, no digits or symbols)',
+                errAge: 'Age must be between 4 and 99',
+                errGender: 'Choose the gender', errLevel: 'Choose the current level',
+                errCountry: 'Choose the country', errGoal: 'Choose the enrollment goal', errTime: 'Choose the preferred session time',
+                errPhone: 'Invalid number — type the WhatsApp number without country code (added automatically)',
+                errPhone2: 'Invalid extra phone number (8 to 15 digits)',
                 sTitle: 'Your request was received successfully!',
                 sBody: 'Your enrollment request has reached the academy administration.<br>Our team will contact you on WhatsApp as soon as possible, God willing.',
+                confirmBtn: '📲 Confirm the request on WhatsApp',
+                confirmCap: 'Tap the button: WhatsApp opens with a ready message holding every detail of the request — press send and it reaches us instantly, and we reply in the same chat, God willing.',
+                anotherBtn: '➕ Register Another Student',
+                sumHead: '📝 New enrollment request from the website — Safwat Al-Huffaz Academy',
                 footer: 'Safwat Al-Huffaz Royal Academy © 2026'
             }
         };
 
-        let currentLang = localStorage.getItem('Safwatulhuffaz_lang') || 'ar';
+        const EnrollState = {
+            lang: localStorage.getItem('Safwatulhuffaz_lang') === 'en' ? 'en' : 'ar',
+            step: 1,
+            courses: [],
+            teachers: [],
+            saveTimer: null
+        };
+
+        const el = (id) => document.getElementById(id);
+        const val = (id) => String(el(id)?.value || '').trim();
+        const selText = (id) => {
+            const s = el(id);
+            return (s && s.value && s.selectedOptions?.[0]) ? s.selectedOptions[0].textContent.trim() : '';
+        };
+        const T = () => I18N[EnrollState.lang] || I18N.ar;
+
+        function initStars() {
+            const bg = el('stars-bg');
+            if (!bg) return;
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < 48; i++) {
+                const s = document.createElement('span');
+                s.className = 'star';
+                const size = 2.5 + Math.random() * 5;
+                s.style.cssText = `width:${size.toFixed(1)}px;height:${size.toFixed(1)}px;top:${(Math.random() * 100).toFixed(2)}%;left:${(Math.random() * 100).toFixed(2)}%;animation-duration:${(3 + Math.random() * 4).toFixed(2)}s;animation-delay:${(Math.random() * 4).toFixed(2)}s;`;
+                frag.appendChild(s);
+            }
+            bg.appendChild(frag);
+        }
+
+        function renderCountryOptions() {
+            const sel = el('f-country');
+            if (!sel) return;
+            const prev = sel.value;
+            sel.innerHTML = `<option value="" disabled ${prev ? '' : 'selected'}>${T().oCountryNone}</option>` +
+                COUNTRIES.map(c => `<option value="${c.ar}" data-code="${c.code}" data-ex="${c.ex}">${EnrollState.lang === 'ar' ? c.ar : c.en}</option>`).join('');
+            if (prev) sel.value = prev;
+        }
+
+        function getCurrentCountryInfo() {
+            const opt = el('f-country')?.selectedOptions?.[0];
+            return {
+                code: opt?.dataset?.code || '',
+                ex: opt?.dataset?.ex || '10XXXXXXXX'
+            };
+        }
+
+        function syncPhoneCode() {
+            const chip = el('f-phone-code');
+            const phoneInp = el('f-parent-phone');
+            const info = getCurrentCountryInfo();
+            if (chip) {
+                chip.textContent = info.code ? `+${info.code}` : '+';
+                chip.classList.toggle('opacity-60', !info.code);
+            }
+            if (phoneInp) phoneInp.placeholder = info.ex;
+        }
+
+        function isAdultStudent() {
+            const age = parseInt(val('f-age'), 10);
+            return Number.isInteger(age) && age >= 18;
+        }
+
+        function syncAgeMode() {
+            const adult = isAdultStudent();
+            const t = T();
+            const parentBox = el('parent-name-box');
+            const parentInp = el('f-parent-name');
+            const phoneLbl = el('t-l-phone');
+            const adultNote = el('f-phone-adult-note');
+
+            parentBox?.classList.toggle('hidden', adult);
+            if (parentInp) parentInp.required = !adult;
+            if (phoneLbl) phoneLbl.textContent = adult ? t.lPhoneStudent : t.lPhone;
+            if (adultNote) {
+                adultNote.textContent = t.adultNote;
+                adultNote.classList.toggle('hidden', !adult);
+            }
+        }
+
+        function renderCoursesAndTeachersDropdowns() {
+            const t = T();
+            const cs = el('f-course');
+            const ts = el('f-teacher');
+
+            if (cs) {
+                const prevC = cs.value;
+                const noneTxt = EnrollState.courses.length ? t.courseNone : t.noCourses;
+                cs.innerHTML = `<option value="">${noneTxt}</option>` +
+                    EnrollState.courses.map(r => `<option value="${r.title}">${r.title}</option>`).join('');
+                if (prevC) cs.value = prevC;
+            }
+
+            if (ts) {
+                const prevT = ts.value;
+                ts.innerHTML = `<option value="">${t.teacherNone}</option>` +
+                    EnrollState.teachers.map(tch => {
+                        const rawName = EnrollState.lang === 'en' ? (tch.name_en || tch.name_ar) : (tch.name_ar || tch.name_en);
+                        const label = `${tch.title ? tch.title + ' ' : ''}${rawName || ''}`.trim();
+                        const storedVal = `${tch.title ? tch.title + ' ' : ''}${tch.name_ar || tch.name_en || ''}`.trim();
+                        return `<option value="${storedVal}">${label}</option>`;
+                    }).join('');
+                if (prevT) ts.value = prevT;
+            }
+        }
+
+        async function loadCoursesAndTeachers() {
+            const cs = el('f-course');
+            const ts = el('f-teacher');
+            if (cs) cs.innerHTML = `<option value="">${T().loading}</option>`;
+            if (ts) ts.innerHTML = `<option value="">${T().loading}</option>`;
+
+            try {
+                const [r1, r2] = await Promise.allSettled([
+                    sb.from('academy_courses').select('id,title,audience').order('created_at', { ascending: false }),
+                    sb.from('teachers_public').select('id,name_ar,name_en,title')
+                ]);
+
+                if (r1.status === 'fulfilled' && r1.value?.data) {
+                    EnrollState.courses = r1.value.data;
+                }
+
+                if (r2.status === 'fulfilled' && !r2.value?.error && r2.value?.data) {
+                    EnrollState.teachers = r2.value.data;
+                } else {
+                    const fallback = await sb.from('teachers').select('id,name_ar,name_en,title,status');
+                    EnrollState.teachers = (fallback.data || []).filter(t => t.status !== 'deleted');
+                }
+            } catch {}
+
+            renderCoursesAndTeachersDropdowns();
+            restoreDraftSelectionsOnly();
+        }
+
         function applyLanguage(lang) {
-            currentLang = (lang === 'en') ? 'en' : 'ar';
-            localStorage.setItem('Safwatulhuffaz_lang', currentLang);
-            const t = translations[currentLang];
+            EnrollState.lang = lang === 'en' ? 'en' : 'ar';
+            localStorage.setItem('Safwatulhuffaz_lang', EnrollState.lang);
+            const t = T();
+
             document.documentElement.setAttribute('dir', t.dir);
-            document.documentElement.setAttribute('lang', currentLang);
+            document.documentElement.setAttribute('lang', EnrollState.lang);
             document.title = t.title;
-            const setTxt = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.innerHTML = v; };
-            const setPh = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.placeholder = v; };
+
+            const setTxt = (id, v) => { const e = el(id); if (e && v != null) e.innerHTML = v; };
+            const setPh = (id, v) => { const e = el(id); if (e && v != null) e.placeholder = v; };
+
             setTxt('t-brand', t.brand); setTxt('t-heading', t.heading); setTxt('t-sub', t.sub);
+            setTxt('draft-note-text', t.draftNote);
+            setTxt('sp-1', t.s1); setTxt('sp-2', t.s2); setTxt('sp-3', t.s3);
+            setTxt('btn-prev', t.prev); setTxt('btn-next', t.next);
+
             setTxt('t-l-name', t.lName); setPh('f-student-name', t.phName);
-            setTxt('t-l-age', t.lAge); setTxt('t-l-level', t.lLevel);
-            setTxt('o-level-none', t.oNone); setTxt('o-level-1', t.o1); setTxt('o-level-2', t.o2); setTxt('o-level-3', t.o3); setTxt('o-level-4', t.o4);
+            setTxt('t-l-age', t.lAge);
+            setTxt('t-l-gender', t.lGender); setTxt('o-gender-none', t.oNone); setTxt('o-gender-1', t.oG1); setTxt('o-gender-2', t.oG2);
+            setTxt('t-l-level', t.lLevel); setTxt('o-level-none', t.oNone); setTxt('o-level-1', t.o1); setTxt('o-level-2', t.o2); setTxt('o-level-3', t.o3); setTxt('o-level-4', t.o4);
+            setTxt('t-l-country', t.lCountry);
+            setTxt('t-l-city', t.lCity); setPh('f-city', t.phCity);
             setTxt('t-l-parent', t.lParent); setPh('f-parent-name', t.phParent);
-            setTxt('t-l-phone', t.lPhone);
+            setTxt('t-l-phone2', t.lPhone2);
+
+            setTxt('t-l-goal', t.lGoal); setTxt('o-goal-none', t.oNone); setTxt('o-goal-1', t.oGoal1); setTxt('o-goal-2', t.oGoal2); setTxt('o-goal-3', t.oGoal3); setTxt('o-goal-4', t.oGoal4); setTxt('o-goal-5', t.oGoal5);
+            setTxt('t-l-course', t.lCourse); setTxt('t-l-teacher', t.lTeacher);
+            setTxt('t-l-time', t.lTime); setTxt('o-time-none', t.oNone); setTxt('o-time-1', t.oT1); setTxt('o-time-2', t.oT2); setTxt('o-time-3', t.oT3); setTxt('o-time-4', t.oT4); setTxt('o-time-5', t.oT5);
+            setTxt('t-l-sessions', t.lSessions); setTxt('o-sw-none', t.oNone); setTxt('o-sw-5', t.sw5);
+            setTxt('t-l-stype', t.lStype); setTxt('o-st-none', t.oNone); setTxt('o-st-1', t.st1); setTxt('o-st-2', t.st2); setTxt('o-st-3', t.st3);
+            setTxt('t-l-exp', t.lExp); setTxt('o-exp-none', t.oNone); setTxt('o-exp-1', t.oE1); setTxt('o-exp-2', t.oE2); setTxt('o-exp-3', t.oE3);
+            setTxt('t-l-ref', t.lRef); setTxt('o-ref-none', t.oNone); setTxt('o-ref-1', t.oR1); setTxt('o-ref-2', t.oR2); setTxt('o-ref-3', t.oR3); setTxt('o-ref-4', t.oR4);
+            setTxt('t-l-days', t.lDays);
             setTxt('t-l-note', t.lNote); setPh('f-note', t.phNote);
+
+            setTxt('review-title', t.reviewTitle);
             setTxt('btn-submit-text', t.submit);
             setTxt('t-consent', t.consent);
             setTxt('t-s-title', t.sTitle); setTxt('t-s-body', t.sBody);
+            setTxt('wa-confirm-btn', t.confirmBtn); setTxt('wa-confirm-cap', t.confirmCap);
+            setTxt('btn-another-student', t.anotherBtn);
             setTxt('t-footer', t.footer);
-            document.getElementById('lang-switcher').value = currentLang;
+
+            document.querySelectorAll('#f-days .enroll-chip').forEach(ch => {
+                const inp = ch.querySelector('input'), sp = ch.querySelector('span');
+                if (inp && sp) sp.textContent = EnrollState.lang === 'ar' ? inp.value : (inp.dataset.en || inp.value);
+            });
+
+            const waUrl = `https://wa.me/${ACADEMY_WA}?text=${encodeURIComponent(t.inqMsg)}`;
+            const floatBtn = el('safwat-wa-float');
+            const inqLink = el('safwat-wa-inq');
+            if (floatBtn) { floatBtn.href = waUrl; floatBtn.setAttribute('aria-label', t.inqAria); }
+            if (inqLink) { inqLink.href = waUrl; inqLink.textContent = t.inqLink; }
+
+            renderCountryOptions();
+            syncPhoneCode();
+            syncAgeMode();
+            renderCoursesAndTeachersDropdowns();
+            if (EnrollState.step === 3) buildReview();
+
+            const sw = el('lang-switcher');
+            if (sw) sw.value = EnrollState.lang;
         }
-        document.getElementById('lang-switcher').addEventListener('change', function(){ applyLanguage(this.value); });
-        applyLanguage(currentLang);
 
-        /* نجوم الخلفية */
-        (function () {
-            const bg = document.getElementById('stars-bg');
-            for (let i = 0; i < 42; i++) {
-                const s = document.createElement('span');
-                s.className = 'star';
-                const size = 2 + Math.random() * 3.5;
-                s.style.cssText = 'width:' + size + 'px;height:' + size + 'px;top:' + (Math.random() * 100) + '%;left:' + (Math.random() * 100) + '%;animation-duration:' + (3 + Math.random() * 4) + 's;animation-delay:' + (Math.random() * 4) + 's;';
-                bg.appendChild(s);
+        function clearErrors() {
+            document.querySelectorAll('.enroll-field-err').forEach(p => { p.classList.add('hidden'); p.textContent = ''; });
+            document.querySelectorAll('.lux-input.enroll-invalid').forEach(inp => inp.classList.remove('enroll-invalid'));
+            el('form-error')?.classList.add('hidden');
+        }
+
+        function markFieldError(inputId, errId, msg) {
+            const p = el(errId), inp = el(inputId);
+            if (p) { p.textContent = msg; p.classList.remove('hidden'); }
+            if (inp) inp.classList.add('enroll-invalid');
+        }
+
+        function isNameValid(v) {
+            if (!v || v.length < 5 || v.length > 120) return false;
+            if (!/^[\p{L}][\p{L}\s\-'.]*$/u.test(v)) return false;
+            const words = v.split(/\s+/).filter(Boolean);
+            if (words.length < 2 || words.some(w => w.replace(/[\-'.]/g, '').length < 2)) return false;
+            if (/(.)\1{3,}/u.test(v)) return false;
+            const junk = ['test', 'asdf', 'qwerty', 'unknown', 'none', 'nothing', 'مجهول', 'test test'];
+            return !junk.includes(v.toLowerCase());
+        }
+
+        function composeInternationalPhone(rawLocal) {
+            const code = getCurrentCountryInfo().code;
+            let local = String(rawLocal || '').replace(/[\s\-().]/g, '');
+            if (/^00/.test(local)) local = '+' + local.slice(2);
+            local = local.replace(/^\+/, '');
+            if (code && local.startsWith(code)) local = local.slice(code.length);
+            local = local.replace(/^0+/, '');
+            return code ? `+${code}${local}` : local;
+        }
+
+        function isPhoneValid(raw, minDigits = 9) {
+            let ph = String(raw || '').replace(/[\s\-().]/g, '');
+            if (/^00/.test(ph)) ph = '+' + ph.slice(2);
+            if (!new RegExp(`^\\+?\\d{${minDigits},15}$`).test(ph)) return false;
+            const digits = ph.replace(/\D/g, '');
+            if (/^(\d)\1+$/.test(digits)) return false;
+            const seq = '01234567890123456789', rseq = '98765432109876543210';
+            return !seq.includes(digits) && !rseq.includes(digits);
+        }
+
+        function validateStep(stepNum) {
+            clearErrors();
+            const t = T();
+            const errs = [];
+
+            if (stepNum === 1) {
+                if (!isNameValid(val('f-student-name'))) errs.push(['f-student-name', 'err-name', t.errName]);
+                const age = parseInt(val('f-age'), 10);
+                if (!(Number.isInteger(age) && age >= 4 && age <= 99)) errs.push(['f-age', 'err-age', t.errAge]);
+                if (!val('f-gender')) errs.push(['f-gender', 'err-gender', t.errGender]);
+                if (!val('f-level')) errs.push(['f-level', 'err-level', t.errLevel]);
+                if (!val('f-country')) errs.push(['f-country', 'err-country', t.errCountry]);
+                if (!isAdultStudent() && !isNameValid(val('f-parent-name'))) errs.push(['f-parent-name', 'err-parent', t.errName]);
+
+                const fullPhone = composeInternationalPhone(val('f-parent-phone'));
+                if (!isPhoneValid(fullPhone, 9)) errs.push(['f-parent-phone', 'err-phone', t.errPhone]);
+
+                const p2 = val('f-phone2');
+                if (p2 && !isPhoneValid(p2, 8)) errs.push(['f-phone2', 'err-phone2', t.errPhone2]);
+            } else if (stepNum === 2) {
+                if (!val('f-goal')) errs.push(['f-goal', 'err-goal', t.errGoal]);
+                if (!val('f-time')) errs.push(['f-time', 'err-time', t.errTime]);
             }
-        })();
 
-        document.getElementById('enroll-form').addEventListener('submit', async function (e) {
+            errs.forEach(([inp, eid, msg]) => markFieldError(inp, eid, msg));
+            if (errs.length) {
+                el(errs[0][0])?.focus();
+                return false;
+            }
+            return true;
+        }
+
+        function buildReview() {
+            const t = T();
+            const adult = isAdultStudent();
+            const days = [...document.querySelectorAll('#f-days input:checked')].map(i => {
+                const sp = i.closest('label')?.querySelector('span');
+                return sp ? sp.textContent : i.value;
+            });
+
+            const rows = [
+                [t.lName, val('f-student-name')],
+                [t.lAge, val('f-age')],
+                [t.lGender, selText('f-gender')],
+                [t.lLevel, selText('f-level')],
+                [t.lCountry, selText('f-country')],
+                [t.lCity, val('f-city')],
+                ...(adult ? [] : [[t.lParent, val('f-parent-name')]]),
+                [adult ? t.lPhoneStudent : t.lPhone, composeInternationalPhone(val('f-parent-phone'))],
+                [t.lPhone2, val('f-phone2')],
+                [t.lGoal, selText('f-goal')],
+                [t.lCourse, selText('f-course')],
+                [t.lTeacher, selText('f-teacher')],
+                [t.lTime, selText('f-time')],
+                [t.lSessions, selText('f-sessions')],
+                [t.lStype, selText('f-stype')],
+                [t.lDays, days.join('، ')],
+                [t.lExp, selText('f-exp')],
+                [t.lRef, selText('f-ref')],
+                [t.lNote, val('f-note'), true]
+            ];
+
+            const esc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            el('review-grid').innerHTML = rows.map(([label, value, isWide]) => {
+                const cleanLabel = String(label || '').replace(/\s*\*$/, '').replace(/\s*\((اختياري|optional)\)$/, '');
+                return `<div class="review-row${isWide ? ' wide' : ''}"><span class="k">${esc(cleanLabel)}</span><span class="v">${esc(value || '—')}</span></div>`;
+            }).join('');
+        }
+
+        function goToStep(stepNum) {
+            EnrollState.step = stepNum;
+            const form = el('enroll-form');
+            const prog = el('step-progress');
+            if (form) form.setAttribute('data-step', String(stepNum));
+            if (prog) {
+                prog.setAttribute('aria-valuenow', String(stepNum));
+                prog.querySelectorAll('.step-seg').forEach(seg => {
+                    const n = parseInt(seg.dataset.s, 10);
+                    seg.classList.toggle('is-active', n === stepNum);
+                    seg.classList.toggle('is-done', n < stepNum);
+                    seg.querySelector('.step-dot').textContent = n < stepNum ? '✓' : String(n);
+                });
+            }
+            el('btn-prev').disabled = stepNum === 1;
+            el('btn-next').style.display = stepNum === 3 ? 'none' : '';
+            el('step-counter').textContent = `${stepNum} / 3`;
+            if (stepNum === 3) buildReview();
+            prog?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function saveDraft() {
+            try {
+                const data = {};
+                DRAFT_FIELDS.forEach(id => { const f = el(id); if (f) data[id] = f.value; });
+                data._days = [...document.querySelectorAll('#f-days input:checked')].map(i => i.value);
+                localStorage.setItem(DRAFT_KEY, JSON.stringify({ t: Date.now(), data }));
+            } catch {}
+        }
+
+        function restoreDraft() {
+            try {
+                const raw = localStorage.getItem(DRAFT_KEY);
+                if (!raw) return;
+                const parsed = JSON.parse(raw);
+                if (!parsed?.t || (Date.now() - parsed.t > 30 * 864e5) || !parsed.data) {
+                    localStorage.removeItem(DRAFT_KEY);
+                    return;
+                }
+                let hasAny = false;
+                DRAFT_FIELDS.forEach(id => {
+                    const f = el(id);
+                    if (f && parsed.data[id]) { f.value = parsed.data[id]; hasAny = true; }
+                });
+                if (Array.isArray(parsed.data._days)) {
+                    document.querySelectorAll('#f-days input').forEach(i => {
+                        i.checked = parsed.data._days.includes(i.value);
+                        if (i.checked) hasAny = true;
+                    });
+                }
+                if (hasAny) {
+                    syncAgeMode();
+                    syncPhoneCode();
+                    el('draft-note')?.classList.remove('hidden');
+                }
+            } catch {}
+        }
+
+        function restoreDraftSelectionsOnly() {
+            try {
+                const parsed = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+                if (!parsed?.data) return;
+                if (parsed.data['f-course'] && el('f-course')) el('f-course').value = parsed.data['f-course'];
+                if (parsed.data['f-teacher'] && el('f-teacher')) el('f-teacher').value = parsed.data['f-teacher'];
+            } catch {}
+        }
+
+        function buildWhatsAppSummary(composedPhone) {
+            const t = T();
+            const adult = isAdultStudent();
+            const lines = [
+                t.sumHead,
+                `${t.lName.replace(' *', '')}: ${val('f-student-name')}`,
+                `${t.lAge.replace(' *', '')}: ${val('f-age')}`,
+                selText('f-gender') ? `${t.lGender.replace(' *', '')}: ${selText('f-gender')}` : '',
+                selText('f-level') ? `${t.lLevel.replace(' *', '')}: ${selText('f-level')}` : '',
+                selText('f-goal') ? `${t.lGoal.replace(' *', '')}: ${selText('f-goal')}` : '',
+                selText('f-course') ? `${t.lCourse.replace(' (اختياري)', '').replace(' (optional)', '')}: ${selText('f-course')}` : '',
+                selText('f-teacher') ? `${t.lTeacher.replace(' (اختياري)', '').replace(' (optional)', '')}: ${selText('f-teacher')}` : '',
+                val('f-country') ? `${t.lCountry.replace(' *', '')}: ${val('f-country')}` : '',
+                selText('f-time') ? `${t.lTime.replace(' *', '')}: ${selText('f-time')}` : '',
+                `${EnrollState.lang === 'ar' ? 'التواصل' : 'Contact'}: ${adult ? val('f-student-name') : val('f-parent-name')} — ${composedPhone}`,
+                val('f-city') ? `${EnrollState.lang === 'ar' ? 'المدينة' : 'City'}: ${val('f-city')}` : '',
+                val('f-note') ? `${EnrollState.lang === 'ar' ? 'ملاحظات' : 'Notes'}: ${val('f-note').slice(0, 200)}` : ''
+            ].filter(Boolean);
+            return lines.join('\n');
+        }
+
+        async function handleFormSubmit(e) {
             e.preventDefault();
-            const t = translations[currentLang];
-            const err = document.getElementById('form-error');
-            const btn = document.getElementById('btn-submit');
-            const btnText = document.getElementById('btn-submit-text');
-            err.classList.add('hidden');
-
-            const row = {
-                student_name: document.getElementById('f-student-name').value.trim(),
-                student_age: parseInt(document.getElementById('f-age').value, 10) || null,
-                level: document.getElementById('f-level').value || null,
-                parent_name: document.getElementById('f-parent-name').value.trim(),
-                parent_phone: document.getElementById('f-parent-phone').value.trim(),
-                note: document.getElementById('f-note').value.trim() || null
-            };
-            if (!row.student_name || !row.parent_name || !row.parent_phone || !row.student_age || !row.level) {
-                err.innerText = t.errFill;
-                err.classList.remove('hidden');
+            if (EnrollState.step < 3) {
+                if (validateStep(EnrollState.step)) goToStep(EnrollState.step + 1);
                 return;
             }
+            if (!validateStep(1)) return goToStep(1);
+            if (!validateStep(2)) return goToStep(2);
+
+            const t = T();
+            const errBox = el('form-error');
+            const btn = el('btn-submit');
+            const btnText = el('btn-submit-text');
+            errBox?.classList.add('hidden');
+
+            const isAr = EnrollState.lang === 'ar';
+            const adult = isAdultStudent();
+            const studentName = val('f-student-name');
+            const parentName = adult ? studentName : val('f-parent-name');
+            const composedPhone = composeInternationalPhone(val('f-parent-phone'));
+            const rawUserNote = val('f-note');
+
+            const days = [...document.querySelectorAll('#f-days input:checked')].map(i => i.value);
+            const prefBits = [
+                val('f-course') ? `${isAr ? 'الكورس المطلوب: ' : 'Requested course: '}${val('f-course')}` : '',
+                val('f-teacher') ? `${isAr ? 'المعلم المفضل: ' : 'Preferred teacher: '}${val('f-teacher')}` : '',
+                val('f-sessions') ? `${isAr ? 'عدد الحصص أسبوعيًا: ' : 'Sessions/week: '}${selText('f-sessions')}` : '',
+                val('f-stype') ? `${isAr ? 'نوع الحصة: ' : 'Session type: '}${selText('f-stype')}` : '',
+                days.length ? `${isAr ? 'أيام مفضلة: ' : 'Preferred days: '}${days.join('، ')}` : ''
+            ].filter(Boolean);
+
+            const cleanComposedNote = [rawUserNote, prefBits.join(' | ')].filter(Boolean).join('\n') || null;
+
+            const fullRow = {
+                student_name: studentName,
+                student_age: parseInt(val('f-age'), 10),
+                level: val('f-level'),
+                gender: val('f-gender'),
+                goal: val('f-goal'),
+                country: val('f-country'),
+                pref_time: val('f-time'),
+                referral: val('f-ref') || null,
+                city: val('f-city') || null,
+                phone2: val('f-phone2') || null,
+                experience: val('f-exp') || null,
+                requested_course: val('f-course') || null,
+                requested_teacher: val('f-teacher') || null,
+                parent_name: parentName,
+                parent_phone: composedPhone,
+                note: cleanComposedNote
+            };
+
+            const fallbackExtras = [
+                `${isAr ? 'الجنس: ' : 'Gender: '}${selText('f-gender')}`,
+                `${isAr ? 'الدولة: ' : 'Country: '}${val('f-country')}`,
+                `${isAr ? 'الهدف: ' : 'Goal: '}${selText('f-goal')}`,
+                `${isAr ? 'الوقت المفضل: ' : 'Preferred time: '}${selText('f-time')}`,
+                val('f-ref') ? `${isAr ? 'سمع عنا من: ' : 'Heard via: '}${selText('f-ref')}` : '',
+                val('f-city') ? `${isAr ? 'المدينة: ' : 'City: '}${val('f-city')}` : '',
+                val('f-phone2') ? `${isAr ? 'تليفون إضافي: ' : 'Extra phone: '}${val('f-phone2')}` : '',
+                val('f-exp') ? `${isAr ? 'خبرة سابقة: ' : 'Experience: '}${selText('f-exp')}` : ''
+            ].filter(Boolean).join(' | ');
+
+            const coreRow = {
+                student_name: studentName,
+                student_age: fullRow.student_age,
+                level: fullRow.level,
+                parent_name: parentName,
+                parent_phone: composedPhone,
+                note: [cleanComposedNote, fallbackExtras].filter(Boolean).join('\n')
+            };
 
             btn.disabled = true;
             btnText.innerHTML = '<span class="spin"></span>';
+
             try {
-                const { error } = await sb.from('enrollment_requests').insert(row);
-                if (error) throw error;
-                document.getElementById('enroll-form').classList.add('hidden');
-                document.getElementById('success-box').classList.remove('hidden');
-            } catch (ex) {
-                console.error(ex);
-                err.innerText = t.errNet;
-                err.classList.remove('hidden');
+                let res = await sb.from('enrollment_requests').insert(fullRow);
+                if (res.error) {
+                    res = await sb.from('enrollment_requests').insert(coreRow);
+                    if (res.error) throw res.error;
+                }
+
+                try { localStorage.removeItem(DRAFT_KEY); } catch {}
+                el('draft-note')?.classList.add('hidden');
+                el('step-progress')?.classList.add('hidden');
+                el('enroll-form')?.classList.add('hidden');
+
+                const waConfirmBtn = el('wa-confirm-btn');
+                if (waConfirmBtn) {
+                    waConfirmBtn.href = `https://wa.me/${ACADEMY_WA}?text=${encodeURIComponent(buildWhatsAppSummary(composedPhone))}`;
+                }
+                el('success-box')?.classList.remove('hidden');
+            } catch {
+                if (errBox) {
+                    errBox.textContent = t.errNet;
+                    errBox.classList.remove('hidden');
+                }
                 btn.disabled = false;
-                btnText.innerText = t.submit;
+                btnText.textContent = t.submit;
             }
-        });
+        }
+
+        window.resetFormForAnotherStudent = function() {
+            const form = el('enroll-form');
+            const btn = el('btn-submit');
+            const btnText = el('btn-submit-text');
+            if (!form) return;
+
+            form.reset();
+            clearErrors();
+            try { localStorage.removeItem(DRAFT_KEY); } catch {}
+
+            if (btn) btn.disabled = false;
+            if (btnText) btnText.textContent = T().submit;
+
+            el('success-box')?.classList.add('hidden');
+            el('step-progress')?.classList.remove('hidden');
+            form.classList.remove('hidden');
+
+            syncPhoneCode();
+            syncAgeMode();
+            goToStep(1);
+        };
+
+        function init() {
+            initStars();
+            applyLanguage(EnrollState.lang);
+            restoreDraft();
+            goToStep(1);
+            loadCoursesAndTeachers();
+
+            const form = el('enroll-form');
+            el('lang-switcher')?.addEventListener('change', (e) => applyLanguage(e.target.value));
+            el('f-country')?.addEventListener('change', syncPhoneCode);
+            el('f-age')?.addEventListener('input', syncAgeMode);
+            el('f-age')?.addEventListener('change', syncAgeMode);
+
+            el('btn-next')?.addEventListener('click', () => {
+                if (validateStep(EnrollState.step)) goToStep(EnrollState.step + 1);
+            });
+            el('btn-prev')?.addEventListener('click', () => {
+                if (EnrollState.step > 1) goToStep(EnrollState.step - 1);
+            });
+
+            const scheduleDraftSave = () => {
+                clearTimeout(EnrollState.saveTimer);
+                EnrollState.saveTimer = setTimeout(saveDraft, 400);
+            };
+            form?.addEventListener('input', scheduleDraftSave);
+            form?.addEventListener('change', scheduleDraftSave);
+            form?.addEventListener('submit', handleFormSubmit);
+        }
+
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+        else init();
+    })();
     </script>
 </body>
 </html>
