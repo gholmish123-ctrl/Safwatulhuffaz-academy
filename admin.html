@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="html-tag">
 <head>
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="gheir-mamnoon-logo.jpg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title class="academy-name-text">القيادة العُليا | أكاديمية صفوة الحفاظ</title>
+    <title class="academy-name-text">القيادة العُليا | أكاديمية غير ممنون</title>
     
     <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -147,11 +147,96 @@
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden text-slate-800">
+<!-- ==================== [Safwat Brand] هوية الأكاديمية — لأي إعادة تسمية عدّل سطور SAFWAT_BRAND بس ==================== -->
+<script>
+window.SAFWAT_BRAND = {
+    tenantId: 2,
+    nameAr: 'أكاديمية غير ممنون',
+    shortAr: 'غير ممنون',
+    nameEn: 'Gheir Mamnoon Academy',
+    shortEn: 'Gheir Mamnoon',
+    logoFile: 'gheir-mamnoon-logo.jpg',
+    emailDomain: 'gheirmamnoon.edu',
+    siteUrl: 'https://gholmish123-ctrl.github.io/Safwatulhuffaz-academy/gheir-mamnoon/login.html',
+    initials: 'GM'
+};
+(function () {
+    var B = window.SAFWAT_BRAND;
+    var REPLACERS = [
+        ['أكاديمية صفوة الحفاظ', B.nameAr],
+        ['صفوة الحفاظ', B.shortAr],
+        ['Safwat Al-Huffaz Academy', B.nameEn],
+        ['Safwat Al-Huffaz', B.shortEn],
+        ['Safwat Al Huffaz', B.shortEn]
+    ];
+    function fixText(s) {
+        if (!s || (s.indexOf('صفوة') === -1 && s.indexOf('Safwat') === -1)) return s;
+        for (var i = 0; i < REPLACERS.length; i++) s = s.split(REPLACERS[i][0]).join(REPLACERS[i][1]);
+        return s;
+    }
+    function fixNode(root) {
+        if (!root || !root.querySelectorAll) return;
+        var imgs = root.querySelectorAll('img');
+        for (var i = 0; i < imgs.length; i++) {
+            var im = imgs[i];
+            var src = im.getAttribute('src') || '';
+            if (src.indexOf('logo.png') !== -1) im.src = B.logoFile;
+            var one = im.getAttribute('onerror') || '';
+            if (one.indexOf('ui-avatars.com') !== -1) {
+                im.setAttribute('onerror', one.replace(/name=SA&|name=Safwa&/g, 'name=' + B.initials + '&'));
+            }
+            var alt = im.getAttribute('alt');
+            if (alt && fixText(alt) !== alt) im.setAttribute('alt', fixText(alt));
+        }
+        var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+        var node, batch = 0;
+        while ((node = walker.nextNode()) && batch < 4000) {
+            batch++;
+            var v = node.nodeValue;
+            if (v && (v.indexOf('صفوة') !== -1 || v.indexOf('Safwat') !== -1)) {
+                var nv = fixText(v);
+                if (nv !== v) node.nodeValue = nv;
+            }
+        }
+    }
+    function fixChrome() {
+        try { document.title = fixText(document.title); } catch (e) {}
+        var links = document.querySelectorAll('link[rel*="icon"]');
+        for (var i = 0; i < links.length; i++) {
+            links[i].href = B.logoFile;
+            if (links[i].getAttribute('type') === 'image/png') links[i].setAttribute('type', 'image/jpeg');
+        }
+        var metas = document.querySelectorAll('meta[name="description"], meta[property="og:title"], meta[property="og:description"]');
+        for (var m = 0; m < metas.length; m++) {
+            var c = metas[m].getAttribute('content');
+            if (c && fixText(c) !== c) metas[m].setAttribute('content', fixText(c));
+        }
+    }
+    var pending = false;
+    function scheduleFix() {
+        if (pending) return;
+        pending = true;
+        setTimeout(function () {
+            pending = false;
+            try { fixNode(document.body); fixChrome(); } catch (e) {}
+        }, 350);
+    }
+    function runNow() { try { fixNode(document.body); fixChrome(); } catch (e) {} }
+    document.addEventListener('DOMContentLoaded', runNow);
+    if (document.body) runNow();
+    var mo = new MutationObserver(function () { scheduleFix(); });
+    function startObs() { if (document.body) mo.observe(document.body, { childList: true, subtree: true, characterData: true }); }
+    document.addEventListener('DOMContentLoaded', startObs);
+    if (document.body) startObs();
+    console.log('[Safwat Brand] active for tenant', B.tenantId, B.shortEn);
+})();
+</script>
+
 
     <!-- ✨ الشريط القرآني الملكي العلوي -->
     <div class="w-full bg-gradient-to-r from-[#02100c] via-[#062c21] to-[#02100c] text-amber-200/95 py-1.5 shadow-sm text-xs font-bold overflow-hidden whitespace-nowrap relative z-50 border-b border-amber-500/30 no-print">
         <div class="inline-block animate-marquee">
-            ✨ ﴿ إِنَّ اللَّهَ يَأْمُرُكُمْ أَن تُؤَدُّوا الْأَمَانَاتِ إِلَىٰ أَهْلِهَا ﴾ &nbsp;&nbsp;•&nbsp;&nbsp; ﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾ &nbsp;&nbsp;•&nbsp;&nbsp; ﴿ خَيْرُكُمْ مَنْ تَعَلَّمَ القُرْآنَ وَعَلَّمَهُ ﴾ &nbsp;&nbsp;•&nbsp;&nbsp; بوابة القيادة العليا والإدارة المركزية لأكاديمية صفوة الحفاظ (ERP Royal V16) ✨
+            ✨ ﴿ إِنَّ اللَّهَ يَأْمُرُكُمْ أَن تُؤَدُّوا الْأَمَانَاتِ إِلَىٰ أَهْلِهَا ﴾ &nbsp;&nbsp;•&nbsp;&nbsp; ﴿ وَقُل رَّبِّ زِدْنِي عِلْمًا ﴾ &nbsp;&nbsp;•&nbsp;&nbsp; ﴿ خَيْرُكُمْ مَنْ تَعَلَّمَ القُرْآنَ وَعَلَّمَهُ ﴾ &nbsp;&nbsp;•&nbsp;&nbsp; بوابة القيادة العليا والإدارة المركزية لأكاديمية غير ممنون (ERP Royal V16) ✨
         </div>
     </div>
 
@@ -165,11 +250,11 @@
                 <div class="p-5 border-b border-white/10 flex items-center justify-between gap-3">
                     <div class="flex items-center gap-3.5">
                         <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-xl shadow-lg border-2 border-amber-400 overflow-hidden shrink-0" id="sidebar-logo-container">
-                            <img src="logo.png" alt="Logo" class="academy-logo-img w-full h-full object-contain" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
+                            <img src="gheir-mamnoon-logo.jpg" alt="Logo" class="academy-logo-img w-full h-full object-contain" onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');">
                             <span class="academy-logo-fallback hidden">👑</span>
                         </div>
                         <div>
-                            <h1 class="text-base font-black tracking-wide text-amber-300 academy-name-text font-diwani">أكاديمية صفوة الحفاظ</h1>
+                            <h1 class="text-base font-black tracking-wide text-amber-300 academy-name-text font-diwani">أكاديمية غير ممنون</h1>
                             <p class="text-[10px] font-bold text-emerald-400 tracking-wider mt-0.5" id="admin-role-badge">القيادة العليا • Royal V16</p>
                         </div>
                     </div>
@@ -301,7 +386,7 @@
                                 <span class="inline-flex items-center gap-2 bg-amber-500/20 border border-amber-400/40 text-amber-300 text-[11px] font-black px-3.5 py-1 rounded-full">
                                     <span>👑</span> <span>غرفة القيادة والتحكم المركزي الشامل • ERP Royal V16</span>
                                 </span>
-                                <h2 class="text-2xl sm:text-3xl font-diwani text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-100 to-amber-300">مرحباً بك في القيادة العُليا لأكاديمية صفوة الحفاظ</h2>
+                                <h2 class="text-2xl sm:text-3xl font-diwani text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-100 to-amber-300">مرحباً بك في القيادة العُليا لأكاديمية غير ممنون</h2>
                                 <p class="text-xs text-emerald-100/85 font-bold max-w-2xl leading-relaxed">إدارة متكاملة للنخبة من المعلمين والطلاب، خريطة الإنجاز القرآني لـ 30 جزءاً، إصدار الشهادات الملكية بـ QR، الدورات المشفرة، والخزينة متعددة العملات مع الإرسال السحابي عبر Green-API.</p>
                             </div>
 
@@ -466,7 +551,7 @@
 
                                     <div>
                                         <label class="block text-xs font-black text-emerald-800 mb-1.5">📧 البريد الإلكتروني (حساب الدخول)</label>
-                                        <input type="email" id="t-email" required class="w-full p-3 border-2 border-emerald-400 rounded-xl bg-emerald-50/30 text-xs font-mono font-black text-emerald-950" dir="ltr" placeholder="teacher@safwatulhuffaz.edu">
+                                        <input type="email" id="t-email" required class="w-full p-3 border-2 border-emerald-400 rounded-xl bg-emerald-50/30 text-xs font-mono font-black text-emerald-950" dir="ltr" placeholder="teacher@gheirmamnoon.edu">
                                     </div>
 
                                     <div>
@@ -697,7 +782,7 @@
                                             <span>📧 البريد (اسم المستخدم)</span>
                                             <button type="button" onclick="autoSuggestStudentEmail(true)" class="text-[9px] bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded font-black cursor-pointer">توليد ⚡</button>
                                         </label>
-                                        <input type="email" id="s-custom-email" required class="w-full p-3 border-2 border-emerald-400 rounded-xl bg-emerald-50/40 text-xs font-mono font-black text-emerald-950 outline-none" dir="ltr" placeholder="student@safwatulhuffaz.edu">
+                                        <input type="email" id="s-custom-email" required class="w-full p-3 border-2 border-emerald-400 rounded-xl bg-emerald-50/40 text-xs font-mono font-black text-emerald-950 outline-none" dir="ltr" placeholder="student@gheirmamnoon.edu">
                                     </div>
 
                                     <div>
@@ -1549,7 +1634,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-black text-emerald-800 mb-1.5">📧 البريد الإلكتروني (حساب الدخول)</label>
-                        <input type="email" id="stf-email" required dir="ltr" placeholder="deputy@safwatulhuffaz.edu" class="w-full p-3 border-2 border-emerald-400 rounded-xl bg-white text-xs font-mono font-black">
+                        <input type="email" id="stf-email" required dir="ltr" placeholder="deputy@gheirmamnoon.edu" class="w-full p-3 border-2 border-emerald-400 rounded-xl bg-white text-xs font-mono font-black">
                     </div>
                     <div>
                         <label class="block text-xs font-black text-amber-800 mb-1.5">🔑 كلمة المرور</label>
@@ -1772,11 +1857,11 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
         <div>
             <label class="block font-black text-slate-700 mb-1">🏛️ اسم الفرع / الأكاديمية للمدير</label>
-            <input type="text" id="stf-branch-name" placeholder="مثال: أكاديمية صفوة الحفاظ - فرع..." class="w-full p-2.5 border border-slate-300 rounded-xl bg-white font-bold">
+            <input type="text" id="stf-branch-name" placeholder="مثال: أكاديمية غير ممنون - فرع..." class="w-full p-2.5 border border-slate-300 rounded-xl bg-white font-bold">
         </div>
         <div>
             <label class="block font-black text-slate-700 mb-1">🖼️ رابط شعار الفرع (اختياري)</label>
-            <input type="url" id="stf-branch-logo" dir="ltr" placeholder="https://.../logo.png" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white font-mono">
+            <input type="url" id="stf-branch-logo" dir="ltr" placeholder="https://.../gheir-mamnoon-logo.jpg" class="w-full p-2.5 border border-slate-300 rounded-xl bg-white font-mono">
         </div>
         <div>
             <label class="block font-black text-emerald-900 mb-1">☁️ رقم المعرّف (Green-API ID)</label>
@@ -1844,7 +1929,7 @@
             </div>
             <div class="space-y-2 text-xs">
                 <label class="font-black text-slate-700 block">✍️ نص رسالة التحديث الجديد:</label>
-                <textarea id="bd-update-msg-input" rows="4" class="w-full p-3.5 border-2 border-slate-200 rounded-2xl font-bold text-slate-800 bg-slate-50 outline-none focus:border-emerald-500 resize-none">تم بحمد الله إطلاق التحديث الملكي الجديد لمنصة أكاديمية صفوة الحفاظ! 🌟
+                <textarea id="bd-update-msg-input" rows="4" class="w-full p-3.5 border-2 border-slate-200 rounded-2xl font-bold text-slate-800 bg-slate-50 outline-none focus:border-emerald-500 resize-none">تم بحمد الله إطلاق التحديث الملكي الجديد لمنصة أكاديمية غير ممنون! 🌟
 يمكنكم الآن الدخول لقاعات الدورات التفاعلية، رفع حلول التكليفات مباشرة للمعلم، ومتابعة خريطة الأجزاء الثلاثين.</textarea>
             </div>
             <div class="space-y-2 text-xs border-t border-slate-100 pt-3">
@@ -2214,7 +2299,7 @@
     <script>
         const SUPABASE_URL = "https://cnfykoxjwxujrsxvjdud.supabase.co"; 
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuZnlrb3hqd3h1anJzeHZqZHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NTIzOTcsImV4cCI6MjEwMDAyODM5N30.kLEmrA3XPIhgtwMw5bMkJhCH-Q8LP4ygyNKcnr265i4";
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { storageKey: 'gm-auth-token' } });
 
         // =========================================================================
         // 🛡️ أدوات الحماية المضافة في المراجعة الأمنية (لا تغيّر أي سلوك قائم)
@@ -2241,7 +2326,7 @@
         let dbRewardsStore = []; 
         let dbRewardOrders = []; 
         window.dbPaymentsLedger = [];
-        window.dbOperationalExpenses = safeJsonParse(localStorage.getItem('Safwat_Operational_Expenses'), []);
+        window.dbOperationalExpenses = safeJsonParse(localStorage.getItem('GM_Operational_Expenses'), []);
 
         let currentEditTId = null; 
         let tempNewTeacherAttachments = [];
@@ -2341,7 +2426,7 @@
         let adminSelectedMutoon = new Set();
 
         let academySettings = safeJsonParse(localStorage.getItem('Safwatulhuffaz_settings'), null) || {
-            name: "أكاديمية صفوة الحفاظ",
+            name: "أكاديمية غير ممنون",
             logo: "",
             defTeacherRate: 8,
             defStudentPrice: 10,
@@ -2362,7 +2447,7 @@
         window.getAcademyPortalUrl = function() {
             const loc = window.location.href.split('?')[0];
             if (loc.includes('http')) return loc.replace(/\/[^\/]*$/, '/index.html');
-            return "https://gholmish123-ctrl.github.io/Safwatulhuffaz-academy/index.html";
+            return "https://gholmish123-ctrl.github.io/Safwatulhuffaz-academy/gheir-mamnoon/login.html";
         };
 
         window.getStudentStoredPass = function(studentObj) {
@@ -2372,15 +2457,15 @@
             if (studentObj.quran_progress && typeof studentObj.quran_progress === 'object' && studentObj.quran_progress._portal_pass) {
                 return studentObj.quran_progress._portal_pass;
             }
-            const localMap = safeJsonParse(localStorage.getItem('Safwat_Students_Passwords'), {});
+            const localMap = safeJsonParse(localStorage.getItem('GM_Students_Passwords'), {});
             return localMap[studentObj.id] || localMap[studentObj.email] || '123456';
         };
 
         window.saveStudentPassLocallyAndMeta = function(studentId, email, pass, existingProgress = {}) {
-            const localMap = safeJsonParse(localStorage.getItem('Safwat_Students_Passwords'), {});
+            const localMap = safeJsonParse(localStorage.getItem('GM_Students_Passwords'), {});
             if (studentId) localMap[studentId] = pass;
             if (email) localMap[email] = pass;
-            localStorage.setItem('Safwat_Students_Passwords', JSON.stringify(localMap));
+            localStorage.setItem('GM_Students_Passwords', JSON.stringify(localMap));
             let prog = (existingProgress && typeof existingProgress === 'object') ? { ...existingProgress } : {};
             prog._portal_pass = pass;
             prog._portal_email = email;
@@ -2418,8 +2503,8 @@
             if (cleanPhone.startsWith('00')) cleanPhone = cleanPhone.substring(2);
             if (cleanPhone.length === 11 && cleanPhone.startsWith('01')) cleanPhone = '2' + cleanPhone;
 
-            const instId = localStorage.getItem('Safwat_GreenAPI_Id') || '';
-            const token = localStorage.getItem('Safwat_GreenAPI_Token') || '';
+            const instId = localStorage.getItem('GM_GreenAPI_Id') || '';
+            const token = localStorage.getItem('GM_GreenAPI_Token') || '';
 
             if (instId && token && cleanPhone.length >= 10) {
                 try {
@@ -2451,8 +2536,8 @@
         window.saveAdminGreenApiCredentials = function() {
             const id = document.getElementById('admin-green-id')?.value.trim() || '';
             const token = document.getElementById('admin-green-token')?.value.trim() || '';
-            localStorage.setItem('Safwat_GreenAPI_Id', id);
-            localStorage.setItem('Safwat_GreenAPI_Token', token);
+            localStorage.setItem('GM_GreenAPI_Id', id);
+            localStorage.setItem('GM_GreenAPI_Token', token);
             updateGreenApiHeaderBadge();
             window.showToast('✅ تم حفظ وتفعيل بوابة الواتساب السحابية (Green-API 24/7) بنجاح!', 'success');
         };
@@ -2460,12 +2545,12 @@
         window.testAdminGreenApiConnection = async function() {
             const testPhone = prompt('أدخل رقم الواتساب بالصيغة الدولية لتجربة الإرسال التلقائي (مثال: 201012345678):');
             if (!testPhone) return;
-            await dispatchAdminWhatsApp(testPhone, `🕌 *أكاديمية صفوة الحفاظ | القيادة العُليا*\n✅ تم ربط وتفعيل بوابة الواتساب السحابية التلقائية (Green-API 24/7) بنجاح!`);
+            await dispatchAdminWhatsApp(testPhone, `🕌 *أكاديمية غير ممنون | القيادة العُليا*\n✅ تم ربط وتفعيل بوابة الواتساب السحابية التلقائية (Green-API 24/7) بنجاح!`);
         };
 
         function updateGreenApiHeaderBadge() {
-            const id = localStorage.getItem('Safwat_GreenAPI_Id') || '';
-            const token = localStorage.getItem('Safwat_GreenAPI_Token') || '';
+            const id = localStorage.getItem('GM_GreenAPI_Id') || '';
+            const token = localStorage.getItem('GM_GreenAPI_Token') || '';
             const txtEl = document.getElementById('header-wa-status-text');
             if (document.getElementById('admin-green-id')) document.getElementById('admin-green-id').value = id;
             if (document.getElementById('admin-green-token')) document.getElementById('admin-green-token').value = token;
@@ -2485,7 +2570,7 @@
         window.toggleAdminDarkMode = function() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('Safwat_Admin_Dark', isDark);
+            localStorage.setItem('GM_Admin_Dark', isDark);
             const btn = document.getElementById('admin-dark-btn');
             if (btn) btn.innerText = isDark ? '☀️' : '🌙';
         };
@@ -2513,7 +2598,7 @@
         };
 
         window.saveGlobalSettings = () => {
-            academySettings.name = document.getElementById('set-acad-name').value || "أكاديمية صفوة الحفاظ";
+            academySettings.name = document.getElementById('set-acad-name').value || "أكاديمية غير ممنون";
             academySettings.defTeacherRate = parseFloat(document.getElementById('set-def-t-rate').value) || 8;
             academySettings.defStudentPrice = parseFloat(document.getElementById('set-def-s-price').value) || 10;
             academySettings.fxRates = {
@@ -2545,7 +2630,7 @@
 
         window.downloadFullAcademyBackup = function() {
             const backupPayload = {
-                academy: academySettings?.name || "أكاديمية صفوة الحفاظ",
+                academy: academySettings?.name || "أكاديمية غير ممنون",
                 version: "ERP Royal V16",
                 exported_at: new Date().toISOString(),
                 teachers: globalTeachers || [],
@@ -2560,7 +2645,7 @@
             const blob = new Blob([JSON.stringify(backupPayload, null, 2)], { type: "application/json;charset=utf-8;" });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = `Safwat_Academy_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.download = `GM_Academy_Backup_${new Date().toISOString().split('T')[0]}.json`;
             link.click();
             window.showToast('📦 تم تنزيل النسخة الاحتياطية الشاملة للأكاديمية بنجاح!', 'success');
         };
@@ -2575,7 +2660,7 @@
                     if (factor.status === 'verified') return window.showToast('⚠️ المصادقة الثنائية (2FA) مفعلة مسبقاً!', 'warning');
                     else if (factor.status === 'unverified') await supabaseClient.auth.mfa.unenroll({ factorId: factor.id });
                 }
-                const { data, error } = await supabaseClient.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Safwat Al-Huffaz ERP' });
+                const { data, error } = await supabaseClient.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Gheir Mamnoon ERP' });
                 if (error) throw error;
                 mfaFactorId = data.id;
                 document.getElementById('mfa-svg').innerHTML = data.totp.qr_code;
@@ -2673,7 +2758,7 @@
     const { data: authData, error: authError } = await tempAuthClient.auth.signUp({
         email: cleanEmail,
         password: cleanPass,
-        options: { data: { full_name: cleanName, name: cleanName, role: role } }
+        options: { data: { full_name: cleanName, name: cleanName, role: role, tenant_id: (window.SAFWAT_BRAND && window.SAFWAT_BRAND.tenantId) || 1 } }
     });
 
     if (authError) {
@@ -2688,7 +2773,8 @@
                 await supabaseClient.from('profiles').upsert([{
                     id: existingUid,
                     full_name: cleanName,
-                    role: role
+                    role: role,
+                    tenant_id: (window.SAFWAT_BRAND && window.SAFWAT_BRAND.tenantId) || 1
                 }], { onConflict: 'id' });
                 return { userId: existingUid, authActivated: true };
             }
@@ -2705,7 +2791,8 @@
     const { error: profErr } = await supabaseClient.from('profiles').upsert([{
         id: createdUserId,
         full_name: cleanName,
-        role: role
+        role: role,
+                    tenant_id: (window.SAFWAT_BRAND && window.SAFWAT_BRAND.tenantId) || 1
     }], { onConflict: 'id' });
 
     if (profErr) console.warn('Profile upsert notice:', profErr.message);
@@ -2716,7 +2803,7 @@
 window.activateStudentSupabaseAuth = async function(studentId) {
     const s = dbStudents.find(x => String(x.id) === String(studentId));
     if (!s) return;
-    const email = (s.email || `${s.name.toLowerCase().replace(/[^a-z0-9]/g, '')}@safwatulhuffaz.edu`).trim();
+    const email = (s.email || `${s.name.toLowerCase().replace(/[^a-z0-9]/g, '')}@gheirmamnoon.edu`).trim();
     const pass = getStudentStoredPass(s);
 
     window.showToast(`⏳ جاري تفعيل وربط حساب (${s.name}) على Supabase Auth...`, 'info');
@@ -2750,7 +2837,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             for (let i = 0; i < raw.length; i++) en += /[a-zA-Z0-9]/.test(raw[i]) ? raw[i] : (arabicToEnglishMap[raw[i]] || '');
             const clean = en.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 14) || 'student';
             const num = Math.floor(10 + Math.random() * 89);
-            emailInput.value = `${clean}.${num}@safwatulhuffaz.edu`;
+            emailInput.value = `${clean}.${num}@gheirmamnoon.edu`;
             emailInput.setAttribute('data-auto', 'true');
         };
 
@@ -2940,7 +3027,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
                     const s = dbStudents.find(x => String(x.id) === String(slot.studentId));
                     if (s) {
                         const zoom = t.zoom_link || getAcademyPortalUrl();
-                        const msg = `🕌 *أكاديمية صفوة الحفاظ | منبه الحلقات الذكي* ⏰\n\nتذكير بموعد حلقة الطالب البطل *(${s.name})* مع فضيلة *${t.title || 'الشيخ'} ${t.name_ar}* خلال 30 دقيقة (${hoursGrid[nextSlotIdx]} بتوقيت القاهرة).\n\n🎥 *رابط دخول الحلقة المباشر:*\n${zoom}`;
+                        const msg = `🕌 *أكاديمية غير ممنون | منبه الحلقات الذكي* ⏰\n\nتذكير بموعد حلقة الطالب البطل *(${s.name})* مع فضيلة *${t.title || 'الشيخ'} ${t.name_ar}* خلال 30 دقيقة (${hoursGrid[nextSlotIdx]} بتوقيت القاهرة).\n\n🎥 *رابط دخول الحلقة المباشر:*\n${zoom}`;
                         await dispatchAdminWhatsApp(s.parent_phone || s.phone, msg, s, false, true);
                         await sleep(1200);
                         sent++;
@@ -3016,7 +3103,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
 
         // ================= التحميل الأولي، الصلاحيات (RBAC)، وجلب البيانات =================
         window.onload = async () => {
-            if (localStorage.getItem('Safwat_Admin_Dark') === 'true') {
+            if (localStorage.getItem('GM_Admin_Dark') === 'true') {
                 document.documentElement.classList.add('dark');
                 if (document.getElementById('admin-dark-btn')) document.getElementById('admin-dark-btn').innerText = '☀️';
             }
@@ -3356,8 +3443,8 @@ window.activateStudentSupabaseAuth = async function(studentId) {
                 const stuAtt = dbAttendance.filter(a => String(a.student_id) === String(s.id) && a.status === 'present' && new Date(a.date || a.created_at) >= sevenDaysAgo);
                 const isEn = (s.is_arab === false || String(s.is_arab) === 'false');
                 const msg = isEn
-                    ? `🕌 *Safwat Al-Huffaz Academy*\n📊 *Weekly Progress Digest*\n👤 *Student:* ${s.name}\n✅ *Completed Sessions (7 Days):* ${stuAtt.length}\n⭐ *Merit Stars:* ${s.stars_balance || 0} ⭐\n📌 *Remaining Package Balance:* ${s.remaining_sessions || 0} sessions`
-                    : `🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n📊 *ملخص الحصاد الأسبوعي لولي الأمر*\n👤 *الطالب البطل:* ${s.name}\n✅ *الحلقات المنجزة هذا الأسبوع:* ${stuAtt.length} حلقات\n⭐ *رصيد النجوم:* ${s.stars_balance || 0} نجمة\n📌 *الرصيد المتبقي بالباقة:* ${s.remaining_sessions || 0} حصة`;
+                    ? `🕌 *Gheir Mamnoon Academy*\n📊 *Weekly Progress Digest*\n👤 *Student:* ${s.name}\n✅ *Completed Sessions (7 Days):* ${stuAtt.length}\n⭐ *Merit Stars:* ${s.stars_balance || 0} ⭐\n📌 *Remaining Package Balance:* ${s.remaining_sessions || 0} sessions`
+                    : `🕌 *أكاديمية غير ممنون للقرآن الكريم*\n📊 *ملخص الحصاد الأسبوعي لولي الأمر*\n👤 *الطالب البطل:* ${s.name}\n✅ *الحلقات المنجزة هذا الأسبوع:* ${stuAtt.length} حلقات\n⭐ *رصيد النجوم:* ${s.stars_balance || 0} نجمة\n📌 *الرصيد المتبقي بالباقة:* ${s.remaining_sessions || 0} حصة`;
                 await dispatchAdminWhatsApp(s.parent_phone || s.phone, msg, s, false, true);
                 sent++;
                 await sleep(1500);
@@ -3512,7 +3599,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
 
                 await dispatchAdminWhatsApp(
                     phone,
-                    `🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n👑 *مرحباً بك فضيلة ${title} / ${name_ar}*\nتم إنشاء وتفعيل حسابكم الرسمي في بوابة المعلمين بنجاح.`,
+                    `🕌 *أكاديمية غير ممنون للقرآن الكريم*\n👑 *مرحباً بك فضيلة ${title} / ${name_ar}*\nتم إنشاء وتفعيل حسابكم الرسمي في بوابة المعلمين بنجاح.`,
                     newTeacherObj,
                     true
                 );
@@ -3531,7 +3618,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             if (!t) return;
             await dispatchAdminWhatsApp(
                 t.phone,
-                `🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n👑 *مرحباً بك فضيلة ${t.title || 'الشيخ'} / ${t.name_ar}*\nإليك بيانات الدخول لبوابة المعلم المعتمدة:`,
+                `🕌 *أكاديمية غير ممنون للقرآن الكريم*\n👑 *مرحباً بك فضيلة ${t.title || 'الشيخ'} / ${t.name_ar}*\nإليك بيانات الدخول لبوابة المعلم المعتمدة:`,
                 t,
                 true
             );
@@ -3867,18 +3954,18 @@ window.activateStudentSupabaseAuth = async function(studentId) {
                     if (refStu) {
                         const bonusRem = (parseInt(refStu.remaining_sessions) || 0) + 1;
                         await supabaseClient.from('students').update({ remaining_sessions: bonusRem }).eq('id', refStu.id);
-                        await dispatchAdminWhatsApp(refStu.parent_phone || refStu.phone, `🕌 *أكاديمية صفوة الحفاظ | برنامج سفراء الأكاديمية* 🤝\n\nشكراً لدعوتكم الكريمة للطالب الجديد *(${nameEn})*! 🎁\nتمت إضافة *(+1 حصة مجانية)* لرصيد الطالب البطل *(${refStu.name})* ليصبح رصيده الحالي *(${bonusRem} حصة)*. بارك الله فيكم!`, refStu, false, true);
+                        await dispatchAdminWhatsApp(refStu.parent_phone || refStu.phone, `🕌 *أكاديمية غير ممنون | برنامج سفراء الأكاديمية* 🤝\n\nشكراً لدعوتكم الكريمة للطالب الجديد *(${nameEn})*! 🎁\nتمت إضافة *(+1 حصة مجانية)* لرصيد الطالب البطل *(${refStu.name})* ليصبح رصيده الحالي *(${bonusRem} حصة)*. بارك الله فيكم!`, refStu, false, true);
                     }
                 }
 
                 const portalLink = getAcademyPortalUrl();
                 let waMessage = isTrial
                     ? (isArabSelection
-                        ? `🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n🆓 *مرحباً ببطلنا (${nameEn}) في الحصة التجريبية المجانية!* 🌟\n\nتم تفعيل حسابك التجريبي ومقعد تقييم المستوى المجاني على بوابة الطالب الذكية.\n\n🌐 *بيانات الدخول لمنصة الطالب:*\n🔗 *رابط المنصة:* ${portalLink}\n👤 *اسم المستخدم (الإيميل):* ${customEmail}\n🔑 *كلمة المرور:* ${customPass}`
-                        : `🕌 *Safwat Al-Huffaz Academy*\n🆓 *Welcome (${nameEn}) to Your Free Trial Evaluation Session!* 🌟\n\n🌐 *Student Portal Login Info:*\n🔗 *Platform Link:* ${portalLink}\n👤 *Username (Email):* ${customEmail}\n🔑 *Password:* ${customPass}`)
+                        ? `🕌 *أكاديمية غير ممنون للقرآن الكريم*\n🆓 *مرحباً ببطلنا (${nameEn}) في الحصة التجريبية المجانية!* 🌟\n\nتم تفعيل حسابك التجريبي ومقعد تقييم المستوى المجاني على بوابة الطالب الذكية.\n\n🌐 *بيانات الدخول لمنصة الطالب:*\n🔗 *رابط المنصة:* ${portalLink}\n👤 *اسم المستخدم (الإيميل):* ${customEmail}\n🔑 *كلمة المرور:* ${customPass}`
+                        : `🕌 *Gheir Mamnoon Academy*\n🆓 *Welcome (${nameEn}) to Your Free Trial Evaluation Session!* 🌟\n\n🌐 *Student Portal Login Info:*\n🔗 *Platform Link:* ${portalLink}\n👤 *Username (Email):* ${customEmail}\n🔑 *Password:* ${customPass}`)
                     : (isArabSelection
-                        ? `🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n👑 *مرحباً ببطلنا الرسمي (${nameEn}) في عائلتنا القرآنية!* 🌟\n\nتم تفعيل حسابك وباقتك الدراسية (${sessions} حلقات) على بوابة الطالب الذكية.\n\n🌐 *بيانات الدخول لمنصة الطالب:*\n🔗 *رابط المنصة:* ${portalLink}\n👤 *اسم المستخدم (الإيميل):* ${customEmail}\n🔑 *كلمة المرور:* ${customPass}`
-                        : `🕌 *Safwat Al-Huffaz Academy*\n👑 *Welcome (${nameEn}) to Our Official Quranic Family!* 🌟\n\n🌐 *Student Portal Login Info:*\n🔗 *Platform Link:* ${portalLink}\n👤 *Username (Email):* ${customEmail}\n🔑 *Password:* ${customPass}`);
+                        ? `🕌 *أكاديمية غير ممنون للقرآن الكريم*\n👑 *مرحباً ببطلنا الرسمي (${nameEn}) في عائلتنا القرآنية!* 🌟\n\nتم تفعيل حسابك وباقتك الدراسية (${sessions} حلقات) على بوابة الطالب الذكية.\n\n🌐 *بيانات الدخول لمنصة الطالب:*\n🔗 *رابط المنصة:* ${portalLink}\n👤 *اسم المستخدم (الإيميل):* ${customEmail}\n🔑 *كلمة المرور:* ${customPass}`
+                        : `🕌 *Gheir Mamnoon Academy*\n👑 *Welcome (${nameEn}) to Our Official Quranic Family!* 🌟\n\n🌐 *Student Portal Login Info:*\n🔗 *Platform Link:* ${portalLink}\n👤 *Username (Email):* ${customEmail}\n🔑 *Password:* ${customPass}`);
 
                 await dispatchAdminWhatsApp(studentPhone || phone, waMessage, null, false);
 
@@ -3997,8 +4084,8 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             if (!studentPhone) return window.showToast('⚠️ رقم هاتف الطالب/ولي الأمر غير مسجل!', 'warning');
             const portalLink = getAcademyPortalUrl();
             let message = isArab
-                ? `🌟 *أهلاً بك في أكاديمية صفوة الحفاظ للقرآن الكريم* 🌟\n\nالسلام عليكم ورحمة الله وبركاته يا بطلنا *(${studentName})*،\nتم تجهيز وتفعيل حسابك الشخصي على بوابة الطالب الذكية بنجاح! 📖✨\n\n🌐 *بيانات الدخول لمنصة الطالب:*\n🔗 *رابط المنصة:* ${portalLink}\n👤 *اسم المستخدم (الإيميل):* ${studentEmail}\n🔑 *كلمة المرور:* ${defaultPassword}\n\nنسأل الله أن يجعل القرآن ربيع قلبك ونور صدرك! 🚀`
-                : `🌟 *Welcome to Safwat Al-Huffaz Academy* 🌟\n\nAssalamu Alaikum Dear *(${studentName})*,\nYour Smart Student Portal account has been activated! 📖✨\n\n🌐 *Student Portal Login Info:*\n🔗 *Platform Link:* ${portalLink}\n👤 *Username (Email):* ${studentEmail}\n🔑 *Password:* ${defaultPassword}\n\nWishing you a blessed journey with the Glorious Quran! 🚀`;
+                ? `🌟 *أهلاً بك في أكاديمية غير ممنون للقرآن الكريم* 🌟\n\nالسلام عليكم ورحمة الله وبركاته يا بطلنا *(${studentName})*،\nتم تجهيز وتفعيل حسابك الشخصي على بوابة الطالب الذكية بنجاح! 📖✨\n\n🌐 *بيانات الدخول لمنصة الطالب:*\n🔗 *رابط المنصة:* ${portalLink}\n👤 *اسم المستخدم (الإيميل):* ${studentEmail}\n🔑 *كلمة المرور:* ${defaultPassword}\n\nنسأل الله أن يجعل القرآن ربيع قلبك ونور صدرك! 🚀`
+                : `🌟 *Welcome to Gheir Mamnoon Academy* 🌟\n\nAssalamu Alaikum Dear *(${studentName})*,\nYour Smart Student Portal account has been activated! 📖✨\n\n🌐 *Student Portal Login Info:*\n🔗 *Platform Link:* ${portalLink}\n👤 *Username (Email):* ${studentEmail}\n🔑 *Password:* ${defaultPassword}\n\nWishing you a blessed journey with the Glorious Quran! 🚀`;
 
             await dispatchAdminWhatsApp(studentPhone, message, null, false);
         };
@@ -4016,8 +4103,8 @@ window.activateStudentSupabaseAuth = async function(studentId) {
                 if (s && t) {
                     const isEn = (s.is_arab === false || String(s.is_arab) === 'false');
                     const stuMsg = isEn
-                        ? `🕌 *Safwat Al-Huffaz Academy*\n🔗 *Instructor Assigned*\n👤 *Student:* ${s.name}\n👨‍🏫 *Assigned Instructor:* ${t.name_en || t.name_ar}`
-                        : `🕌 *أكاديمية صفوة الحفاظ*\n🔗 *تسكين المعلم المشرف*\n👤 *الطالب:* ${s.name}\n👨‍🏫 *المعلم المشرف:* ${t.title || 'الشيخ'} ${t.name_ar}`;
+                        ? `🕌 *Gheir Mamnoon Academy*\n🔗 *Instructor Assigned*\n👤 *Student:* ${s.name}\n👨‍🏫 *Assigned Instructor:* ${t.name_en || t.name_ar}`
+                        : `🕌 *أكاديمية غير ممنون*\n🔗 *تسكين المعلم المشرف*\n👤 *الطالب:* ${s.name}\n👨‍🏫 *المعلم المشرف:* ${t.title || 'الشيخ'} ${t.name_ar}`;
                     await dispatchAdminWhatsApp(s.parent_phone || s.phone, stuMsg, s, false);
                 }
                 window.showToast(`🔗 تم ربط الطالب بالمعلم وإرسال إشعار واتساب!`); 
@@ -4295,7 +4382,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
         };
 
     window.fetchPaymentsLedgerFromDB = async function() {
-            let localLedger = JSON.parse(localStorage.getItem('Safwat_Payments_Ledger') || '[]');
+            let localLedger = JSON.parse(localStorage.getItem('GM_Payments_Ledger') || '[]');
             try {
                 const { data, error } = await supabaseClient
                     .from('student_payments_ledger')
@@ -4303,7 +4390,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
                     .order('created_at', { ascending: false });
                 if (!error && data) {
                     window.dbPaymentsLedger = data;
-                    localStorage.setItem('Safwat_Payments_Ledger', JSON.stringify(data));
+                    localStorage.setItem('GM_Payments_Ledger', JSON.stringify(data));
                     return;
                 }
             } catch (e) {}
@@ -4324,7 +4411,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
                 date: new Date().toISOString().split('T')[0]
             };
             window.dbOperationalExpenses.unshift(newExp);
-            localStorage.setItem('Safwat_Operational_Expenses', JSON.stringify(window.dbOperationalExpenses));
+            localStorage.setItem('GM_Operational_Expenses', JSON.stringify(window.dbOperationalExpenses));
             e.target.reset();
             window.renderFinancials();
             window.showToast('🧾 تم تسجيل المصروف التشغيلي وخصمه من صافي الربح!');
@@ -4332,7 +4419,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
 
         window.deleteOperationalExpense = function(expId) {
             window.dbOperationalExpenses = (window.dbOperationalExpenses || []).filter(x => x.id !== expId);
-            localStorage.setItem('Safwat_Operational_Expenses', JSON.stringify(window.dbOperationalExpenses));
+            localStorage.setItem('GM_Operational_Expenses', JSON.stringify(window.dbOperationalExpenses));
             window.renderFinancials();
             window.showToast('🗑️ تم حذف المصروف التشغيلي.');
         };
@@ -4518,12 +4605,12 @@ window.activateStudentSupabaseAuth = async function(studentId) {
                 } catch (sqlErr) {}
 
                 window.dbPaymentsLedger.unshift(ledgerEntry);
-                localStorage.setItem('Safwat_Payments_Ledger', JSON.stringify(window.dbPaymentsLedger));
+                localStorage.setItem('GM_Payments_Ledger', JSON.stringify(window.dbPaymentsLedger));
 
                 const curr = s.currency || 'USD';
                 const waMsg = isEn
-                    ? `🕌 *Safwat Al-Huffaz Academy*\n🧾 *Official Payment & Subscription Receipt*\n━━━━━━━━━━━━━━━━━━\n👤 *Student:* ${s.name}\n💵 *Amount Paid Now:* *${paidNow.toFixed(2)} ${curr}*\n🗓️ *Covered Period (Month/Year):* ${analysis.coveredMonthsLabel}\n📌 *Payment Status:* ${analysis.statusBadgeText}\n🎯 *Sessions Added:* +${addedSessions} sessions (Total Balance: ${updatedSessions})\n📅 *Valid From:* ${startDateStr} *Until:* *${expiryDateStr}*`
-                    : `🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n🧾 *إيصال سداد وتجديد اشتراك رسمي*\n━━━━━━━━━━━━━━━━━━\n👤 *الطالب البطل:* ${s.name}\n💵 *المبلغ المسدد الآن:* *${paidNow.toFixed(2)} ${curr}*\n🗓️ *الشهور والسنة المغطاة:* ${analysisAr.coveredMonthsLabel}\n📌 *تفاصيل السداد:* ${analysisAr.statusBadgeText}\n🎯 *الحصص المضافة:* +${addedSessions} حصة (إجمالي الرصيد الحالي: ${updatedSessions} حصة)\n📅 *فترة الصلاحية:* من ${startDateStr} حتى *${expiryDateStr}*`;
+                    ? `🕌 *Gheir Mamnoon Academy*\n🧾 *Official Payment & Subscription Receipt*\n━━━━━━━━━━━━━━━━━━\n👤 *Student:* ${s.name}\n💵 *Amount Paid Now:* *${paidNow.toFixed(2)} ${curr}*\n🗓️ *Covered Period (Month/Year):* ${analysis.coveredMonthsLabel}\n📌 *Payment Status:* ${analysis.statusBadgeText}\n🎯 *Sessions Added:* +${addedSessions} sessions (Total Balance: ${updatedSessions})\n📅 *Valid From:* ${startDateStr} *Until:* *${expiryDateStr}*`
+                    : `🕌 *أكاديمية غير ممنون للقرآن الكريم*\n🧾 *إيصال سداد وتجديد اشتراك رسمي*\n━━━━━━━━━━━━━━━━━━\n👤 *الطالب البطل:* ${s.name}\n💵 *المبلغ المسدد الآن:* *${paidNow.toFixed(2)} ${curr}*\n🗓️ *الشهور والسنة المغطاة:* ${analysisAr.coveredMonthsLabel}\n📌 *تفاصيل السداد:* ${analysisAr.statusBadgeText}\n🎯 *الحصص المضافة:* +${addedSessions} حصة (إجمالي الرصيد الحالي: ${updatedSessions} حصة)\n📅 *فترة الصلاحية:* من ${startDateStr} حتى *${expiryDateStr}*`;
 
                 await dispatchAdminWhatsApp(s.parent_phone || s.phone, waMsg, s, false);
 
@@ -4767,8 +4854,8 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             const expStr = s.expiry_date || analysis.expiryDateStr;
 
             const msg = isEn
-                ? `🕌 *Safwat Al-Huffaz Academy*\n💳 *Detailed Subscription & Financial Statement*\n━━━━━━━━━━━━━━━━━━\n👤 *Student:* ${s.name}\n💵 *Total Paid:* *${(parseFloat(s.paid_amount)||0).toFixed(2)} ${curr}*\n🗓️ *Covered Months & Year:* ${analysis.coveredMonthsLabel}\n📌 *Coverage Status:* ${analysis.statusBadgeText}\n🎯 *Remaining Sessions Balance:* ${s.remaining_sessions || 0} sessions\n📅 *Subscription Expiry Date:* *${expStr}*`
-                : `🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n💳 *كشف حساب الاشتراك والتغطية الشهرية*\n━━━━━━━━━━━━━━━━━━\n👤 *الطالب البطل:* ${s.name}\n💵 *إجمالي المسدد:* *${(parseFloat(s.paid_amount)||0).toFixed(2)} ${curr}*\n🗓️ *الشهور والسنة المغطاة:* ${analysis.coveredMonthsLabel}\n📌 *حالة التغطية:* ${analysis.statusBadgeText}\n🎯 *رصيد الحلقات المتبقي:* ${s.remaining_sessions || 0} حصة\n📅 *تاريخ انتهاء الاشتراك:* *${expStr}*`;
+                ? `🕌 *Gheir Mamnoon Academy*\n💳 *Detailed Subscription & Financial Statement*\n━━━━━━━━━━━━━━━━━━\n👤 *Student:* ${s.name}\n💵 *Total Paid:* *${(parseFloat(s.paid_amount)||0).toFixed(2)} ${curr}*\n🗓️ *Covered Months & Year:* ${analysis.coveredMonthsLabel}\n📌 *Coverage Status:* ${analysis.statusBadgeText}\n🎯 *Remaining Sessions Balance:* ${s.remaining_sessions || 0} sessions\n📅 *Subscription Expiry Date:* *${expStr}*`
+                : `🕌 *أكاديمية غير ممنون للقرآن الكريم*\n💳 *كشف حساب الاشتراك والتغطية الشهرية*\n━━━━━━━━━━━━━━━━━━\n👤 *الطالب البطل:* ${s.name}\n💵 *إجمالي المسدد:* *${(parseFloat(s.paid_amount)||0).toFixed(2)} ${curr}*\n🗓️ *الشهور والسنة المغطاة:* ${analysis.coveredMonthsLabel}\n📌 *حالة التغطية:* ${analysis.statusBadgeText}\n🎯 *رصيد الحلقات المتبقي:* ${s.remaining_sessions || 0} حصة\n📅 *تاريخ انتهاء الاشتراك:* *${expStr}*`;
 
             await dispatchAdminWhatsApp(s.parent_phone || s.phone, msg, s, false);
         };
@@ -4788,7 +4875,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
 
                 await dispatchAdminWhatsApp(
                     t.phone,
-                    `🕌 *أكاديمية صفوة الحفاظ | الإدارة المالية*\n💰 *إشعار تحويل وصرف الراتب*\n👨‍🏫 *المعلم:* ${t.title || 'الشيخ'} ${t.name_ar}\n✅ *عدد الحلقات المنجزة:* ${sessionsCount} حلقة\n💵 *المبلغ المحوّل:* *$${amount.toFixed(2)}*\n💳 *وسيلة التحويل:* ${t.payment_method || ''} (${t.payment_details || ''})\n✨ جزاكم الله خيراً وبارك في علمكم ووقتكم!`,
+                    `🕌 *أكاديمية غير ممنون | الإدارة المالية*\n💰 *إشعار تحويل وصرف الراتب*\n👨‍🏫 *المعلم:* ${t.title || 'الشيخ'} ${t.name_ar}\n✅ *عدد الحلقات المنجزة:* ${sessionsCount} حلقة\n💵 *المبلغ المحوّل:* *$${amount.toFixed(2)}*\n💳 *وسيلة التحويل:* ${t.payment_method || ''} (${t.payment_details || ''})\n✨ جزاكم الله خيراً وبارك في علمكم ووقتكم!`,
                     t,
                     true
                 );
@@ -4883,8 +4970,8 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             }]);
 
             const msg = isEn
-                ? `🕌 *Safwat Al-Huffaz Academy*\n🎓 *Course Enrollment Activated*\n👤 *Student:* ${std.name}\n📚 *Course:* ${crs.title}\n🔐 *Secret Access Code:* *${crs.access_code}*`
-                : `🕌 *أكاديمية صفوة الحفاظ*\n🎓 *تفعيل اشتراكك في دورة (${crs.title})*\n👤 *الطالب:* ${std.name}\n🔐 *كود الدخول السري للدورة:* *${crs.access_code}*`;
+                ? `🕌 *Gheir Mamnoon Academy*\n🎓 *Course Enrollment Activated*\n👤 *Student:* ${std.name}\n📚 *Course:* ${crs.title}\n🔐 *Secret Access Code:* *${crs.access_code}*`
+                : `🕌 *أكاديمية غير ممنون*\n🎓 *تفعيل اشتراكك في دورة (${crs.title})*\n👤 *الطالب:* ${std.name}\n🔐 *كود الدخول السري للدورة:* *${crs.access_code}*`;
             await dispatchAdminWhatsApp(std.parent_phone || std.phone, msg, std, false);
 
             await renderAdminCoursesSection();
@@ -5115,7 +5202,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             for (let en of enrolled) {
                 const st = dbStudents.find(s => String(s.id) === String(en.student_id));
                 if (st) {
-                    await dispatchAdminWhatsApp(st.parent_phone || st.phone, `🕌 *أكاديمية صفوة الحفاظ*\n📚 *محاضرة جديدة في دورة (${crs?.title || ''})*\n👤 *الطالب:* ${st.name}\n📖 *المحاضرة:* ${title}`, st, false, true);
+                    await dispatchAdminWhatsApp(st.parent_phone || st.phone, `🕌 *أكاديمية غير ممنون*\n📚 *محاضرة جديدة في دورة (${crs?.title || ''})*\n👤 *الطالب:* ${st.name}\n📖 *المحاضرة:* ${title}`, st, false, true);
                     await sleep(1000);
                 }
             }
@@ -5148,7 +5235,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             for (let en of enrolled) {
                 const st = dbStudents.find(s => String(s.id) === String(en.student_id));
                 if (st) {
-                    await dispatchAdminWhatsApp(st.parent_phone || st.phone, `🕌 *أكاديمية صفوة الحفاظ*\n📝 *تكليف جديد في دورة (${crs?.title || ''})*\n📌 *المطلوب:* ${rawTitle}\n⏰ *آخر موعد للتسليم:* ${due}`, st, false, true);
+                    await dispatchAdminWhatsApp(st.parent_phone || st.phone, `🕌 *أكاديمية غير ممنون*\n📝 *تكليف جديد في دورة (${crs?.title || ''})*\n📌 *المطلوب:* ${rawTitle}\n⏰ *آخر موعد للتسليم:* ${due}`, st, false, true);
                     await sleep(1000);
                 }
             }
@@ -5195,7 +5282,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
 
             if (std) {
                 const crs = cachedAdminCourses.find(c => String(c.id) === String(window.activeAdminCourseId));
-                await dispatchAdminWhatsApp(std.parent_phone || std.phone, `🕌 *أكاديمية صفوة الحفاظ*\n📊 *إعلان نتيجة دورة (${crs?.title || ''})*\n👤 *الطالب:* ${std.name}\n🎯 *الدرجة:* ${score} / 100\n💬 *التقدير:* ${notes}`, std, false);
+                await dispatchAdminWhatsApp(std.parent_phone || std.phone, `🕌 *أكاديمية غير ممنون*\n📊 *إعلان نتيجة دورة (${crs?.title || ''})*\n👤 *الطالب:* ${std.name}\n🎯 *الدرجة:* ${score} / 100\n💬 *التقدير:* ${notes}`, std, false);
             }
             await renderAdminCoursesSection();
             window.showToast('✔️ تم اعتماد النتيجة وإرسالها واتساب!');
@@ -5213,7 +5300,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             if (std) {
                 const newStars = (parseInt(std.stars_balance) || 0) + 2;
                 await supabaseClient.from('students').update({ stars_balance: newStars }).eq('id', std.id);
-                await dispatchAdminWhatsApp(std.parent_phone || std.phone, `🕌 *أكاديمية صفوة الحفاظ*\n✅ *اعتماد حل التكليف (+2 نجوم)*\n👤 *الطالب:* ${std.name}\n📝 *التكليف:* ${assignTitle}\n💬 *تعليق الإدارة:* ${feedback}`, std, false);
+                await dispatchAdminWhatsApp(std.parent_phone || std.phone, `🕌 *أكاديمية غير ممنون*\n✅ *اعتماد حل التكليف (+2 نجوم)*\n👤 *الطالب:* ${std.name}\n📝 *التكليف:* ${assignTitle}\n💬 *تعليق الإدارة:* ${feedback}`, std, false);
             }
             await renderAdminCoursesSection();
             window.showToast('✅ تم اعتماد حل الطالب وإرسال المكافأة واتساب!');
@@ -5295,7 +5382,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             if (!rep) return;
             const std = dbStudents.find(s => String(s.id) === String(rep.student_id));
             const phone = std ? (std.parent_phone || std.phone || '') : '';
-            const text = `🕌 *أكاديمية صفوة الحفاظ*\n📋 *تقرير متابعة الحلقة*\n👤 *الطالب:* ${rep.sName || std?.name || '-'}\n📅 *التاريخ:* ${rep.date}\n📌 *الحالة:* ${rep.status === 'present' ? 'حاضر 🟢' : 'غياب 🔴'}`;
+            const text = `🕌 *أكاديمية غير ممنون*\n📋 *تقرير متابعة الحلقة*\n👤 *الطالب:* ${rep.sName || std?.name || '-'}\n📅 *التاريخ:* ${rep.date}\n📌 *الحالة:* ${rep.status === 'present' ? 'حاضر 🟢' : 'غياب 🔴'}`;
             await dispatchAdminWhatsApp(phone, text, std, false);
         };
 
@@ -5330,7 +5417,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             await supabaseClient.from('reward_orders').update({ status: 'approved' }).eq('id', orderId);
             const std = dbStudents.find(s => s.name === studentName);
             if (std) {
-                await dispatchAdminWhatsApp(std.parent_phone || std.phone, `🕌 *أكاديمية صفوة الحفاظ*\n🎁 *تهنئة اعتماد جائزة متجر الأبطال*\n👑 *الطالب البطل:* ${std.name}\n🏆 *الجائزة:* ${rewardName}\n✨ مبارك يا بطل القرآن، فخورون بتميزك واجتهادك!`, std, false);
+                await dispatchAdminWhatsApp(std.parent_phone || std.phone, `🕌 *أكاديمية غير ممنون*\n🎁 *تهنئة اعتماد جائزة متجر الأبطال*\n👑 *الطالب البطل:* ${std.name}\n🏆 *الجائزة:* ${rewardName}\n✨ مبارك يا بطل القرآن، فخورون بتميزك واجتهادك!`, std, false);
             }
             window.showToast(`✅ تم اعتماد المكافأة وإرسال تهنئة واتساب للطالب: ${studentName}`);
             await window.fetchAllDataFromSupabase();
@@ -5351,7 +5438,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             const targetTeachers = targetId === 'all' ? globalTeachers.filter(t => t.status === 'active') : globalTeachers.filter(t => String(t.id) === String(targetId));
             for (let t of targetTeachers) {
                 if (t.phone) {
-                    await dispatchAdminWhatsApp(t.phone, `🕌 *القيادة العليا | أكاديمية صفوة الحفاظ*\n📢 *${title}*\n\n${body}`, t, true, targetId === 'all');
+                    await dispatchAdminWhatsApp(t.phone, `🕌 *القيادة العليا | أكاديمية غير ممنون*\n📢 *${title}*\n\n${body}`, t, true, targetId === 'all');
                     if (targetId === 'all') await sleep(1200);
                 }
             }
@@ -5374,7 +5461,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
 
             await supabaseClient.from('student_notifications').insert([{ target: cleanTargetName, type, title, body, expiry }]);
             for (let s of targetStudents) {
-                await dispatchAdminWhatsApp(s.parent_phone || s.phone, `🕌 *أكاديمية صفوة الحفاظ*\n📢 *${title}*\n👤 *الطالب:* ${s.name}\n\n${body}`, s, false, targetVal === 'all');
+                await dispatchAdminWhatsApp(s.parent_phone || s.phone, `🕌 *أكاديمية غير ممنون*\n📢 *${title}*\n👤 *الطالب:* ${s.name}\n\n${body}`, s, false, targetVal === 'all');
                 if (targetVal === 'all') await sleep(1200);
             }
             window.showToast('🚀 تم إرسال الإشعار للبوابة والواتساب مع بيانات الدخول!'); 
@@ -5417,9 +5504,9 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             const pass = getStudentStoredPass(s);
 
             if (isEn) {
-                return `🕌 *Safwat Al-Huffaz Academy*\n🚀 *New Platform Update Released!*\n━━━━━━━━━━━━━━━━━━\nAssalamu Alaikum Hero *(${s.name})* 🌟\n${customNote}\n\n🌐 *Your Student Portal Login Details:*\n🔗 *Platform Link:* ${portalUrl}\n👤 *Username (Email):* ${email}\n🔑 *Password:* ${pass}\n━━━━━━━━━━━━━━━━━━\n✨ Log in now and explore the new features!`;
+                return `🕌 *Gheir Mamnoon Academy*\n🚀 *New Platform Update Released!*\n━━━━━━━━━━━━━━━━━━\nAssalamu Alaikum Hero *(${s.name})* 🌟\n${customNote}\n\n🌐 *Your Student Portal Login Details:*\n🔗 *Platform Link:* ${portalUrl}\n👤 *Username (Email):* ${email}\n🔑 *Password:* ${pass}\n━━━━━━━━━━━━━━━━━━\n✨ Log in now and explore the new features!`;
             } else {
-                return `🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n🚀 *انطلاق التحديث الجديد لبوابة الطالب!*\n━━━━━━━━━━━━━━━━━━\nأهلاً ببطل القرآن *(${s.name})* 🌟\n${customNote}\n\n🌐 *بيانات الدخول المباشر لبوابتك:*\n🔗 *رابط المنصة:* ${portalUrl}\n👤 *اسم المستخدم (الإيميل):* ${email}\n🔑 *كلمة المرور:* ${pass}\n━━━━━━━━━━━━━━━━━━\n✨ ادخل الآن واستمتع بالمميزات الجديدة!`;
+                return `🕌 *أكاديمية غير ممنون للقرآن الكريم*\n🚀 *انطلاق التحديث الجديد لبوابة الطالب!*\n━━━━━━━━━━━━━━━━━━\nأهلاً ببطل القرآن *(${s.name})* 🌟\n${customNote}\n\n🌐 *بيانات الدخول المباشر لبوابتك:*\n🔗 *رابط المنصة:* ${portalUrl}\n👤 *اسم المستخدم (الإيميل):* ${email}\n🔑 *كلمة المرور:* ${pass}\n━━━━━━━━━━━━━━━━━━\n✨ ادخل الآن واستمتع بالمميزات الجديدة!`;
             }
         }
 
@@ -5443,7 +5530,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             try {
                 await supabaseClient.from('student_notifications').insert([{
                     target: 'الكل', type: 'success',
-                    title: '🚀 تحديث جديد ومميز في منصة أكاديمية صفوة الحفاظ!',
+                    title: '🚀 تحديث جديد ومميز في منصة أكاديمية غير ممنون!',
                     body: customNote,
                     expiry: new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0]
                 }]);
@@ -5515,7 +5602,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
         window.generateDemoEmail = function() {
             const num = Math.floor(100 + Math.random() * 899);
             document.getElementById('s-name').value = `Student ${num}`;
-            document.getElementById('s-custom-email').value = `student.${num}@safwatulhuffaz.edu`;
+            document.getElementById('s-custom-email').value = `student.${num}@gheirmamnoon.edu`;
             document.getElementById('s-custom-pass').value = '123456';
             document.getElementById('p-name').value = `ولي أمر الطالب ${num}`;
             document.getElementById('p-phone').value = `+201000000${num}`;
@@ -5553,7 +5640,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             await supabaseClient.from('students').update({ active_khatmas: newKhatmas }).eq('id', student.id);
             student.active_khatmas = newKhatmas;
             renderAdminStudentKhatmas(studentId);
-            await dispatchAdminWhatsApp(student.parent_phone || student.phone, `🕌 *أكاديمية صفوة الحفاظ*\n🎓 *اعتماد ختمة سند جديدة*\n👤 *الطالب:* ${student.name}\n📜 *القراءة:* ${Array.from(adminSelectedQiraat).join(' + ')}`, student, false);
+            await dispatchAdminWhatsApp(student.parent_phone || student.phone, `🕌 *أكاديمية غير ممنون*\n🎓 *اعتماد ختمة سند جديدة*\n👤 *الطالب:* ${student.name}\n📜 *القراءة:* ${Array.from(adminSelectedQiraat).join(' + ')}`, student, false);
             window.showToast('✅ تم اعتماد الختمة وإشعار الطالب واتساب!');
         };
 
@@ -5593,7 +5680,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
                 const parts = qiraaFull.split('-');
                 const newKhatmas = [...(student.active_khatmas || []), { qiraa: parts[0]?.trim() || qiraaFull, rewayah: parts[1]?.trim() || 'كامل الروايات', matn: matnStr, date: new Date().toISOString().split('T')[0] }];
                 await supabaseClient.from('students').update({ active_khatmas: newKhatmas }).eq('id', student.id);
-                await dispatchAdminWhatsApp(student.parent_phone || student.phone, `🕌 *أكاديمية صفوة الحفاظ*\n🎓 *تم اعتماد ختمة السند الجديدة للطالب (${student.name})*\n📜 *القراءة:* ${qiraaFull}`, student, false);
+                await dispatchAdminWhatsApp(student.parent_phone || student.phone, `🕌 *أكاديمية غير ممنون*\n🎓 *تم اعتماد ختمة السند الجديدة للطالب (${student.name})*\n📜 *القراءة:* ${qiraaFull}`, student, false);
             }
             await supabaseClient.from('notifications').delete().eq('id', notifId);
             await window.refreshAllDataSilent();
@@ -5736,7 +5823,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             }
             if (status === 'booked' && student) {
                 await supabaseClient.from('students').update({ teacher_id: tId }).eq('id', sId);
-                await dispatchAdminWhatsApp(student.parent_phone || student.phone, `🕌 *أكاديمية صفوة الحفاظ*\n📅 *تأكيد موعد الحلقة*\n👤 *الطالب:* ${student.name}\n🕒 *الموعد (بتوقيت القاهرة):* ${daysAr[dIdx]} الساعة ${hoursGrid[hIdx]}`, student, false);
+                await dispatchAdminWhatsApp(student.parent_phone || student.phone, `🕌 *أكاديمية غير ممنون*\n📅 *تأكيد موعد الحلقة*\n👤 *الطالب:* ${student.name}\n🕒 *الموعد (بتوقيت القاهرة):* ${daysAr[dIdx]} الساعة ${hoursGrid[hIdx]}`, student, false);
             }
             document.getElementById('slot-modal').classList.add('hidden');
             window.loadMasterGrid();
@@ -5908,7 +5995,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
         window.renderNewsFeed = function() {
             const ticker = document.getElementById('news-ticker-content');
             if (!ticker) return;
-            ticker.innerHTML = dbNotifications.length ? dbNotifications.slice(0, 5).map(n => `<span class="mx-8 text-xs font-bold text-amber-200">📢 ${n.title}: ${n.body}</span>`).join(' • ') : `<span class="mx-8 text-xs font-bold text-slate-200">🌟 أهلاً بكم في منظومة القيادة العليا لأكاديمية صفوة الحفاظ للقرآن الكريم واللغات (ERP Royal V16)</span>`;
+            ticker.innerHTML = dbNotifications.length ? dbNotifications.slice(0, 5).map(n => `<span class="mx-8 text-xs font-bold text-amber-200">📢 ${n.title}: ${n.body}</span>`).join(' • ') : `<span class="mx-8 text-xs font-bold text-slate-200">🌟 أهلاً بكم في منظومة القيادة العليا لأكاديمية غير ممنون للقرآن الكريم واللغات (ERP Royal V16)</span>`;
         };
 
         window.addLog = function(actor, action, isDanger = false) {
@@ -5934,7 +6021,7 @@ window.activateStudentSupabaseAuth = async function(studentId) {
             window.location.href = 'index.html';
         };
         // ================= 🔐 المحرك السيادي للصلاحيات وحجب البيانات (RBAC & Data Masking Engine V16) =================
-window.dbStaffPermissions = safeJsonParse(localStorage.getItem('Safwat_Staff_RBAC'), []);
+window.dbStaffPermissions = safeJsonParse(localStorage.getItem('GM_Staff_RBAC'), []);
 window.activeRbacRules = null; // القواعد المطبقة حالياً على الجلسة
 
 // القواعد الافتراضية للمعلمين والطلاب
@@ -6035,7 +6122,7 @@ window.saveStaffMemberPermissions = async function(e) {
         if (existingIdx > -1) window.dbStaffPermissions[existingIdx] = staffRecord;
         else window.dbStaffPermissions.unshift(staffRecord);
 
-        localStorage.setItem('Safwat_Staff_RBAC', JSON.stringify(window.dbStaffPermissions));
+        localStorage.setItem('GM_Staff_RBAC', JSON.stringify(window.dbStaffPermissions));
         await syncRbacConfigToSupabase();
 
         e.target.reset();
@@ -6053,8 +6140,8 @@ async function syncRbacConfigToSupabase() {
     try {
         const payload = {
             staff: window.dbStaffPermissions,
-            teacherGlobal: JSON.parse(localStorage.getItem('Safwat_Teacher_Global_Perms') || JSON.stringify(window.defaultTeacherPerms)),
-            studentGlobal: JSON.parse(localStorage.getItem('Safwat_Student_Global_Perms') || JSON.stringify(window.defaultStudentPerms))
+            teacherGlobal: JSON.parse(localStorage.getItem('GM_Teacher_Global_Perms') || JSON.stringify(window.defaultTeacherPerms)),
+            studentGlobal: JSON.parse(localStorage.getItem('GM_Student_Global_Perms') || JSON.stringify(window.defaultStudentPerms))
         };
         await supabaseClient.from('notifications').delete().eq('title', '__SYSTEM_RBAC_CONFIG__');
         await supabaseClient.from('notifications').insert([{
@@ -6074,10 +6161,10 @@ async function loadRbacConfigFromSupabase() {
             const parsed = JSON.parse(data.body);
             if (parsed.staff) {
                 window.dbStaffPermissions = parsed.staff;
-                localStorage.setItem('Safwat_Staff_RBAC', JSON.stringify(parsed.staff));
+                localStorage.setItem('GM_Staff_RBAC', JSON.stringify(parsed.staff));
             }
-            if (parsed.teacherGlobal) localStorage.setItem('Safwat_Teacher_Global_Perms', JSON.stringify(parsed.teacherGlobal));
-            if (parsed.studentGlobal) localStorage.setItem('Safwat_Student_Global_Perms', JSON.stringify(parsed.studentGlobal));
+            if (parsed.teacherGlobal) localStorage.setItem('GM_Teacher_Global_Perms', JSON.stringify(parsed.teacherGlobal));
+            if (parsed.studentGlobal) localStorage.setItem('GM_Student_Global_Perms', JSON.stringify(parsed.studentGlobal));
         }
     } catch (e) {}
 }
@@ -6155,7 +6242,7 @@ window.editStaffMemberPermissions = function(email) {
 window.deleteStaffMemberPermissions = async function(email) {
     if (!confirm('حذف هذا المسؤول وإلغاء صلاحياته؟')) return;
     window.dbStaffPermissions = window.dbStaffPermissions.filter(x => x.email !== email);
-    localStorage.setItem('Safwat_Staff_RBAC', JSON.stringify(window.dbStaffPermissions));
+    localStorage.setItem('GM_Staff_RBAC', JSON.stringify(window.dbStaffPermissions));
     await syncRbacConfigToSupabase();
     renderStaffPermissionsTable();
     window.showToast('🗑️ تم حذف المسؤول بنجاح.');
@@ -6293,13 +6380,13 @@ function populateRbacTeachersDropdown() {
 }
 
 window.loadTeacherPermissionsUI = function(targetId) {
-    let perms = JSON.parse(localStorage.getItem('Safwat_Teacher_Global_Perms') || JSON.stringify(window.defaultTeacherPerms));
+    let perms = JSON.parse(localStorage.getItem('GM_Teacher_Global_Perms') || JSON.stringify(window.defaultTeacherPerms));
     if (targetId !== 'GLOBAL_ALL') {
         const t = globalTeachers.find(x => String(x.id) === String(targetId));
         if (t && t.attachments && !Array.isArray(t.attachments) && t.attachments._perms) {
             perms = { ...perms, ...t.attachments._perms };
         } else {
-            const customMap = JSON.parse(localStorage.getItem('Safwat_Teacher_Custom_Perms') || '{}');
+            const customMap = JSON.parse(localStorage.getItem('GM_Teacher_Custom_Perms') || '{}');
             if (customMap[targetId]) perms = { ...perms, ...customMap[targetId] };
         }
     }
@@ -6323,11 +6410,11 @@ window.saveTeacherPortalPermissions = async function() {
     };
 
     if (targetId === 'GLOBAL_ALL') {
-        localStorage.setItem('Safwat_Teacher_Global_Perms', JSON.stringify(perms));
+        localStorage.setItem('GM_Teacher_Global_Perms', JSON.stringify(perms));
     } else {
-        const customMap = JSON.parse(localStorage.getItem('Safwat_Teacher_Custom_Perms') || '{}');
+        const customMap = JSON.parse(localStorage.getItem('GM_Teacher_Custom_Perms') || '{}');
         customMap[targetId] = perms;
-        localStorage.setItem('Safwat_Teacher_Custom_Perms', JSON.stringify(customMap));
+        localStorage.setItem('GM_Teacher_Custom_Perms', JSON.stringify(customMap));
     }
     await syncRbacConfigToSupabase();
     window.showToast('✅ تم حفظ وتعميم صلاحيات بوابة المعلمين بنجاح!', 'success');
@@ -6342,7 +6429,7 @@ function populateRbacStudentsDropdown() {
 }
 
 window.loadStudentPermissionsUI = function(targetId) {
-    let perms = JSON.parse(localStorage.getItem('Safwat_Student_Global_Perms') || JSON.stringify(window.defaultStudentPerms));
+    let perms = JSON.parse(localStorage.getItem('GM_Student_Global_Perms') || JSON.stringify(window.defaultStudentPerms));
     if (targetId !== 'GLOBAL_ALL') {
         const s = dbStudents.find(x => String(x.id) === String(targetId));
         if (s && s.quran_progress && s.quran_progress._student_perms) {
@@ -6369,7 +6456,7 @@ window.saveStudentPortalPermissions = async function() {
     };
 
     if (targetId === 'GLOBAL_ALL') {
-        localStorage.setItem('Safwat_Student_Global_Perms', JSON.stringify(perms));
+        localStorage.setItem('GM_Student_Global_Perms', JSON.stringify(perms));
     } else {
         const s = dbStudents.find(x => String(x.id) === String(targetId));
         if (s) {
@@ -6431,7 +6518,7 @@ window.rawMasterCourses = [];
 window.superAdminSelectedWorkspace = 'ALL'; // 'ALL' | 'MINE' | 'manager@email.com'
 
 // البريد الإلكتروني للمالك الرئيسي للأكاديمية (ضع بريدك الأساسي هنا)
-const PRIMARY_OWNER_EMAIL = "admin@safwatulhuffaz.edu"; 
+const PRIMARY_OWNER_EMAIL = "admin@gheirmamnoon.edu"; 
 
 window.isSuperOwner = function() {
     if (!currentUser || !currentUser.email) return false;
@@ -6466,7 +6553,7 @@ window.getRecordOwnerEmail = function(record, type = 'student') {
             const metaTag = record.attachments.find(a => a && a._owner_admin);
             if (metaTag) return String(metaTag._owner_admin).toLowerCase();
         }
-        const map = JSON.parse(localStorage.getItem('Safwat_Record_Owners_Map') || '{}');
+        const map = JSON.parse(localStorage.getItem('GM_Record_Owners_Map') || '{}');
         if (map[`t_${record.id}`]) return String(map[`t_${record.id}`]).toLowerCase();
     }
     // أي سجل قديم غير موسوم يتبع المالك الرئيسي تلقائياً ولا يراه المديرون الجدد
@@ -6482,7 +6569,7 @@ window.saveStaffMemberPermissions = async function(e) {
     if (window.dbStaffPermissions.length > 0) {
         const target = window.dbStaffPermissions[0];
         target.isolated_workspace = isIsolated;
-        localStorage.setItem('Safwat_Staff_RBAC', JSON.stringify(window.dbStaffPermissions));
+        localStorage.setItem('GM_Staff_RBAC', JSON.stringify(window.dbStaffPermissions));
         await syncRbacConfigToSupabase();
         renderWorkspaceSwitcherInHeader();
         populateTransferDropdowns();
@@ -6573,9 +6660,9 @@ window.addTeacher = async function(e) {
 
     const addedT = window.rawMasterTeachers.find(t => (t.email || '').toLowerCase() === emailInput);
     if (addedT) {
-        const map = JSON.parse(localStorage.getItem('Safwat_Record_Owners_Map') || '{}');
+        const map = JSON.parse(localStorage.getItem('GM_Record_Owners_Map') || '{}');
         map[`t_${addedT.id}`] = ownerEmail;
-        localStorage.setItem('Safwat_Record_Owners_Map', JSON.stringify(map));
+        localStorage.setItem('GM_Record_Owners_Map', JSON.stringify(map));
         await window.fetchAllDataFromSupabase();
     }
 };
@@ -6614,9 +6701,9 @@ window.transferEntityToManager = async function() {
         const cleanAtt = (Array.isArray(t.attachments) ? t.attachments : []).filter(a => !a._owner_admin);
         cleanAtt.push({ name: '🏢 محفظة الإدارة', url: '#', _owner_admin: targetOwner });
         await supabaseClient.from('teachers').update({ attachments: cleanAtt }).eq('id', t.id);
-        const map = JSON.parse(localStorage.getItem('Safwat_Record_Owners_Map') || '{}');
+        const map = JSON.parse(localStorage.getItem('GM_Record_Owners_Map') || '{}');
         map[`t_${t.id}`] = targetOwner;
-        localStorage.setItem('Safwat_Record_Owners_Map', JSON.stringify(map));
+        localStorage.setItem('GM_Record_Owners_Map', JSON.stringify(map));
     }
 
     window.showToast(`✅ تم نقل التبعية إلى محفظة (${targetOwner}) بنجاح!`, 'success');
@@ -6655,10 +6742,10 @@ function renderWorkspaceSwitcherInHeader() {
 
 // حفظ إعدادات الفرع الرئيسي الأصلية للعودة إليها عند الحاجة
 window.masterAcademyDefaults = {
-    name: academySettings?.name || "أكاديمية صفوة الحفاظ",
+    name: academySettings?.name || "أكاديمية غير ممنون",
     logo: academySettings?.logo || "",
-    greenId: localStorage.getItem('Safwat_GreenAPI_Id') || "",
-    greenToken: localStorage.getItem('Safwat_GreenAPI_Token') || ""
+    greenId: localStorage.getItem('GM_GreenAPI_Id') || "",
+    greenToken: localStorage.getItem('GM_GreenAPI_Token') || ""
 };
 
 // 1. استخراج بيانات الفرع والـ Green-API للمدير المالك للسجل أو الجلسة الحالية
@@ -6697,8 +6784,8 @@ window.getManagerBranchConfig = function(recipientObj = null, isTeacher = false)
         managerName: 'القيادة العليا',
         branchName: window.masterAcademyDefaults.name,
         branchLogo: window.masterAcademyDefaults.logo,
-        greenId: localStorage.getItem('Safwat_GreenAPI_Id_Master') || localStorage.getItem('Safwat_GreenAPI_Id') || '',
-        greenToken: localStorage.getItem('Safwat_GreenAPI_Token_Master') || localStorage.getItem('Safwat_GreenAPI_Token') || ''
+        greenId: localStorage.getItem('GM_GreenAPI_Id_Master') || localStorage.getItem('GM_GreenAPI_Id') || '',
+        greenToken: localStorage.getItem('GM_GreenAPI_Token_Master') || localStorage.getItem('GM_GreenAPI_Token') || ''
     };
 };
 
@@ -6719,7 +6806,7 @@ window.saveStaffMemberPermissions = async function(e) {
         target.branch_logo = branchLogo;
         target.green_id = greenId;
         target.green_token = greenToken;
-        localStorage.setItem('Safwat_Staff_RBAC', JSON.stringify(window.dbStaffPermissions));
+        localStorage.setItem('GM_Staff_RBAC', JSON.stringify(window.dbStaffPermissions));
         await syncRbacConfigToSupabase();
         renderStaffPermissionsTable();
     }
@@ -6747,15 +6834,15 @@ window.saveAdminGreenApiCredentials = async function() {
         window.activeRbacRules.green_token = token;
         const idx = window.dbStaffPermissions.findIndex(x => x.email.toLowerCase() === window.activeRbacRules.email.toLowerCase());
         if (idx > -1) window.dbStaffPermissions[idx] = window.activeRbacRules;
-        localStorage.setItem('Safwat_Staff_RBAC', JSON.stringify(window.dbStaffPermissions));
+        localStorage.setItem('GM_Staff_RBAC', JSON.stringify(window.dbStaffPermissions));
         await syncRbacConfigToSupabase();
         updateBranchBrandingAndHeader();
         window.showToast(`✅ تم حفظ وربط بوابة الواتساب الخاصة بفرع (${window.activeRbacRules.branch_name || window.activeRbacRules.name})!`, 'success');
     } else {
-        localStorage.setItem('Safwat_GreenAPI_Id', id);
-        localStorage.setItem('Safwat_GreenAPI_Token', token);
-        localStorage.setItem('Safwat_GreenAPI_Id_Master', id);
-        localStorage.setItem('Safwat_GreenAPI_Token_Master', token);
+        localStorage.setItem('GM_GreenAPI_Id', id);
+        localStorage.setItem('GM_GreenAPI_Token', token);
+        localStorage.setItem('GM_GreenAPI_Id_Master', id);
+        localStorage.setItem('GM_GreenAPI_Token_Master', token);
         updateBranchBrandingAndHeader();
         window.showToast('✅ تم حفظ وتفعيل بوابة الواتساب الرئيسية للأكاديمية!', 'success');
     }
@@ -6771,11 +6858,11 @@ window.dispatchAdminWhatsApp = async function(rawPhone, messageText, recipientOb
     }
 
     // استبدال اسم الأكاديمية في نص الرسالة باسم فرع المدير تلقائياً
-    if (branchCfg.branchName && branchCfg.branchName !== "أكاديمية صفوة الحفاظ") {
+    if (branchCfg.branchName && branchCfg.branchName !== "أكاديمية غير ممنون") {
         messageText = messageText
-            .replace(/أكاديمية صفوة الحفاظ للقرآن الكريم/g, branchCfg.branchName)
-            .replace(/أكاديمية صفوة الحفاظ/g, branchCfg.branchName)
-            .replace(/Safwat Al-Huffaz Academy/g, branchCfg.branchName);
+            .replace(/أكاديمية غير ممنون للقرآن الكريم/g, branchCfg.branchName)
+            .replace(/أكاديمية غير ممنون/g, branchCfg.branchName)
+            .replace(/Gheir Mamnoon Academy/g, branchCfg.branchName);
     }
 
     let cleanPhone = String(rawPhone || '').replace(/[^0-9]/g, '');
@@ -7069,7 +7156,7 @@ window.simulateStaffPermissions = function() {
                 payRow.kind = 'lessons'; payRow.lessons_count = n;
                 newSub.lessons_credit = curCr + n;
                 stuUpd.remaining_sessions = (parseInt(s.remaining_sessions) || 0) + n;
-                waMsg = '🕌 *أكاديمية صفوة الحفاظ*\n🧾 *إيصال سداد اشتراك (بالحصة)*\n👤 الطالب: ' + s.name + '\n💵 المبلغ: ' + amount + ' ' + cur + '\n➕ الحصص المضافة: ' + n + '\n🎯 الرصيد الحالي: ' + (curCr + n) + ' حصة' + (note ? '\n📝 ' + note : '');
+                waMsg = '🕌 *أكاديمية غير ممنون*\n🧾 *إيصال سداد اشتراك (بالحصة)*\n👤 الطالب: ' + s.name + '\n💵 المبلغ: ' + amount + ' ' + cur + '\n➕ الحصص المضافة: ' + n + '\n🎯 الرصيد الحالي: ' + (curCr + n) + ' حصة' + (note ? '\n📝 ' + note : '');
             } else {
                 var m = sbState.pay.months;
                 var from = sub.paid_through ? sbAddM(sub.paid_through, 1) : sbMS(new Date());
@@ -7080,7 +7167,7 @@ window.simulateStaffPermissions = function() {
                 if (!s.subscription_date) stuUpd.subscription_date = sbMS(new Date());
                 var spm = parseInt(s.sessions_per_month) || 0;
                 if (spm) stuUpd.remaining_sessions = (parseInt(s.remaining_sessions) || 0) + spm * m;
-                waMsg = '🕌 *أكاديمية صفوة الحفاظ*\n🧾 *إيصال سداد اشتراك*\n👤 الطالب: ' + s.name + '\n💵 المبلغ: ' + amount + ' ' + cur + '\n🗓️ التغطية: من ' + sbLabel(from) + ' إلى ' + sbLabel(to) + ' (' + m + ' شهر)\n✅ مدفوع لغاية شهر ' + sbLabel(to) + (note ? '\n📝 ' + note : '');
+                waMsg = '🕌 *أكاديمية غير ممنون*\n🧾 *إيصال سداد اشتراك*\n👤 الطالب: ' + s.name + '\n💵 المبلغ: ' + amount + ' ' + cur + '\n🗓️ التغطية: من ' + sbLabel(from) + ' إلى ' + sbLabel(to) + ' (' + m + ' شهر)\n✅ مدفوع لغاية شهر ' + sbLabel(to) + (note ? '\n📝 ' + note : '');
             }
             var r1 = await supabaseClient.from('student_subscriptions').upsert(newSub, { onConflict: 'student_id' });
             if (r1.error) throw r1.error;
@@ -7372,10 +7459,10 @@ window.simulateStaffPermissions = function() {
 (function(){
     if (window.__anAdmLoaded) return;
     window.__anAdmLoaded = true;
-    var CFG_KEY = 'Safwat_AdminAutoNotify_Cfg';
-    var LOG_KEY = 'Safwat_AdminAutoNotify_Log';
+    var CFG_KEY = 'GM_AdminAutoNotify_Cfg';
+    var LOG_KEY = 'GM_AdminAutoNotify_Log';
     var MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
-    var DEFAULT_TPL = '🕌 *أكاديمية صفوة الحفاظ*\n⏳ *تذكير بتجديد الاشتراك*\n👤 الطالب: {name}\n🗓️ الاشتراك الحالي مدفوع لغاية نهاية شهر {month} (متبقي {days} يوم).\nبرجاء التجديد في أقرب وقت لضمان استمرار حلقات الطالب، وجزاكم الله خيراً 🤲';
+    var DEFAULT_TPL = '🕌 *أكاديمية غير ممنون*\n⏳ *تذكير بتجديد الاشتراك*\n👤 الطالب: {name}\n🗓️ الاشتراك الحالي مدفوع لغاية نهاية شهر {month} (متبقي {days} يوم).\nبرجاء التجديد في أقرب وقت لضمان استمرار حلقات الطالب، وجزاكم الله خيراً 🤲';
     var cfg = { expiry: true, days: 7, tpl: DEFAULT_TPL };
     try { Object.assign(cfg, JSON.parse(localStorage.getItem(CFG_KEY) || '{}')); } catch(e){}
     function saveCfg(){ try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch(e){} }
@@ -7468,10 +7555,10 @@ window.simulateStaffPermissions = function() {
     setTimeout(function(){
         if (!cfg.expiry) return;
         var last = '';
-        try { last = localStorage.getItem('Safwat_AdminAutoNotify_LastAuto') || ''; } catch(e){}
+        try { last = localStorage.getItem('GM_AdminAutoNotify_LastAuto') || ''; } catch(e){}
         var today = new Date().toISOString().slice(0, 10);
         if (last === today) return;
-        try { localStorage.setItem('Safwat_AdminAutoNotify_LastAuto', today); } catch(e){}
+        try { localStorage.setItem('GM_AdminAutoNotify_LastAuto', today); } catch(e){}
         window.anExpScan(false);
     }, 8000);
 })();
@@ -7625,11 +7712,11 @@ window.simulateStaffPermissions = function() {
                 messageText += isTeacher ? buildTeacherCredentialsFooter(recipientObj) : buildStudentCredentialsFooter(recipientObj);
             }
             const branchCfg = (typeof getManagerBranchConfig === 'function') ? (getManagerBranchConfig(recipientObj, isTeacher) || {}) : {};
-            if (branchCfg.branchName && branchCfg.branchName !== 'أكاديمية صفوة الحفاظ') {
+            if (branchCfg.branchName && branchCfg.branchName !== 'أكاديمية غير ممنون') {
                 messageText = messageText
-                    .replace(/أكاديمية صفوة الحفاظ للقرآن الكريم/g, branchCfg.branchName)
-                    .replace(/أكاديمية صفوة الحفاظ/g, branchCfg.branchName)
-                    .replace(/Safwat Al-Huffaz Academy/g, branchCfg.branchName);
+                    .replace(/أكاديمية غير ممنون للقرآن الكريم/g, branchCfg.branchName)
+                    .replace(/أكاديمية غير ممنون/g, branchCfg.branchName)
+                    .replace(/Gheir Mamnoon Academy/g, branchCfg.branchName);
             }
         } catch (e) {}
 
@@ -7936,8 +8023,8 @@ window.simulateStaffPermissions = function() {
         function welcomeLink(phone, name, course) {
             var num = waNumber(phone);
             if (!num) return '';
-            var msg = '🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n\n' +
-                'أهلًا بك يا *' + name + '* في أسرة صفوة الحفاظ! 🌟\n' +
+            var msg = '🕌 *أكاديمية غير ممنون للقرآن الكريم*\n\n' +
+                'أهلًا بك يا *' + name + '* في أسرة غير ممنون! 🌟\n' +
                 (course ? '📚 الكورس المطلوب: *' + course + '*\n' : '') +
                 '\nسيتواصل معك فريق الأكاديمية قريبًا لتأكيد تفاصيل البدء إن شاء الله، وجزاكم الله خيرًا 🤲';
             return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
@@ -8591,7 +8678,7 @@ window.simulateStaffPermissions = function() {
                 if (totps[i].status === 'verified') { window.showToast('⚠️ المصادقة الثنائية مفعلة مسبقاً!', 'warning'); sf2faStatus(); return; }
                 if (totps[i].status === 'unverified') await supabaseClient.auth.mfa.unenroll({ factorId: totps[i].id });
             }
-            var en = await supabaseClient.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Safwat Al-Huffaz ERP' });
+            var en = await supabaseClient.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Gheir Mamnoon ERP' });
             if (en.error) throw en.error;
             try { mfaFactorId = en.data.id; } catch(e){}
             sfRenderQr(en.data.totp.qr_code);
@@ -8694,7 +8781,8 @@ window.simulateStaffPermissions = function() {
                 await supabaseClient.from('profiles').upsert([{
                     id: uid,
                     full_name: String(fullName || '').trim() || String(email || '').split('@')[0],
-                    role: role
+                    role: role,
+                    tenant_id: (window.SAFWAT_BRAND && window.SAFWAT_BRAND.tenantId) || 1
                 }], { onConflict: 'id' });
             } catch (e) { console.warn(LOG, 'retry', i, e); }
             await new Promise(function (r) { setTimeout(r, 700); });
