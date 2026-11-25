@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="html-tag">
 <head>
-    <link rel="icon" type="image/png" href="gheir-mamnoon-logo.jpg">
+    <link rel="icon" type="image/png" href="logo.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title" data-ar="بوابة الطالب الملكية | أكاديمية غير ممنون" data-en="Royal Student Portal | Gheir Mamnoon Academy">بوابة الطالب الملكية | أكاديمية غير ممنون</title>
+    <title id="page-title" data-ar="بوابة الطالب الملكية | أكاديمية صفوة الحفاظ" data-en="Royal Student Portal | Safwat Al-Huffaz Academy">بوابة الطالب الملكية | أكاديمية صفوة الحفاظ</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,9 +18,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="غير ممنون">
-    <meta name="application-name" content="أكاديمية غير ممنون">
-    <link rel="apple-touch-icon" href="gheir-mamnoon-logo.jpg">
+    <meta name="apple-mobile-web-app-title" content="صفوة الحفاظ">
+    <meta name="application-name" content="أكاديمية صفوة الحفاظ">
+    <link rel="apple-touch-icon" href="logo.png">
     
     <style id="custom-theme-css">
         :root { 
@@ -454,91 +454,6 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden text-slate-800">
-<!-- ==================== [Safwat Brand] هوية الأكاديمية — لأي إعادة تسمية عدّل سطور SAFWAT_BRAND بس ==================== -->
-<script>
-window.SAFWAT_BRAND = {
-    tenantId: 2,
-    nameAr: 'أكاديمية غير ممنون',
-    shortAr: 'غير ممنون',
-    nameEn: 'Gheir Mamnoon Academy',
-    shortEn: 'Gheir Mamnoon',
-    logoFile: 'gheir-mamnoon-logo.jpg',
-    emailDomain: 'gheirmamnoon.edu',
-    siteUrl: 'https://gholmish123-ctrl.github.io/Safwatulhuffaz-academy/gheir-mamnoon/login.html',
-    initials: 'GM'
-};
-(function () {
-    var B = window.SAFWAT_BRAND;
-    var REPLACERS = [
-        ['أكاديمية صفوة الحفاظ', B.nameAr],
-        ['صفوة الحفاظ', B.shortAr],
-        ['Safwat Al-Huffaz Academy', B.nameEn],
-        ['Safwat Al-Huffaz', B.shortEn],
-        ['Safwat Al Huffaz', B.shortEn]
-    ];
-    function fixText(s) {
-        if (!s || (s.indexOf('صفوة') === -1 && s.indexOf('Safwat') === -1)) return s;
-        for (var i = 0; i < REPLACERS.length; i++) s = s.split(REPLACERS[i][0]).join(REPLACERS[i][1]);
-        return s;
-    }
-    function fixNode(root) {
-        if (!root || !root.querySelectorAll) return;
-        var imgs = root.querySelectorAll('img');
-        for (var i = 0; i < imgs.length; i++) {
-            var im = imgs[i];
-            var src = im.getAttribute('src') || '';
-            if (src.indexOf('logo.png') !== -1) im.src = B.logoFile;
-            var one = im.getAttribute('onerror') || '';
-            if (one.indexOf('ui-avatars.com') !== -1) {
-                im.setAttribute('onerror', one.replace(/name=SA&|name=Safwa&/g, 'name=' + B.initials + '&'));
-            }
-            var alt = im.getAttribute('alt');
-            if (alt && fixText(alt) !== alt) im.setAttribute('alt', fixText(alt));
-        }
-        var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-        var node, batch = 0;
-        while ((node = walker.nextNode()) && batch < 4000) {
-            batch++;
-            var v = node.nodeValue;
-            if (v && (v.indexOf('صفوة') !== -1 || v.indexOf('Safwat') !== -1)) {
-                var nv = fixText(v);
-                if (nv !== v) node.nodeValue = nv;
-            }
-        }
-    }
-    function fixChrome() {
-        try { document.title = fixText(document.title); } catch (e) {}
-        var links = document.querySelectorAll('link[rel*="icon"]');
-        for (var i = 0; i < links.length; i++) {
-            links[i].href = B.logoFile;
-            if (links[i].getAttribute('type') === 'image/png') links[i].setAttribute('type', 'image/jpeg');
-        }
-        var metas = document.querySelectorAll('meta[name="description"], meta[property="og:title"], meta[property="og:description"]');
-        for (var m = 0; m < metas.length; m++) {
-            var c = metas[m].getAttribute('content');
-            if (c && fixText(c) !== c) metas[m].setAttribute('content', fixText(c));
-        }
-    }
-    var pending = false;
-    function scheduleFix() {
-        if (pending) return;
-        pending = true;
-        setTimeout(function () {
-            pending = false;
-            try { fixNode(document.body); fixChrome(); } catch (e) {}
-        }, 350);
-    }
-    function runNow() { try { fixNode(document.body); fixChrome(); } catch (e) {} }
-    document.addEventListener('DOMContentLoaded', runNow);
-    if (document.body) runNow();
-    var mo = new MutationObserver(function () { scheduleFix(); });
-    function startObs() { if (document.body) mo.observe(document.body, { childList: true, subtree: true, characterData: true }); }
-    document.addEventListener('DOMContentLoaded', startObs);
-    if (document.body) startObs();
-    console.log('[Safwat Brand] active for tenant', B.tenantId, B.shortEn);
-})();
-</script>
-
 
     <!-- Sound Element للإشعارات -->
     <audio id="notification-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_24e05b5f9d.mp3" preload="auto"></audio>
@@ -557,11 +472,11 @@ window.SAFWAT_BRAND = {
                 ☰
             </button>
             <div class="relative">
-                <img src="gheir-mamnoon-logo.jpg" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=GM&background=047857&color=fff'" alt="Logo" class="w-11 h-11 object-contain rounded-2xl border-2 border-emerald-500/30 shadow-sm p-0.5 bg-white">
+                <img src="logo.png" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Safwa&background=047857&color=fff'" alt="Logo" class="w-11 h-11 object-contain rounded-2xl border-2 border-emerald-500/30 shadow-sm p-0.5 bg-white">
                 <span class="absolute -bottom-0.5 -left-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full animate-pulse" title="متصل بالرادار"></span>
             </div>
             <div>
-                <h1 class="text-base sm:text-lg font-black text-slate-900 tracking-tight" id="lbl-title" data-ar="أكاديمية غير ممنون | بوابة الطالب الملكية" data-en="Gheir Mamnoon Academy | Royal Student Portal">أكاديمية غير ممنون | بوابة الطالب الملكية</h1>
+                <h1 class="text-base sm:text-lg font-black text-slate-900 tracking-tight" id="lbl-title" data-ar="أكاديمية صفوة الحفاظ | بوابة الطالب الملكية" data-en="Safwat Al-Huffaz Academy | Royal Student Portal">أكاديمية صفوة الحفاظ | بوابة الطالب الملكية</h1>
                 <p class="text-[11px] font-bold text-emerald-700" id="live-date">نظام المتابعة الأكاديمية الذكي</p>
             </div>
         </div>
@@ -2129,9 +2044,9 @@ window.SAFWAT_BRAND = {
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden border border-slate-200">
             <div class="px-5 py-3.5 bg-slate-900 text-white flex justify-between items-center shrink-0">
                 <div class="flex items-center gap-3">
-                    <img src="gheir-mamnoon-logo.jpg" onerror="this.src='https://ui-avatars.com/api/?name=GM&background=047857&color=fff'" class="w-10 h-10 object-contain rounded-full bg-white p-0.5">
+                    <img src="logo.png" onerror="this.src='https://ui-avatars.com/api/?name=Safwa&background=047857&color=fff'" class="w-10 h-10 object-contain rounded-full bg-white p-0.5">
                     <div>
-                        <h4 class="text-xs font-black text-emerald-400" data-ar="أكاديمية غير ممنون للقرآن واللغات" data-en="Gheir Mamnoon Academy">أكاديمية غير ممنون للقرآن واللغات</h4>
+                        <h4 class="text-xs font-black text-emerald-400" data-ar="أكاديمية صفوة الحفاظ للقرآن واللغات" data-en="Safwat Al-Huffaz Academy">أكاديمية صفوة الحفاظ للقرآن واللغات</h4>
                         <p id="preview-modal-title" class="text-xs font-bold text-slate-200 truncate max-w-md mt-0.5">📖 معاينة المستند</p>
                     </div>
                 </div>
@@ -2155,7 +2070,7 @@ window.SAFWAT_BRAND = {
         const htmlTag = document.getElementById('html-tag');
         const langSwitcher = document.getElementById('lang-switcher');
         
-        let currentLang = localStorage.getItem('GM-student-lang') || localStorage.getItem('Safwatulhuffaz_lang') || "ar";
+        let currentLang = localStorage.getItem('Safwatulhuffaz-student-lang') || localStorage.getItem('Safwatulhuffaz_lang') || "ar";
         const SUPABASE_URL = "https://cnfykoxjwxujrsxvjdud.supabase.co"; 
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNuZnlrb3hqd3h1anJzeHZqZHVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NTIzOTcsImV4cCI6MjEwMDAyODM5N30.kLEmrA3XPIhgtwMw5bMkJhCH-Q8LP4ygyNKcnr265i4";
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -2267,7 +2182,7 @@ window.SAFWAT_BRAND = {
         window.toggleDarkMode = function() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('GM-student-dark', isDark);
+            localStorage.setItem('Safwatulhuffaz-student-dark', isDark);
             const btn = document.getElementById('dark-mode-btn');
             if (btn) btn.innerText = isDark ? "☀️" : "🌙";
         };
@@ -2320,7 +2235,7 @@ window.SAFWAT_BRAND = {
         // 🌐 تطبيق اللغة والترجمة الثنائية على كامل بوابة الطالب
         window.applyLanguage = function(lang) {
             currentLang = lang;
-            localStorage.setItem('GM-student-lang', lang);
+            localStorage.setItem('Safwatulhuffaz-student-lang', lang);
             localStorage.setItem('Safwatulhuffaz_lang', lang);
             htmlTag.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
             htmlTag.setAttribute('lang', lang);
@@ -2477,7 +2392,7 @@ async function setupStudentLivePresence(studentId) {
         else if (/Mac/i.test(ua)) osDevice = `MacBook (${browser}) 💻`;
 
         // جلب الـ IP والدولة مع حفظ مؤقت (Cache) و 3 سيرفرات بديلة لمنع الحظر عند التجربة من نفس اللاب
-        let geoData = JSON.parse(sessionStorage.getItem('GM_Cached_GeoIP') || 'null');
+        let geoData = JSON.parse(sessionStorage.getItem('Safwat_Cached_GeoIP') || 'null');
         if (!geoData || !geoData.ip) {
             try {
                 const r1 = await fetch('https://ipwho.is/').then(r => r.json());
@@ -2497,7 +2412,7 @@ async function setupStudentLivePresence(studentId) {
             } catch (e) {}
         }
         if (geoData && geoData.ip) {
-            sessionStorage.setItem('GM_Cached_GeoIP', JSON.stringify(geoData));
+            sessionStorage.setItem('Safwat_Cached_GeoIP', JSON.stringify(geoData));
         }
 
         const locationStr = geoData
@@ -2546,7 +2461,7 @@ async function setupStudentLivePresence(studentId) {
     } catch (e) {}
 }
         window.onload = async () => {
-            if(localStorage.getItem('GM-student-dark') === 'true') {
+            if(localStorage.getItem('Safwatulhuffaz-student-dark') === 'true') {
                 document.documentElement.classList.add('dark');
                 const dBtn = document.getElementById('dark-mode-btn');
                 if(dBtn) dBtn.innerText = "☀️";
@@ -2618,11 +2533,11 @@ if (teacherIds.length) {
     }
 }
             // فتح وضع ولي الأمر والتبويب المطلوب تلقائياً إذا سجل الدخول من تبويب Parent في شاشة الدخول
-if (localStorage.getItem('GM_Parent_Auto_Unlock_PIN') === DEFAULT_PARENT_PIN) {
+if (localStorage.getItem('Safwat_Parent_Auto_Unlock_PIN') === DEFAULT_PARENT_PIN) {
     isParentMode = true;
-    const targetParentTab = localStorage.getItem('GM_Parent_Target_Tab') || 'reports';
-    localStorage.removeItem('GM_Parent_Auto_Unlock_PIN');
-    localStorage.removeItem('GM_Parent_Target_Tab');
+    const targetParentTab = localStorage.getItem('Safwat_Parent_Target_Tab') || 'reports';
+    localStorage.removeItem('Safwat_Parent_Auto_Unlock_PIN');
+    localStorage.removeItem('Safwat_Parent_Target_Tab');
     setTimeout(() => switchTab(targetParentTab), 600);
 }
 
@@ -2661,7 +2576,7 @@ if (localStorage.getItem('GM_Parent_Auto_Unlock_PIN') === DEFAULT_PARENT_PIN) {
             } catch(e) {}
 
             // ضبط لغة البوابة تلقائياً إذا لم يختر الطالب لغة سابقة بناءً على كونه عربياً أم أعجمياً
-            if (!localStorage.getItem('GM-student-lang')) {
+            if (!localStorage.getItem('Safwatulhuffaz-student-lang')) {
                 const firstStu = students[0];
                 if (firstStu.is_arab === false || String(firstStu.is_arab) === 'false') {
                     currentLang = 'en';
@@ -2689,8 +2604,8 @@ window.switchFamilyMember = async function(memberId, silent = false) {
             window.currentStudentObj = studentData;
             window.currentStudentId = currentStudentId;
             window.teacherData = teacherData;
-            localStorage.setItem('GM_Student_Id', studentData.id);
-            localStorage.setItem('GM_Student_Name', studentData.name || '');
+            localStorage.setItem('Safwat_Student_Id', studentData.id);
+            localStorage.setItem('Safwat_Student_Name', studentData.name || '');
             
             const isAr = currentLang === 'ar';
 
@@ -3708,12 +3623,12 @@ window.switchFamilyMember = async function(memberId, silent = false) {
         let currentAssignedHadithObj = null;
 
         async function loadStudentHadithBank() {
-            let stored = JSON.parse(localStorage.getItem('GM_Academy_Hadith_Bank') || 'null');
+            let stored = JSON.parse(localStorage.getItem('Safwat_Academy_Hadith_Bank') || 'null');
             try {
                 const { data } = await supabaseClient.from('hadith_bank').select('*').order('number', { ascending: true });
                 if (data && data.length > 0) {
                     stored = data;
-                    localStorage.setItem('GM_Academy_Hadith_Bank', JSON.stringify(stored));
+                    localStorage.setItem('Safwat_Academy_Hadith_Bank', JSON.stringify(stored));
                 }
             } catch (e) {}
             if (stored && Array.isArray(stored) && stored.length > 0) studentHadithBank = stored;
@@ -3950,10 +3865,10 @@ window.unlockCourseWithSecretCode = async function() {
             { onConflict: 'course_id, student_id' }
         );
 
-        let localUnlocked = JSON.parse(localStorage.getItem(`GM_Unlocked_Courses_${studentData.id}`) || '[]');
+        let localUnlocked = JSON.parse(localStorage.getItem(`Safwat_Unlocked_Courses_${studentData.id}`) || '[]');
         if (!localUnlocked.includes(matchedCourse.id)) {
             localUnlocked.push(matchedCourse.id);
-            localStorage.setItem(`GM_Unlocked_Courses_${studentData.id}`, JSON.stringify(localUnlocked));
+            localStorage.setItem(`Safwat_Unlocked_Courses_${studentData.id}`, JSON.stringify(localUnlocked));
         }
 
         if (codeInput) codeInput.value = '';
@@ -4034,7 +3949,7 @@ window.fetchStudentEnrolledCourses = async function() {
         const enrollments = enrRes.data || [];
 
         const enrolledIds = new Set(enrollments.map(e => String(e.course_id)));
-        const localUnlocked = JSON.parse(localStorage.getItem(`GM_Unlocked_Courses_${studentData.id}`) || '[]');
+        const localUnlocked = JSON.parse(localStorage.getItem(`Safwat_Unlocked_Courses_${studentData.id}`) || '[]');
         localUnlocked.forEach(id => enrolledIds.add(String(id)));
 
         // إخفاء بانر الاشتراك العلوي تلقائياً إذا كان الطالب مشتركاً في دورة واحدة على الأقل
@@ -4388,7 +4303,7 @@ window.forceDownloadCourseFile = async function(url, filename) {
             const isAr = (currentLang === 'ar');
             const isStudentArab = (studentData?.is_arab !== false && String(studentData?.is_arab) !== 'false');
 
-            let books = JSON.parse(localStorage.getItem('GM_Academy_Library_Books') || '[]');
+            let books = JSON.parse(localStorage.getItem('Safwat_Academy_Library_Books') || '[]');
             try {
                 const { data } = await supabaseClient.from('library_books').select('*').order('created_at', { ascending: false });
                 if (data && data.length > 0) books = data;
@@ -4529,7 +4444,7 @@ window.forceDownloadCourseFile = async function(url, filename) {
                     return `
                         <div class="space-y-3">
                             <div id="${certId}" class="bg-[#FCF6E3] border-[6px] border-double border-[#B8860B] rounded-3xl p-6 sm:p-8 text-center relative overflow-hidden shadow-xl">
-                                <p class="text-[11px] font-black text-emerald-900 tracking-widest uppercase">${isAr ? 'أكاديمية غير ممنون للقرآن الكريم واللغات' : 'SAFWAT AL-HUFFAZ ACADEMY FOR QURAN & LANGUAGES'}</p>
+                                <p class="text-[11px] font-black text-emerald-900 tracking-widest uppercase">${isAr ? 'أكاديمية صفوة الحفاظ للقرآن الكريم واللغات' : 'SAFWAT AL-HUFFAZ ACADEMY FOR QURAN & LANGUAGES'}</p>
                                 <h4 class="text-2xl sm:text-3xl font-black text-[#8B6508] font-diwani mt-2">${isAr ? 'شهادة شكر وتقدير وإتقان' : 'Certificate of Excellence & Mastery'}</h4>
                                 <h2 class="text-2xl font-black text-emerald-950 my-2 font-diwani">${studentData.name}</h2>
                                 <div class="bg-amber-500/10 border border-amber-600/30 rounded-2xl py-2.5 px-4 max-w-lg mx-auto my-2">
@@ -5390,7 +5305,7 @@ const { data: studentsList } = await supabaseClient
 
     // الحالة الموحدة للتطبيق (مصدر الحقيقة الوحيد)
     const AppState = {
-        lang: localStorage.getItem('GM-student-lang') || localStorage.getItem('Safwatulhuffaz_lang') || 'ar',
+        lang: localStorage.getItem('Safwatulhuffaz-student-lang') || localStorage.getItem('Safwatulhuffaz_lang') || 'ar',
         activeTab: 'dashboard',
         studentId: null,
         student: null,
@@ -5406,7 +5321,7 @@ const { data: studentsList } = await supabaseClient
         pendingSecureTab: null,
         dbRewardsStore: [],
         pendingBookingData: null,
-        branchConfig: { name: "أكاديمية غير ممنون", logo: "gheir-mamnoon-logo.jpg", greenId: "", greenToken: "", ownerEmail: "" },
+        branchConfig: { name: "أكاديمية صفوة الحفاظ", logo: "logo.png", greenId: "", greenToken: "", ownerEmail: "" },
 
         // المشغل القرآني
         quranAudio: new Audio(),
@@ -5453,7 +5368,7 @@ const { data: studentsList } = await supabaseClient
         isWheelSpinning: false,
 
         // المسابقات والسبورة والرادار
-        solvedQuizIds: safeJsonParse(localStorage.getItem('GM_Solved_MCQ_Quizzes'), []),
+        solvedQuizIds: safeJsonParse(localStorage.getItem('Safwat_Solved_MCQ_Quizzes'), []),
         inlineQuizzesMap: {},
         activeInlineQuiz: null,
         inlineQIdx: 0,
@@ -5711,7 +5626,7 @@ const { data: studentsList } = await supabaseClient
 
     window.applyLanguage = function(lang) {
         AppState.lang = lang || 'ar';
-        localStorage.setItem('GM-student-lang', AppState.lang);
+        localStorage.setItem('Safwatulhuffaz-student-lang', AppState.lang);
         localStorage.setItem('Safwatulhuffaz_lang', AppState.lang);
         const htmlTag = document.getElementById('html-tag');
         if (htmlTag) {
@@ -5762,7 +5677,7 @@ const { data: studentsList } = await supabaseClient
 
     window.toggleDarkMode = function() {
         const isDark = document.documentElement.classList.toggle('dark');
-        localStorage.setItem('GM-student-dark', isDark);
+        localStorage.setItem('Safwatulhuffaz-student-dark', isDark);
         const btn = document.getElementById('dark-mode-btn');
         if (btn) btn.innerText = isDark ? "☀️" : "🌙";
     };
@@ -5910,8 +5825,8 @@ const { data: studentsList } = await supabaseClient
         AppState.starBalance = m.stars_balance || 0;
         AppState.makeupTokens = m.makeup_tokens || 0;
         AppState.teacher = m.teachers || null;
-        localStorage.setItem('GM_Student_Id', m.id);
-        localStorage.setItem('GM_Student_Name', m.name || '');
+        localStorage.setItem('Safwat_Student_Id', m.id);
+        localStorage.setItem('Safwat_Student_Name', m.name || '');
 
         renderStudentHeaderSummary();
         renderTeacherInfo();
@@ -5968,7 +5883,7 @@ const { data: studentsList } = await supabaseClient
             else if (/Android/i.test(ua)) osDevice = `Android (${browser}) 📱`;
             else if (/Mac/i.test(ua)) osDevice = `MacBook (${browser}) 💻`;
 
-            let geoData = JSON.parse(sessionStorage.getItem('GM_Cached_GeoIP') || 'null');
+            let geoData = JSON.parse(sessionStorage.getItem('Safwat_Cached_GeoIP') || 'null');
             if (!geoData?.ip) {
                 for (const url of ['https://ipwho.is/', 'https://ipapi.co/json/']) {
                     try {
@@ -5976,7 +5891,7 @@ const { data: studentsList } = await supabaseClient
                         if (r?.ip) { geoData = { ip: r.ip, country: r.country || r.country_name, city: r.city, flag: r.flag?.emoji || '🌍' }; break; }
                     } catch {}
                 }
-                if (geoData?.ip) sessionStorage.setItem('GM_Cached_GeoIP', JSON.stringify(geoData));
+                if (geoData?.ip) sessionStorage.setItem('Safwat_Cached_GeoIP', JSON.stringify(geoData));
             }
 
             const locationStr = geoData
@@ -6021,20 +5936,20 @@ const { data: studentsList } = await supabaseClient
             if (!manager) return;
 
             AppState.branchConfig = {
-                name: manager.branch_name || "أكاديمية غير ممنون",
-                logo: manager.branch_logo || "gheir-mamnoon-logo.jpg",
+                name: manager.branch_name || "أكاديمية صفوة الحفاظ",
+                logo: manager.branch_logo || "logo.png",
                 greenId: manager.green_id || "",
                 greenToken: manager.green_token || "",
                 ownerEmail
             };
             const b = AppState.branchConfig;
             if (b.name) {
-                document.title = document.title.replace(/أكاديمية غير ممنون/g, b.name);
+                document.title = document.title.replace(/أكاديمية صفوة الحفاظ/g, b.name);
                 document.querySelectorAll('.academy-name-text, header h1, header h2').forEach(el => {
-                    if (el.innerText.includes('أكاديمية غير ممنون')) el.innerText = el.innerText.replace(/أكاديمية غير ممنون/g, b.name);
+                    if (el.innerText.includes('أكاديمية صفوة الحفاظ')) el.innerText = el.innerText.replace(/أكاديمية صفوة الحفاظ/g, b.name);
                 });
             }
-            if (b.logo && b.logo !== 'gheir-mamnoon-logo.jpg') {
+            if (b.logo && b.logo !== 'logo.png') {
                 document.querySelectorAll('header img[src*="logo"], aside img[src*="logo"]').forEach(img => { img.src = b.logo; });
                 const fav = document.querySelector('link[rel*="icon"]');
                 if (fav) fav.href = b.logo;
@@ -6930,10 +6845,10 @@ const { data: studentsList } = await supabaseClient
     // 11. معمل الأحاديث ومقرأة المتون (الشاطبية)
     // =========================================================================
     async function loadStudentHadithBank() {
-        let stored = JSON.parse(localStorage.getItem('GM_Academy_Hadith_Bank') || 'null');
+        let stored = JSON.parse(localStorage.getItem('Safwat_Academy_Hadith_Bank') || 'null');
         try {
             const { data } = await supabaseClient.from('hadith_bank').select('*').order('number', { ascending: true });
-            if (data?.length) { stored = data; localStorage.setItem('GM_Academy_Hadith_Bank', JSON.stringify(stored)); }
+            if (data?.length) { stored = data; localStorage.setItem('Safwat_Academy_Hadith_Bank', JSON.stringify(stored)); }
         } catch {}
         AppState.hadithBank = (Array.isArray(stored) && stored.length) ? stored : [...DEFAULT_HADITH_BANK];
     }
@@ -7138,7 +7053,7 @@ const { data: studentsList } = await supabaseClient
             if (!matched) return showToast(isAr() ? '❌ كود الدورة غير صحيح!' : '❌ Invalid course code!', 'error');
 
             await supabaseClient.from('course_enrollments').upsert({ course_id: matched.id, student_id: AppState.student.id, student_name: AppState.student.name }, { onConflict: 'course_id, student_id' });
-            const key = `GM_Unlocked_Courses_${AppState.student.id}`;
+            const key = `Safwat_Unlocked_Courses_${AppState.student.id}`;
             const local = JSON.parse(localStorage.getItem(key) || '[]');
             if (!local.includes(matched.id)) { local.push(matched.id); localStorage.setItem(key, JSON.stringify(local)); }
             if (input) input.value = '';
@@ -7165,7 +7080,7 @@ const { data: studentsList } = await supabaseClient
             const enrollments = enrRes.data || [];
 
             const enrolledIds = new Set(enrollments.map(e => String(e.course_id)));
-            JSON.parse(localStorage.getItem(`GM_Unlocked_Courses_${AppState.student.id}`) || '[]').forEach(id => enrolledIds.add(String(id)));
+            JSON.parse(localStorage.getItem(`Safwat_Unlocked_Courses_${AppState.student.id}`) || '[]').forEach(id => enrolledIds.add(String(id)));
 
             const banner = document.getElementById('course-unlock-banner');
             const compact = document.getElementById('course-unlocked-compact-bar');
@@ -7425,7 +7340,7 @@ const { data: studentsList } = await supabaseClient
         if (!grid) return;
         const isStudentArab = AppState.student?.is_arab !== false && String(AppState.student?.is_arab) !== 'false';
 
-        let books = JSON.parse(localStorage.getItem('GM_Academy_Library_Books') || '[]');
+        let books = JSON.parse(localStorage.getItem('Safwat_Academy_Library_Books') || '[]');
         try {
             const { data } = await supabaseClient.from('library_books').select('*').order('created_at', { ascending: false });
             if (data?.length) books = data;
@@ -7726,7 +7641,7 @@ const { data: studentsList } = await supabaseClient
     async function saveQuizScoreAndBroadcast(quizObj, rightCount, maxScore, summaryNotes, elapsedSecs) {
         if (quizObj.quiz_id && !AppState.solvedQuizIds.includes(quizObj.quiz_id)) {
             AppState.solvedQuizIds.push(quizObj.quiz_id);
-            localStorage.setItem('GM_Solved_MCQ_Quizzes', JSON.stringify(AppState.solvedQuizIds));
+            localStorage.setItem('Safwat_Solved_MCQ_Quizzes', JSON.stringify(AppState.solvedQuizIds));
         }
         const perc = maxScore > 0 ? `${Math.round((rightCount / maxScore) * 100)}%` : '0%';
         const allCorrect = rightCount === maxScore && maxScore > 0;
@@ -7990,7 +7905,7 @@ const { data: studentsList } = await supabaseClient
 
     async function fetchLiveAdhanTimesForStudent() {
         try {
-            const geo = JSON.parse(sessionStorage.getItem('GM_Cached_GeoIP') || 'null');
+            const geo = JSON.parse(sessionStorage.getItem('Safwat_Cached_GeoIP') || 'null');
             const city = encodeURIComponent(geo?.city || 'Cairo');
             const country = encodeURIComponent(geo?.country || 'Egypt');
             const res = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=5`).then(r => r.json());
@@ -8413,7 +8328,7 @@ const { data: studentsList } = await supabaseClient
     function renderTajweedAtlasCards() {
         const grid = document.getElementById('makharij-atlas-grid');
         if (!grid) return;
-        const custom = JSON.parse(localStorage.getItem('GM_Custom_Tajweed_Cards') || '[]');
+        const custom = JSON.parse(localStorage.getItem('Safwat_Custom_Tajweed_Cards') || '[]');
         grid.innerHTML = [...DEFAULT_TAJWEED_CARDS, ...custom].map(c => `
             <div class="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-1.5 hover-lift flex flex-col justify-between">
                 <div>
@@ -8427,21 +8342,21 @@ const { data: studentsList } = await supabaseClient
 
     window.saveCustomTajweedCard = function(e) {
         e.preventDefault();
-        const custom = JSON.parse(localStorage.getItem('GM_Custom_Tajweed_Cards') || '[]');
+        const custom = JSON.parse(localStorage.getItem('Safwat_Custom_Tajweed_Cards') || '[]');
         const desc = document.getElementById('tj-card-desc').value.trim();
         custom.push({
             id: 'cust_' + Date.now(), badge: document.getElementById('tj-card-badge').value.trim(),
             titleAr: document.getElementById('tj-card-title-ar').value.trim(), titleEn: document.getElementById('tj-card-title-en').value.trim(),
             letters: document.getElementById('tj-card-letters').value.trim(), descAr: desc, descEn: desc
         });
-        localStorage.setItem('GM_Custom_Tajweed_Cards', JSON.stringify(custom));
+        localStorage.setItem('Safwat_Custom_Tajweed_Cards', JSON.stringify(custom));
         document.getElementById('add-tajweed-card-modal').classList.add('hidden');
         e.target.reset(); renderTajweedAtlasCards();
         showToast(isAr() ? '✅ تمت إضافة البطاقة بنجاح!' : '✅ Card added!', 'success');
     };
 
     window.deleteCustomTajweedCard = function(id) {
-        localStorage.setItem('GM_Custom_Tajweed_Cards', JSON.stringify(JSON.parse(localStorage.getItem('GM_Custom_Tajweed_Cards') || '[]').filter(c => c.id !== id)));
+        localStorage.setItem('Safwat_Custom_Tajweed_Cards', JSON.stringify(JSON.parse(localStorage.getItem('Safwat_Custom_Tajweed_Cards') || '[]').filter(c => c.id !== id)));
         renderTajweedAtlasCards();
     };
 
@@ -8707,7 +8622,7 @@ const { data: studentsList } = await supabaseClient
             { icon: '🎙️', ar: 'البلبل الصدّاح', en: 'Golden Reciter', min: 25 },
             { icon: '📜', ar: 'حافظ السنة النبوية', en: 'Sunnah Guardian', min: 40 },
             { icon: '💎', ar: 'نجم الانضباط الذهبي', en: 'Discipline Star', min: 75 },
-            { icon: '👑', ar: 'تاج غير ممنون', en: 'Crown of Al-Huffaz', min: 150 }
+            { icon: '👑', ar: 'تاج صفوة الحفاظ', en: 'Crown of Al-Huffaz', min: 150 }
         ];
         grid.innerHTML = badges.map(b => `<div class="p-4 rounded-3xl border-2 text-center flex flex-col items-center justify-center gap-2 ${AppState.starBalance >= b.min ? 'bg-amber-50/80 border-amber-400 shadow-md' : 'bg-slate-50 border-slate-200 grayscale opacity-50'}"><span class="text-4xl">${b.icon}</span><h4 class="font-black text-xs text-slate-900">${isAr() ? b.ar : b.en}</h4></div>`).join('');
     }
@@ -8806,7 +8721,7 @@ const { data: studentsList } = await supabaseClient
                 supabaseClient.from('academy_news').select('*').order('is_pinned', { ascending: false }).order('created_at', { ascending: false }).limit(1),
                 supabaseClient.from('students').select('name, stars_balance, status').order('stars_balance', { ascending: false }).limit(5)
             ]);
-            latest = nRes.data?.[0] || JSON.parse(localStorage.getItem('GM_Local_News') || '[]')[0] || null;
+            latest = nRes.data?.[0] || JSON.parse(localStorage.getItem('Safwat_Local_News') || '[]')[0] || null;
             heroes = (sRes.data || []).filter(s => s.status !== 'deleted').slice(0, 3);
         } catch {}
 
@@ -8819,7 +8734,7 @@ const { data: studentsList } = await supabaseClient
                     <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
                         <div class="space-y-2.5 flex-1">
                             <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-3 py-0.5 rounded-full">📰 ${latest?.category || (isAr() ? 'أخبار الأكاديمية' : 'Academy News')}</span>
-                            <h3 class="text-lg sm:text-2xl font-black text-amber-300 font-diwani">${latest?.title || (isAr() ? 'انطلاق التحديث الملكي الجديد لأكاديمية غير ممنون!' : 'Welcome to the New Royal Student Portal!')}</h3>
+                            <h3 class="text-lg sm:text-2xl font-black text-amber-300 font-diwani">${latest?.title || (isAr() ? 'انطلاق التحديث الملكي الجديد لأكاديمية صفوة الحفاظ!' : 'Welcome to the New Royal Student Portal!')}</h3>
                             <p class="text-xs text-slate-200 font-bold line-clamp-2 max-w-2xl">${latest?.content || ''}</p>
                             ${heroesHtml ? `<div class="pt-2 flex flex-wrap items-center gap-2">${heroesHtml}</div>` : ''}
                         </div>
@@ -8871,7 +8786,7 @@ const { data: studentsList } = await supabaseClient
     // =========================================================================
     async function initStudentApp() {
         // Dark mode & PWA events
-        if (localStorage.getItem('GM-student-dark') === 'true') {
+        if (localStorage.getItem('Safwatulhuffaz-student-dark') === 'true') {
             document.documentElement.classList.add('dark');
             const btn = document.getElementById('dark-mode-btn'); if (btn) btn.innerText = "☀️";
         }
@@ -8951,7 +8866,7 @@ if (teacherIds.length) {
             if (rewards) AppState.dbRewardsStore = rewards;
         } catch {}
 
-        if (!localStorage.getItem('GM-student-lang') && (students[0].is_arab === false || String(students[0].is_arab) === 'false')) {
+        if (!localStorage.getItem('Safwatulhuffaz-student-lang') && (students[0].is_arab === false || String(students[0].is_arab) === 'false')) {
             AppState.lang = 'en';
         }
         const langSel = document.getElementById('lang-switcher');
@@ -8964,11 +8879,11 @@ if (teacherIds.length) {
         startMasterTicker();
 
         // فتح تبويب ولي الأمر تلقائياً إن طُلب من صفحة الدخول
-        if (localStorage.getItem('GM_Parent_Auto_Unlock_PIN') === DEFAULT_PARENT_PIN) {
+        if (localStorage.getItem('Safwat_Parent_Auto_Unlock_PIN') === DEFAULT_PARENT_PIN) {
             AppState.isParentMode = true;
-            const target = localStorage.getItem('GM_Parent_Target_Tab') || 'reports';
-            localStorage.removeItem('GM_Parent_Auto_Unlock_PIN');
-            localStorage.removeItem('GM_Parent_Target_Tab');
+            const target = localStorage.getItem('Safwat_Parent_Target_Tab') || 'reports';
+            localStorage.removeItem('Safwat_Parent_Auto_Unlock_PIN');
+            localStorage.removeItem('Safwat_Parent_Target_Tab');
             switchTab(target);
         }
 
@@ -9031,7 +8946,7 @@ if (teacherIds.length) {
         { ar: 'اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ', en: 'Allahumma salli wa sallim ala Nabiyyina Muhammad ﷺ', target: 10 },
         { ar: 'سُبْحَانَ اللَّهِ وَالْحَمْدُ لِلَّهِ وَلَا إِلَهَ إِلَّا اللَّهُ وَاللَّهُ أَكْبَرُ', en: 'SubhanAllah walhamdu lillah wa la ilaha illallah wallahu akbar', target: 10 }
     ];
-    const adhkarKey = () => 'GM-adhkar-' + todayKey();
+    const adhkarKey = () => 'Safwatulhuffaz-adhkar-' + todayKey();
     let adhkarState = {};
     try { adhkarState = JSON.parse(localStorage.getItem(adhkarKey()) || '{}'); } catch (e) { adhkarState = {}; }
 
@@ -9065,7 +8980,7 @@ if (teacherIds.length) {
     };
 
     // ---------- 📿 عداد التسبيح ----------
-    const tasbihKey = () => 'GM-tasbih-' + todayKey();
+    const tasbihKey = () => 'Safwatulhuffaz-tasbih-' + todayKey();
     let tasbihCount = parseInt(localStorage.getItem(tasbihKey()) || '0', 10) || 0;
 
     window.renderTasbih = function () {
@@ -9098,7 +9013,7 @@ if (teacherIds.length) {
     };
 
     // ---------- 🎯 الهدف الأسبوعي ----------
-    const GOAL_KEY = 'GM-weekly-goal';
+    const GOAL_KEY = 'Safwatulhuffaz-weekly-goal';
     let weeklyGoal = null;
     try { weeklyGoal = JSON.parse(localStorage.getItem(GOAL_KEY) || 'null'); } catch (e) { weeklyGoal = null; }
     if (weeklyGoal && weeklyGoal.week !== weekKey()) {
@@ -9182,12 +9097,12 @@ if (teacherIds.length) {
         });
 
         function showPwaBanner() {
-            if (isStandalone() || sessionStorage.getItem('GM_PWA_Banner_Dismissed')) return;
+            if (isStandalone() || sessionStorage.getItem('Safwat_PWA_Banner_Dismissed')) return;
             if (document.getElementById('pwa-install-banner')) return;
             const b = document.createElement('div');
             b.id = 'pwa-install-banner';
             b.innerHTML =
-                '<img src="gheir-mamnoon-logo.jpg" alt="" onerror="this.style.display=\'none\'">' +
+                '<img src="logo.png" alt="" onerror="this.style.display=\'none\'">' +
                 '<div><div class="pwa-title">' + (isArNow() ? 'ثبّت تطبيق الأكاديمية' : 'Install the Academy app') + '</div>' +
                 '<div class="pwa-sub">' + (isArNow() ? 'وصول أسرع من شاشتك الرئيسية 📱' : 'Faster access from your home screen 📱') + '</div></div>' +
                 '<div class="pwa-actions"><button type="button" class="pwa-go" onclick="window.installAppPrompt()">' + (isArNow() ? 'تثبيت' : 'Install') + '</button>' +
@@ -9195,7 +9110,7 @@ if (teacherIds.length) {
             document.body.appendChild(b);
         }
         function hidePwaBanner() { document.getElementById('pwa-install-banner')?.remove(); }
-        window.dismissPwaBanner = function () { sessionStorage.setItem('GM_PWA_Banner_Dismissed', '1'); hidePwaBanner(); };
+        window.dismissPwaBanner = function () { sessionStorage.setItem('Safwat_PWA_Banner_Dismissed', '1'); hidePwaBanner(); };
 
         window.installAppPrompt = async function () {
             if (isStandalone()) {
@@ -10125,7 +10040,7 @@ if (teacherIds.length) {
     // ===== SAFWAT-DECLUTTER: طي/فتح مجموعات القائمة الجانبية + حفظ الحالة — بلوك مستقل قابل للإزالة
     // =========================================================================
     (function () {
-        const SG_KEY = 'GM_nav_groups_v1';
+        const SG_KEY = 'Safwat_nav_groups_v1';
         function sgRead() { try { return JSON.parse(localStorage.getItem(SG_KEY) || '{}'); } catch (e) { return {}; } }
         function sgWrite(s) { try { localStorage.setItem(SG_KEY, JSON.stringify(s)); } catch (e) {} }
         window.sgToggleGroup = function (headBtn) {
@@ -10837,13 +10752,13 @@ html.dark #iz-bar { background: linear-gradient(120deg, rgba(217,183,92,.10), rg
         window.applyLanguage = wrappedApply;
     }
     try { patchI18n(); } catch (e) {}
-    const curLangNow = window.currentLang || localStorage.getItem('GM-student-lang') || 'ar';
+    const curLangNow = window.currentLang || localStorage.getItem('Safwatulhuffaz-student-lang') || 'ar';
     if (curLangNow !== 'ar' && window.applyLanguage) { try { window.applyLanguage(curLangNow); } catch (e) {} }
 
     // ---------- 2) علامات "جديد" على عناصر القائمة الجانبية ----------
     function badgeSid() { return String(window.currentStudentId || (window.studentData && window.studentData.id) || ''); }
-    function badgeStore(sid) { try { return JSON.parse(localStorage.getItem('GM_NavBadges_' + sid) || '{}'); } catch (e) { return {}; } }
-    function badgeSave(sid, o) { try { localStorage.setItem('GM_NavBadges_' + sid, JSON.stringify(o)); } catch (e) {} }
+    function badgeStore(sid) { try { return JSON.parse(localStorage.getItem('Safwat_NavBadges_' + sid) || '{}'); } catch (e) { return {}; } }
+    function badgeSave(sid, o) { try { localStorage.setItem('Safwat_NavBadges_' + sid, JSON.stringify(o)); } catch (e) {} }
     function setNavDot(navId, n) {
         const btn = document.getElementById(navId); if (!btn) return;
         let dot = btn.querySelector(':scope > .safwat-new-dot');
