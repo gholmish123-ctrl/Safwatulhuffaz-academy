@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="html-tag">
 <head>
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="gheir-mamnoon-logo.jpg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-ar="لوحة المعلم | أكاديمية صفوة الحفاظ" data-en="Teacher Portal | Safwat Al-Huffaz Academy">لوحة المعلم | أكاديمية صفوة الحفاظ</title>
+    <title data-ar="لوحة المعلم | أكاديمية غير ممنون" data-en="Teacher Portal | Gheir Mamnoon Academy">لوحة المعلم | أكاديمية غير ممنون</title>
     
     <!-- Tailwind CSS v4 -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -709,6 +709,91 @@
 </style>
 </head>
 <body class="bg-slate-50/70 flex flex-col h-screen overflow-hidden text-slate-800">
+<!-- ==================== [Safwat Brand] هوية الأكاديمية — لأي إعادة تسمية عدّل سطور SAFWAT_BRAND بس ==================== -->
+<script>
+window.SAFWAT_BRAND = {
+    tenantId: 2,
+    nameAr: 'أكاديمية غير ممنون',
+    shortAr: 'غير ممنون',
+    nameEn: 'Gheir Mamnoon Academy',
+    shortEn: 'Gheir Mamnoon',
+    logoFile: 'gheir-mamnoon-logo.jpg',
+    emailDomain: 'gheirmamnoon.edu',
+    siteUrl: 'https://gholmish123-ctrl.github.io/Safwatulhuffaz-academy/gheir-mamnoon/login.html',
+    initials: 'GM'
+};
+(function () {
+    var B = window.SAFWAT_BRAND;
+    var REPLACERS = [
+        ['أكاديمية صفوة الحفاظ', B.nameAr],
+        ['صفوة الحفاظ', B.shortAr],
+        ['Safwat Al-Huffaz Academy', B.nameEn],
+        ['Safwat Al-Huffaz', B.shortEn],
+        ['Safwat Al Huffaz', B.shortEn]
+    ];
+    function fixText(s) {
+        if (!s || (s.indexOf('صفوة') === -1 && s.indexOf('Safwat') === -1)) return s;
+        for (var i = 0; i < REPLACERS.length; i++) s = s.split(REPLACERS[i][0]).join(REPLACERS[i][1]);
+        return s;
+    }
+    function fixNode(root) {
+        if (!root || !root.querySelectorAll) return;
+        var imgs = root.querySelectorAll('img');
+        for (var i = 0; i < imgs.length; i++) {
+            var im = imgs[i];
+            var src = im.getAttribute('src') || '';
+            if (src.indexOf('logo.png') !== -1) im.src = B.logoFile;
+            var one = im.getAttribute('onerror') || '';
+            if (one.indexOf('ui-avatars.com') !== -1) {
+                im.setAttribute('onerror', one.replace(/name=SA&|name=Safwa&/g, 'name=' + B.initials + '&'));
+            }
+            var alt = im.getAttribute('alt');
+            if (alt && fixText(alt) !== alt) im.setAttribute('alt', fixText(alt));
+        }
+        var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+        var node, batch = 0;
+        while ((node = walker.nextNode()) && batch < 4000) {
+            batch++;
+            var v = node.nodeValue;
+            if (v && (v.indexOf('صفوة') !== -1 || v.indexOf('Safwat') !== -1)) {
+                var nv = fixText(v);
+                if (nv !== v) node.nodeValue = nv;
+            }
+        }
+    }
+    function fixChrome() {
+        try { document.title = fixText(document.title); } catch (e) {}
+        var links = document.querySelectorAll('link[rel*="icon"]');
+        for (var i = 0; i < links.length; i++) {
+            links[i].href = B.logoFile;
+            if (links[i].getAttribute('type') === 'image/png') links[i].setAttribute('type', 'image/jpeg');
+        }
+        var metas = document.querySelectorAll('meta[name="description"], meta[property="og:title"], meta[property="og:description"]');
+        for (var m = 0; m < metas.length; m++) {
+            var c = metas[m].getAttribute('content');
+            if (c && fixText(c) !== c) metas[m].setAttribute('content', fixText(c));
+        }
+    }
+    var pending = false;
+    function scheduleFix() {
+        if (pending) return;
+        pending = true;
+        setTimeout(function () {
+            pending = false;
+            try { fixNode(document.body); fixChrome(); } catch (e) {}
+        }, 350);
+    }
+    function runNow() { try { fixNode(document.body); fixChrome(); } catch (e) {} }
+    document.addEventListener('DOMContentLoaded', runNow);
+    if (document.body) runNow();
+    var mo = new MutationObserver(function () { scheduleFix(); });
+    function startObs() { if (document.body) mo.observe(document.body, { childList: true, subtree: true, characterData: true }); }
+    document.addEventListener('DOMContentLoaded', startObs);
+    if (document.body) startObs();
+    console.log('[Safwat Brand] active for tenant', B.tenantId, B.shortEn);
+})();
+</script>
+
 
     <!-- شريط الآيات العلوية الملكي -->
     <div class="w-full bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-950 text-amber-200/90 py-2 shadow-sm text-xs font-bold overflow-hidden whitespace-nowrap relative z-50 border-b border-amber-500/30">
@@ -722,11 +807,11 @@
         <div class="flex items-center gap-3.5">
             <button onclick="toggleSidebar()" class="md:hidden text-2xl text-slate-600 hover:text-emerald-600 transition cursor-pointer p-1.5 rounded-xl hover:bg-slate-100">☰</button>
             <div class="relative">
-                <img src="logo.png" alt="Logo" class="w-11 h-11 object-contain rounded-2xl border-2 border-emerald-500/30 shadow-sm hover-lift p-0.5 bg-white" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Safwa&background=047857&color=fff'">
+                <img src="gheir-mamnoon-logo.jpg" alt="Logo" class="w-11 h-11 object-contain rounded-2xl border-2 border-emerald-500/30 shadow-sm hover-lift p-0.5 bg-white" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=GM&background=047857&color=fff'">
                 <span class="absolute -bottom-0.5 -left-0.5 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
             </div>
             <div class="hidden sm:block">
-                <h1 class="text-base sm:text-lg font-black text-slate-900 tracking-tight" data-ar="أكاديمية صفوة الحفاظ | بوابة المعلم" data-en="Safwat Al-Huffaz Academy | Teacher Portal">أكاديمية صفوة الحفاظ | بوابة المعلم</h1>
+                <h1 class="text-base sm:text-lg font-black text-slate-900 tracking-tight" data-ar="أكاديمية غير ممنون | بوابة المعلم" data-en="Gheir Mamnoon Academy | Teacher Portal">أكاديمية غير ممنون | بوابة المعلم</h1>
                 <p class="text-[11px] font-bold text-emerald-700" id="header-teacher-name" data-ar="مرحباً بك فضيلة المعلم" data-en="Welcome, Respected Teacher">مرحباً بك فضيلة المعلم</p>
             </div>
         </div>
@@ -834,7 +919,7 @@
             </nav>
 
             <div class="mt-6 p-3.5 rounded-2xl bg-gradient-to-br from-slate-900 to-emerald-950 text-white border border-emerald-500/20 shadow-md text-center">
-                <p class="text-[11px] font-bold text-amber-300 mb-1" data-ar="🌟 بوابة صفوة الحفاظ" data-en="🌟 Safwat Al-Huffaz Portal">🌟 بوابة صفوة الحفاظ</p>
+                <p class="text-[11px] font-bold text-amber-300 mb-1" data-ar="🌟 بوابة غير ممنون" data-en="🌟 Gheir Mamnoon Portal">🌟 بوابة غير ممنون</p>
                 <p class="text-[10px] text-slate-300 leading-relaxed" data-ar="إصدار احترافي ثنائي اللغة متكامل مع الطيار الآلي وموسوعة الأحاديث" data-en="Bilingual Pro Edition with Auto-Pilot & Hadith Bank">إصدار احترافي ثنائي اللغة متكامل مع الطيار الآلي وموسوعة الأحاديث</p>
             </div>
         </aside>
@@ -866,7 +951,7 @@
                             <div class="space-y-1.5">
                                 <div class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/25 to-amber-500/5 border border-amber-400/40 text-amber-300 text-[11px] font-black px-3.5 py-1 rounded-full shadow-xs">
                                     <span>👑</span>
-                                    <span data-ar="معلم معتمد ومصرح لدى أكاديمية صفوة الحفاظ" data-en="Certified Instructor at Safwat Al-Huffaz">معلم معتمد ومصرح لدى أكاديمية صفوة الحفاظ</span>
+                                    <span data-ar="معلم معتمد ومصرح لدى أكاديمية غير ممنون" data-en="Certified Instructor at Gheir Mamnoon">معلم معتمد ومصرح لدى أكاديمية غير ممنون</span>
                                 </div>
                                 <h2 id="txt-centered-teacher-name" class="text-2xl sm:text-3xl font-diwani text-transparent bg-clip-text bg-gradient-to-r from-white via-emerald-100 to-amber-200 tracking-wide" data-ar="جاري التحميل..." data-en="Loading...">جاري التحميل...</h2>
                                 <p class="text-xs text-emerald-200/80 font-medium" data-ar="نسأل الله أن يبارك في وقتك وعلمك وينفع بك طلاب القرآن الكريم" data-en="May Allah bless your time and knowledge and benefit the students of Quran">نسأل الله أن يبارك في وقتك وعلمك وينفع بك طلاب القرآن الكريم</p>
@@ -2330,8 +2415,8 @@
                     <div class="xl:col-span-7 flex items-center justify-center">
                         <div id="cert-live-preview-wrapper" class="w-full bg-[#FCF6E3] p-5 sm:p-8 rounded-[2rem] border-4 border-[#C59B27] shadow-2xl relative overflow-hidden text-center" dir="rtl">
                             <div class="border-[3px] border-double border-[#0B3B24] p-6 sm:p-8 rounded-2xl relative bg-white/60 backdrop-blur-xs">
-                                <img src="logo.png" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Safwa&background=047857&color=fff'" class="w-16 h-16 mx-auto rounded-2xl border-2 border-[#C59B27] shadow-md mb-2 bg-white p-0.5">
-                                <h4 id="prev-cert-academy" class="text-xs font-black text-emerald-900 tracking-wider">أكاديمية صفوة الحفاظ للقرآن الكريم واللغات</h4>
+                                <img src="gheir-mamnoon-logo.jpg" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=GM&background=047857&color=fff'" class="w-16 h-16 mx-auto rounded-2xl border-2 border-[#C59B27] shadow-md mb-2 bg-white p-0.5">
+                                <h4 id="prev-cert-academy" class="text-xs font-black text-emerald-900 tracking-wider">أكاديمية غير ممنون للقرآن الكريم واللغات</h4>
                                 <h2 id="prev-cert-main-title" class="text-2xl sm:text-3xl font-diwani font-black text-[#B8860B] my-3">شهادة شكر وتقدير وإتقان</h2>
                                 <p id="prev-cert-intro" class="text-xs font-bold text-slate-600">تتشرف إدارة الأكاديمية ومعلم الحلقة بمنح هذا الوسام المبارك للطالب:</p>
                                 <div class="my-3 py-2 px-6 bg-gradient-to-r from-transparent via-amber-100/80 to-transparent border-y border-[#C59B27]/50 inline-block min-w-[260px]">
@@ -2356,7 +2441,7 @@
                                         <div class="relative w-28 h-28 rounded-full border-4 border-[#B8860B] bg-gradient-to-br from-[#FFFBEB] via-[#FEF3C7] to-[#FDE68A] flex flex-col items-center justify-center p-2 shadow-lg rotate-[6deg] ring-2 ring-[#C59B27]/40">
                                             <div class="absolute inset-1 rounded-full border border-dashed border-[#92400E]"></div>
                                             <span class="text-[8px] font-black text-[#92400E] tracking-widest">★ SAFWAT AL-HUFFAZ ★</span>
-                                            <span class="text-xs font-diwani font-black text-[#0B3B24] my-1">أكاديمية صفوة الحفاظ</span>
+                                            <span class="text-xs font-diwani font-black text-[#0B3B24] my-1">أكاديمية غير ممنون</span>
                                             <span id="prev-cert-academy-seal-sub" class="text-[8px] font-black text-emerald-900 bg-amber-300/70 px-2 py-0.5 rounded-full">ختم الاعتماد الرسمي</span>
                                         </div>
                                     </div>
@@ -3128,8 +3213,8 @@
     <div id="daily-print-zone" class="hidden bg-white min-h-screen font-sans p-8" dir="rtl">
         <div class="border-4 border-double border-slate-300 p-8 rounded-3xl relative">
             <div class="text-center mb-6 border-b-2 border-slate-100 pb-4">
-                <img src="logo.png" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Safwa&background=047857&color=fff'" class="w-16 h-16 mx-auto rounded-full mb-2 shadow-md">
-                <h1 class="text-2xl font-black text-slate-800 mb-1" id="p-daily-title">أكاديمية صفوة الحفاظ للقرآن واللغات</h1>
+                <img src="gheir-mamnoon-logo.jpg" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=GM&background=047857&color=fff'" class="w-16 h-16 mx-auto rounded-full mb-2 shadow-md">
+                <h1 class="text-2xl font-black text-slate-800 mb-1" id="p-daily-title">أكاديمية غير ممنون للقرآن واللغات</h1>
                 <p class="text-xs font-bold text-slate-500" id="p-daily-sub">تقرير متابعة الحصة التعليمية</p>
             </div>
             <div class="flex justify-between items-center mb-6 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
@@ -3147,9 +3232,9 @@
     <div id="exam-print-zone" class="hidden bg-white min-h-screen font-sans p-8" dir="rtl">
         <div class="border-4 border-slate-800 p-8 rounded-3xl relative">
             <div class="text-center mb-6 border-b-2 border-slate-200 pb-4">
-                <img src="logo.png" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Safwa&background=047857&color=fff'" class="w-16 h-16 mx-auto rounded-full mb-2 shadow-md">
+                <img src="gheir-mamnoon-logo.jpg" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=GM&background=047857&color=fff'" class="w-16 h-16 mx-auto rounded-full mb-2 shadow-md">
                 <h1 class="text-2xl font-black text-slate-800 mb-1" id="p-exam-title">تقرير تقييم واختبار</h1>
-                <p class="text-xs font-bold text-slate-500" id="p-exam-sub">أكاديمية صفوة الحفاظ للقرآن الكريم واللغات</p>
+                <p class="text-xs font-bold text-slate-500" id="p-exam-sub">أكاديمية غير ممنون للقرآن الكريم واللغات</p>
             </div>
             <div class="grid grid-cols-2 gap-3 mb-6 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
                 <div><p class="text-slate-500 font-bold" id="p-ex-lbl-student">اسم الطالب:</p><h2 id="print-exam-student-name" class="text-sm font-black text-blue-900 mt-0.5">---</h2></div>
@@ -3565,7 +3650,7 @@
         window.toggleDarkMode = function() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('Safwatulhuffaz-dark-mode', isDark);
+            localStorage.setItem('GM-dark-mode', isDark);
             document.getElementById('dark-mode-btn').innerText = isDark ? "☀️" : "🌙";
         };
 
@@ -3641,12 +3726,12 @@
         };
 
         function initDashboard() {
-            const isDark = localStorage.getItem('Safwatulhuffaz-dark-mode') === 'true';
+            const isDark = localStorage.getItem('GM-dark-mode') === 'true';
             if(isDark) { 
                 document.documentElement.classList.add('dark'); 
                 document.getElementById('dark-mode-btn').innerText = "☀️"; 
             }
-            const savedTheme = localStorage.getItem('Safwatulhuffaz-theme');
+            const savedTheme = localStorage.getItem('GM-theme');
             if(savedTheme) { 
                 const t = JSON.parse(savedTheme); 
                 changeTheme(t.primary, t.hover, t.light); 
@@ -3662,7 +3747,7 @@
             document.documentElement.style.setProperty('--primary', primary);
             document.documentElement.style.setProperty('--primary-hover', hover);
             document.documentElement.style.setProperty('--primary-light', light);
-            localStorage.setItem('Safwatulhuffaz-theme', JSON.stringify({primary, hover, light}));
+            localStorage.setItem('GM-theme', JSON.stringify({primary, hover, light}));
         };
 
         function setAutoDateAndDay() {
@@ -3904,13 +3989,13 @@ supabaseClient.channel('teacher_slots_realtime')
                 const byDayStr = daysIcsMap[dIdx];
 
                 icsEvents.push(`BEGIN:VEVENT
-UID:${Math.random().toString(36).substring(2)}@safwatulhuffaz.edu
+UID:${Math.random().toString(36).substring(2)}@gheirmamnoon.edu
 DTSTAMP:${nowIso}
 DTSTART:${formatIcsDate(eventStartDate)}
 DTEND:${formatIcsDate(eventEndDate)}
 RRULE:FREQ=WEEKLY;BYDAY=${byDayStr}
 SUMMARY:حصة قرآن مع الطالب (${studentName}) - ${duration} دقيقة
-DESCRIPTION:حصة تعليمية مجدولة للمعلم ${currentTeacherObj.name_ar} مع الطالب ${studentName} عبر أكاديمية صفوة الحفاظ.
+DESCRIPTION:حصة تعليمية مجدولة للمعلم ${currentTeacherObj.name_ar} مع الطالب ${studentName} عبر أكاديمية غير ممنون.
 LOCATION:Zoom Online
 STATUS:CONFIRMED
 END:VEVENT`);
@@ -3918,7 +4003,7 @@ END:VEVENT`);
 
             const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Safwat Al-Huffaz//Teacher Portal//AR
+PRODID:-//Gheir Mamnoon//Teacher Portal//AR
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:جدول المعلم ${currentTeacherObj.name_ar}
@@ -4107,7 +4192,7 @@ END:VCALENDAR`;
                 }]);
 
                 if (typeof sendSilentCloudWhatsApp === 'function') {
-                    sendSilentCloudWhatsApp(std, `🕌 *${isStuEn ? 'Safwat Al-Huffaz Academy' : 'أكاديمية صفوة الحفاظ'}*\n${notifTitle}\n${notifMsg}`);
+                    sendSilentCloudWhatsApp(std, `🕌 *${isStuEn ? 'Gheir Mamnoon Academy' : 'أكاديمية غير ممنون'}*\n${notifTitle}\n${notifMsg}`);
                 }
 
                 showToast(currentLang === 'ar' ? `✅ تم توثيق الغياب بعذر وإضافة رصيد تعويض للطالب!` : `✅ Excused absence logged!`, 'success');
@@ -4151,7 +4236,7 @@ END:VCALENDAR`;
                 }]);
 
                 if (typeof sendSilentCloudWhatsApp === 'function') {
-                    sendSilentCloudWhatsApp(std, `🕌 *${isStuEn ? 'Safwat Al-Huffaz Academy' : 'أكاديمية صفوة الحفاظ'}*\n${notifTitle}\n${notifMsg}`);
+                    sendSilentCloudWhatsApp(std, `🕌 *${isStuEn ? 'Gheir Mamnoon Academy' : 'أكاديمية غير ممنون'}*\n${notifTitle}\n${notifMsg}`);
                 }
 
                 showToast(currentLang === 'ar' ? `✅ تم توثيق الغياب وخصم الحصة من رصيد الطالب!` : `✅ Absence logged and session deducted!`, 'success');
@@ -5155,8 +5240,8 @@ if (lessonNumInput) {
                     if (stObj && typeof sendSilentCloudWhatsApp === 'function') {
                         const isStuEn = (getStudentPreferredLang(stObj) === 'en');
                         const waMsg = isStuEn
-                            ? `🕌 *Safwat Al-Huffaz Academy*\n📝 *New Online Exam: ${title}*\n👤 *Student:* ${stObj.name}\n⏰ *Deadline:* ${expiry}\n🔗 *Exam Link:* ${url}`
-                            : `🕌 *أكاديمية صفوة الحفاظ*\n📝 *اختبار إلكتروني جديد: ${title}*\n👤 *الطالب:* ${stObj.name}\n⏰ *آخر موعد:* ${expiry}\n🔗 *رابط الاختبار:* ${url}`;
+                            ? `🕌 *Gheir Mamnoon Academy*\n📝 *New Online Exam: ${title}*\n👤 *Student:* ${stObj.name}\n⏰ *Deadline:* ${expiry}\n🔗 *Exam Link:* ${url}`
+                            : `🕌 *أكاديمية غير ممنون*\n📝 *اختبار إلكتروني جديد: ${title}*\n👤 *الطالب:* ${stObj.name}\n⏰ *آخر موعد:* ${expiry}\n🔗 *رابط الاختبار:* ${url}`;
                         sendSilentCloudWhatsApp(stObj, waMsg);
                     }
                 });
@@ -5239,8 +5324,8 @@ if (lessonNumInput) {
 
                 if (document.getElementById('autopilot-on-report-cb')?.checked !== false && typeof sendSilentCloudWhatsApp === 'function') {
                     const waText = isStuEn
-                        ? `🕌 *Safwat Al-Huffaz Academy*\n🏆 *Official Exam Result: ${title}*\n👤 *Student:* ${std.name}\n🎯 *Score:* ${studentScore} / ${maxScore} (${perc})\n💬 *Teacher Notes:* ${notes || 'Excellent performance, keep it up!'}`
-                        : `🕌 *أكاديمية صفوة الحفاظ*\n🏆 *نتيجة اختبار: ${title}*\n👤 *الطالب:* ${std.name}\n🎯 *الدرجة:* ${studentScore} / ${maxScore} (${perc})\n💬 *ملاحظات المعلم:* ${notes || 'ممتاز وبارك الله فيك!'}`;
+                        ? `🕌 *Gheir Mamnoon Academy*\n🏆 *Official Exam Result: ${title}*\n👤 *Student:* ${std.name}\n🎯 *Score:* ${studentScore} / ${maxScore} (${perc})\n💬 *Teacher Notes:* ${notes || 'Excellent performance, keep it up!'}`
+                        : `🕌 *أكاديمية غير ممنون*\n🏆 *نتيجة اختبار: ${title}*\n👤 *الطالب:* ${std.name}\n🎯 *الدرجة:* ${studentScore} / ${maxScore} (${perc})\n💬 *ملاحظات المعلم:* ${notes || 'ممتاز وبارك الله فيك!'}`;
                     sendSilentCloudWhatsApp(std, waText);
                 }
 
@@ -5431,8 +5516,8 @@ if (lessonNumInput) {
 
                 if (stdObj && typeof sendSilentCloudWhatsApp === 'function') {
                     const waText = isStuEn
-                        ? `🕌 *Safwat Al-Huffaz Academy*\n🎙️ *Audio Recitation Evaluation for (${studentName})*\n⭐ *Stars Awarded:* +${starsInput}\n💬 *Teacher Feedback:* ${notesInput || 'Blessed recitation, Mashallah!'}`
-                        : `🕌 *أكاديمية صفوة الحفاظ*\n🎙️ *تقييم التلاوة الصوتية للطالب (${studentName})*\n⭐ *النجوم الممنوحة:* +${starsInput}\n💬 *ملاحظات المعلم:* ${notesInput || 'تلاوة طيبة ومباركة!'}`;
+                        ? `🕌 *Gheir Mamnoon Academy*\n🎙️ *Audio Recitation Evaluation for (${studentName})*\n⭐ *Stars Awarded:* +${starsInput}\n💬 *Teacher Feedback:* ${notesInput || 'Blessed recitation, Mashallah!'}`
+                        : `🕌 *أكاديمية غير ممنون*\n🎙️ *تقييم التلاوة الصوتية للطالب (${studentName})*\n⭐ *النجوم الممنوحة:* +${starsInput}\n💬 *ملاحظات المعلم:* ${notesInput || 'تلاوة طيبة ومباركة!'}`;
                     sendSilentCloudWhatsApp(stdObj, waText);
                 }
 
@@ -5449,18 +5534,18 @@ if (lessonNumInput) {
         };
         // ================= 📜 محرك موسوعة الأحاديث النبوية المرقمة والتكليفات =================
         window.loadHadithBankData = async function() {
-            let stored = JSON.parse(localStorage.getItem('Safwat_Academy_Hadith_Bank') || 'null');
+            let stored = JSON.parse(localStorage.getItem('GM_Academy_Hadith_Bank') || 'null');
             try {
                 const { data } = await supabaseClient.from('hadith_bank').select('*').order('number', { ascending: true });
                 if (data && data.length > 0) {
                     stored = data;
-                    localStorage.setItem('Safwat_Academy_Hadith_Bank', JSON.stringify(stored));
+                    localStorage.setItem('GM_Academy_Hadith_Bank', JSON.stringify(stored));
                 }
             } catch (e) {}
 
             if (!stored || !Array.isArray(stored) || stored.length === 0) {
                 stored = [...defaultHadithBank];
-                localStorage.setItem('Safwat_Academy_Hadith_Bank', JSON.stringify(stored));
+                localStorage.setItem('GM_Academy_Hadith_Bank', JSON.stringify(stored));
             }
             cachedHadithBank = stored;
             populateHadithReportDropdowns();
@@ -5603,7 +5688,7 @@ if (lessonNumInput) {
                 else cachedHadithBank.push(hadithObj);
             }
 
-            localStorage.setItem('Safwat_Academy_Hadith_Bank', JSON.stringify(cachedHadithBank));
+            localStorage.setItem('GM_Academy_Hadith_Bank', JSON.stringify(cachedHadithBank));
             try { await supabaseClient.from('hadith_bank').upsert(hadithObj); } catch (err) {}
 
             document.getElementById('add-hadith-modal').classList.add('hidden');
@@ -5615,7 +5700,7 @@ if (lessonNumInput) {
         window.deleteHadithFromBank = async function(id) {
             if (!confirm(currentLang === 'ar' ? 'هل تريد حذف هذا الحديث من الموسوعة؟' : 'Delete this Hadith from bank?')) return;
             cachedHadithBank = cachedHadithBank.filter(h => String(h.id) !== String(id));
-            localStorage.setItem('Safwat_Academy_Hadith_Bank', JSON.stringify(cachedHadithBank));
+            localStorage.setItem('GM_Academy_Hadith_Bank', JSON.stringify(cachedHadithBank));
             try { await supabaseClient.from('hadith_bank').delete().eq('id', id); } catch (e) {}
             populateHadithReportDropdowns();
             renderHadithBankGrid();
@@ -5653,8 +5738,8 @@ if (lessonNumInput) {
 
             const isStuEn = (getStudentPreferredLang(std) === 'en');
             const msg = isStuEn
-                ? `🕌 *Safwat Al-Huffaz Academy*\n📜 *Prophetic Hadith Assignment (#${h.number})*\n👤 *Student:* ${std.name}\n📌 *Topic:* ${h.title}\n\n🇸🇦 *Arabic Text:*\n${h.text_ar}\n\n🇬🇧 *English Meaning:*\n${h.text_en}`
-                : `🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n📜 *تكليف حفظ الحديث النبوي الشريف رقم (#${h.number})*\n👤 *الطالب البطل:* ${std.name}\n📌 *الموضوع:* ${h.title}\n\n✨ *نص الحديث الشريف:*\n${h.text_ar}\n\n🇬🇧 *English Translation:*\n${h.text_en}`;
+                ? `🕌 *Gheir Mamnoon Academy*\n📜 *Prophetic Hadith Assignment (#${h.number})*\n👤 *Student:* ${std.name}\n📌 *Topic:* ${h.title}\n\n🇸🇦 *Arabic Text:*\n${h.text_ar}\n\n🇬🇧 *English Meaning:*\n${h.text_en}`
+                : `🕌 *أكاديمية غير ممنون للقرآن الكريم*\n📜 *تكليف حفظ الحديث النبوي الشريف رقم (#${h.number})*\n👤 *الطالب البطل:* ${std.name}\n📌 *الموضوع:* ${h.title}\n\n✨ *نص الحديث الشريف:*\n${h.text_ar}\n\n🇬🇧 *English Translation:*\n${h.text_en}`;
 
             dispatchMessageViaFreeWhatsAppGatewayOrDirect(std, msg);
         };
@@ -5682,7 +5767,7 @@ if (lessonNumInput) {
 
             let lines = [];
             if (isStuEn) {
-                lines.push(`🕌 *Safwat Al-Huffaz Academy*`);
+                lines.push(`🕌 *Gheir Mamnoon Academy*`);
                 lines.push(`📋 *Official Session Progress Report (#${reportData.session || 1})*`);
                 lines.push(`━━━━━━━━━━━━━━━━━━`);
                 lines.push(`👤 *Student:* ${std.name}`);
@@ -5747,7 +5832,7 @@ if (lessonNumInput) {
                 lines.push(`━━━━━━━━━━━━━━━━━━`);
                 lines.push(`✨ *May Allah bless your efforts in learning the Book of Allah!*`);
             } else {
-                lines.push(`🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم واللغات*`);
+                lines.push(`🕌 *أكاديمية غير ممنون للقرآن الكريم واللغات*`);
                 lines.push(`📋 *تقرير متابعة الحلقة رقم (${reportData.session || 1})*`);
                 lines.push(`━━━━━━━━━━━━━━━━━━`);
                 lines.push(`👤 *الطالب البطل:* ${std.name}`);
@@ -6009,7 +6094,7 @@ if (lessonNumInput) {
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `Safwat_Financials_${selectedMonthVal}.csv`;
+            link.download = `GM_Financials_${selectedMonthVal}.csv`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -6037,7 +6122,7 @@ if (lessonNumInput) {
             const zone = document.getElementById('invoice-print-zone');
             zone.setAttribute('dir', isAr ? 'rtl' : 'ltr');
 
-            document.getElementById('inv-academy-title').innerText = isAr ? 'أكاديمية صفوة الحفاظ للقرآن الكريم واللغات' : 'Safwat Al-Huffaz Academy for Quran & Languages';
+            document.getElementById('inv-academy-title').innerText = isAr ? 'أكاديمية غير ممنون للقرآن الكريم واللغات' : 'Gheir Mamnoon Academy for Quran & Languages';
             document.getElementById('inv-doc-subtitle').innerText = isAr ? 'بيان تفصيلي بتواريخ وتقارير الحلقات ومطالبة سداد المصروفات' : 'Official Session Attendance Log & Tuition Statement';
             document.getElementById('inv-issue-date').innerText = `Date: ${new Date().toISOString().split('T')[0]}`;
             document.getElementById('inv-lbl-student').innerText = isAr ? 'اسم الطالب:' : 'Student Name:';
@@ -6103,8 +6188,8 @@ if (lessonNumInput) {
             } catch (e) {}
 
             const waMessage = isEn
-                ? `🕌 *Safwat Al-Huffaz Academy*\n🔔 *Subscription Renewal Notice*\n👤 *Student:* ${std.name}\n✅ *Completed:* ${sessionsCount}/${monthlyQuota} sessions (${totalHours} Hrs)\n📅 *Dates:* ${datesList || 'Current Cycle'}\n💰 *Amount Due:* *$${totalDue}*\n✨ Thank you for your continued support!`
-                : `🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n🔔 *تذكير بتجديد باقة الاشتراك الشهري*\n👤 *الطالب:* ${std.name}\n✅ *الحلقات المنجزة:* ${sessionsCount} من ${monthlyQuota} (${totalHours} ساعة)\n📅 *التواريخ:* ${datesList || 'الدورة الحالية'}\n💰 *القيمة المستحقة:* *$${totalDue}*\n✨ بارك الله فيكم وفي أبنائكم!`;
+                ? `🕌 *Gheir Mamnoon Academy*\n🔔 *Subscription Renewal Notice*\n👤 *Student:* ${std.name}\n✅ *Completed:* ${sessionsCount}/${monthlyQuota} sessions (${totalHours} Hrs)\n📅 *Dates:* ${datesList || 'Current Cycle'}\n💰 *Amount Due:* *$${totalDue}*\n✨ Thank you for your continued support!`
+                : `🕌 *أكاديمية غير ممنون للقرآن الكريم*\n🔔 *تذكير بتجديد باقة الاشتراك الشهري*\n👤 *الطالب:* ${std.name}\n✅ *الحلقات المنجزة:* ${sessionsCount} من ${monthlyQuota} (${totalHours} ساعة)\n📅 *التواريخ:* ${datesList || 'الدورة الحالية'}\n💰 *القيمة المستحقة:* *$${totalDue}*\n✨ بارك الله فيكم وفي أبنائكم!`;
 
             await dispatchMessageViaFreeWhatsAppGatewayOrDirect(std, waMessage);
         };
@@ -6324,8 +6409,8 @@ if (lessonNumInput) {
                 }]);
                 if (std && typeof sendSilentCloudWhatsApp === 'function') {
                     const waText = isStuEn
-                        ? `🕌 *Safwat Al-Huffaz Academy*\n🌟 *Congratulations to (${name}) for earning (+${stars} Merit Stars)!*\n📌 *Reason:* ${note}\n🏆 *Total Balance:* ${newBal} Stars!`
-                        : `🕌 *أكاديمية صفوة الحفاظ*\n🌟 *مبارك للطالب البطل (${name}) الحصول على (+${stars} نجوم استحقاق)*\n📌 *السبب:* ${note}\n🏆 *إجمالي الرصيد الحالي:* ${newBal} نجمة!`;
+                        ? `🕌 *Gheir Mamnoon Academy*\n🌟 *Congratulations to (${name}) for earning (+${stars} Merit Stars)!*\n📌 *Reason:* ${note}\n🏆 *Total Balance:* ${newBal} Stars!`
+                        : `🕌 *أكاديمية غير ممنون*\n🌟 *مبارك للطالب البطل (${name}) الحصول على (+${stars} نجوم استحقاق)*\n📌 *السبب:* ${note}\n🏆 *إجمالي الرصيد الحالي:* ${newBal} نجمة!`;
                     sendSilentCloudWhatsApp(std, waText);
                 }
                 showToast(currentLang === 'ar' ? `✅ تم اعتماد ومنح (${stars} نجوم) للطالب!` : `✅ Awarded (+${stars} stars) successfully!`, 'success');
@@ -6394,8 +6479,8 @@ if (lessonNumInput) {
             }]);
             if (typeof sendSilentCloudWhatsApp === 'function') {
                 const waText = isStuEn
-                    ? `🕌 *Safwat Al-Huffaz Academy*\n🎯 *Placement Test Evaluation for (${std.name})*\n📊 *Recommended Level:* ${levelResult}\n💬 *Teacher Recommendation:* ${notes}`
-                    : `🕌 *أكاديمية صفوة الحفاظ*\n🎯 *نتيجة تحديد المستوى للطالب (${std.name})*\n📊 *المستوى:* ${levelResult}\n💬 *التوصية:* ${notes}`;
+                    ? `🕌 *Gheir Mamnoon Academy*\n🎯 *Placement Test Evaluation for (${std.name})*\n📊 *Recommended Level:* ${levelResult}\n💬 *Teacher Recommendation:* ${notes}`
+                    : `🕌 *أكاديمية غير ممنون*\n🎯 *نتيجة تحديد المستوى للطالب (${std.name})*\n📊 *المستوى:* ${levelResult}\n💬 *التوصية:* ${notes}`;
                 sendSilentCloudWhatsApp(std, waText);
             }
             showToast(currentLang === 'ar' ? '🚀 تم اعتماد التقييم وإرساله بلغة الطالب!' : '🚀 Placement evaluation sent!', 'success');
@@ -6495,8 +6580,8 @@ if (lessonNumInput) {
 
                 if (document.getElementById('autopilot-on-report-cb')?.checked !== false && typeof sendSilentCloudWhatsApp === 'function') {
                     const waText = isStuEn
-                        ? `🕌 *Safwat Al-Huffaz Academy*\n🎓 *Connected Sanad Recitation Report*\n👤 *Student:* ${std.name}\n📜 *Khatma:* ${khatmaName}\n📖 *Recited:* Surah ${sFromObj?.en || sF} (${aF}) to Surah ${sToObj?.en || sT} (${aT})\n⭐ *Grade:* ${formatRatingForStudentLang(generalEval, true)}\n📌 *Notes:* ${notes}`
-                        : `🕌 *أكاديمية صفوة الحفاظ*\n🎓 *تقرير مجلس إقراء السند المتصل*\n👤 *الطالب:* ${std.name}\n📜 *الختمة:* ${khatmaName}\n📖 *المقدار المقروء:* من سورة ${sFromObj?.ar || sF} (${aF}) إلى سورة ${sToObj?.ar || sT} (${aT})\n⭐ *التقييم:* ${formatRatingForStudentLang(generalEval, false)}\n📌 *الملاحظات:* ${notes}`;
+                        ? `🕌 *Gheir Mamnoon Academy*\n🎓 *Connected Sanad Recitation Report*\n👤 *Student:* ${std.name}\n📜 *Khatma:* ${khatmaName}\n📖 *Recited:* Surah ${sFromObj?.en || sF} (${aF}) to Surah ${sToObj?.en || sT} (${aT})\n⭐ *Grade:* ${formatRatingForStudentLang(generalEval, true)}\n📌 *Notes:* ${notes}`
+                        : `🕌 *أكاديمية غير ممنون*\n🎓 *تقرير مجلس إقراء السند المتصل*\n👤 *الطالب:* ${std.name}\n📜 *الختمة:* ${khatmaName}\n📖 *المقدار المقروء:* من سورة ${sFromObj?.ar || sF} (${aF}) إلى سورة ${sToObj?.ar || sT} (${aT})\n⭐ *التقييم:* ${formatRatingForStudentLang(generalEval, false)}\n📌 *الملاحظات:* ${notes}`;
                     sendSilentCloudWhatsApp(std, waText);
                 }
 
@@ -6567,7 +6652,7 @@ if (lessonNumInput) {
 
             const zone = document.getElementById('daily-print-zone');
             zone.setAttribute('dir', isStuEn ? 'ltr' : 'rtl');
-            document.getElementById('p-daily-title').innerText = isStuEn ? 'Safwat Al-Huffaz Academy for Quran & Languages' : 'أكاديمية صفوة الحفاظ للقرآن واللغات';
+            document.getElementById('p-daily-title').innerText = isStuEn ? 'Gheir Mamnoon Academy for Quran & Languages' : 'أكاديمية غير ممنون للقرآن واللغات';
             document.getElementById('p-daily-sub').innerText = isStuEn ? 'Official Session Progress Report' : 'تقرير متابعة الحصة التعليمية';
             document.getElementById('p-lbl-student').innerText = isStuEn ? 'Student Name:' : 'اسم الطالب:';
             document.getElementById('print-daily-student').innerText = std.name;
@@ -6593,7 +6678,7 @@ if (lessonNumInput) {
             zone.setAttribute('dir', isStuEn ? 'ltr' : 'rtl');
 
             document.getElementById('p-exam-title').innerText = isStuEn ? 'Official Exam Evaluation Certificate' : 'تقرير تقييم واختبار';
-            document.getElementById('p-exam-sub').innerText = isStuEn ? 'Safwat Al-Huffaz Academy for Quran & Languages' : 'أكاديمية صفوة الحفاظ للقرآن الكريم واللغات';
+            document.getElementById('p-exam-sub').innerText = isStuEn ? 'Gheir Mamnoon Academy for Quran & Languages' : 'أكاديمية غير ممنون للقرآن الكريم واللغات';
             document.getElementById('p-ex-lbl-student').innerText = isStuEn ? 'Student Name:' : 'اسم الطالب:';
             document.getElementById('print-exam-student-name').innerText = std.name;
             document.getElementById('p-ex-lbl-date').innerText = isStuEn ? 'Date:' : 'التاريخ:';
@@ -7025,8 +7110,8 @@ if (lessonNumInput) {
             if (!currentAssessmentStudent || !currentAssessedMistakes.length) return;
             const isStuEn = (getStudentPreferredLang(currentAssessmentStudent) === 'en');
             const msg = isStuEn
-                ? `🕌 *Safwat Al-Huffaz Academy*\n📖 *Quran Recitation Corrections Report*\n👤 *Student:* ${currentAssessmentStudent.name}\n${buildFormattedMistakesTableText(currentAssessmentStudent)}\n✨ Please review and practice these words carefully!`
-                : `🕌 *أكاديمية صفوة الحفاظ*\n📖 *تقرير تصويب أخطاء التلاوة*\n👤 *الطالب:* ${currentAssessmentStudent.name}\n${buildFormattedMistakesTableText(currentAssessmentStudent)}\n✨ نرجو مراجعة هذه الكلمات وتكرارها بالضبط الصحيح!`;
+                ? `🕌 *Gheir Mamnoon Academy*\n📖 *Quran Recitation Corrections Report*\n👤 *Student:* ${currentAssessmentStudent.name}\n${buildFormattedMistakesTableText(currentAssessmentStudent)}\n✨ Please review and practice these words carefully!`
+                : `🕌 *أكاديمية غير ممنون*\n📖 *تقرير تصويب أخطاء التلاوة*\n👤 *الطالب:* ${currentAssessmentStudent.name}\n${buildFormattedMistakesTableText(currentAssessmentStudent)}\n✨ نرجو مراجعة هذه الكلمات وتكرارها بالضبط الصحيح!`;
             openParentWhatsAppChat(currentAssessmentStudent, msg, false);
         };
 
@@ -7215,8 +7300,8 @@ window.openParentWhatsAppChat = function(studentObj, messageText, forceGroup = f
     else window.open(`https://api.whatsapp.com/send?text=${encodedMsg}`, '_blank');
 };
 window.sendSilentCloudWhatsApp = async function(studentObj, messageText) {
-    const instId = localStorage.getItem('Safwat_GreenAPI_Id') || '';
-    const token = localStorage.getItem('Safwat_GreenAPI_Token') || '';
+    const instId = localStorage.getItem('GM_GreenAPI_Id') || '';
+    const token = localStorage.getItem('GM_GreenAPI_Token') || '';
     if (!instId || !token || !studentObj) return false;
 
     if (!messageText.includes('رابط المنصة:') && !messageText.includes('Platform Link:')) {
@@ -7267,8 +7352,8 @@ window.sendSilentCloudWhatsApp = async function(studentObj, messageText) {
             const generalEval = document.getElementById('sanad-general-rating')?.value || 'Excellent';
             const notes = document.getElementById('sanad-rep-notes')?.value || '';
             const msg = isStuEn
-                ? `🕌 *Safwat Al-Huffaz Academy*\n🎓 *Connected Sanad Recitation Report*\n👤 *Student:* ${std.name}\n📜 *Khatma:* ${khatmaName}\n⭐ *Grade:* ${formatRatingForStudentLang(generalEval, true)}\n📌 *Notes:* ${notes}`
-                : `🕌 *أكاديمية صفوة الحفاظ*\n🎓 *تقرير مجلس إقراء السند*\n👤 *الطالب:* ${std.name}\n📜 *الختمة:* ${khatmaName}\n⭐ *التقييم:* ${formatRatingForStudentLang(generalEval, false)}\n📌 *الملاحظات:* ${notes}`;
+                ? `🕌 *Gheir Mamnoon Academy*\n🎓 *Connected Sanad Recitation Report*\n👤 *Student:* ${std.name}\n📜 *Khatma:* ${khatmaName}\n⭐ *Grade:* ${formatRatingForStudentLang(generalEval, true)}\n📌 *Notes:* ${notes}`
+                : `🕌 *أكاديمية غير ممنون*\n🎓 *تقرير مجلس إقراء السند*\n👤 *الطالب:* ${std.name}\n📜 *الختمة:* ${khatmaName}\n⭐ *التقييم:* ${formatRatingForStudentLang(generalEval, false)}\n📌 *الملاحظات:* ${notes}`;
             openParentWhatsAppChat(std, msg, forceGroup);
         };
 
@@ -7280,8 +7365,8 @@ window.sendSilentCloudWhatsApp = async function(studentObj, messageText) {
             const lvl = document.getElementById('placement-level-result')?.value || '';
             const notes = document.getElementById('placement-notes')?.value || '';
             const msg = isStuEn
-                ? `🕌 *Safwat Al-Huffaz Academy*\n🎯 *Placement Test Result*\n👤 *Student:* ${std.name}\n📊 *Recommended Level:* ${lvl}\n💬 *Notes:* ${notes}`
-                : `🕌 *أكاديمية صفوة الحفاظ*\n🎯 *نتيجة تحديد المستوى*\n👤 *الطالب:* ${std.name}\n📊 *المستوى:* ${lvl}\n💬 *التوصية:* ${notes}`;
+                ? `🕌 *Gheir Mamnoon Academy*\n🎯 *Placement Test Result*\n👤 *Student:* ${std.name}\n📊 *Recommended Level:* ${lvl}\n💬 *Notes:* ${notes}`
+                : `🕌 *أكاديمية غير ممنون*\n🎯 *نتيجة تحديد المستوى*\n👤 *الطالب:* ${std.name}\n📊 *المستوى:* ${lvl}\n💬 *التوصية:* ${notes}`;
             openParentWhatsAppChat(std, msg, forceGroup);
         };
 
@@ -7295,8 +7380,8 @@ window.sendSilentCloudWhatsApp = async function(studentObj, messageText) {
             const max = document.getElementById('exam-max-score-input')?.value || 100;
             const notes = document.getElementById('exam-final-notes')?.value || '';
             const msg = isStuEn
-                ? `🕌 *Safwat Al-Huffaz Academy*\n🏆 *Official Exam Result: ${title}*\n👤 *Student:* ${std.name}\n🎯 *Score:* ${score} / ${max}\n💬 *Feedback:* ${notes || 'Excellent work!'}`
-                : `🕌 *أكاديمية صفوة الحفاظ*\n🏆 *نتيجة اختبار: ${title}*\n👤 *الطالب:* ${std.name}\n🎯 *الدرجة:* ${score}/${max}\n💬 *الملاحظات:* ${notes || 'بارك الله فيك!'}`;
+                ? `🕌 *Gheir Mamnoon Academy*\n🏆 *Official Exam Result: ${title}*\n👤 *Student:* ${std.name}\n🎯 *Score:* ${score} / ${max}\n💬 *Feedback:* ${notes || 'Excellent work!'}`
+                : `🕌 *أكاديمية غير ممنون*\n🏆 *نتيجة اختبار: ${title}*\n👤 *الطالب:* ${std.name}\n🎯 *الدرجة:* ${score}/${max}\n💬 *الملاحظات:* ${notes || 'بارك الله فيك!'}`;
             openParentWhatsAppChat(std, msg, forceGroup);
         };
 
@@ -7458,8 +7543,8 @@ function setupLiveStudentPresenceChannel() {
             if (!std) return;
             const isStuEn = (getStudentPreferredLang(std) === 'en');
             const msg = isStuEn
-                ? `🕌 *Safwat Al-Huffaz Academy*\nAssalamu Alaikum Dear Parent of *(${std.name})* 🌟\nKindly encourage our hero to log in to the Student Portal today to complete their daily Quranic quests and revision.`
-                : `🕌 *أكاديمية صفوة الحفاظ*\nالسلام عليكم ولي أمر الطالب *(${std.name})* 🌟\nنرجو تشجيع البطل للدخول لبوابة الطالب ومتابعة ورده ومهامه اليومية.`;
+                ? `🕌 *Gheir Mamnoon Academy*\nAssalamu Alaikum Dear Parent of *(${std.name})* 🌟\nKindly encourage our hero to log in to the Student Portal today to complete their daily Quranic quests and revision.`
+                : `🕌 *أكاديمية غير ممنون*\nالسلام عليكم ولي أمر الطالب *(${std.name})* 🌟\nنرجو تشجيع البطل للدخول لبوابة الطالب ومتابعة ورده ومهامه اليومية.`;
             dispatchMessageViaFreeWhatsAppGatewayOrDirect(std, msg);
         };
 
@@ -7475,8 +7560,8 @@ function setupLiveStudentPresenceChannel() {
                 const stuAtt = (attWeek || []).filter(a => String(a.student_id) === String(stu.id) && a.status === 'present');
                 const isEn = (getStudentPreferredLang(stu) === 'en');
                 const digestMsg = isEn
-                    ? `🕌 *Safwat Al-Huffaz Academy*\n📊 *Weekly Student Progress Digest*\n━━━━━━━━━━━━━━━━━━\n👤 *Student:* ${stu.name}\n✅ *Sessions Attended (7 Days):* ${stuAtt.length} sessions\n⭐ *Current Merit Stars:* ${stu.stars_balance || 0} ⭐\n📖 *Latest Achievement:* ${stuAtt[0] ? summarizeSessionReportNote(stuAtt[0].notes, false) : 'Active revision'}\n━━━━━━━━━━━━━━━━━━\n✨ *Jazakum Allahu Khairan for your continuous follow-up!*`
-                    : `🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n📊 *بطاقة الحصاد الأسبوعي لولي الأمر*\n━━━━━━━━━━━━━━━━━━\n👤 *الطالب البطل:* ${stu.name}\n✅ *الحلقات المنجزة هذا الأسبوع:* ${stuAtt.length} حلقات\n⭐ *رصيد نجوم الشرف:* ${stu.stars_balance || 0} نجمة\n📖 *آخر إنجاز مسجل:* ${stuAtt[0] ? summarizeSessionReportNote(stuAtt[0].notes, true) : 'مراجعة وتثبيت'}\n━━━━━━━━━━━━━━━━━━\n✨ *شكر الله حرصكم ومتابعتكم الطيبة لبطل القرآن!*`;
+                    ? `🕌 *Gheir Mamnoon Academy*\n📊 *Weekly Student Progress Digest*\n━━━━━━━━━━━━━━━━━━\n👤 *Student:* ${stu.name}\n✅ *Sessions Attended (7 Days):* ${stuAtt.length} sessions\n⭐ *Current Merit Stars:* ${stu.stars_balance || 0} ⭐\n📖 *Latest Achievement:* ${stuAtt[0] ? summarizeSessionReportNote(stuAtt[0].notes, false) : 'Active revision'}\n━━━━━━━━━━━━━━━━━━\n✨ *Jazakum Allahu Khairan for your continuous follow-up!*`
+                    : `🕌 *أكاديمية غير ممنون للقرآن الكريم*\n📊 *بطاقة الحصاد الأسبوعي لولي الأمر*\n━━━━━━━━━━━━━━━━━━\n👤 *الطالب البطل:* ${stu.name}\n✅ *الحلقات المنجزة هذا الأسبوع:* ${stuAtt.length} حلقات\n⭐ *رصيد نجوم الشرف:* ${stu.stars_balance || 0} نجمة\n📖 *آخر إنجاز مسجل:* ${stuAtt[0] ? summarizeSessionReportNote(stuAtt[0].notes, true) : 'مراجعة وتثبيت'}\n━━━━━━━━━━━━━━━━━━\n✨ *شكر الله حرصكم ومتابعتكم الطيبة لبطل القرآن!*`;
 
                 await dispatchMessageViaFreeWhatsAppGatewayOrDirect(stu, digestMsg);
             }
@@ -7748,10 +7833,10 @@ function setupLiveStudentPresenceChannel() {
         };
 
         window.loadAcademyLibraryBooks = async function() {
-            let books = JSON.parse(localStorage.getItem('Safwat_Academy_Library_Books') || '[]');
+            let books = JSON.parse(localStorage.getItem('GM_Academy_Library_Books') || '[]');
             try {
                 const { data } = await supabaseClient.from('library_books').select('*').order('created_at', { ascending: false });
-                if (data && data.length > 0) { books = data; localStorage.setItem('Safwat_Academy_Library_Books', JSON.stringify(books)); }
+                if (data && data.length > 0) { books = data; localStorage.setItem('GM_Academy_Library_Books', JSON.stringify(books)); }
             } catch (e) {}
             cachedLibraryBooks = books;
             renderLibraryBooksGrid();
@@ -7794,7 +7879,7 @@ function setupLiveStudentPresenceChannel() {
             const newBook = { id: 'bk_' + Date.now(), teacher_id: currentTeacherId, title, audience, category, file_url: fileUrl, created_at: new Date().toISOString() };
             try { await supabaseClient.from('library_books').insert([newBook]); } catch (e) {}
             cachedLibraryBooks.unshift(newBook);
-            localStorage.setItem('Safwat_Academy_Library_Books', JSON.stringify(cachedLibraryBooks));
+            localStorage.setItem('GM_Academy_Library_Books', JSON.stringify(cachedLibraryBooks));
             document.getElementById('add-book-modal').classList.add('hidden');
             e.target.reset();
             renderLibraryBooksGrid();
@@ -7803,7 +7888,7 @@ function setupLiveStudentPresenceChannel() {
 
         window.deleteLibraryBook = async function(bookId) {
             cachedLibraryBooks = cachedLibraryBooks.filter(b => String(b.id) !== String(bookId));
-            localStorage.setItem('Safwat_Academy_Library_Books', JSON.stringify(cachedLibraryBooks));
+            localStorage.setItem('GM_Academy_Library_Books', JSON.stringify(cachedLibraryBooks));
             try { await supabaseClient.from('library_books').delete().eq('id', bookId); } catch (e) {}
             renderLibraryBooksGrid();
         };
@@ -7944,8 +8029,8 @@ function setupLiveStudentPresenceChannel() {
 
             if (sendWhatsAppCode) {
                 const waText = isStuEn
-                    ? `🕌 *Safwat Al-Huffaz Academy*\n🎓 *Course Enrollment Activated: (${courseObj.title})*\n🔐 *Secret Access Code:* *${courseObj.access_code}*`
-                    : `🕌 *أكاديمية صفوة الحفاظ*\n🎓 *تفعيل اشتراكك في دورة (${courseObj.title})*\n🔐 *كود الدخول السري:* *${courseObj.access_code}*`;
+                    ? `🕌 *Gheir Mamnoon Academy*\n🎓 *Course Enrollment Activated: (${courseObj.title})*\n🔐 *Secret Access Code:* *${courseObj.access_code}*`
+                    : `🕌 *أكاديمية غير ممنون*\n🎓 *تفعيل اشتراكك في دورة (${courseObj.title})*\n🔐 *كود الدخول السري:* *${courseObj.access_code}*`;
                 await dispatchMessageViaFreeWhatsAppGatewayOrDirect(std, waText);
             }
 
@@ -8358,7 +8443,7 @@ window.submitCourseExamFromClassroom = async function(e) {
             body: isStuEn ? `A new exam has been published in your course classroom.` : `تم نشر اختبار جديد لك داخل قاعة الدورة. يمكنك فتحه أو تحميله الآن.`
         });
         if (stObj && typeof sendSilentCloudWhatsApp === 'function') {
-            sendSilentCloudWhatsApp(stObj, `🕌 *أكاديمية صفوة الحفاظ*\n⚡ *امتحان جديد في دورة (${crs?.title || ''})*\n📌 *الاختبار:* ${title}\n🔗 *الرابط:* ${fileUrl}`);
+            sendSilentCloudWhatsApp(stObj, `🕌 *أكاديمية غير ممنون*\n⚡ *امتحان جديد في دورة (${crs?.title || ''})*\n📌 *الاختبار:* ${title}\n🔗 *الرابط:* ${fileUrl}`);
         }
     });
     if (notifs.length > 0) await supabaseClient.from('student_notifications').insert(notifs);
@@ -8476,7 +8561,7 @@ window.submitCourseCertificateFromClassroom = async function(e) {
             const wrapper = document.getElementById('cert-live-preview-wrapper');
             if (wrapper) wrapper.setAttribute('dir', isEn ? 'ltr' : 'rtl');
 
-            document.getElementById('prev-cert-academy').innerText = isEn ? 'SAFWAT AL-HUFFAZ ACADEMY FOR QURAN & LANGUAGES' : 'أكاديمية صفوة الحفاظ للقرآن الكريم واللغات';
+            document.getElementById('prev-cert-academy').innerText = isEn ? 'SAFWAT AL-HUFFAZ ACADEMY FOR QURAN & LANGUAGES' : 'أكاديمية غير ممنون للقرآن الكريم واللغات';
             document.getElementById('prev-cert-main-title').innerText = isEn ? 'Certificate of Excellence & Mastery' : 'شهادة شكر وتقدير وإتقان';
             document.getElementById('prev-cert-intro').innerText = isEn ? 'The Academy Administration & Respected Instructor proudly present this honor to:' : 'تتشرف إدارة الأكاديمية ومعلم الحلقة بمنح هذا الوسام المبارك للطالب:';
             document.getElementById('prev-cert-student-name').innerText = std ? std.name : '---';
@@ -8523,15 +8608,15 @@ window.submitCourseCertificateFromClassroom = async function(e) {
             const ach = document.getElementById('cert-achievement-input')?.value || '';
             const msg = document.getElementById('cert-message-input')?.value || '';
             const waText = isStuEn
-                ? `🕌 *Safwat Al-Huffaz Academy*\n🏅 *Official Certificate of Excellence*\n👑 *Honored Student:* ${std.name}\n🌟 *Achievement:* ${ach}\n💬 *Teacher's Message:* ${msg}`
-                : `🕌 *أكاديمية صفوة الحفاظ*\n🏅 *شهادة شكر وتقدير وتفوق*\n👑 *الطالب البطل:* ${std.name}\n🌟 *الإنجاز:* ${ach}\n💬 *تهنئة المعلم:* ${msg}`;
+                ? `🕌 *Gheir Mamnoon Academy*\n🏅 *Official Certificate of Excellence*\n👑 *Honored Student:* ${std.name}\n🌟 *Achievement:* ${ach}\n💬 *Teacher's Message:* ${msg}`
+                : `🕌 *أكاديمية غير ممنون*\n🏅 *شهادة شكر وتقدير وتفوق*\n👑 *الطالب البطل:* ${std.name}\n🌟 *الإنجاز:* ${ach}\n💬 *تهنئة المعلم:* ${msg}`;
             dispatchMessageViaFreeWhatsAppGatewayOrDirect(std, waText);
         };
 
         // ================= 🔔 مركز الإشعارات والربط السحابي والطيار الآلي (بلغة كل طالب) =================
         window.initNotificationsCenter = function() {
-            const instId = localStorage.getItem('Safwat_GreenAPI_Id') || '';
-            const token = localStorage.getItem('Safwat_GreenAPI_Token') || '';
+            const instId = localStorage.getItem('GM_GreenAPI_Id') || '';
+            const token = localStorage.getItem('GM_GreenAPI_Token') || '';
             if (document.getElementById('green-api-instance-id')) document.getElementById('green-api-instance-id').value = instId;
             if (document.getElementById('green-api-token')) document.getElementById('green-api-token').value = token;
             loadSentStudentNotificationsLog();
@@ -8540,15 +8625,15 @@ window.submitCourseCertificateFromClassroom = async function(e) {
         window.saveCloudWhatsAppCredentials = function() {
             const instId = document.getElementById('green-api-instance-id')?.value.trim() || '';
             const token = document.getElementById('green-api-token')?.value.trim() || '';
-            localStorage.setItem('Safwat_GreenAPI_Id', instId);
-            localStorage.setItem('Safwat_GreenAPI_Token', token);
+            localStorage.setItem('GM_GreenAPI_Id', instId);
+            localStorage.setItem('GM_GreenAPI_Token', token);
             showToast(currentLang === 'ar' ? '✅ تم حفظ وتفعيل الربط السحابي للواتساب 24/7!' : '✅ 24/7 Cloud WhatsApp activated!', 'success');
         };
 
         window.testCloudWhatsAppConnection = async function() {
             const testPhone = prompt(currentLang === 'ar' ? 'أدخل رقم هاتفك بالصيغة الدولية (مثال: 201012345678):' : 'Enter phone number in international format (e.g. 201012345678):');
             if (!testPhone) return;
-            await dispatchMessageViaFreeWhatsAppGatewayOrDirect({ name: 'Test', phone: testPhone }, '🕌 *أكاديمية صفوة الحفاظ | Safwat Al-Huffaz*\n✅ تم تفعيل الطيار الآلي للواتساب السحابي بنجاح!');
+            await dispatchMessageViaFreeWhatsAppGatewayOrDirect({ name: 'Test', phone: testPhone }, '🕌 *أكاديمية غير ممنون | Gheir Mamnoon*\n✅ تم تفعيل الطيار الآلي للواتساب السحابي بنجاح!');
         };
 
         window.sendCustomTeacherNotification = async function(e) {
@@ -8565,7 +8650,7 @@ window.submitCourseCertificateFromClassroom = async function(e) {
             const rows = targetList.map(s => ({ student_id: s.id, target: s.name, type: typeVal, title: titleVal, body: bodyVal }));
             await supabaseClient.from('student_notifications').insert(rows);
             if (sendWa) {
-                for (let stu of targetList) await sendSilentCloudWhatsApp(stu, `🕌 *Safwat Al-Huffaz | أكاديمية صفوة الحفاظ*\n📢 *${titleVal}*\n\n${bodyVal}`);
+                for (let stu of targetList) await sendSilentCloudWhatsApp(stu, `🕌 *Gheir Mamnoon | أكاديمية غير ممنون*\n📢 *${titleVal}*\n\n${bodyVal}`);
             }
             showToast(currentLang === 'ar' ? `✅ تم إرسال الإشعار لـ (${targetList.length}) طالب!` : `✅ Notification sent to (${targetList.length}) students!`, 'success');
             e.target.reset();
@@ -8600,7 +8685,7 @@ window.submitCourseCertificateFromClassroom = async function(e) {
                 if (!activeTodayScheduleSlots || !activeTodayScheduleSlots.length) return;
                 const cairoNow = getExactCairoTimeParts();
                 const todayDateStr = new Date().toISOString().split('T')[0];
-                let autoLog = safeJsonParse(localStorage.getItem('Safwat_AutoPilot_Log'), {});
+                let autoLog = safeJsonParse(localStorage.getItem('GM_AutoPilot_Log'), {});
                 // تنظيف مفاتيح الأيام السابقة حتى لا يتضخم التخزين المحلي مع مرور الوقت
                 Object.keys(autoLog).forEach(k => { if (!k.includes(todayDateStr)) delete autoLog[k]; });
                 const zoomUrl = currentTeacherObj?.zoom_link || 'https://zoom.us';
@@ -8615,15 +8700,15 @@ window.submitCourseCertificateFromClassroom = async function(e) {
                     const key15Min = `pre15_${todayDateStr}_${stu.id}_${item.startMins}`;
                     if (document.getElementById('autopilot-15min-cb')?.checked !== false && diffBeforeStart >= 14 && diffBeforeStart <= 16 && !autoLog[key15Min]) {
                         autoLog[key15Min] = true;
-                        localStorage.setItem('Safwat_AutoPilot_Log', JSON.stringify(autoLog));
+                        localStorage.setItem('GM_AutoPilot_Log', JSON.stringify(autoLog));
                         await supabaseClient.from('student_notifications').insert([{
                             student_id: stu.id, target: stu.name, type: 'warning',
                             title: isStuEn ? '⏰ Your Session Starts in 15 Minutes!' : '⏰ باقي 15 دقيقة على موعد حلقتك!',
                             body: isStuEn ? 'Please get ready and join the session from your portal.' : 'يرجى الاستعداد والدخول للحلقة من بوابتك في الموقع.'
                         }]);
                         const waPreMsg = isStuEn
-                            ? `🕌 *Safwat Al-Huffaz Academy*\n⏰ *Automatic Reminder: Session in 15 Mins*\n👤 *Student:* ${stu.name}\n🕒 *Time:* ${item.timeLabel} (Cairo Time)\n🎥 *Join Link:* ${zoomUrl}`
-                            : `🕌 *أكاديمية صفوة الحفاظ*\n⏰ *تذكير تلقائي: باقي 15 دقيقة على موعد الحلقة*\n👤 *الطالب:* ${stu.name}\n🕒 *الموعد:* ${item.timeLabel} (بتوقيت القاهرة)\n🎥 *رابط الدخول:* ${zoomUrl}`;
+                            ? `🕌 *Gheir Mamnoon Academy*\n⏰ *Automatic Reminder: Session in 15 Mins*\n👤 *Student:* ${stu.name}\n🕒 *Time:* ${item.timeLabel} (Cairo Time)\n🎥 *Join Link:* ${zoomUrl}`
+                            : `🕌 *أكاديمية غير ممنون*\n⏰ *تذكير تلقائي: باقي 15 دقيقة على موعد الحلقة*\n👤 *الطالب:* ${stu.name}\n🕒 *الموعد:* ${item.timeLabel} (بتوقيت القاهرة)\n🎥 *رابط الدخول:* ${zoomUrl}`;
                         await sendSilentCloudWhatsApp(stu, waPreMsg);
                     }
 
@@ -8631,15 +8716,15 @@ window.submitCourseCertificateFromClassroom = async function(e) {
                     const key10Late = `late10_${todayDateStr}_${stu.id}_${item.startMins}`;
                     if (document.getElementById('autopilot-10min-late-cb')?.checked !== false && diffAfterStart >= 10 && diffAfterStart <= 12 && String(activeSessionStudentId) !== String(stu.id) && !autoLog[key10Late]) {
                         autoLog[key10Late] = true;
-                        localStorage.setItem('Safwat_AutoPilot_Log', JSON.stringify(autoLog));
+                        localStorage.setItem('GM_AutoPilot_Log', JSON.stringify(autoLog));
                         await supabaseClient.from('student_notifications').insert([{
                             student_id: stu.id, target: stu.name, type: 'error',
                             title: isStuEn ? '🚨 Your Session Started 10 Mins Ago!' : '🚨 بدأت حلقتك والمعلم في انتظارك الآن!',
                             body: isStuEn ? 'Your teacher is waiting for you in the room. Please join immediately.' : 'مرت 10 دقائق من وقت الحلقة، يرجى الدخول فوراً من الموقع.'
                         }]);
                         const waLateMsg = isStuEn
-                            ? `🕌 *Safwat Al-Huffaz Academy*\n🚨 *Alert: Session Started 10 Minutes Ago*\n👤 *Student:* ${stu.name}\nYour teacher is currently waiting for you in the session room. Please join immediately:\n🔗 ${zoomUrl}`
-                            : `🕌 *أكاديمية صفوة الحفاظ*\n🚨 *تنبيه: بدأت الحلقة منذ 10 دقائق*\n👤 *الطالب:* ${stu.name}\nفضيلة المعلم في انتظار البطل الآن داخل غرفة الحلقة، نرجو الدخول فوراً عبر البوابة أو الرابط:\n🔗 ${zoomUrl}`;
+                            ? `🕌 *Gheir Mamnoon Academy*\n🚨 *Alert: Session Started 10 Minutes Ago*\n👤 *Student:* ${stu.name}\nYour teacher is currently waiting for you in the session room. Please join immediately:\n🔗 ${zoomUrl}`
+                            : `🕌 *أكاديمية غير ممنون*\n🚨 *تنبيه: بدأت الحلقة منذ 10 دقائق*\n👤 *الطالب:* ${stu.name}\nفضيلة المعلم في انتظار البطل الآن داخل غرفة الحلقة، نرجو الدخول فوراً عبر البوابة أو الرابط:\n🔗 ${zoomUrl}`;
                         await sendSilentCloudWhatsApp(stu, waLateMsg);
                     }
                 }
@@ -8918,8 +9003,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
     };
 
     window.sendSilentCloudWhatsApp = async function(studentObj, messageText) {
-        const instId = localStorage.getItem('Safwat_GreenAPI_Id') || '';
-        const token = localStorage.getItem('Safwat_GreenAPI_Token') || '';
+        const instId = localStorage.getItem('GM_GreenAPI_Id') || '';
+        const token = localStorage.getItem('GM_GreenAPI_Token') || '';
         if (!instId || !token || !studentObj) return false;
 
         const enrichedMsg = window.appendCredentialsIfMissing(studentObj, messageText);
@@ -9066,7 +9151,7 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
                 return;
             }
 
-            const seasonSyncKey = `Safwat_WinterSync_2026_${currentTeacherId}`;
+            const seasonSyncKey = `GM_WinterSync_2026_${currentTeacherId}`;
             const alreadySyncedThisSeason = localStorage.getItem(seasonSyncKey) === 'true';
 
             let updatedCount = 0;
@@ -9222,8 +9307,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
             if (studentObj) {
                 await window.sendAutoWhatsAppOnAnyAction(
                     studentObj,
-                    `🕌 *أكاديمية صفوة الحفاظ*\n📅 *اعتماد جدول الحلقات الأسبوعي*\n👤 *الطالب:* ${studentObj.name}\n⏱️ *مدة الحلقة:* ${duration} دقيقة\n📌 *المواعيد بتوقيتكم المحلي:*\n${scheduleSummaryAr.join('\n')}\n✨ بارك الله في أوقاتكم!`,
-                    `🕌 *Safwat Al-Huffaz Academy*\n📅 *Weekly Schedule Confirmed*\n👤 *Student:* ${studentObj.name}\n⏱️ *Duration:* ${duration} mins\n📌 *Your Local Schedule:*\n${scheduleSummaryEn.join('\n')}`
+                    `🕌 *أكاديمية غير ممنون*\n📅 *اعتماد جدول الحلقات الأسبوعي*\n👤 *الطالب:* ${studentObj.name}\n⏱️ *مدة الحلقة:* ${duration} دقيقة\n📌 *المواعيد بتوقيتكم المحلي:*\n${scheduleSummaryAr.join('\n')}\n✨ بارك الله في أوقاتكم!`,
+                    `🕌 *Gheir Mamnoon Academy*\n📅 *Weekly Schedule Confirmed*\n👤 *Student:* ${studentObj.name}\n⏱️ *Duration:* ${duration} mins\n📌 *Your Local Schedule:*\n${scheduleSummaryEn.join('\n')}`
                 );
             }
 
@@ -9285,8 +9370,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
                 const newLocal = window.convertCairoToStudentTime(newCairoDay, newCairoHourIdx, stuTz);
                 await window.sendAutoWhatsAppOnAnyAction(
                     studentObj,
-                    `🕌 *أكاديمية صفوة الحفاظ*\n🔄 *تعديل موعد الحلقة*\n👤 *الطالب:* ${studentObj.name}\n📌 *الموعد الجديد بتوقيتكم:* يوم ${newLocal ? newLocal.day : daysAr[newCairoDay]} الساعة ${newLocal ? newLocal.time : hoursGrid[newCairoHourIdx]}`,
-                    `🕌 *Safwat Al-Huffaz Academy*\n🔄 *Session Rescheduled*\n👤 *Student:* ${studentObj.name}\n📌 *New Time (Your Local Time):* ${newLocal ? newLocal.day : daysEn[newCairoDay]} at ${newLocal ? newLocal.time : hoursGrid[newCairoHourIdx]}`
+                    `🕌 *أكاديمية غير ممنون*\n🔄 *تعديل موعد الحلقة*\n👤 *الطالب:* ${studentObj.name}\n📌 *الموعد الجديد بتوقيتكم:* يوم ${newLocal ? newLocal.day : daysAr[newCairoDay]} الساعة ${newLocal ? newLocal.time : hoursGrid[newCairoHourIdx]}`,
+                    `🕌 *Gheir Mamnoon Academy*\n🔄 *Session Rescheduled*\n👤 *Student:* ${studentObj.name}\n📌 *New Time (Your Local Time):* ${newLocal ? newLocal.day : daysEn[newCairoDay]} at ${newLocal ? newLocal.time : hoursGrid[newCairoHourIdx]}`
                 );
             }
             showToast(currentLang === 'ar' ? '✅ تم نقل الموعد وإشعار الطالب عبر الواتساب!' : '✅ Slot moved & WhatsApp sent!', 'success');
@@ -9315,8 +9400,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
         if (studentObj) {
             await window.sendAutoWhatsAppOnAnyAction(
                 studentObj,
-                `🕌 *أكاديمية صفوة الحفاظ*\n❌ *إشعار إلغاء موعد حلقة*\n👤 *الطالب:* ${studentObj.name}\nتم إلغاء موعد يوم (${daysAr[dayIdx]} - ${hoursGrid[hourIdx]}) من الجدول. يرجى التواصل لتحديد موعد بديل.`,
-                `🕌 *Safwat Al-Huffaz Academy*\n❌ *Session Slot Cancelled*\n👤 *Student:* ${studentObj.name}\nThe session slot on (${daysEn[dayIdx]} - ${hoursGrid[hourIdx]}) has been cancelled.`
+                `🕌 *أكاديمية غير ممنون*\n❌ *إشعار إلغاء موعد حلقة*\n👤 *الطالب:* ${studentObj.name}\nتم إلغاء موعد يوم (${daysAr[dayIdx]} - ${hoursGrid[hourIdx]}) من الجدول. يرجى التواصل لتحديد موعد بديل.`,
+                `🕌 *Gheir Mamnoon Academy*\n❌ *Session Slot Cancelled*\n👤 *Student:* ${studentObj.name}\nThe session slot on (${daysEn[dayIdx]} - ${hoursGrid[hourIdx]}) has been cancelled.`
             );
         }
 
@@ -9333,8 +9418,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
         if (studentObj) {
             await window.sendAutoWhatsAppOnAnyAction(
                 studentObj,
-                `🕌 *أكاديمية صفوة الحفاظ*\n📅 *تحديث جدول الحلقات*\n👤 *الطالب:* ${studentObj.name}\nتم إخلاء مواعيدكم السابقة في الجدول لإعادة جدولة مواعيد جديدة تناسبكم.`,
-                `🕌 *Safwat Al-Huffaz Academy*\n📅 *Schedule Update*\n👤 *Student:* ${studentObj.name}\nYour previous session slots have been cleared for rescheduling.`
+                `🕌 *أكاديمية غير ممنون*\n📅 *تحديث جدول الحلقات*\n👤 *الطالب:* ${studentObj.name}\nتم إخلاء مواعيدكم السابقة في الجدول لإعادة جدولة مواعيد جديدة تناسبكم.`,
+                `🕌 *Gheir Mamnoon Academy*\n📅 *Schedule Update*\n👤 *Student:* ${studentObj.name}\nYour previous session slots have been cleared for rescheduling.`
             );
         }
 
@@ -9937,8 +10022,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
 
                 await window.sendAutoWhatsAppOnAnyAction(
                     std,
-                    `🕌 *أكاديمية صفوة الحفاظ*\n🎓 *إشعار إلغاء اشتراك في دورة*\n👤 *الطالب:* ${std.name}\n📚 *الدورة:* ${crs?.title || ''}\nتم إلغاء اشتراككم في هذه الدورة.`,
-                    `🕌 *Safwat Al-Huffaz Academy*\n🎓 *Course Unenrollment Notice*\n👤 *Student:* ${std.name}\n📚 *Course:* ${crs?.title || ''}\nYour subscription to this course has been cancelled.`
+                    `🕌 *أكاديمية غير ممنون*\n🎓 *إشعار إلغاء اشتراك في دورة*\n👤 *الطالب:* ${std.name}\n📚 *الدورة:* ${crs?.title || ''}\nتم إلغاء اشتراككم في هذه الدورة.`,
+                    `🕌 *Gheir Mamnoon Academy*\n🎓 *Course Unenrollment Notice*\n👤 *Student:* ${std.name}\n📚 *Course:* ${crs?.title || ''}\nYour subscription to this course has been cancelled.`
                 );
             }
 
@@ -9973,8 +10058,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
 
             await window.sendAutoWhatsAppOnAnyAction(
                 std,
-                `🕌 *أكاديمية صفوة الحفاظ*\n🎓 *تفعيل اشتراكك في دورة (${courseObj.title})*\n👤 *الطالب:* ${std.name}\n🔐 *كود الدخول السري:* *${courseObj.access_code}*\n✨ يمكنك الآن دخول قاعة الدورة من بوابتك!`,
-                `🕌 *Safwat Al-Huffaz Academy*\n🎓 *Course Enrollment Activated: (${courseObj.title})*\n👤 *Student:* ${std.name}\n🔐 *Secret Access Code:* *${courseObj.access_code}*`
+                `🕌 *أكاديمية غير ممنون*\n🎓 *تفعيل اشتراكك في دورة (${courseObj.title})*\n👤 *الطالب:* ${std.name}\n🔐 *كود الدخول السري:* *${courseObj.access_code}*\n✨ يمكنك الآن دخول قاعة الدورة من بوابتك!`,
+                `🕌 *Gheir Mamnoon Academy*\n🎓 *Course Enrollment Activated: (${courseObj.title})*\n👤 *Student:* ${std.name}\n🔐 *Secret Access Code:* *${courseObj.access_code}*`
             );
 
             await window.renderAcademyCoursesSection();
@@ -10493,8 +10578,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
 
                 await window.sendAutoWhatsAppOnAnyAction(
                     stObj,
-                    `🕌 *أكاديمية صفوة الحفاظ*\n📚 *تم رفع محاضرة جديدة في دورة (${crs?.title || ''})*\n👤 *الطالب:* ${stObj.name}\n📖 *عنوان المحاضرة:* ${title}\n🔐 *كود الدورة:* ${crs?.access_code || ''}`,
-                    `🕌 *Safwat Al-Huffaz Academy*\n📚 *New Lecture Uploaded in (${crs?.title || ''})*\n👤 *Student:* ${stObj.name}\n📖 *Lecture:* ${title}\n🔐 *Course Code:* ${crs?.access_code || ''}`
+                    `🕌 *أكاديمية غير ممنون*\n📚 *تم رفع محاضرة جديدة في دورة (${crs?.title || ''})*\n👤 *الطالب:* ${stObj.name}\n📖 *عنوان المحاضرة:* ${title}\n🔐 *كود الدورة:* ${crs?.access_code || ''}`,
+                    `🕌 *Gheir Mamnoon Academy*\n📚 *New Lecture Uploaded in (${crs?.title || ''})*\n👤 *Student:* ${stObj.name}\n📖 *Lecture:* ${title}\n🔐 *Course Code:* ${crs?.access_code || ''}`
                 );
             }
         }
@@ -10533,8 +10618,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
             if (stObj) {
                 await window.sendAutoWhatsAppOnAnyAction(
                     stObj,
-                    `🕌 *أكاديمية صفوة الحفاظ*\n📝 *تكليف جديد في دورة (${crs?.title || ''})*\n📌 *المطلوب:* ${rawTitle}\n⏰ *آخر موعد:* ${due_date}`,
-                    `🕌 *Safwat Al-Huffaz Academy*\n📝 *New Course Assignment (${crs?.title || ''})*\n📌 *Task:* ${rawTitle}\n⏰ *Due:* ${due_date}`
+                    `🕌 *أكاديمية غير ممنون*\n📝 *تكليف جديد في دورة (${crs?.title || ''})*\n📌 *المطلوب:* ${rawTitle}\n⏰ *آخر موعد:* ${due_date}`,
+                    `🕌 *Gheir Mamnoon Academy*\n📝 *New Course Assignment (${crs?.title || ''})*\n📌 *Task:* ${rawTitle}\n⏰ *Due:* ${due_date}`
                 );
             }
         }
@@ -10569,8 +10654,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
             const crs = (cachedAcademyCourses || []).find(c => String(c.id) === String(window.activeTeacherCourseId));
             await window.sendAutoWhatsAppOnAnyAction(
                 std,
-                `🕌 *أكاديمية صفوة الحفاظ*\n📊 *إعلان نتيجة دورة (${crs?.title || ''})*\n👤 *الطالب:* ${std.name}\n🎯 *الدرجة:* ${score} / ${max}\n💬 *التقدير:* ${notes}`,
-                `🕌 *Safwat Al-Huffaz Academy*\n📊 *Official Course Grade (${crs?.title || ''})*\n👤 *Student:* ${std.name}\n🎯 *Score:* ${score} / ${max}\n💬 *Notes:* ${notes}`
+                `🕌 *أكاديمية غير ممنون*\n📊 *إعلان نتيجة دورة (${crs?.title || ''})*\n👤 *الطالب:* ${std.name}\n🎯 *الدرجة:* ${score} / ${max}\n💬 *التقدير:* ${notes}`,
+                `🕌 *Gheir Mamnoon Academy*\n📊 *Official Course Grade (${crs?.title || ''})*\n👤 *Student:* ${std.name}\n🎯 *Score:* ${score} / ${max}\n💬 *Notes:* ${notes}`
             );
         }
         e.target.reset();
@@ -10612,8 +10697,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
 
                 await window.sendAutoWhatsAppOnAnyAction(
                     std,
-                    `🕌 *أكاديمية صفوة الحفاظ*\n✅ *اعتماد ومراجعة حل التكليف*\n👤 *الطالب:* ${std.name}\n📝 *التكليف:* ${assignmentTitle}\n⭐ *المكافأة:* +${starsAwarded} نجوم\n💬 *تعليق المعلم:* ${feedback}`,
-                    `🕌 *Safwat Al-Huffaz Academy*\n✅ *Assignment Solution Reviewed*\n👤 *Student:* ${std.name}\n📝 *Assignment:* ${assignmentTitle}\n⭐ *Reward:* +${starsAwarded} Stars\n💬 *Teacher Feedback:* ${feedback}`
+                    `🕌 *أكاديمية غير ممنون*\n✅ *اعتماد ومراجعة حل التكليف*\n👤 *الطالب:* ${std.name}\n📝 *التكليف:* ${assignmentTitle}\n⭐ *المكافأة:* +${starsAwarded} نجوم\n💬 *تعليق المعلم:* ${feedback}`,
+                    `🕌 *Gheir Mamnoon Academy*\n✅ *Assignment Solution Reviewed*\n👤 *Student:* ${std.name}\n📝 *Assignment:* ${assignmentTitle}\n⭐ *Reward:* +${starsAwarded} Stars\n💬 *Teacher Feedback:* ${feedback}`
                 );
             }
 
@@ -10701,13 +10786,13 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
             }]);
 
             let waCaption = isStuEn
-                ? `🕌 *Safwat Al-Huffaz Academy*\n🏅 *Official Certificate of Excellence*\n👑 *Honored Student:* ${std.name}\n🌟 *Achievement:* ${ach}\n💬 *Teacher's Message:* ${msg}`
-                : `🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n🏅 *شهادة شكر وتقدير وتفوق ملكية*\n👑 *الطالب البطل:* ${std.name}\n🌟 *الإنجاز:* ${ach}\n💬 *تهنئة المعلم:* ${msg}`;
+                ? `🕌 *Gheir Mamnoon Academy*\n🏅 *Official Certificate of Excellence*\n👑 *Honored Student:* ${std.name}\n🌟 *Achievement:* ${ach}\n💬 *Teacher's Message:* ${msg}`
+                : `🕌 *أكاديمية غير ممنون للقرآن الكريم*\n🏅 *شهادة شكر وتقدير وتفوق ملكية*\n👑 *الطالب البطل:* ${std.name}\n🌟 *الإنجاز:* ${ach}\n💬 *تهنئة المعلم:* ${msg}`;
 
             waCaption = window.appendCredentialsIfMissing(std, waCaption);
 
-            const instId = localStorage.getItem('Safwat_GreenAPI_Id') || '';
-            const token = localStorage.getItem('Safwat_GreenAPI_Token') || '';
+            const instId = localStorage.getItem('GM_GreenAPI_Id') || '';
+            const token = localStorage.getItem('GM_GreenAPI_Token') || '';
             let rawPhone = std.parent_phone || std.guardian_phone || std.whatsapp || std.phone || '';
             let cleanPhone = String(rawPhone).replace(/[^0-9]/g, '');
             if (cleanPhone.startsWith('00')) cleanPhone = cleanPhone.substring(2);
@@ -11013,7 +11098,7 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
                     <div class="flex items-center gap-2.5">
                         <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center text-lg shadow-xs font-black">W</div>
                         <div class="flex items-center gap-1.5">
-                            <h3 class="text-xs sm:text-sm font-black text-slate-900">سبورة صفوة الحفاظ التفاعلية</h3>
+                            <h3 class="text-xs sm:text-sm font-black text-slate-900">سبورة غير ممنون التفاعلية</h3>
                             <span class="bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded-md">60FPS Turbo</span>
                         </div>
 
@@ -11902,8 +11987,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
                     }]);
                     await window.sendAutoWhatsAppOnAnyAction(
                         stObj,
-                        `🕌 *أكاديمية صفوة الحفاظ*\n🎨 *تم نشر سبورة الشرح في دورة (${crs.title})*\n👤 *الطالب:* ${stObj.name}\n📖 *العنوان:* ${autoTitle}\n🖼️ *رابط اللوحة المباشر:* ${publicUrl}`,
-                        `🕌 *Safwat Al-Huffaz Academy*\n🎨 *New Whiteboard Notes Published in (${crs.title})*\n👤 *Student:* ${stObj.name}\n🖼️ *Board Link:* ${publicUrl}`
+                        `🕌 *أكاديمية غير ممنون*\n🎨 *تم نشر سبورة الشرح في دورة (${crs.title})*\n👤 *الطالب:* ${stObj.name}\n📖 *العنوان:* ${autoTitle}\n🖼️ *رابط اللوحة المباشر:* ${publicUrl}`,
+                        `🕌 *Gheir Mamnoon Academy*\n🎨 *New Whiteboard Notes Published in (${crs.title})*\n👤 *Student:* ${stObj.name}\n🖼️ *Board Link:* ${publicUrl}`
                     );
                 }
             }
@@ -11927,8 +12012,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
             const { publicUrl } = await uploadCompositeBoard(`wb_wa_${std.id}`);
             await window.sendAutoWhatsAppOnAnyAction(
                 std,
-                `🕌 *أكاديمية صفوة الحفاظ*\n🎨 *لوحة الشرح التفاعلي من السبورة*\n👤 *الطالب:* ${std.name}\n🖼️ *رابط اللوحة:* ${publicUrl}`,
-                `🕌 *Safwat Al-Huffaz Academy*\n🎨 *Interactive Whiteboard Notes*\n👤 *Student:* ${std.name}\n🖼️ *Board Link:* ${publicUrl}`
+                `🕌 *أكاديمية غير ممنون*\n🎨 *لوحة الشرح التفاعلي من السبورة*\n👤 *الطالب:* ${std.name}\n🖼️ *رابط اللوحة:* ${publicUrl}`,
+                `🕌 *Gheir Mamnoon Academy*\n🎨 *Interactive Whiteboard Notes*\n👤 *Student:* ${std.name}\n🖼️ *Board Link:* ${publicUrl}`
             );
             showToast('✅ تم إرسال لوحة الشرح لواتساب الطالب!', 'success');
         } catch (e) { showToast('❌ ' + e.message, 'error'); }
@@ -11937,7 +12022,7 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
     window.downloadWhiteboardImage = function() {
         const flat = renderFlattenedBoardToCanvas(1800, 1125);
         const a = document.createElement('a');
-        a.download = `Safwat_Whiteboard_${Date.now()}.png`;
+        a.download = `GM_Whiteboard_${Date.now()}.png`;
         a.href = flat.toDataURL('image/png', 1.0);
         a.click();
     };
@@ -12764,7 +12849,7 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
 
         const quizTitle = document.getElementById('mcq-active-quiz-title-lbl')?.innerText?.split(' (')[0] || 'المسابقة القرآنية التفاعلية';
         const medals = ['🥇 المركز الأول:', '🥈 المركز الثاني:', '🥉 المركز الثالث:'];
-        let lines = [`🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*`, `🏆 *لوحة شرف الفائزين في: ${quizTitle}*`, `━━━━━━━━━━━━━━━━━━`];
+        let lines = [`🕌 *أكاديمية غير ممنون للقرآن الكريم*`, `🏆 *لوحة شرف الفائزين في: ${quizTitle}*`, `━━━━━━━━━━━━━━━━━━`];
 
         list.slice(0, 3).forEach((item, idx) => {
             lines.push(`${medals[idx]} *${item.studentName}* — (${item.score}/${item.maxScore}) ⚡ زمن الإجابة: ${item.elapsedSecs} ثانية`);
@@ -12888,8 +12973,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
     // 12. 🏛️📲 محرك هوية الفرع وواتساب المدير لبوابة المعلم (بدون استعلامات مكررة)
     // =========================================================================
     window.activeBranchConfig = {
-        name: "أكاديمية صفوة الحفاظ",
-        logo: "logo.png",
+        name: "أكاديمية غير ممنون",
+        logo: "gheir-mamnoon-logo.jpg",
         greenId: "",
         greenToken: "",
         ownerEmail: ""
@@ -12899,7 +12984,7 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
         if (!branch) return;
 
         if (branch.name) {
-            document.title = document.title.replace(/أكاديمية صفوة الحفاظ/g, branch.name);
+            document.title = document.title.replace(/أكاديمية غير ممنون/g, branch.name);
             if (!document.title.includes(branch.name)) {
                 document.title = `بوابة المعلم | ${branch.name}`;
             }
@@ -12907,13 +12992,13 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
             document.querySelectorAll('.academy-name-text, header h1, header h2, aside h1, aside h2').forEach(el => {
                 if (el.classList.contains('academy-name-text')) {
                     el.innerText = branch.name;
-                } else if (el.innerText.includes('أكاديمية صفوة الحفاظ')) {
-                    el.innerText = el.innerText.replace(/أكاديمية صفوة الحفاظ/g, branch.name);
+                } else if (el.innerText.includes('أكاديمية غير ممنون')) {
+                    el.innerText = el.innerText.replace(/أكاديمية غير ممنون/g, branch.name);
                 }
             });
         }
 
-        if (branch.logo && branch.logo !== 'logo.png') {
+        if (branch.logo && branch.logo !== 'gheir-mamnoon-logo.jpg') {
             document.querySelectorAll('.academy-logo-img, header img[src*="logo"], aside img[src*="logo"]').forEach(img => {
                 img.src = branch.logo;
                 img.classList.remove('hidden');
@@ -12960,16 +13045,16 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
 
                 if (matchedManager) {
                     window.activeBranchConfig = {
-                        name: matchedManager.branch_name || "أكاديمية صفوة الحفاظ",
-                        logo: matchedManager.branch_logo || "logo.png",
+                        name: matchedManager.branch_name || "أكاديمية غير ممنون",
+                        logo: matchedManager.branch_logo || "gheir-mamnoon-logo.jpg",
                         greenId: matchedManager.green_id || "",
                         greenToken: matchedManager.green_token || "",
                         ownerEmail: ownerEmail
                     };
 
                     if (matchedManager.green_id && matchedManager.green_token) {
-                        localStorage.setItem('Safwat_GreenAPI_Id', matchedManager.green_id);
-                        localStorage.setItem('Safwat_GreenAPI_Token', matchedManager.green_token);
+                        localStorage.setItem('GM_GreenAPI_Id', matchedManager.green_id);
+                        localStorage.setItem('GM_GreenAPI_Token', matchedManager.green_token);
                     }
 
                     applyTeacherBranchDOM(window.activeBranchConfig);
@@ -13051,7 +13136,7 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
                     <div class="flex items-center gap-2.5">
                         <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center text-lg shadow-xs font-black">W</div>
                         <div class="flex items-center gap-1.5">
-                            <h3 class="text-xs sm:text-sm font-black text-slate-900">سبورة صفوة الحفاظ التفاعلية</h3>
+                            <h3 class="text-xs sm:text-sm font-black text-slate-900">سبورة غير ممنون التفاعلية</h3>
                             <span class="bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded-md">60FPS Turbo</span>
                         </div>
 
@@ -13931,8 +14016,8 @@ html.dark #mt-search, html.dark #mt-surah, html.dark #mt-assign-student, html.da
 
             if (document.getElementById('autopilot-on-report-cb')?.checked !== false && typeof sendSilentCloudWhatsApp === 'function') {
                 const waText = isStuEn
-                    ? `🕌 *Safwat Al-Huffaz Academy*\n🏆 *Official Exam Result: ${cleanTitle}*\n👤 *Student:* ${std.name}\n🎯 *Score:* ${studentScore} / ${maxScore} (${perc})\n💬 *Teacher Notes:* ${notes || 'Excellent effort!'}`
-                    : `🕌 *أكاديمية صفوة الحفاظ*\n🏆 *نتيجة اختبار: ${cleanTitle}*\n👤 *الطالب:* ${std.name}\n🎯 *الدرجة:* ${studentScore} / ${maxScore} (${perc})\n💬 *ملاحظات المعلم:* ${notes || 'بارك الله فيك!'}`;
+                    ? `🕌 *Gheir Mamnoon Academy*\n🏆 *Official Exam Result: ${cleanTitle}*\n👤 *Student:* ${std.name}\n🎯 *Score:* ${studentScore} / ${maxScore} (${perc})\n💬 *Teacher Notes:* ${notes || 'Excellent effort!'}`
+                    : `🕌 *أكاديمية غير ممنون*\n🏆 *نتيجة اختبار: ${cleanTitle}*\n👤 *الطالب:* ${std.name}\n🎯 *الدرجة:* ${studentScore} / ${maxScore} (${perc})\n💬 *ملاحظات المعلم:* ${notes || 'بارك الله فيك!'}`;
                 sendSilentCloudWhatsApp(std, waText);
             }
 
@@ -15401,8 +15486,8 @@ const smTimer = setInterval(() => {
             var st = studs[i], d = prCache[String(st.id)] || { sessions: 0, achievement: '', misNew: 0, misReviewed: 0, misMastered: 0 };
             var isEn = (typeof getStudentPreferredLang === 'function') && getStudentPreferredLang(st) === 'en';
             var msg = isEn
-                ? '🕌 *Safwat Al-Huffaz Academy*\n📊 *Weekly Parent Report*\n━━━━━━━━━━━━━━━━━━\n👤 *Student:* ' + st.name + '\n✅ *Sessions this week:* ' + d.sessions + '\n📖 *Latest achievement:* ' + (d.achievement || 'Active revision') + '\n✍️ *Recitation corrections:* ' + d.misNew + ' new, ' + d.misReviewed + ' reviewed, ' + d.misMastered + ' mastered 🌟\n⭐ *Merit stars:* ' + (st.stars_balance || 0) + '\n━━━━━━━━━━━━━━━━━━\n✨ *Jazakum Allahu Khairan for your follow-up!*'
-                : '🕌 *أكاديمية صفوة الحفاظ للقرآن الكريم*\n📊 *تقرير الأسبوع لولي الأمر*\n━━━━━━━━━━━━━━━━━━\n👤 *الطالب البطل:* ' + st.name + '\n✅ *حلقات الأسبوع:* ' + d.sessions + ' حلقة\n📖 *آخر إنجاز:* ' + (d.achievement || 'مراجعة وتثبيت') + '\n✍️ *تصويبات التلاوة:* ' + d.misNew + ' جديدة، ' + d.misReviewed + ' راجعها، ' + d.misMastered + ' أتقنها 🌟\n⭐ *نجوم الشرف:* ' + (st.stars_balance || 0) + ' نجمة\n━━━━━━━━━━━━━━━━━━\n✨ *شكر الله حرصكم ومتابعتكم الطيبة لبطل القرآن!*';
+                ? '🕌 *Gheir Mamnoon Academy*\n📊 *Weekly Parent Report*\n━━━━━━━━━━━━━━━━━━\n👤 *Student:* ' + st.name + '\n✅ *Sessions this week:* ' + d.sessions + '\n📖 *Latest achievement:* ' + (d.achievement || 'Active revision') + '\n✍️ *Recitation corrections:* ' + d.misNew + ' new, ' + d.misReviewed + ' reviewed, ' + d.misMastered + ' mastered 🌟\n⭐ *Merit stars:* ' + (st.stars_balance || 0) + '\n━━━━━━━━━━━━━━━━━━\n✨ *Jazakum Allahu Khairan for your follow-up!*'
+                : '🕌 *أكاديمية غير ممنون للقرآن الكريم*\n📊 *تقرير الأسبوع لولي الأمر*\n━━━━━━━━━━━━━━━━━━\n👤 *الطالب البطل:* ' + st.name + '\n✅ *حلقات الأسبوع:* ' + d.sessions + ' حلقة\n📖 *آخر إنجاز:* ' + (d.achievement || 'مراجعة وتثبيت') + '\n✍️ *تصويبات التلاوة:* ' + d.misNew + ' جديدة، ' + d.misReviewed + ' راجعها، ' + d.misMastered + ' أتقنها 🌟\n⭐ *نجوم الشرف:* ' + (st.stars_balance || 0) + ' نجمة\n━━━━━━━━━━━━━━━━━━\n✨ *شكر الله حرصكم ومتابعتكم الطيبة لبطل القرآن!*';
             try { await dispatchMessageViaFreeWhatsAppGatewayOrDirect(st, msg); } catch (e) {}
         }
         if (typeof showToast === 'function') showToast(T('✅ التقارير اتبعتت', '✅ Reports sent'), 'success');
@@ -15446,7 +15531,7 @@ const smTimer = setInterval(() => {
             sig.className = 'flex flex-wrap items-end justify-between gap-4 mt-5 px-2';
             sig.innerHTML =
                 '<div class="lux-sig"><div class="lux-sig-name" id="lux-teacher-sig">فضيلة المعلم</div><div class="lux-sig-line"></div><div class="lux-sig-lbl" data-ar="توقيع المعلم المشرف" data-en="Instructor Signature">توقيع المعلم المشرف</div></div>'
-                + '<div class="lux-sig"><div class="lux-sig-name">أكاديمية صفوة الحفاظ</div><div class="lux-sig-line"></div><div class="lux-sig-lbl" data-ar="توقيع الإدارة" data-en="Academy Management">توقيع الإدارة</div></div>';
+                + '<div class="lux-sig"><div class="lux-sig-name">أكاديمية غير ممنون</div><div class="lux-sig-line"></div><div class="lux-sig-lbl" data-ar="توقيع الإدارة" data-en="Academy Management">توقيع الإدارة</div></div>';
             sealsGrid.parentNode.insertBefore(sig, sealsGrid.nextSibling);
         }
 
@@ -15470,7 +15555,7 @@ const smTimer = setInterval(() => {
 (function(){
     if (window.__anLoaded) return;
     window.__anLoaded = true;
-    var CFG_KEY = 'Safwat_AutoNotify_Cfg';
+    var CFG_KEY = 'GM_AutoNotify_Cfg';
     var cfg = { absence: true, juz: true };
     try { Object.assign(cfg, JSON.parse(localStorage.getItem(CFG_KEY) || '{}')); } catch(e) {}
     function saveCfg(){ try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch(e){} }
@@ -15507,8 +15592,8 @@ const smTimer = setInterval(() => {
                                 var sName = '';
                                 try { var so = (typeof quranSurahs !== 'undefined' ? quranSurahs : []).find(function(s){ return s.id == sT; }); sName = so ? (isAr() ? so.ar : so.en) : sT; } catch(e){ sName = sT; }
                                 var msg = isAr()
-                                    ? '🕌 *أكاديمية صفوة الحفاظ*\n🌟 *مبارك إتمام الجزء ' + j + '!*\n👤 الطالب: ' + studentObj.name + '\n📖 أتمّ بحمد الله حفظ الجزء ' + j + ' حتى نهاية سورة ' + sName + '.\nنسأل الله أن يجعل القرآن ربيع قلبه وشفيعه يوم القيامة 🤲'
-                                    : '🕌 *Safwat Al-Huffaz Academy*\n🌟 *Juz ' + j + ' Completed!*\n👤 Student: ' + studentObj.name + '\n📖 Alhamdulillah, completed memorizing Juz ' + j + ' through the end of Surah ' + sName + '.\nMay Allah make the Quran an intercessor for them 🤲';
+                                    ? '🕌 *أكاديمية غير ممنون*\n🌟 *مبارك إتمام الجزء ' + j + '!*\n👤 الطالب: ' + studentObj.name + '\n📖 أتمّ بحمد الله حفظ الجزء ' + j + ' حتى نهاية سورة ' + sName + '.\nنسأل الله أن يجعل القرآن ربيع قلبه وشفيعه يوم القيامة 🤲'
+                                    : '🕌 *Gheir Mamnoon Academy*\n🌟 *Juz ' + j + ' Completed!*\n👤 Student: ' + studentObj.name + '\n📖 Alhamdulillah, completed memorizing Juz ' + j + ' through the end of Surah ' + sName + '.\nMay Allah make the Quran an intercessor for them 🤲';
                                 setTimeout(function(){ _origSend(studentObj, msg); }, 1800);
                                 break;
                             }
@@ -15574,7 +15659,7 @@ const smTimer = setInterval(() => {
     var REC_CLS = ['bg-slate-100 text-slate-500 border-slate-200', 'bg-amber-100 text-amber-800 border-amber-300', 'bg-emerald-100 text-emerald-800 border-emerald-300', 'bg-orange-100 text-orange-800 border-orange-300'];
     var st = null;
     function todayStr(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
-    function bufKey(){ return 'Safwat_LiveCircle_' + (st ? st.date : todayStr()); }
+    function bufKey(){ return 'GM_LiveCircle_' + (st ? st.date : todayStr()); }
     function persist(){ try { localStorage.setItem(bufKey(), JSON.stringify(st)); } catch(e){} var h = document.getElementById('lc-save-hint'); if (h) { h.textContent = '💾 اتحفظ ' + new Date().toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'}); } dbSync(); }
     var dbTimer = null, dbWarned = false;
     function dbSync(){
@@ -15609,7 +15694,7 @@ const smTimer = setInterval(() => {
     }
     function lcTryResume(){
         try {
-            var raw = localStorage.getItem('Safwat_LiveCircle_' + todayStr());
+            var raw = localStorage.getItem('GM_LiveCircle_' + todayStr());
             if (raw) {
                 var saved = JSON.parse(raw);
                 if (saved && saved.rows && Object.keys(saved.rows).length && !saved.ended) {
@@ -16068,8 +16153,8 @@ const smTimer = setInterval(() => {
     }
     function purgePoisonedCache() {
         try {
-            const raw = localStorage.getItem('Safwat_Academy_Hadith_Bank');
-            if (raw && bankLooksCorrupt(JSON.parse(raw))) localStorage.removeItem('Safwat_Academy_Hadith_Bank');
+            const raw = localStorage.getItem('GM_Academy_Hadith_Bank');
+            if (raw && bankLooksCorrupt(JSON.parse(raw))) localStorage.removeItem('GM_Academy_Hadith_Bank');
         } catch (e) {}
     }
     purgePoisonedCache();
@@ -16088,7 +16173,7 @@ const smTimer = setInterval(() => {
     try {
         if (typeof cachedHadithBank !== 'undefined' && bankLooksCorrupt(cachedHadithBank) && typeof defaultHadithBank !== 'undefined' && Array.isArray(defaultHadithBank)) {
             cachedHadithBank = [...defaultHadithBank];
-            try { localStorage.setItem('Safwat_Academy_Hadith_Bank', JSON.stringify(cachedHadithBank)); } catch (e) {}
+            try { localStorage.setItem('GM_Academy_Hadith_Bank', JSON.stringify(cachedHadithBank)); } catch (e) {}
             if (typeof populateHadithReportDropdowns === 'function') populateHadithReportDropdowns();
             if (typeof renderHadithBankGrid === 'function') renderHadithBankGrid();
         }
@@ -16102,11 +16187,11 @@ const smTimer = setInterval(() => {
     const nT = (ar, en) => nIsAr() ? ar : en;
     const nToast = (m, k) => { if (typeof showToast === 'function') showToast(m, k || 'info'); };
     let doneSet;
-    try { doneSet = new Set(JSON.parse(localStorage.getItem('Safwat_DuelNotified') || '[]')); } catch (e) { doneSet = new Set(); }
+    try { doneSet = new Set(JSON.parse(localStorage.getItem('GM_DuelNotified') || '[]')); } catch (e) { doneSet = new Set(); }
     const partialSet = new Set();
     function rememberDone(id) {
         doneSet.add(String(id));
-        try { localStorage.setItem('Safwat_DuelNotified', JSON.stringify([...doneSet].slice(-100))); } catch (e) {}
+        try { localStorage.setItem('GM_DuelNotified', JSON.stringify([...doneSet].slice(-100))); } catch (e) {}
     }
 
     async function duelNames(ids) {
